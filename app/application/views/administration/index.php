@@ -16,6 +16,11 @@ f<?php
 	echo __('tinyissue.administration');
 	echo '.<span>'.__('tinyissue.administration_description').'</span>';
 	echo '</h3>';
+	
+	$Def = array('mailerrormsg' => 1, 'intro' => '', 'bye' => '', 'encoding' => 'UTF-8',);
+	foreach ($Def as $ind => $val) {
+		$Conf[$ind] = isset($Conf[$ind]) ? $Conf[$ind] : $val;
+	}
 ?>
 
 <div class="pad">
@@ -254,27 +259,20 @@ f<?php
 						<option value="html" <?php echo ($Conf['plainHTML'] == 'html') ? 'selected="selected"' : ''; ?>>html</option>
 						<option value="multipart/mixed" <?php echo ($Conf['plainHTML'] == 'multipart/mixed') ? 'selected="selected"' : ''; ?>>multipart/mixed</option>
 					</select> <br />
-				<?php echo $LngSRV["Email_encoding"]; ?> : 
-					<select name="email_encoding" id="input_email_encoding" onchange="this.style.backgroundColor = 'yellow';">
-						<option value="Big5" 		<?php echo ($Conf["encoding"] == 'Big5') ? 'selected="selected"' : ''; ?> >Big5</option>
-						<option value="EUC-KR" 		<?php echo ($Conf["encoding"] == 'EUC-KR') ? 'selected="selected"' : ''; ?> >EUC-KR</option>
-						<option value="GB18030" 	<?php echo ($Conf["encoding"] == 'GB18030') ? 'selected="selected"' : ''; ?> >GB18030</option>
-						<option value="ISO-8859-2" <?php echo ($Conf["encoding"] == 'ISO-8859-2') ? 'selected="selected"' : ''; ?> >ISO-8859-2</option>
-						<option value="ISO-8859-7" <?php echo ($Conf["encoding"] == 'ISO-8859-7') ? 'selected="selected"' : ''; ?> >ISO-8859-7</option>
-						<option value="ISO-8859-8" <?php echo ($Conf["encoding"] == 'ISO-8859-8') ? 'selected="selected"' : ''; ?> >ISO-8859-8</option>
-						<option value="ISO-2022-JP" <?php echo ($Conf["encoding"] == 'ISO-2022-JP') ? 'selected="selected"' : ''; ?> >ISO-2022-JP</option>
-						<option value="Shift JIS" 	<?php echo ($Conf["encoding"] == 'Shift JIS') ? 'selected="selected"' : ''; ?> >Shift JIS</option>
-						<option value="UTF-8" 		<?php echo ($Conf["encoding"] == 'UTF-8' || !isset($Conf["encoding"])) ? 'selected="selected"' : ''; ?> >UTF-8</option>
-						<option value="UTF-16BE" 	<?php echo ($Conf["encoding"] == 'UTF-16BE') ? 'selected="selected"' : ''; ?> >UTF-16BE</option>
-						<option value="Windows-874" <?php echo ($Conf["encoding"] == 'Windows-874') ? 'selected="selected"' : ''; ?> >Windows-874</option>
-						<option value="Windows-1250" <?php echo ($Conf["encoding"] == 'Windows-1250') ? 'selected="selected"' : ''; ?> >Windows-1250</option>
-						<option value="Windows-1251" <?php echo ($Conf["encoding"] == 'Windows-1251') ? 'selected="selected"' : ''; ?> >Windows-1251</option>
-						<option value="Windows-1252" <?php echo ($Conf["encoding"] == 'Windows-1252') ? 'selected="selected"' : ''; ?> >Windows-1252</option>
-						<option value="Windows-1254" <?php echo ($Conf["encoding"] == 'Windows-1254') ? 'selected="selected"' : ''; ?> >Windows-1254</option>
-						<option value="Windows-1255" <?php echo ($Conf["encoding"] == 'Windows-1255') ? 'selected="selected"' : ''; ?> >Windows-1255</option>
-						<option value="Windows-1256" <?php echo ($Conf["encoding"] == 'Windows-1256') ? 'selected="selected"' : ''; ?> >Windows-1256</option>
-						<option value="Windows-1257" <?php echo ($Conf["encoding"] == 'Windows-1257') ? 'selected="selected"' : ''; ?> >Windows-1257</option>
-						<option value="Windows-1258" <?php echo ($Conf["encoding"] == 'Windows-1258') ? 'selected="selected"' : ''; ?> >Windows-1258</option>
+				<?php 
+					echo $LngSRV["Email_encoding"].' : ';		 
+					echo '<select name="email_encoding" id="input_email_encoding" onchange="this.style.backgroundColor = \'yellow\';">';
+					$Options = array("Big5", "EUC-KR", "GB18030", "ISO-8859-2", "ISO-8859-7", "ISO-8859-8", "ISO-2022-JP", "Shift JIS", "UTF-8", "UTF-16BE", "Windows-874", "Windows-1250", "Windows-1251", "Windows-1252", "Windows-1254", "Windows-1255", "Windows-1256", "Windows-1257", "Windows-1258" );
+					foreach ($Options as $ind => $val) {
+						echo '<option value="'.$val.'" 			'.(($Conf["encoding"] == $val) 			? 'selected="selected"' : '').' >'.$val.'</option>';
+					}
+					echo '</select> <br />';
+				?> 
+				<?php	echo $LngSRV["Email_mailerrormsg"]; ?> :
+					<select name="email_mailerrormsg" id="input_email_mailerrormsg" onchange="this.style.backgroundColor = 'yellow';">
+						<option value="0"	<?php echo ($Conf["mailerrormsg"] == '0') ? 'selected="selected"' : ''; ?> ><?php echo $LngSRV["Email_mailerrormsg_0"]; ?></option>
+						<option value="1"	<?php echo ($Conf["mailerrormsg"] == '1') ? 'selected="selected"' : ''; ?> ><?php echo $LngSRV["Email_mailerrormsg_1"]; ?></option>
+						<option value="2"	<?php echo ($Conf["mailerrormsg"] == '2') ? 'selected="selected"' : ''; ?> ><?php echo $LngSRV["Email_mailerrormsg_2"]; ?></option>
 					</select>
 					<br /><br />
 				<?php echo $LngSRV["Email_linelenght"]; ?> : <input name="email_linelenght" id="input_email_linelenght" type="number" max="1000" min="25" size="6" value="<?php echo $Conf["linelenght"]; ?>" onchange="this.style.backgroundColor = 'yellow';" /><br /><br />

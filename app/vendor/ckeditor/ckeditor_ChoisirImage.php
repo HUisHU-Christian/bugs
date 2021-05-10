@@ -10,15 +10,18 @@
 <meta http-equiv="content-style-type" content="text/css">
 </head>
 <body>
+
 <table width="100%"><tr>
 <?php
-$prefixe = $_SESSION["prefixe"] ?? "../"; 
-//var_dump($_SESSION);
+$prefixe = "";
+while (!file_exists($prefixe."config.app.php")) {
+	$prefixe .= "../";
+}
+
 $agit = false;
 $NomFichier = array();
 $NomRepertoire = array();
-if (isset($NumMbre) && !isset($_SESSION["EnAdmin"])) {
-	$chemin = $prefixe."uploads/".$NumMbre;
+	$chemin = $prefixe."uploads/";
 	$Chemin = $chemin;
 	$handle=opendir($chemin);
 	while ($file = readdir($handle)) {
@@ -27,7 +30,7 @@ if (isset($NumMbre) && !isset($_SESSION["EnAdmin"])) {
 		}
 	}
 	$agit = true;
-}
+
 unset($_SESSION["Historique"]);
 if (isset($_SESSION["AdminEcole"]) && isset($_SESSION["EnAdmin"])) {
 	unset($NomFicher);
@@ -92,7 +95,7 @@ if ($agit) {
 	} 
 
 	function ChoisitImage (Quelle) {
-		opener.document.getElementById(retenue[0]).value = '<?php echo $Chemin.'/';  ?>' + Quelle;
+		opener.document.getElementById(retenue[0]).value = 'uploads/' + Quelle;
 		if ( opener.document.getElementById(retenue[2]).value == 0 ) { opener.document.getElementById(retenue[2]).value = 200; }
 		if ( opener.document.getElementById(retenue[3]).value == 0 ) { opener.document.getElementById(retenue[3]).value = 150; }
 		if ( opener.document.getElementById(retenue[4]).value == 0 ) { opener.document.getElementById(retenue[4]).value = 0; }

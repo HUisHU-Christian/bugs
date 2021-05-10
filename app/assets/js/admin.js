@@ -59,7 +59,7 @@
 	}
 	
 	function AppliquerServeur() {
-		champs = new Array('input_email_encoding','input_email_linelenght','input_email_server','input_email_port','input_email_encryption','input_email_username','input_email_password','select_Email_transport','select_Email_plainHTML');
+		champs = new Array('input_email_encoding','input_email_linelenght','input_email_server','input_email_port','input_email_encryption','input_email_username','input_email_password','select_Email_transport','select_Email_plainHTML','input_email_mailerrormsg');
 		if (!VerifChamps(champs)) { return false; }
 		var xhttp = new XMLHttpRequest();
 		var formdata = new FormData();
@@ -72,6 +72,7 @@
 		formdata.append("encryption", document.getElementById('input_email_encryption').value);
 		formdata.append("username", document.getElementById('input_email_username').value);
 		formdata.append("password", document.getElementById('input_email_password').value);
+		formdata.append("mailerrormsg", document.getElementById('input_email_mailerrormsg').value);
 		var NextPage = 'app/application/controllers/ajax/ChgConfEmail_Server.php';
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {

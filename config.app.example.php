@@ -141,6 +141,9 @@ return array(
 		*/
 		'plainHTML' => 'multipart/mixed',
 		'linelenght' => 80,
+		// Output after error on sending email
+		// 0 = no output, 1 = errors and messages, 2 = messages only.
+		'mailerrormsg' => '1',
 		/*
 		* Every emails you'll send from here will start by  intro and end by bye
 		* Use those to include the recepient values:
