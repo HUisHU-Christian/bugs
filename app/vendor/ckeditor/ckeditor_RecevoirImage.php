@@ -69,10 +69,11 @@ if ($_FILES["upload"]['size'] > 0 ) {
 	//Donc les valeurs calculées se font en soustrayant   81, 71, 68, 62, 59, 56, 53 et 0
 	parent.document.getElementById('cke_' + (NumRef - 81) + '_textInput').value = "<?php echo "uploads/".$_FILES["upload"]['name']; ?>";
 	parent.document.getElementById('cke_' + (NumRef - 71) + '_textInput').value = "200";
-	parent.document.getElementById('cke_' + (NumRef - 68) + '_textInput').value = "150";
+//	parent.document.getElementById('cke_' + (NumRef - 68) + '_textInput').value = "150";
 	parent.document.getElementById('cke_' + (NumRef - 62) + '_textInput').value = "0";
 	parent.document.getElementById('cke_' + (NumRef - 59) + '_textInput').value = "15";
 	parent.document.getElementById('cke_' + (NumRef - 56) + '_textInput').value = "15";
 	parent.document.getElementById('cke_' + (NumRef - 53) + '_select').selectedIndex = 1;
-	parent.document.getElementById('cke_' + (NumRef - 0) + '_label').click();
+	parent.document.getElementById('cke_' + (NumRef - 45) + '_uiElement').style.display = 'block';
+//	parent.document.getElementById('cke_' + (NumRef - 0) + '_label').click();
 </script>
