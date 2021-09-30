@@ -129,24 +129,26 @@ class Issue extends \Eloquent {
 
 				case 6:
 					//using project/issue/activity/update-issue-tags.php
-					//according to db table activity, field activity's value for id = 6 
+					//according to db table activity, field activity's value for id = 6
 					$tag_diff = json_decode($row->data, true);
-					if (isset($tag_diff["tag_data"])) {
-						//2 sept 2021 : pourquoi les changements de tags n'intègrenent pas toute l'information nécessaire dans la table activity ? 
-						//ci-bas, une ligne pour contourner le problème en attendant de trouver la solution
-						if (isset($tag_diff["tag_data"][8])) {
-							$tag_info = \DB::table('tags')->where('id', '=', $tag_diff["tag_data"][8]["id"])->get();
-							//2 sept 2021 insistance sur ce document.
-							$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
-								'issue' => $issue,
-								'project' => $project,
-								'user' => $users[$row->user_id],
-								'tag_diff' => $tag_diff,
-								'bgcolor' => $tag_info[0]->bgcolor,
-								'ftcolor' => ($tag_info[0]->ftcolor ? $tag_info[0]->ftcolor : 'black'),
-								'activity' => $row
-							));
-						}
+					if (strlen($row->data) > 10) { 
+						$prem = strpos($row->data, "[");
+						$pren = strpos($row->data, "]");
+						$deux = strpos($row->data, "[", $prem+1);
+						$deuy = strpos($row->data, "]", $deux);
+						$valadd = trim(substr($row->data, $prem+1, ($pren-$prem)-1));
+						$numtag = ($valadd != '') ? $valadd : trim(substr($row->data, $deux+1, ($deuy-$deux)-1));
+								$tag_info = \DB::table('tags')->where('id', '=', $numtag)->get();
+								//2 sept 2021 insistance sur ce document.
+								$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
+									'issue' => $issue,
+									'project' => $project,
+									'user' => $users[$row->user_id],
+									'tag_diff' => $tag_diff,
+									'bgcolor' => $tag_info[0]->bgcolor,
+									'ftcolor' => ($tag_info[0]->ftcolor ? $tag_info[0]->ftcolor : 'black'),
+									'activity' => $row
+								));
 					}
 					break;
 				case 8:

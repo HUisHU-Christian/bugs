@@ -101,7 +101,7 @@ CREATE TABLE `projects_links` (
   `desactivated` date DEFAULT NULL,
   PRIMARY KEY (`id_link`),
   KEY `id_project_category_desactivated_created` (`id_project`,`category`,`desactivated`,`created`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 #--
 
 #--#Create Projects Users Table
@@ -196,6 +196,30 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 #--
 
+#--#Create update_history table
+CREATE TABLE IF NOT EXISTS `update_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `Footprint` varchar(25) DEFAULT NULL,
+  `Description` varchar(100) DEFAULT NULL,
+  `DteRelease` datetime DEFAULT NULL,
+  `DteInstall` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+#--
+
+#--#Create following table
+CREATE TABLE IF NOT EXISTS `following` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `issue_id` int(11) NOT NULL,
+  `project` tinyint(2) NOT NULL DEFAULT 0,
+  `attached` tinyint(2) NOT NULL DEFAULT 1,
+  `tags` tinyint(2) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+#--
+
 #--#Create Users Activity Table
 CREATE TABLE IF NOT EXISTS `users_activity` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
@@ -211,29 +235,6 @@ CREATE TABLE IF NOT EXISTS `users_activity` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 #--
 
-#--Create the update history system table
-CREATE TABLE `update_history` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `Footprint` varchar(25) DEFAULT NULL,
-  `Description` varchar(100) DEFAULT NULL,
-  `DteRelease` datetime DEFAULT NULL,
-  `DteInstall` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-#--
-
-#--Create following table - this permits to user to receive email on ticket's activity
-CREATE TABLE `following` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `issue_id` int(11) NOT NULL,
-  `project` tinyint(2) NOT NULL DEFAULT 0,
-  `attached` tinyint(2) NOT NULL DEFAULT 1,
-  `tags` tinyint(2) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-#--
 
 #--#Insert Permisions Data
 INSERT IGNORE INTO `permissions` (`id`, `permission`, `description`, `auto_has`) VALUES
@@ -292,11 +293,13 @@ VALUES
 	(7,'Attached a file to issue','attached-file'),
 	(8,'Move an issue from project A to project B',	'ChangeIssue-project'),
 	(9,'User starts or stop following issue or project', 'Follow'),
-	(10, 'Updated an issue', 'IssueEdit');
+	(10,'Updated an issue', 'IssueEdit'),
+	(11,'Deleted a comment', 'delete_comment'),
+	(12,'Edited a comment','edit_comment' );
 #--
 
-#--#Create default tags : id 9
-INSERT INTO `tags` (`id`, `tag`, `bgcolor`, `created_at`, `updated_at`) VALUES
+#--#Create default tags : id 10
+INSERT INTO `tags` (`id`, `tag`, `bgcolor`, `ftcolor`, `created_at`, `updated_at`) VALUES
 (1,	'status:open',		'#c43c35',		'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
 (2,	'status:closed',	'#46A546',		'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
 (3,	'type:feature',	'#62cffc',		'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
@@ -304,7 +307,7 @@ INSERT INTO `tags` (`id`, `tag`, `bgcolor`, `created_at`, `updated_at`) VALUES
 (6,	'resolution:won`t fix','#812323','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
 (7,	'resolution:fixed',	'#048383',	'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
 (8,	'status:testing',	'#FCC307',		'#FFFFFF',	'2013-11-30 11:23:01',	'2016-11-30 23:11:01'),
-(9,	'status:inProgress','#FF6600',	'#FFFFFF',	'2016-11-10 23:12:01',	'2016-11-10 23:12:01')
+(9,	'status:inProgress','#FF6600',	'#FFFFFF',	'2016-11-10 23:12:01',	'2016-11-10 23:12:01');
 #--
 
 #--#Import open/closed states
@@ -313,7 +316,6 @@ INSERT INTO projects_issues_tags (issue_id, tag_id, created_at, updated_at)
 	SELECT id as issue_id, IF(status = 1, 1, 2) as tag_id, NOW(), NOW()
 	FROM projects_issues
 );
-#--
 
 #----- Last line of this file .... Anything bellow this line will be lost. -----
 

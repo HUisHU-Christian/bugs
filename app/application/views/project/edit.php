@@ -3,7 +3,7 @@
 	$roles = array();
 	foreach($Rol as $R) {  $roles[$R->id] = $R->name;  }
 	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
-		echo '<script>document.location.href="'.URL::to().'";</script>';
+//		echo '<script>document.location.href="'.URL::to().'";</script>';
 	}
 ?>
 

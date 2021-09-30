@@ -7,5 +7,5 @@ CREATE TABLE `update_history` (
   `DteRelease` datetime DEFAULT NULL,
   `DteInstall` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

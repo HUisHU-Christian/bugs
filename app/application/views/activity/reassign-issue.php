@@ -6,13 +6,15 @@
 
 	<div class="data">
 		<a href="<?php echo $issue->to(); ?>"><?php echo $issue->title; ?></a> <?php echo __('tinyissue.was_reassigned_to'); ?>
-		<?php if($activity->action_id > 0): ?>
-		<strong><?php echo $assigned->firstname . ' ' . $assigned->lastname; ?></strong>
-		<?php else: ?>
-		<strong><?php echo __('tinyissue.no_one'); ?></strong>
-		<?php endif; ?>
-		<?php echo __('tinyissue.by'); ?>
-		<strong><?php echo $user->firstname . ' ' . $user->lastname; ?></strong>
+		<?php
+			echo '<strong>'; 
+			echo  ($activity->action_id > 0) ? $assigned->firstname . ' ' . $assigned->lastname :  __('tinyissue.no_one');
+			echo '</strong>';
+
+			echo __('tinyissue.by');
+
+			echo '<strong>'.$user->firstname . ' ' . $user->lastname.'</strong>';
+		?>
 
 		<span class="time">
 			<?php echo date(Config::get('application.my_bugs_app.date_format'), strtotime($activity->created_at)); ?>

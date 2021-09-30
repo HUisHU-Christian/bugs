@@ -11,6 +11,8 @@
 - set  www-data  ( CHOWN -R www-data:www-data )  as owner of the Bugs's main directory and sub-directories
 - Open index.php ... it should bring you to ./install/index.php page and open the installation forms
 	( ex.:   http://127.0.0.1/Bugs/index.php  ) 
+- Create users
+- Create first project
 
 Enjoy!
 
@@ -42,7 +44,7 @@ If your version is older than september 2018
 ## Requirements:
 
 - Tested on: Apache, IIS;
-- PHP 7.0+;   
+- PHP 7.3+;   (since 2021/09/21, no longer PHP 7.0 is no longer supported)   
 - MySQL 5+;
 - PDO Extension for PHP (MySQL);
 - MCrypt Extension for PHP : soon MCrypt will be removed from Bugs project;

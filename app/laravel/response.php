@@ -269,17 +269,16 @@ class Response {
 	 *
 	 * @return void
 	 */
-	protected function cookies()
-	{
+	protected function cookies() {
 		$ref = new \ReflectionClass('Symfony\Component\HttpFoundation\Cookie');
 
 		// All of the cookies for the response are actually stored on the
 		// Cookie class until we're ready to send the response back to
 		// the browser. This allows our cookies to be set easily.
-		foreach (Cookie::$jar as $name => $cookie)
-		{
+		foreach (Cookie::$jar as $name => $cookie) {
 			$config = array_values($cookie);
-
+			//$this->headers()->setCookie($ref->newInstanceArgs(array($config[0], $config[1], intval($config[2]), $config[3], boolval($config[4]), boolval($config[5]), boolval($config[6]), 'strict')));
+			//If the line bellow (282) provoques an error, use the line up (280) and set remarked ( // ) line 282
 			$this->headers()->setCookie($ref->newInstanceArgs($config));
 		}
 	}

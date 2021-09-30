@@ -9,8 +9,7 @@ class Redirect extends Response {
 	 * @param  bool      $https
 	 * @return Redirect
 	 */
-	public static function home($status = 302, $https = null)
-	{
+	public static function home($status = 302, $https = null) {
 		return static::to(URL::home($https), $status);
 	}
 
@@ -20,8 +19,7 @@ class Redirect extends Response {
 	 * @param  int       $status
 	 * @return Redirect
 	 */
-	public static function back($status = 302)
-	{
+	public static function back($status = 302) {
 		return static::to(Request::referrer(), $status);
 	}
 
@@ -41,8 +39,7 @@ class Redirect extends Response {
 	 * @param  bool      $https
 	 * @return Redirect
 	 */
-	public static function to($url, $status = 302, $https = null)
-	{
+	public static function to($url, $status = 302, $https = null) {
 		return static::make('', $status)->header('Location', URL::to($url, $https));
 	}
 
@@ -53,8 +50,7 @@ class Redirect extends Response {
 	 * @param  int       $status
 	 * @return Redirect
 	 */
-	public static function to_secure($url, $status = 302)
-	{
+	public static function to_secure($url, $status = 302) {
 		return static::to($url, $status, true);
 	}
 
@@ -66,8 +62,7 @@ class Redirect extends Response {
 	 * @param  int       $status
 	 * @return Redirect
 	 */
-	public static function to_action($action, $parameters = array(), $status = 302)
-	{
+	public static function to_action($action, $parameters = array(), $status = 302) {
 		return static::to(URL::to_action($action, $parameters), $status);
 	}
 
@@ -87,8 +82,7 @@ class Redirect extends Response {
 	 * @param  int       $status
 	 * @return Redirect
 	 */
-	public static function to_route($route, $parameters = array(), $status = 302)
-	{
+	public static function to_route($route, $parameters = array(), $status = 302) {
 		return static::to(URL::to_route($route, $parameters), $status);
 	}
 
@@ -106,10 +100,8 @@ class Redirect extends Response {
 	 * @param  mixed           $value
 	 * @return Redirect
 	 */
-	public function with($key, $value)
-	{
-		if (Config::get('session.driver') == '')
-		{
+	public function with($key, $value) {
+		if (Config::get('session.driver') == '') {
 			throw new \Exception('A session driver must be set before setting flash data.');
 		}
 
@@ -138,8 +130,7 @@ class Redirect extends Response {
 	 * @param  array     $items
 	 * @return Redirect
 	 */
-	public function with_input($filter = null, $items = array())
-	{
+	public function with_input($filter = null, $items = array()) {
 		Input::flash($filter, $items);
 
 		return $this;
@@ -158,8 +149,7 @@ class Redirect extends Response {
 	 * @param  Validator|Messages  $container
 	 * @return Redirect
 	 */
-	public function with_errors($container)
-	{
+	public function with_errors($container) {
 		$errors = ($container instanceof Validator) ? $container->errors : $container;
 
 		return $this->with('errors', $errors);
@@ -170,8 +160,7 @@ class Redirect extends Response {
 	 *
 	 * @return void
 	 */
-	public function send()
-	{
+	public function send() {
 		// Dump all output buffering, this ensures
 		// that symphony will send our redirect headers
 		// properly if we've outputted any content from
@@ -182,5 +171,4 @@ class Redirect extends Response {
 		}
 		return parent::send();
 	}
-
 }
