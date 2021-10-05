@@ -49,6 +49,7 @@ If your version is older than september 2018
 - PDO Extension for PHP (MySQL);
 - MCrypt Extension for PHP : soon MCrypt will be removed from Bugs project;
 - Javascript Enabled - Bugs also heavily uses Javascript.
+- PHP rewrite module
 
 ### How to contribute
 
