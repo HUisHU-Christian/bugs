@@ -27,10 +27,8 @@ require 'core.php';
 |
 */
 
-set_exception_handler(function($e)
-{
+set_exception_handler(function($e) {
 	require_once path('sys').'error'.EXT;
-
 	Error::exception($e);
 });
 
@@ -83,8 +81,7 @@ Bundle::start(DEFAULT_BUNDLE);
 | to explicitly start them within the application.
 |
 */
-foreach (Bundle::$bundles as $bundle => $config)
-{
+foreach (Bundle::$bundles as $bundle => $config) {
 	if ($config['auto']) Bundle::start($bundle);
 }
 
@@ -99,8 +96,7 @@ foreach (Bundle::$bundles as $bundle => $config)
 |
 */
 
-Router::register('*', '(:all)', function()
-{
+Router::register('*', '(:all)', function() {
 	return Event::first('404');
 });
 
@@ -131,17 +127,14 @@ $languages[] = Config::get('application.language');
 | URI we'll pass to the router to not include the lang segment.
 |
 */
-foreach ($languages as $language)
-{
-	if (preg_match("#^{$language}(?:$|/)#i", $uri))
-	{
+foreach ($languages as $language) {
+	if (preg_match("#^{$language}(?:$|/)#i", $uri)) {
 		Config::set('application.language', $language);
-
 		$uri = trim(substr($uri, strlen($language)), '/'); break;
 	}
 }
 
-if ($uri == '') $uri = '/';
+if ($uri == '') { $uri = '/'; }
 
 URI::$uri = $uri;
 
@@ -183,8 +176,7 @@ $response->render();
 |
 */
 
-if (Config::get('session.driver') !== '')
-{
+if (Config::get('session.driver') !== '') {
 	Session::save();
 }
 
@@ -199,7 +191,6 @@ if (Config::get('session.driver') !== '')
 | browser and show something pretty to the user.
 |
 */
-
 $response->send();
 
 /*

@@ -2,6 +2,7 @@
 $Email["en"] = 'Email';
 $Email["es"] = 'Correo';
 $Email["fr"] = 'Courriel';
+$Email["pt"] = 'Email';
 $Email["pt-BR"] = 'Email';
 $Email["it"] = 'Email';
 
