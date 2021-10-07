@@ -445,7 +445,7 @@ class Router {
 			// We only need to check routes with regular expression since all others
 			// would have been able to be matched by the search for literal matches
 			// we just did before we started searching.
-			if (str_contains($route, '(')) {
+			if (fctstr_contains($route, '(')) {
 				$pattern = '#^'.static::wildcards($route).'$#';
 
 				// If we get a match we'll return the route and slice off the first

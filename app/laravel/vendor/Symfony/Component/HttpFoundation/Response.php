@@ -245,7 +245,6 @@ class Response {
 
         // status
         header(sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText));
-
         // headers
         foreach ($this->headers->all() as $name => $values) {
             foreach ($values as $value) {
@@ -255,6 +254,11 @@ class Response {
 
         // cookies
         foreach ($this->headers->getCookies() as $cookie) {
+/*
+        		echo '
+        			Nous sommes en ligne 259 de Response.php avec '.$cookie.'<br />';
+            //setcookie($cookie->getName(), $cookie->getValue(), ['expires' => $cookie->getExpiresTime(), 'path' => $cookie->getPath(), 'domain' => $cookie->getDomain(), 'secure' => $cookie->isSecure(), 'httponly' => true, 'samesite' => 'Strict']);
+*/
             setcookie($cookie->getName(), $cookie->getValue(), ['expires' => $cookie->getExpiresTime(), 'path' => $cookie->getPath(), 'domain' => $cookie->getDomain(), 'secure' => $cookie->isSecure(), 'httponly' => true, 'samesite' => 'Strict']);
         }
 
@@ -268,7 +272,6 @@ class Response {
      */
     public function sendContent() {
         echo $this->content;
-
         return $this;
     }
 

@@ -1,6 +1,5 @@
 <?php namespace Laravel;
 
-use Router;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +14,7 @@ use Router;
 */
 
 require 'core.php';
+use Router;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +31,6 @@ set_exception_handler(function($e) {
 	require_once path('sys').'error'.EXT;
 	Error::exception($e);
 });
-
 
 set_error_handler(function($code, $error, $file, $line) {
 	require_once path('sys').'error'.EXT;
@@ -81,6 +80,7 @@ Bundle::start(DEFAULT_BUNDLE);
 | to explicitly start them within the application.
 |
 */
+
 foreach (Bundle::$bundles as $bundle => $config) {
 	if ($config['auto']) Bundle::start($bundle);
 }
@@ -150,7 +150,16 @@ URI::$uri = $uri;
 */
 Request::$route = Router::route(Request::method(), $uri);
 
+/*
+echo '
+<br /><br />=================  Avant  =============================<br /><br />
+';
+*/
 $response = Request::$route->call();
+/*
+echo '
+<br /><br />=================  Après  =============================<br /><br />';
+*/
 
 /*
 |--------------------------------------------------------------------------
@@ -162,7 +171,6 @@ $response = Request::$route->call();
 | content and sets the raw string result as the new response.
 |
 */
-
 $response->render();
 
 /*
@@ -175,10 +183,29 @@ $response->render();
 | the session cookie in the cookie jar to be sent to the user.
 |
 */
-
 if (Config::get('session.driver') !== '') {
 	Session::save();
 }
+
+/*
+echo '
+Nous sommes ici en ligne 87 de laravel.php';
+echo '<br /><br />';
+echo '
+<b>Le tableau-objet reponse: </b> <br />';
+var_dump($response);
+echo '<br /><br />';
+echo '
+<b>Le cookies sont</b>: <br />';
+var_dump($_COOKIE);
+echo '
+<br /><br />';
+var_dump(Bundle::$bundles);
+echo '<br /><br />';
+var_dump($languages);
+echo '<br /><br />';
+//exit();
+*/
 
 /*
 |--------------------------------------------------------------------------
@@ -191,6 +218,7 @@ if (Config::get('session.driver') !== '') {
 | browser and show something pretty to the user.
 |
 */
+
 $response->send();
 
 /*

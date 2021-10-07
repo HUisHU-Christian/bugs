@@ -85,7 +85,6 @@ Autoloader::namespaces(array('Laravel' => path('sys')));
 | underscores as directory hierarchy indicators.
 |
 */
-
 Autoloader::map(array(
 	'Laravel\\Database\\Eloquent\\Relationships\\Belongs_To' 
                     => path('sys').'database/eloquent/relationships/belongs_to'.EXT,
@@ -98,7 +97,6 @@ Autoloader::map(array(
 	'Laravel\\Database\\Eloquent\\Relationships\\Has_One_Or_Many' 
                     => path('sys').'database/eloquent/relationships/has_one_or_many'.EXT,
 ));
-
 /*
 |--------------------------------------------------------------------------
 | Register The Symfony Components
@@ -206,11 +204,8 @@ if (isset($environment)) {
 
 if (defined('STDIN')) {
 	$console = CLI\Command::options($_SERVER['argv']);
-
 	list($arguments, $options) = $console;
-
 	$options = array_change_key_case($options, CASE_UPPER);
-
 	$_SERVER['CLI'] = $options;
 }
 
