@@ -27,11 +27,13 @@ use Router;
 */
 
 set_exception_handler(function($e) {
+	exit();
 	require_once path('sys').'error'.EXT;
 	Error::exception($e);
 });
 
 set_error_handler(function($code, $error, $file, $line) {
+	exit();
 	require_once path('sys').'error'.EXT;
 	Error::native($code, $error, $file, $line);
 });

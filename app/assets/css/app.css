@@ -151,7 +151,10 @@ code{
 
 span.colstate {
 	font-size: 200%;
-	
+}
+
+span.colstate:hover {
+	a.global-taglev.style.display: :block;
 }
 
 footer{

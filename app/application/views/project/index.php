@@ -34,6 +34,8 @@
 	</ul>
 
 	<div class="inside-tabs">
-		<?php echo $page; ?>
+		<?php 
+		//echo $page; 
+		?>
 	</div>
 </div>
