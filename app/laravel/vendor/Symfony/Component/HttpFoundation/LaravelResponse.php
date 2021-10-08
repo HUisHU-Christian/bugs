@@ -17,8 +17,7 @@ class LaravelResponse extends Response
      *
      * @api
      */
-    public function send()
-    {
+    public function send() {
         $this->sendHeaders();
         $this->sendContent();
 
@@ -30,8 +29,7 @@ class LaravelResponse extends Response
      *
      * @return void
      */
-    public function finish()
-    {
+    public function finish() {
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }

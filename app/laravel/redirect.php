@@ -10,6 +10,7 @@ class Redirect extends Response {
 	 * @return Redirect
 	 */
 	public static function home($status = 302, $https = null) {
+		echo 'nous sommes ici en ligne 13 de redirect.php<br /><br />';
 		return static::to(URL::home($https), $status);
 	}
 
@@ -20,6 +21,7 @@ class Redirect extends Response {
 	 * @return Redirect
 	 */
 	public static function back($status = 302) {
+		echo 'Nous sommes ici en ligne 24 de redirect.php<br /><br />';
 		return static::to(Request::referrer(), $status);
 	}
 
@@ -165,7 +167,6 @@ class Redirect extends Response {
 		// that symphony will send our redirect headers
 		// properly if we've outputted any content from
 		// within Laravel.
-
 		while (ob_get_level() > 0) {
 			ob_end_clean();
 		}

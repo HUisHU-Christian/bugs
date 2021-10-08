@@ -39,8 +39,7 @@ class Config {
 	 * @param  string  $key
 	 * @return bool
 	 */
-	public static function has($key)
-	{
+	public static function has($key) {
 		return ! is_null(static::get($key));
 	}
 
@@ -64,8 +63,7 @@ class Config {
 	 * @param  mixed   $default
 	 * @return array
 	 */
-	public static function get($key, $default = null)
-	{
+	public static function get($key, $default = null) {
 		list($bundle, $file, $item) = static::parse($key);
 
 		if ( ! static::load($bundle, $file)) return value($default);
@@ -75,12 +73,10 @@ class Config {
 		// If a specific configuration item was not requested, the key will be null,
 		// meaning we'll return the entire array of configuration items from the
 		// requested configuration file. Otherwise we can return the item.
-		if (is_null($item))
-		{
+		if (is_null($item)) {
 			return $items;
 		}
-		else
-		{
+		else {
 			return array_get($items, $item, $default);
 		}
 	}
@@ -103,8 +99,7 @@ class Config {
 	 * @param  mixed   $value
 	 * @return void
 	 */
-	public static function set($key, $value)
-	{
+	public static function set($key, $value) {
 		list($bundle, $file, $item) = static::parse($key);
 
 		static::load($bundle, $file);
@@ -112,12 +107,10 @@ class Config {
 		// If the item is null, it means the developer wishes to set the entire
 		// configuration array to a given value, so we will pass the entire
 		// array for the bundle into the array_set method.
-		if (is_null($item))
-		{
+		if (is_null($item)) {
 			array_set(static::$items[$bundle], $file, $value);
 		}
-		else
-		{
+		else {
 			array_set(static::$items[$bundle][$file], $item, $value);
 		}
 	}
@@ -130,13 +123,11 @@ class Config {
 	 * @param  string  $key
 	 * @return array
 	 */
-	protected static function parse($key)
-	{
+	protected static function parse($key) {
 		// First, we'll check the keyed cache of configuration items, as this will
 		// be the fastest method of retrieving the configuration option. After an
 		// item is parsed, it is always stored in the cache by its key.
-		if (array_key_exists($key, static::$cache))
-		{
+		if (array_key_exists($key, static::$cache)) {
 			return static::$cache[$key];
 		}
 
@@ -147,12 +138,10 @@ class Config {
 		// If there are not at least two segments in the array, it means that the
 		// developer is requesting the entire configuration array to be returned.
 		// If that is the case, we'll make the item field "null".
-		if (count($segments) >= 2)
-		{
+		if (count($segments) >= 2) {
 			$parsed = array($bundle, $segments[0], implode('.', array_slice($segments, 1)));
 		}
-		else
-		{
+		else {
 			$parsed = array($bundle, $segments[0], null);
 		}
 
@@ -166,8 +155,7 @@ class Config {
 	 * @param  string  $file
 	 * @return bool
 	 */
-	public static function load($bundle, $file)
-	{
+	public static function load($bundle, $file) {
 		if (isset(static::$items[$bundle][$file])) return true;
 
 		// We allow a "config.loader" event to be registered which is responsible for
@@ -178,8 +166,7 @@ class Config {
 		// If configuration items were actually found for the bundle and file, we
 		// will add them to the configuration array and return true, otherwise
 		// we will return false indicating the file was not found.
-		if (count($config) > 0)
-		{
+		if (count($config) > 0) {
 			static::$items[$bundle][$file] = $config;
 		}
 
@@ -193,17 +180,14 @@ class Config {
 	 * @param  string  $file
 	 * @return array
 	 */
-	public static function file($bundle, $file)
-	{
+	public static function file($bundle, $file) {
 		$config = array();
 
 		// Configuration files cascade. Typically, the bundle configuration array is
 		// loaded first, followed by the environment array, providing the convenient
 		// cascading of configuration options across environments.
-		foreach (static::paths($bundle) as $directory)
-		{
-			if ($directory !== '' and file_exists($path = $directory.$file.EXT))
-			{
+		foreach (static::paths($bundle) as $directory) {
+			if ($directory !== '' and file_exists($path = $directory.$file.EXT)) {
 				$config = array_merge($config, require $path);
 			}
 		}
@@ -217,15 +201,13 @@ class Config {
 	 * @param  string  $bundle
 	 * @return array
 	 */
-	protected static function paths($bundle)
-	{
+	protected static function paths($bundle) {
 		$paths[] = Bundle::path($bundle).'config/';
 
 		// Configuration files can be made specific for a given environment. If an
 		// environment has been set, we will merge the environment configuration
 		// in last, so that it overrides all other options.
-		if ( ! is_null(Request::env()))
-		{
+		if ( ! is_null(Request::env())) {
 			$paths[] = $paths[count($paths) - 1].Request::env().'/';
 		}
 
