@@ -7,6 +7,7 @@
 	<a href="javascript: this.click();" id="global-taglev" class="global-taglev">
 	<?php
 		$statut = $issue->status ?? 99;
+		$config_app = require_once path('public') . 'config.app.php';
 		for ($x=1; $x<6; $x++) {
 			echo '<span style="color: '.$config_app['PriorityColors'][$x].'; font-size: 200%;">&#9899;</span>'.(($statut == $x) ? '<b>' : '').__('tinyissue.priority_desc_'.$x).(($statut == $x) ? '</b>' : '');
 		}

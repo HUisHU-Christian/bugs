@@ -149,6 +149,11 @@ code{
   background-color: #5f6074;
 }
 
+span.colstate {
+	font-size: 200%;
+	
+}
+
 footer{
 	position: fixed;
 	bottom: 0;

@@ -22,7 +22,7 @@
 	<a href="<?php echo Project::current()->to('issue/new'); ?>" class="newissue"><?php echo __('tinyissue.new_issue'); ?></a>
    <?php } ?> 
 
-	<span style="color: <?php echo $config_app['PriorityColors'][$issue->status]; ?>; font-size: 200%;">&#9899;
+	<span class="colstate" style="color: <?php echo $config_app['PriorityColors'][$issue->status]; ?>; ">&#9899;
 	<?php if(Auth::user()->permission('issue-modify') && $issue->status > 0 ): ?>
 	<a href="<?php echo $issue->to('edit'); ?>" class="edit-issue" style="font-size: 80%; font-weight: bold;"><?php echo $issue->title; ?></a>
 	<?php else: ?>
