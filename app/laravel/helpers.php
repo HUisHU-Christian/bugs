@@ -32,7 +32,6 @@ function __($key, $replacements = array(), $language = null) {
  */
 function dd($value) {
 	echo "<pre>";
-	//Patrick a ôté ici un var_dump
 	echo "Likes an error occured here.  Please report the app/laravel/helpers.php page which was reading value = ".$value.'<br />';
 	echo "</pre>";
 	die;

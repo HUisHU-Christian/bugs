@@ -1,6 +1,5 @@
 <?php namespace Laravel;
 
-
 /*
 |--------------------------------------------------------------------------
 | Bootstrap The Framework Core
@@ -186,6 +185,10 @@ $response->render();
 if (Config::get('session.driver') !== '') {
 	Session::save();
 }
+
+//echo 'Voici que nous sommes en ligne 189<br />';
+//var_dump(debug_backtrace());
+//exit();
 
 /*
 echo '
