@@ -36,10 +36,12 @@
 				<th><?php echo __('tinyissue.language') ; ?></th>
 				<td>
 					<select name="language">				
-						<?php $languages = User\Setting::get_languages($user->language) ; ?>
-						<?php foreach($languages as $language) :	 ?>
-							<option <?php echo $language['selected'] ; ?> value="<?php echo $language['name'] ; ?>"><?php echo $language['name'] ; ?></option>
-						<?php endforeach ; ?>
+						<?php
+							//Language has added in nov 2016
+							$Lng = scandir("application/language/");
+							$Not = array(".", "..", "all.php");
+							foreach ($Lng as $val) { if(!in_array(trim($val), $Not) && is_dir("application/language/".$val)) { echo '<option value="'.$val.'" '; if ($val == Input::old('language',$user->language)) { echo ' selected="selected" '; } echo '>'.$val.'</option>'; } }
+						?>
 					</select>
 				</td>
 			</tr>

@@ -11,7 +11,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 			<form method="get" action="">
 				<div class="filter-and-sorting_TAGS">
 					<div style="position: absolute; left: 0; width: 10%; font-weight: bold; text-align: right; top: 13px;">
-						<b><?php echo __('tinyissue.tags'); ?></b>
+						<b><?php echo __('tinyissue.tags'); ?></b><br /><span style="font-weight: lighter;">Joker : % *</span>
 					</div>
 					<div style="position: absolute; left: 11%; width: 85%;">
 							<?php echo Form::text('tags', Input::get('tags', ''), array('id' => 'tags')); ?>
@@ -76,10 +76,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 				if(!empty($row->tags)) {
 					echo '<div class="tags">';
 					foreach($row->tags()->order_by('tag', 'ASC')->get() as $tag) {
-						//2 sept 2021 recherche d'un bogue lié à ftcolor
 						echo '<label class="label" style="'.($tag->bgcolor ? ' background-color: ' . $tag->bgcolor . ';' : '').($tag->ftcolor ? ' color: ' . $tag->ftcolor . ';' : '').'">' . $tag->tag . '</label>';
-						//echo '<label class="label" style="'.($tag->bgcolor ? ' background-color: ' . $tag->bgcolor . ';' : '').($tag->ftcolor ? ' color: ' . $tag->ftcolor . ';' : '').'">' . $tag->tag . '</label>';
-						//echo '<label class="label" style="'.($tag->bgcolor ? ' background-color: ' . $tag->bgcolor . ';' : '').'">' . $tag->tag . '</label>';
 					}
 					echo '</div>';
 				} 
@@ -108,7 +105,6 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								////Calculations
 								$SizeXtot = 500;
 								$SizeX = $SizeXtot / 100;
-//								echo __('tinyissue.issue_percent').' : ';
 								$Etat = Todo::load_todo($row->id);
 								////Here we show the progress bar
 								if (is_object($Etat)) {
@@ -132,7 +128,6 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								if ($DurRelat >= 75 && @$Etat->weight <= 50 ) { $DurColor = 'red'; }
 								$TxtColor = ($DurColor == 'yellow') ? 'black' : 'white' ;
 								////Here we show to progress bar
-//								echo __('tinyissue.countdown').' ('.__('tinyissue.day').'s) : ';
 								echo '<div class="Percent2">';
 								echo '<div style="background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$row->duration : $Dur).'</div>';
 								if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.$row->duration.'</div>'; }

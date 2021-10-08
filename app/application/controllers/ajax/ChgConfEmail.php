@@ -57,14 +57,12 @@ if ($NumLigne["forma"] > 0) {
 }
 
 	//Textes reçus et devant être enregistrés
-	//if ($_POST["Enreg"]) {
-		$f = fopen($dir."intro.html", "w");
-		fputs($f, $_POST["intro"]);
-		fclose($f);
-		$f = fopen($dir."bye.html", "w");
-		fputs($f, $_POST["bye"]);
-		fclose($f);
-//	}
+	$f = fopen($dir."intro.html", "w");
+	fputs($f, $_POST["intro"]);
+	fclose($f);
+	$f = fopen($dir."bye.html", "w");
+	fputs($f, $_POST["bye"]);
+	fclose($f);
 
 	//Enregistrement du nouveau fichier corrigé
 	$NeoFichier = fopen($NomFichier, "w");
@@ -72,5 +70,5 @@ if ($NumLigne["forma"] > 0) {
 		fwrite($NeoFichier, $val);
 	}
 	fclose($NeoFichier);
-	echo 'Nous avons terminé\n '.$NumLigne["mail"].'\n'.$NumLigne["forma"].'';
+	echo 'Modification apportée avec succès.  /  Successfully updated.';
 ?>

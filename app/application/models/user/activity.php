@@ -29,7 +29,7 @@ class Activity extends \Eloquent {
 	* @param  string  $data
 	* @return bool
 	*/
-	public static function add($type_id = 18, $parent_id, $item_id = null, $action_id = null, $data = null) {
+	public static function add($type_id = 18, $parent_id = 0, $item_id = null, $action_id = null, $data = null) {
 		$insert = array(
 			'type_id' => $type_id,
 			'parent_id' => $parent_id,

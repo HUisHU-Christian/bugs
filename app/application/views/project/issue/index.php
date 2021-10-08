@@ -226,7 +226,7 @@
 				<div style="text-align: right; width: 98%; margin-top: -25px;"><br /><br /></div>
 			<?php  if (Auth::user()->role_id != 1) { ?>
 					<!-- Tags modification  -->
-					<span style="float:left; font-weight: bold; margin: 7px;"><?php echo  __('tinyissue.tags'); ?></span>
+					<span style="float:left; font-weight: bold; margin: 7px;"><?php echo  __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span></span>
 					<div style="width: 73%; float: left">
 						<?php
 							$TAGS = new Project_Issue_Controller();
@@ -292,6 +292,7 @@
 
 
 <script type="text/javascript">
+var path = '<?php echo $url; ?>app/application/controllers/ajax/';
 var d = new Date();
 var t = d.getTime();
 var AllTags = "";
@@ -303,9 +304,7 @@ function AddTag (Quel,d) {
 	var IDcomment = 'comment' + new Date().getTime();
 	var xhttpTAG = new XMLHttpRequest();
 	var NextPage = '<?php echo $url.substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'project')); ?>/retag?Modif=' + Modif + '&Quel=' + Quel;
-//	alert("Nous entrons ici en AddTag --- c'est la ligne 308 avec NextPage = " + NextPage);
 	xhttpTAG.onreadystatechange = function() {
-//	alert("Voici " + this.readyState + " && " + this.status);
 	if (this.readyState == 4 && this.status == 200) {
 		if (xhttpTAG.responseText != '' ) {
 				var adLi = document.createElement("LI");
@@ -318,6 +317,19 @@ function AddTag (Quel,d) {
 	};
 	xhttpTAG.open("GET", NextPage, true);
 	xhttpTAG.send(); 
+
+	var xhttpMAIL = new XMLHttpRequest();
+	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsADD&src=tinyissue";
+	xhttpMAIL.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (xhttpMAIL.responseText != '' ) {
+				alert("Courriels envoyés avec retour = \n" + this.responseText);
+			}
+		}
+	};
+	xhttpMAIL.open("GET", NextPage, true);
+	xhttpMAIL.send(); 
+
 }
 
 function Following(Quoi, etat) {
@@ -330,7 +342,7 @@ function Following(Quoi, etat) {
 		document.getElementById('img_following').src = "<?php echo \URL::home();?>app/assets/images/layout/icon-comments_1.png";
 	}
 	var xhttp = new XMLHttpRequest();
-	var NextPage = '<?php echo $url; ?>app/application/controllers/ajax/Following.php?Quoi=1&Qui=<?php echo \Auth::user()->id; ?>&Quel=<?php echo Project\Issue::current()->id; ?>&Project=<?php echo Project::current()->id; ?>&Etat=' + ((etat) ? 0 : 1);
+	var NextPage = path + 'Following.php?Quoi=1&Qui=<?php echo \Auth::user()->id; ?>&Quel=<?php echo Project\Issue::current()->id; ?>&Project=<?php echo Project::current()->id; ?>&Etat=' + ((etat) ? 0 : 1);
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			if (xhttp.responseText != '' ) {
@@ -421,6 +433,18 @@ function OteTag(Quel) {
 	};
 	xhttpTAG.open("GET", NextPage, true);
 	xhttpTAG.send(); 
+
+	var xhttpMAIL = new XMLHttpRequest();
+	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsOTE&src=tinyissue";
+	xhttpMAIL.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (xhttpMAIL.responseText != '' ) {
+				alert("Courriels envoyés avec retour = \n" + this.responseText);
+			}
+		}
+	};
+	xhttpMAIL.open("GET", NextPage, true);
+	xhttpMAIL.send(); 
 }
 
 function Reassignment (Project, Prev, Suiv, Issue) {
@@ -461,8 +485,21 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 	};
 	xhttpASGMT.open("GET", NextPage, true);
 	xhttpASGMT.send(); 
+
+	var xhttpMAIL = new XMLHttpRequest();
+	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=assigned&src=tinyissue";
+	xhttpMAIL.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (xhttpMAIL.responseText != '' ) {
+				alert("Courriels envoyés avec retour = \n" + this.responseText);
+			}
+		}
+	};
+	xhttpMAIL.open("GET", NextPage, true);
+	xhttpMAIL.send(); 
 }
 <?php
+	$rendu = 0;
 	$wysiwyg = Config::get('application.editor');
 	if (trim(@$wysiwyg['directory']) != '') {
 		if (file_exists($wysiwyg['directory']."/Bugs_code/showeditor.js")) {
@@ -470,11 +507,12 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 			if ($wysiwyg['name'] == 'ckeditor') {
 				echo "
 				setTimeout(function() {
-					showckeditor ('comment');
+					showckeditor ('comment', ".$rendu++.");
 				} , 567);
 				";
 			}
 		} 
 	} 
 ?>
+
 </script>

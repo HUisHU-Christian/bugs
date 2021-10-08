@@ -3,18 +3,20 @@ $(function(){
    if($('.global-notice').html().length > 0){
 
    	$('.global-notice').slideDown();
+		
+   	setTimeout(function(){  $('.global-notice').slideUp(); }, 7500);
 
-   	setTimeout(function(){
-   		$('.global-notice').slideUp();
-   	}, 7500);
-
-   	$('.global-notice').live('click', function(){
-   		$('.global-notice').slideUp();
-   	});
+   	$('.global-notice').live('click', function(){ $('.global-notice').slideUp(); });
    }
 });
 
 var saving = false;
+
+function AffichonsVieux(url,id) {
+	url = url.substr(0, url.indexOf('project'));
+	url = url + "app/application/controllers/ajax/comment_viewDeleted.php?Quel=" + id;
+	window.open(url,'BUGS: review deleted comment','width=400,height=300,left=300,top=200,toolbar=no,channelmode=no,location=no,location=no,resizable=yes,status=no,titlebar=no',false);
+}
 
 function addUserProject(project_id, user, cettepage) {
 	var Exactement = siteurl + "app/application/controllers/ajax/ProjectAddMbr.php";

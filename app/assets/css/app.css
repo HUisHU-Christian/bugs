@@ -158,21 +158,28 @@ footer{
 }
 
 /* Notices */
-.global-notice{
-	min-width: 30%;
-	position: absolute;
-	top: 55%; left: 30%;
+.global-notic, .global-taglev{
+	align-items: center;
 	background: #222727;
-	font-size: 15px;
-	color: #f8e81c;
-	text-decoration: none;
-	text-align: center;
-	opacity: .85;
-	padding:  20px 0;
-	display: none;
-	z-index: 1000;
 	border-radius: 15px;
+	color: #f8e81c;
+	display: none;
+	/* flex-direction: column; */
+	font-size: 15px;
+	justify-content: center;
+	min-width: 33%;
+	opacity: .85;
+	padding:  20px;
+	position: fixed;
+	text-align: center;
+	text-decoration: none;
+	top: 45%; left: 33%; 
+	z-index: 1000;
 }
+.hide {
+	display: none;
+}
+
 .global-notice.global-error{
 	background: #de2e2e!important;
 }
@@ -201,7 +208,7 @@ footer{
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;
 }
-.global-saving:hover, .global-notice:hover{
+.global-saving:hover, .global-notice:hover, .global-taglev:hover{
 	text-decoration: none;
 }
 
@@ -1010,6 +1017,13 @@ td.project-user, th.project-user {
 }
 .issue-discussion li .topbar .edit-comment a{
 	background: url('../images/layout/icon-edit.png') no-repeat;
+	width: 16px; height: 15px;
+}
+.issue-discussion li .topbar .edit-comment a:hover{
+	background: url('../images/layout/icon-edit_1.png') no-repeat;
+}
+.deleted-comment a{
+	background: url('../images/layout/icon-comments_2.png') no-repeat;
 	width: 16px; height: 15px;
 }
 .issue-discussion li .issue{

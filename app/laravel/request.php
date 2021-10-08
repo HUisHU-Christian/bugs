@@ -28,8 +28,7 @@ class Request {
 	 *
 	 * @return string
 	 */
-	public static function uri()
-	{
+	public static function uri() {
 		return URI::current();
 	}
 
@@ -38,8 +37,7 @@ class Request {
 	 *
 	 * @return string
 	 */
-	public static function method()
-	{
+	public static function method() {
 		$method = static::foundation()->getMethod();
 
 		return ($method == 'HEAD') ? 'GET' : $method;
@@ -57,8 +55,7 @@ class Request {
 	 * @param  mixed   $default
 	 * @return mixed
 	 */
-	public static function header($key, $default = null)
-	{
+	public static function header($key, $default = null) {
 		return array_get(static::foundation()->headers->all(), $key, $default);
 	}
 
@@ -67,8 +64,7 @@ class Request {
 	 *
 	 * @return array
 	 */
-	public static function headers()
-	{
+	public static function headers() {
 		return static::foundation()->headers->all();
 	}
 
@@ -79,8 +75,7 @@ class Request {
 	 * @param  mixed   $default
 	 * @return string
 	 */
-	public static function server($key = null, $default = null)
-	{
+	public static function server($key = null, $default = null) {
 		return array_get(static::foundation()->server->all(), strtoupper($key), $default);
 	}
 
@@ -89,8 +84,7 @@ class Request {
 	 *
 	 * @return bool
 	 */
-	public static function spoofed()
-	{
+	public static function spoofed() {
 		return ! is_null(static::foundation()->get(Request::spoofer));
 	}
 
@@ -100,8 +94,7 @@ class Request {
 	 * @param  mixed   $default
 	 * @return string
 	 */
-	public static function ip($default = '0.0.0.0')
-	{
+	public static function ip($default = '0.0.0.0') {
 		$client_ip = static::foundation()->getClientIp();
 		return $client_ip === NULL ? $default : $client_ip;
 	}
@@ -111,8 +104,7 @@ class Request {
 	 *
 	 * @return array
 	 */
-	public static function accept()
-	{
+	public static function accept() {
 		return static::foundation()->getAcceptableContentTypes();
 	}
 
@@ -122,8 +114,7 @@ class Request {
 	 * @param  string  $type
 	 * @return bool
 	 */
-	public static function accepts($type)
-	{
+	public static function accepts($type) {
 		return in_array($type, static::accept());
 	}
 
@@ -132,8 +123,7 @@ class Request {
 	 *
 	 * @return array
 	 */
-	public static function languages()
-	{
+	public static function languages() {
 		return static::foundation()->getLanguages();
 	}
 
@@ -142,8 +132,7 @@ class Request {
 	 *
 	 * @return bool
 	 */
-	public static function secure()
-	{
+	public static function secure() {
 		return static::foundation()->isSecure() and Config::get('application.ssl');
 	}
 
@@ -154,8 +143,7 @@ class Request {
 	 *
 	 * @return bool
 	 */
-	public static function forged()
-	{
+	public static function forged() {
 		return Input::get(Session::csrf_token) !== Session::token();
 	}
 
@@ -164,8 +152,7 @@ class Request {
 	 *
 	 * @return bool
 	 */
-	public static function ajax()
-	{
+	public static function ajax() {
 		return static::foundation()->isXmlHttpRequest();
 	}
 
@@ -174,8 +161,7 @@ class Request {
 	 *
 	 * @return string
 	 */
-	public static function referrer()
-	{
+	public static function referrer() {
 		return static::foundation()->headers->get('referer');
 	}
 	
@@ -184,8 +170,7 @@ class Request {
 	 *
 	 * @return int
 	 */
-	public static function time()
-	{
+	public static function time() {
 		return (int) LARAVEL_START;
 	}
 
@@ -194,8 +179,7 @@ class Request {
 	 *
 	 * @return bool
 	 */
-	public static function cli()
-	{
+	public static function cli() {
 		return defined('STDIN');
 	}
 
@@ -204,8 +188,7 @@ class Request {
 	 *
 	 * @return string|null
 	 */
-	public static function env()
-	{
+	public static function env() {
 		return static::foundation()->server->get('LARAVEL_ENV');
 	}
 
@@ -215,8 +198,7 @@ class Request {
 	 * @param  string  $env
 	 * @return void
 	 */
-	public static function set_env($env)
-	{
+	public static function set_env($env) {
 		static::foundation()->server->set('LARAVEL_ENV', $env);
 	}
 
@@ -226,8 +208,7 @@ class Request {
 	 * @param  string  $env
 	 * @return bool
 	 */
-	public static function is_env($env)
-	{
+	public static function is_env($env) {
 		return static::env() === $env;
 	}
 
@@ -238,8 +219,7 @@ class Request {
 	 * @param  string       $uri
 	 * @return string|null
 	 */
-	public static function detect_env(array $environments, $uri)
-	{
+	public static function detect_env(array $environments, $uri) {
 		foreach ($environments as $environment => $patterns)
 		{
 			// Essentially we just want to loop through each environment pattern
@@ -260,8 +240,7 @@ class Request {
 	 *
 	 * @return Route
 	 */
-	public static function route()
-	{
+	public static function route() {
 		return static::$route;
 	}
 
@@ -270,8 +249,7 @@ class Request {
 	 *
 	 * @return HttpFoundation\Request
 	 */
-	public static function foundation()
-	{
+	public static function foundation() {
 		return static::$foundation;
 	}
 
@@ -282,8 +260,7 @@ class Request {
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
-	public static function __callStatic($method, $parameters)
-	{
+	public static function __callStatic($method, $parameters) {
 		return call_user_func_array(array(static::foundation(), $method), $parameters);
 	}
 

@@ -18,7 +18,7 @@ CREATE TABLE `projects_links` (
   `desactivated` date DEFAULT NULL,
   PRIMARY KEY (`id_link`),
   KEY `id_project_category_desactivated_created` (`id_project`,`category`,`desactivated`,`created`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 "# Create ToDo Table "

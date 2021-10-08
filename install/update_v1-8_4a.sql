@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `update_history` (
   `DteRelease` datetime DEFAULT NULL,
   `DteInstall` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 #--
 
 
@@ -27,4 +27,4 @@ CREATE TABLE IF NOT EXISTS `following` (
   `attached` tinyint(2) NOT NULL DEFAULT 1,
   `tags` tinyint(2) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

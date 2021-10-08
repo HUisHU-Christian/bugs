@@ -8,7 +8,7 @@ class Ajax_Tags_Controller extends Base_Controller {
 		$term = Input::get('term', '');
 		$term = (in_array($term, array("*"))) ? '%' : $term;
 		if ($term) {
-			$tags = Tag::where('tag', 'LIKE', '%' . $term . '%')->get();
+			$tags = Tag::where('tag', 'LIKE', '%' . $term . '%')->order_by('tag', 'ASC')->get();
 			foreach ($tags as $tag) {
 				if ($type == 'filter' && strpos($tag->tag, ':') !== false) {
 					$tag_prefix = substr($tag->tag, 0, strpos($tag->tag, ':'));

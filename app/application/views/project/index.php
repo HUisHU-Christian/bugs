@@ -1,6 +1,6 @@
 <?php 
 	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
-		echo '<script>document.location.href="'.URL::to().'";</script>';
+//		echo '<script>document.location.href="'.URL::to().'";</script>';
 	}
 ?>
 <h3>

@@ -28,7 +28,8 @@
 			</tr>
 
 			<tr>
-				<th><?php echo __('tinyissue.tags'); ?></th>
+				<th><?php echo __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span>
+				</th>
 				<td>
 					<?php echo Form::text('tags', Input::old('tags', $issue_tags), array('id' => 'tags')); ?>
 					<?php echo $errors->first('tags', '<span class="error">:message</span>'); ?>
@@ -41,6 +42,7 @@
 						});
 					});
 					</script>
+					&nbsp;&nbsp;&nbsp;
 				</td>
 			</tr>
 			<tr>
