@@ -18,6 +18,7 @@
 		echo '<span id="span_statut_'.$x.'"><span class="Affcolstate" style="color: '.$config_app['PriorityColors'][$x].'; font-size: 200%;">&#9899;</span>'.(($statut == $x) ? '<b>' : '').__('tinyissue.priority_desc_'.$x).(($statut == $x) ? '</b>' : '');
 		echo '</span>';
 	?>
+	
 	</div>
 	<br />
 <footer>

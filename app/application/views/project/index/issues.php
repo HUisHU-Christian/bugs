@@ -97,12 +97,10 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 						echo ' - '.__('tinyissue.assigned_to'); 
 						echo '&nbsp;&nbsp;<strong>'.$row->assigned->firstname . ' ' . $row->assigned->lastname.'</strong>';
 					} 
-					echo '</div>
-					';
+					echo '</div>';
 
 					if (@$_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
-						echo '<br /><br />
-						';
+						echo '<br /><br />';
 								//Percentage of work done
 								////Calculations
 								$SizeXtot = 500;
@@ -113,8 +111,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 									echo '<div class="Percent2">';
 									echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.$Etat->weight.'%</div>';
 									echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$Etat->weight.'%; width: '.(100-$Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.(100-$Etat->weight).'%</div>';
-									echo '</div>
-									';
+									echo '</div>';
 								}
 						
 								//Time's going fast!
@@ -134,20 +131,17 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								echo '<div class="Percent2">';
 								echo '<div style="background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$row->duration : $Dur).'</div>';
 								if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.$row->duration.'</div>'; }
-								echo '</div>
-								';
+								echo '</div>';
 					}
 					echo '<br clear="all" />';
 					echo '</div>';
-					echo '</li>
-					';
+					echo '</li>';
 	
 				}
 				echo '</ul>';
 			 }
 			 if (Auth::user()->role_id != 1) { 
-				echo '<div id="sortable-msg">'.__('tinyissue.sortable_issue_howto').'</div>
-				';
+				echo '<div id="sortable-msg">'.__('tinyissue.sortable_issue_howto').'</div>';
 			}
 		 ?>
 		<div id="sortable-save"><input id="sortable-save-button" class="button primary" type="submit" value="<?php echo __('tinyissue.save'); ?>" /></div>
