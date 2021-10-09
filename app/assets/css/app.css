@@ -158,7 +158,7 @@ footer{
 }
 
 /* Notices */
-.global-notic, .global-taglev{
+.global-notice, div.taglev {
 	align-items: center;
 	background: #222727;
 	border-radius: 15px;
@@ -176,8 +176,25 @@ footer{
 	top: 45%; left: 33%; 
 	z-index: 1000;
 }
+
+div.taglev {
+	text-align: left;
+}
+
+.colstate, span.Affcolstate {
+	font-size: 300%;
+}
+
+.colstate:hover + div.taglev {
+	display: block;
+}
+
 .hide {
 	display: none;
+}
+
+.global-error{
+	background: #de2e2e;
 }
 
 .global-notice.global-error{
@@ -208,7 +225,7 @@ footer{
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;
 }
-.global-saving:hover, .global-notice:hover, .global-taglev:hover{
+.global-saving:hover, .global-notice:hover, {
 	text-decoration: none;
 }
 
