@@ -139,6 +139,8 @@ class Response {
         if (!$this->headers->has('Date')) {
             $this->setDate(new \DateTime(null, new \DateTimeZone('UTC')));
         }
+//echo '<br /><br />----------------Response<br />';
+//var_dump(debug_backtrace());
     }
 
     /**

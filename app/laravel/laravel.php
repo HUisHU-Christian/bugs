@@ -1,6 +1,5 @@
 <?php namespace Laravel;
 
-
 /*
 |--------------------------------------------------------------------------
 | Bootstrap The Framework Core
@@ -28,11 +27,13 @@ use Router;
 */
 
 set_exception_handler(function($e) {
+	exit();
 	require_once path('sys').'error'.EXT;
 	Error::exception($e);
 });
 
 set_error_handler(function($code, $error, $file, $line) {
+	exit();
 	require_once path('sys').'error'.EXT;
 	Error::native($code, $error, $file, $line);
 });
@@ -186,26 +187,6 @@ $response->render();
 if (Config::get('session.driver') !== '') {
 	Session::save();
 }
-
-/*
-echo '
-Nous sommes ici en ligne 87 de laravel.php';
-echo '<br /><br />';
-echo '
-<b>Le tableau-objet reponse: </b> <br />';
-var_dump($response);
-echo '<br /><br />';
-echo '
-<b>Le cookies sont</b>: <br />';
-var_dump($_COOKIE);
-echo '
-<br /><br />';
-var_dump(Bundle::$bundles);
-echo '<br /><br />';
-var_dump($languages);
-echo '<br /><br />';
-//exit();
-*/
 
 /*
 |--------------------------------------------------------------------------
