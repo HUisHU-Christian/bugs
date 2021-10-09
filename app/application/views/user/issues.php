@@ -32,7 +32,7 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 					} 
 					?>
 
-					<a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?><br /><span class="colstate" style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>; ">&#9899;</span></span></a>
+					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>;">&#9899;</span></div>
 					<div class="data">
 						<a href="<?php echo $row->to(); ?>"><?php echo $row->title; ?></a>
 						<div class="info">

@@ -17,7 +17,7 @@
 			foreach ($lanes[$col] as $lane) {
 				echo '<div class="todo-list-item '.(($col > 0) ? ' draggable' : '').'" id="todo-id-'.$lane->id.'" data-issue-id="'.$lane->id.'">';
 				echo '	<div class="todo-list-item-inner">';
-				echo '		<span><span class="colstate" style="color: '.$config_app['PriorityColors'][$lane->status].'; ">&#9899;</span>#'. $lane->id.'</span>';
+				echo '		<span><span class="colstate" style="color: '.$config_app['PriorityColors'][$lane->status].';">&#9899;</span>#'. $lane->id.'</span>';
 				echo '			<a href="'.(\URL::to('project/' . $lane->project_id . '/issue/' . $lane->id)).'">'.$lane->title.'</a>&nbsp;<span>( '.$lane->weight.'%)</span>';
 				echo '			<a class="todo-button del" title="'. __('tinyissue.todos_remove').'" data-issue-id="'.$lane->id.'" href="#">[X]</a>';
 				echo '		<div>'.$lane->name.'</div>';

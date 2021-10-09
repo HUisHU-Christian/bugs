@@ -41,8 +41,8 @@
 				$Etat =  ($verActu == $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
 				file_put_contents ("../install/get_updates_list", $Etat);
 			}
-			$styleAdmin = file_get_contents ("../install/get_updates_list");
 
+			$styleAdmin = file_get_contents ("../install/get_updates_list");
 			$wysiwyg = Config::get('application.editor');
 			if (trim($wysiwyg['BasePage']) != '') {
 				if (file_exists($wysiwyg['directory'].'/Bugs_code/header.php')) { include_once $wysiwyg['directory'].'/Bugs_code/header.php'; }

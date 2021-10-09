@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 /* Redirect if we have not installed */
 if(!file_exists(__DIR__ . '/config.app.php')) {
 	echo '<script>document.location.href="./install/";</script>';
