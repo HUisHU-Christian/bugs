@@ -158,7 +158,7 @@ footer{
 }
 
 /* Notices */
-.global-notice, div.taglev {
+.global-notice, .taglev {
 	align-items: center;
 	background: #222727;
 	border-radius: 15px;
@@ -177,7 +177,7 @@ footer{
 	z-index: 1000;
 }
 
-div.taglev {
+.taglev {
 	text-align: left;
 }
 
@@ -185,7 +185,7 @@ div.taglev {
 	font-size: 300%;
 }
 
-.colstate:hover + div.taglev {
+.colstate:hover + .taglev {
 	display: block;
 }
 
