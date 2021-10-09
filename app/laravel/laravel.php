@@ -188,30 +188,6 @@ if (Config::get('session.driver') !== '') {
 	Session::save();
 }
 
-//echo 'Voici que nous sommes en ligne 189<br />';
-//var_dump(debug_backtrace());
-//exit();
-
-/*
-echo '
-Nous sommes ici en ligne 87 de laravel.php';
-echo '<br /><br />';
-echo '
-<b>Le tableau-objet reponse: </b> <br />';
-var_dump($response);
-echo '<br /><br />';
-echo '
-<b>Le cookies sont</b>: <br />';
-var_dump($_COOKIE);
-echo '
-<br /><br />';
-var_dump(Bundle::$bundles);
-echo '<br /><br />';
-var_dump($languages);
-echo '<br /><br />';
-//exit();
-*/
-
 /*
 |--------------------------------------------------------------------------
 | Send The Response To The Browser

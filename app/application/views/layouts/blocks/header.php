@@ -32,9 +32,10 @@
 		<?php echo Asset::styles(); ?>
 		<?php echo Asset::scripts(); ?>
 		<?php
-			//Testons si l'usager en ligne en faisant ping 8.8.8.8
-			$pingresult = exec("/bin/ping -n 3 8.8.8.8", $outcome, $status);
-			$EnLigne = (0 == $status) ? true : false;
+			//Testons de savoir si l'usager en ligne en faisant ping 8.8.8.8
+			$status = 0;
+			$pingresult = shell_exec('ping -c 1 -w 1 8.8.8.8');
+			$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
 			if (date("Y-m-d", fileatime ("../install/get_updates_list")) != date("Y-m-d") && $EnLigne) {
 				include "../app/application/libraries/checkVersion.php";
 				$Etat =  ($verActu == $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
