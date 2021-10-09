@@ -1,6 +1,5 @@
 <?php namespace Laravel;
 
-use Router;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +14,7 @@ use Router;
 */
 
 require 'core.php';
+use Router;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,13 +27,10 @@ require 'core.php';
 |
 */
 
-set_exception_handler(function($e)
-{
+set_exception_handler(function($e) {
 	require_once path('sys').'error'.EXT;
-
 	Error::exception($e);
 });
-
 
 set_error_handler(function($code, $error, $file, $line) {
 	require_once path('sys').'error'.EXT;
@@ -83,8 +80,8 @@ Bundle::start(DEFAULT_BUNDLE);
 | to explicitly start them within the application.
 |
 */
-foreach (Bundle::$bundles as $bundle => $config)
-{
+
+foreach (Bundle::$bundles as $bundle => $config) {
 	if ($config['auto']) Bundle::start($bundle);
 }
 
@@ -99,8 +96,7 @@ foreach (Bundle::$bundles as $bundle => $config)
 |
 */
 
-Router::register('*', '(:all)', function()
-{
+Router::register('*', '(:all)', function() {
 	return Event::first('404');
 });
 
@@ -131,17 +127,14 @@ $languages[] = Config::get('application.language');
 | URI we'll pass to the router to not include the lang segment.
 |
 */
-foreach ($languages as $language)
-{
-	if (preg_match("#^{$language}(?:$|/)#i", $uri))
-	{
+foreach ($languages as $language) {
+	if (preg_match("#^{$language}(?:$|/)#i", $uri)) {
 		Config::set('application.language', $language);
-
 		$uri = trim(substr($uri, strlen($language)), '/'); break;
 	}
 }
 
-if ($uri == '') $uri = '/';
+if ($uri == '') { $uri = '/'; }
 
 URI::$uri = $uri;
 
@@ -157,7 +150,16 @@ URI::$uri = $uri;
 */
 Request::$route = Router::route(Request::method(), $uri);
 
+/*
+echo '
+<br /><br />=================  Avant  =============================<br /><br />
+';
+*/
 $response = Request::$route->call();
+/*
+echo '
+<br /><br />=================  Après  =============================<br /><br />';
+*/
 
 /*
 |--------------------------------------------------------------------------
@@ -169,7 +171,6 @@ $response = Request::$route->call();
 | content and sets the raw string result as the new response.
 |
 */
-
 $response->render();
 
 /*
@@ -182,11 +183,29 @@ $response->render();
 | the session cookie in the cookie jar to be sent to the user.
 |
 */
-
-if (Config::get('session.driver') !== '')
-{
+if (Config::get('session.driver') !== '') {
 	Session::save();
 }
+
+/*
+echo '
+Nous sommes ici en ligne 87 de laravel.php';
+echo '<br /><br />';
+echo '
+<b>Le tableau-objet reponse: </b> <br />';
+var_dump($response);
+echo '<br /><br />';
+echo '
+<b>Le cookies sont</b>: <br />';
+var_dump($_COOKIE);
+echo '
+<br /><br />';
+var_dump(Bundle::$bundles);
+echo '<br /><br />';
+var_dump($languages);
+echo '<br /><br />';
+//exit();
+*/
 
 /*
 |--------------------------------------------------------------------------

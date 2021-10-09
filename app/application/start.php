@@ -145,8 +145,7 @@ Event::listen(Lang::loader, function($bundle, $language, $file) {
 |
 */
 
-if (Config::get('application.profiler'))
-{
+if (Config::get('application.profiler')) {
 	Profiler::attach();
 }
 
@@ -189,7 +188,6 @@ date_default_timezone_set(Config::get('application.timezone'));
 |
 */
 
-if ( ! Request::cli() and Config::get('session.driver') !== '')
-{
+if ( ! Request::cli() and Config::get('session.driver') !== '') {
 	Session::load();
 }

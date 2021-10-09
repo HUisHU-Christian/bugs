@@ -18,8 +18,7 @@ namespace Symfony\Component\HttpFoundation;
  *
  * @api
  */
-class ResponseHeaderBag extends HeaderBag
-{
+class ResponseHeaderBag extends HeaderBag {
     const COOKIES_FLAT           = 'flat';
     const COOKIES_ARRAY          = 'array';
 
@@ -43,8 +42,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function __construct(array $headers = array())
-    {
+    public function __construct(array $headers = array()) {
         parent::__construct($headers);
 
         if (!isset($this->headers['cache-control'])) {
@@ -55,8 +53,7 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * {@inheritdoc}
      */
-    public function __toString()
-    {
+    public function __toString() {
         $cookies = '';
         foreach ($this->getCookies() as $cookie) {
             $cookies .= 'Set-Cookie: SameSite: Strict; '.$cookie."\r\n";
@@ -70,8 +67,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function replace(array $headers = array())
-    {
+    public function replace(array $headers = array()) {
         parent::replace($headers);
 
         if (!isset($this->headers['cache-control'])) {
@@ -84,8 +80,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function set($key, $values, $replace = true)
-    {
+    public function set($key, $values, $replace = true) {
         parent::set($key, $values, $replace);
 
         // ensure the cache-control header has sensible defaults
@@ -101,8 +96,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function remove($key)
-    {
+    public function remove($key) {
         parent::remove($key);
 
         if ('cache-control' === strtr(strtolower($key), '_', '-')) {
@@ -113,16 +107,14 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * {@inheritdoc}
      */
-    public function hasCacheControlDirective($key)
-    {
+    public function hasCacheControlDirective($key) {
         return array_key_exists($key, $this->computedCacheControl);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCacheControlDirective($key)
-    {
+    public function getCacheControlDirective($key) {
         return array_key_exists($key, $this->computedCacheControl) ? $this->computedCacheControl[$key] : null;
     }
 
@@ -133,9 +125,13 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function setCookie(Cookie $cookie)
-    {
+    public function setCookie(Cookie $cookie) {
+    	setcookie($cookie->getName(), $cookie->getValue(), ['expires' => $cookie->getExpiresTime(), 'path' => $cookie->getPath(), 'domain' => $cookie->getDomain(), 'secure' => $cookie->isSecure(), 'httponly' => true, 'samesite' => 'Strict']);
+//    	var_dump($cookie);
         $this->cookies[$cookie->getDomain()][$cookie->getPath()][$cookie->getName()] = $cookie;
+//        echo '
+//        	En ResponseHeaderBag.php ligne 131
+//        	';
     }
 
     /**
@@ -147,11 +143,11 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function removeCookie($name, $path = '/', $domain = null)
-    {
+    public function removeCookie($name, $path = '/', $domain = null) {
         if (null === $path) {
             $path = '/';
         }
+        echo 'En soustraction de cookie, ligne 147<br />';
 
         unset($this->cookies[$domain][$path][$name]);
 
@@ -175,8 +171,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function getCookies($format = self::COOKIES_FLAT)
-    {
+    public function getCookies($format = self::COOKIES_FLAT) {
         if (!in_array($format, array(self::COOKIES_FLAT, self::COOKIES_ARRAY))) {
             throw new \InvalidArgumentException(sprintf('Format "%s" invalid (%s).', $format, implode(', ', array(self::COOKIES_FLAT, self::COOKIES_ARRAY))));
         }
@@ -206,8 +201,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @api
      */
-    public function clearCookie($name, $path = '/', $domain = null)
-    {
+    public function clearCookie($name, $path = '/', $domain = null) {
         $this->setCookie(new Cookie($name, null, 1, $path, $domain));
     }
 
@@ -225,8 +219,7 @@ class ResponseHeaderBag extends HeaderBag
      * @throws \InvalidArgumentException
      * @see RFC 6266
      */
-    public function makeDisposition($disposition, $filename, $filenameFallback = '')
-    {
+    public function makeDisposition($disposition, $filename, $filenameFallback = '') {
         if (!in_array($disposition, array(self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE))) {
             throw new \InvalidArgumentException(sprintf('The disposition must be either "%s" or "%s".', self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE));
         }
@@ -267,8 +260,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @return string
      */
-    protected function computeCacheControlValue()
-    {
+    protected function computeCacheControlValue() {
         if (!$this->cacheControl && !$this->has('ETag') && !$this->has('Last-Modified') && !$this->has('Expires')) {
             return 'no-cache';
         }

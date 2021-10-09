@@ -105,8 +105,7 @@ class Response {
 	 * @param  array            $headers
 	 * @return Response
 	 */
-	public static function eloquent($data, $status = 200, $headers = array())
-	{
+	public static function eloquent($data, $status = 200, $headers = array()) {
 		$headers['Content-Type'] = 'application/json; charset=utf-8';
 
 		return new static(eloquent_to_json($data), $status, $headers);
@@ -131,8 +130,7 @@ class Response {
 	 * @param  array     $data
 	 * @return Response
 	 */
-	public static function error($code, $data = array())
-	{
+	public static function error($code, $data = array()) {
 		return new static(View::make('error.'.$code, $data), $code);
 	}
 
@@ -152,8 +150,7 @@ class Response {
 	 * @param  array     $headers
 	 * @return Response
 	 */
-	public static function download($path, $name = null, $headers = array())
-	{
+	public static function download($path, $name = null, $headers = array()) {
 		if (is_null($name)) $name = basename($path);
 
 		// We'll set some sensible default headers, but merge the array given to
@@ -185,8 +182,7 @@ class Response {
 	 * @param  string  $file
 	 * @return string
 	 */
-	public function disposition($file)
-	{
+	public function disposition($file) {
 		$type = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
 
 		return $this->foundation->headers->makeDisposition($type, $file);
@@ -198,13 +194,11 @@ class Response {
 	 * @param  mixed     $response
 	 * @return Response
 	 */
-	public static function prepare($response)
-	{
+	public static function prepare($response) {
 		// We will need to force the response to be a string before closing
 		// the session since the developer may be utilizing the session
 		// within the view, and we can't age it until rendering.
-		if ( ! $response instanceof Response)
-		{
+		if ( ! $response instanceof Response) {
 			$response = new static($response);
 		}
 
@@ -216,12 +210,9 @@ class Response {
 	 *
 	 * @return void
 	 */
-	public function send()
-	{
+	public function send() {
 		$this->cookies();
-
 		$this->foundation->prepare(Request::foundation());
-
 		$this->foundation->send();
 	}
 
@@ -230,17 +221,21 @@ class Response {
 	 *
 	 * @return string
 	 */
-	public function render()
-	{
+	public function render() {
+/*
+		echo '
+		Voici la ligne 227 de app/laravel/response.php';
+		echo '<br /><br />';
+		var_dump($this->content);
+		echo '
+		<br />';
+*/
 		// If the content is a stringable object, we'll go ahead and call
 		// the toString method so that we can get the string content of
 		// the content object. Otherwise we'll just cast to string.
-		if (str_object($this->content))
-		{
+		if (str_object($this->content)) {
 			$this->content = $this->content->__toString();
-		}
-		else
-		{
+		} else {
 			$this->content = (string) $this->content;
 		}
 
@@ -257,8 +252,7 @@ class Response {
 	 *
 	 * @return void
 	 */
-	public function send_headers()
-	{
+	public function send_headers() {
 		$this->foundation->prepare(Request::foundation());
 
 		$this->foundation->sendHeaders();
@@ -279,6 +273,9 @@ class Response {
 			$config = array_values($cookie);
 			//$this->headers()->setCookie($ref->newInstanceArgs(array($config[0], $config[1], intval($config[2]), $config[3], boolval($config[4]), boolval($config[5]), boolval($config[6]), 'strict')));
 			//If the line bellow (282) provoques an error, use the line up (280) and set remarked ( // ) line 282
+//			echo '
+//			Nous sommes en ligne 277 de responses.php
+//			<br />';
 			$this->headers()->setCookie($ref->newInstanceArgs($config));
 		}
 	}
@@ -291,8 +288,7 @@ class Response {
 	 * @param  string    $value
 	 * @return Response
 	 */
-	public function header($name, $value)
-	{
+	public function header($name, $value) {
 		$this->foundation->headers->set($name, $value);
 
 		return $this;
@@ -303,8 +299,7 @@ class Response {
 	 *
 	 * @return ResponseParameterBag
 	 */
-	public function headers()
-	{
+	public function headers() {
 		return $this->foundation->headers;
 	}
 
@@ -314,14 +309,11 @@ class Response {
 	 * @param  int    $status
 	 * @return mixed
 	 */
-	public function status($status = null)
-	{
-		if (is_null($status))
-		{
+	public function status($status = null) {
+		if (is_null($status)) {
 			return $this->foundation->getStatusCode();
 		}
-		else
-		{
+		else {
 			$this->foundation->setStatusCode($status);
 
 			return $this;
@@ -333,8 +325,7 @@ class Response {
 	 *
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->render();
 	}
 

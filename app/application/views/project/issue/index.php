@@ -16,22 +16,18 @@
 		$follower["tags"] = $following[0]->tags ?? 0;
 		$follower["comment"] = $following[0]->comment ?? 0;
 	}
+
+	echo '<h3>';
+	if (Auth::user()->role_id != 1) { 
+		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
+	}
+	echo '<span class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; ">&#9899;';
+	echo '<a href="'.((Auth::user()->permission('issue-modify') && $issue->status > 0 ) ? $issue->to('edit') : $issue->to() ).'" class="edit-issue" style="font-size: 60%; font-weight: bold;">'.$issue->title.'</a>';
+	echo '</span>';	
+	echo '<span>'.__('tinyissue.on_project').' <a href="'.$project->to().'">'.$project->name.'</a></span>';
+	echo '</h3>';
 ?>
-<h3>
-	<?php if (Auth::user()->role_id != 1) { ?>
-	<a href="<?php echo Project::current()->to('issue/new'); ?>" class="newissue"><?php echo __('tinyissue.new_issue'); ?></a>
-   <?php } ?> 
 
-	<span style="color: <?php echo $config_app['PriorityColors'][$issue->status]; ?>; font-size: 200%;">&#9899;
-	<?php if(Auth::user()->permission('issue-modify') && $issue->status > 0 ): ?>
-	<a href="<?php echo $issue->to('edit'); ?>" class="edit-issue" style="font-size: 80%; font-weight: bold;"><?php echo $issue->title; ?></a>
-	<?php else: ?>
-	<a href="<?php echo $issue->to(); ?>" style="font-size: 80%; font-weight: bold;"><?php echo $issue->title; ?></a>
-	<?php endif; ?>
-	</span>	
-
-	<span><?php echo __('tinyissue.on_project'); ?> <a href="<?php echo $project->to(); ?>"><?php echo $project->name; ?></a></span>
-</h3>
 <div class="pad">
 
 	<div style="background-color: #ededed; width: 20%; float: right; ">

@@ -21,8 +21,7 @@ class Str {
      *
      * @return string
      */
-    protected static function encoding()
-    {
+    protected static function encoding() {
         return static::$encoding ?: static::$encoding = Config::get('application.encoding');
     }
 

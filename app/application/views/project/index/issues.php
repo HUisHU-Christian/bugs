@@ -81,7 +81,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 					echo '</div>';
 				} 
 
-				echo '<a href="" class="id">#'.$row->id.'<br /><br /><span style="color: '.$config_app['PriorityColors'][$row->status].'; font-size: 200%;">&#9899;</span></span></a>';
+				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.$config_app['PriorityColors'][$row->status].'; ">&#9899;</span></span></div>';
 				echo '<div class="data">';
 					echo '<a href="'.$row->to().'">'.$row->title.'</a>';
 					echo '<div class="info">';
