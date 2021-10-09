@@ -79,7 +79,11 @@
 	</div>
 </body>
 
-<?php unset ($_SESSION["Msg"],$_SESSION["psw"],$_SESSION["usr"]) ?>
+<?php
+	if (isset($_SESSION)) { 
+		unset ($_SESSION["Msg"],$_SESSION["psw"],$_SESSION["usr"]);
+	} 
+?>
 <?php echo Asset::scripts(); ?>
 <script type="text/javascript">
 var values = new Array();
