@@ -177,7 +177,7 @@ footer{
 
 .taglev {
 	text-align: left;
-	display: block;
+	display: none;
 }
 
 .colstate:hover + .taglev {
