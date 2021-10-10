@@ -158,15 +158,13 @@ footer{
 }
 
 /* Notices */
-.global-notic, .global-taglev{
+.global-notice, .taglev {
 	align-items: center;
 	background: #222727;
 	border-radius: 15px;
 	color: #f8e81c;
 	display: none;
-	/* flex-direction: column; */
 	font-size: 15px;
-	justify-content: center;
 	min-width: 33%;
 	opacity: .85;
 	padding:  20px;
@@ -176,8 +174,26 @@ footer{
 	top: 45%; left: 33%; 
 	z-index: 1000;
 }
+
+.taglev {
+	text-align: left;
+	display: block;
+}
+
+.colstate:hover + .taglev {
+	display: block;
+}
+
+.colstate, span.Affcolstate {
+	font-size: 300%;
+}
+
 .hide {
 	display: none;
+}
+
+.global-error{
+	background: #de2e2e;
 }
 
 .global-notice.global-error{
@@ -208,7 +224,7 @@ footer{
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;
 }
-.global-saving:hover, .global-notice:hover, .global-taglev:hover{
+.global-saving:hover, .global-notice:hover, {
 	text-decoration: none;
 }
 
@@ -1860,3 +1876,4 @@ input.inputRech:focus {
   }
 }
 */
+

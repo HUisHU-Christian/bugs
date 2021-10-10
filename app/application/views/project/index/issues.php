@@ -81,7 +81,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 					echo '</div>';
 				} 
 
-				echo '<a href="" class="id">#'.$row->id.'<br /><br /><span style="color: '.$config_app['PriorityColors'][$row->status].'; font-size: 200%;">&#9899;</span></span></a>';
+				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.$config_app['PriorityColors'][$row->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span></span></div>';
 				echo '<div class="data">';
 					echo '<a href="'.$row->to().'">'.$row->title.'</a>';
 					echo '<div class="info">';
@@ -124,8 +124,8 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								$DurRelat = round(($Dur / $row->duration) * 100);
 								$Dur = round($Dur);
 								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
-								if ($DurRelat >= 50 && @$Etat->weight <= 50 ) { $DurColor = 'yellow'; }
-								if ($DurRelat >= 75 && @$Etat->weight <= 50 ) { $DurColor = 'red'; }
+								if ($DurRelat >= 50 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'yellow'; }
+								if ($DurRelat >= 75 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'red'; }
 								$TxtColor = ($DurColor == 'yellow') ? 'black' : 'white' ;
 								////Here we show to progress bar
 								echo '<div class="Percent2">';

@@ -1,5 +1,4 @@
 <?php
-
 $Email["en"] = 'Email';
 $Email["es"] = 'Correo';
 $Email["fr"] = 'Courriel';

@@ -32,7 +32,7 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 					} 
 					?>
 
-					<a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?><br /><span style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>; font-size: 200%;">&#9899;</span></span></a>
+					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>;"  onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById('taglev').style.display = 'none';">&#9899;</span></div>
 					<div class="data">
 						<a href="<?php echo $row->to(); ?>"><?php echo $row->title; ?></a>
 						<div class="info">
@@ -62,7 +62,7 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 						//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 						$Deb = strtotime($row->created_at);
 						$Dur = (time() - $Deb) / 86400;
-						if (@$issue->duration === 0) { $row->duration = 30; }
+						if (!isset($issue->duration) || $issue->duration === 0) { $row->duration = 30; }
 						$DurRelat = round(($Dur / $row->duration) * 100);
 						$Dur = round($Dur);
 						$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
