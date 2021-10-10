@@ -21,7 +21,7 @@
 	if (Auth::user()->role_id != 1) { 
 		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
 	}
-	echo '<span class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; ">&#9899;';
+	echo '<span class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
 	echo '<a href="'.((Auth::user()->permission('issue-modify') && $issue->status > 0 ) ? $issue->to('edit') : $issue->to() ).'" class="edit-issue" style="font-size: 60%; font-weight: bold;">'.$issue->title.'</a>';
 	echo '</span>';	
 	echo '<span>'.__('tinyissue.on_project').' <a href="'.$project->to().'">'.$project->name.'</a></span>';
