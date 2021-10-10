@@ -164,9 +164,7 @@ footer{
 	border-radius: 15px;
 	color: #f8e81c;
 	display: none;
-	/* flex-direction: column; */
 	font-size: 15px;
-	justify-content: center;
 	min-width: 33%;
 	opacity: .85;
 	padding:  20px;
@@ -179,14 +177,15 @@ footer{
 
 .taglev {
 	text-align: left;
-}
-
-.colstate, span.Affcolstate {
-	font-size: 300%;
+	display: none;
 }
 
 .colstate:hover + .taglev {
 	display: block;
+}
+
+.colstate, span.Affcolstate {
+	font-size: 300%;
 }
 
 .hide {
@@ -1877,3 +1876,4 @@ input.inputRech:focus {
   }
 }
 */
+
