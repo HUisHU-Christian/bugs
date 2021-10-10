@@ -177,11 +177,11 @@ footer{
 
 .taglev {
 	text-align: left;
-	display: block;
+	display: none;
 }
 
 .colstate:hover + .taglev {
-	display: none;
+	display: block;
 }
 
 .colstate, span.Affcolstate {
