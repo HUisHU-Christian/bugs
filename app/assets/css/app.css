@@ -181,7 +181,7 @@ footer{
 }
 
 .colstate:hover + .taglev {
-	display: block;
+	display: none;
 }
 
 .colstate, span.Affcolstate {
