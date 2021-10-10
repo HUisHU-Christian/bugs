@@ -22,8 +22,7 @@ class Auth {
 	 * @param  string  $driver
 	 * @return Driver
 	 */
-	public static function driver($driver = null)
-	{
+	public static function driver($driver = null) {
 		if (is_null($driver)) $driver = Config::get('auth.driver');
 
 		if ( ! isset(static::$drivers[$driver]))
@@ -40,8 +39,7 @@ class Auth {
 	 * @param  string  $driver
 	 * @return Driver
 	 */
-	protected static function factory($driver)
-	{
+	protected static function factory($driver) {
 		if (isset(static::$registrar[$driver]))
 		{
 			$resolver = static::$registrar[$driver];
@@ -69,8 +67,7 @@ class Auth {
 	 * @param  Closure  $resolver
 	 * @return void
 	 */
-	public static function extend($driver, Closure $resolver)
-	{
+	public static function extend($driver, Closure $resolver) {
 		static::$registrar[$driver] = $resolver;
 	}
 

@@ -20,21 +20,31 @@ function showckeditor (Quel, id) {
 }
 
 function AffichonsEditor(id) {
-	var CeComment = document.getElementById(id);
+	var CeComment = document.getElementById('comment'+id);
 	var SesDiv = CeComment.childNodes;
 	var SousDiv = SesDiv[1].childNodes;
-	var SSousDiv = SousDiv[5].childNodes;
+	document.getElementById('div_comment_' + id + '_Sdiv').style.display = "block";
+	var SSousDiv = 'textarea_' + id + '_SSdiv';
 	setTimeout(function() {
-		showckeditor (SSousDiv[1], id);
+		showckeditor (SSousDiv, id);
 	} , 167);
 }
 
 function CachonsEditor(id) {
+	if (document.getElementById('div_comment_' + id + '_Sdiv')) { 
+		document.getElementById('div_comment_' + id + '_Sdiv').style.display = "none"; 
+		AllEditors[id].setData(document.getElementById('div_comment_' + id + '_issue').innerHTML);
+		id = 'textarea_' + id + '_SSdiv';
+	}
 	return AllEditors[id].getData();
 }
 
 function ChangeonsEditor(id, contenu) {
 	return AllEditors[id].setData(contenu);
+}
+
+function EditonsTexte(url,id) {
+	document.location.href = url + "&content=" + AllEditors[id].getData();
 }
 
 function SupprimonsEditor(id) {

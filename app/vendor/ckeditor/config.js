@@ -35,8 +35,8 @@ CKEDITOR.editorConfig = function( config ) {
 		config.entities_greek = false,
 		config.entities_latin = false,
 		config.enterMode = CKEDITOR.ENTER_BR,
-		config.filebrowserImageBrowseUrl = 'app/vendor/ckeditor/ckeditor_ChoisirImage.php', 
-		config.filebrowserImageUploadUrl = 'app/vendor/ckeditor/ckeditor_RecevoirImage.php',
+//		config.filebrowserImageBrowseUrl = 'app/vendor/ckeditor/ckeditor_ChoisirImage.php', 
+//		config.filebrowserImageUploadUrl = 'app/vendor/ckeditor/ckeditor_RecevoirImage.php',
 		config.forcePasteAsPlainText = true,
 		config.language_list =[ 'fr-ca:French:Canada', 'en:English', 'es:Spanish' ],
 		config.protectedSource.push( /<\?[\s\S]*?\?>/g ),
@@ -49,3 +49,4 @@ CKEDITOR.editorConfig = function( config ) {
 	config.entities_latin = false;
 	config.htmlEncodeOutput = false;
 };
+

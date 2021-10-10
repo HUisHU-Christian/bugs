@@ -6,19 +6,16 @@ class Activity extends \Eloquent {
 	public static $timestamps = true;
 	
 	
-	public function user()
-	{
+	public function user() {
 		return $this->belongs_to('\User');
 	}
 	
 	
-	public function other_user()
-	{
+	public function other_user() {
 		return $this->belongs_to('\User');
 	}
 	
-	public function activity()
-	{
+	public function activity() {
 		return $this->belongs_to('Activity', 'type_id');
 	}
 		
@@ -32,28 +29,19 @@ class Activity extends \Eloquent {
 	* @param  string  $data
 	* @return bool
 	*/
-	public static function add($type_id = 18, $parent_id, $item_id = null, $action_id = null, $data = null)
-	{
+	public static function add($type_id = 18, $parent_id = 0, $item_id = null, $action_id = null, $data = null) {
 		$insert = array(
 			'type_id' => $type_id,
 			'parent_id' => $parent_id,
-			'user_id' => \Auth::user()->id
+			'user_id' => \Auth::user()->id,
+			'item_id' => (is_null(@$item_id) ? NULL : $item_id),
+			'action_id' => (is_null(@$action_id) ? NULL : $action_id),
+			'data' => (is_null(@$data) ? NULL : $data)
 		);
 
-		if(!is_null($item_id))
-		{
-			$insert['item_id'] = $item_id;
-		}
-
-		if(!is_null($action_id))
-		{
-			$insert['action_id'] = $action_id;
-		}
-
-		if(!is_null($data))
-		{
-			$insert['data'] = $data;
-		}
+//		if(!is_null($item_id)) 		{ $insert['item_id'] = $item_id; }
+//		if(!is_null($action_id))	{ $insert['action_id'] = $action_id; }
+//		if(!is_null($data)) 			{$insert['data'] = $data; }
 		
 		$activity = new static;
 

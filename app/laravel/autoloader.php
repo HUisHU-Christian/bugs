@@ -45,21 +45,22 @@ class Autoloader {
 	 * @param  string  $class
 	 * @return void
 	 */
-	public static function load($class)
-	{
+
+	public static function load($class) {
+//echo '<br /><br />';
+//echo 'autoloader.php en ligne 49 appelle '.$class.'<br />
+//';
 		// First, we will check to see if the class has been aliased. If it has,
 		// we will register the alias, which may cause the auto-loader to be
 		// called again for the "real" class name to load its file.
-		if (isset(static::$aliases[$class]))
-		{
+		if (isset(static::$aliases[$class])) {
 			return class_alias(static::$aliases[$class], $class);
 		}
 
 		// All classes in Laravel are statically mapped. There is no crazy search
 		// routine that digs through directories. It's just a simple array of
 		// class to file path maps for ultra-fast file loading.
-		elseif (isset(static::$mappings[$class]))
-		{
+		elseif (isset(static::$mappings[$class])) {
 			require static::$mappings[$class];
 
 			return;
@@ -68,10 +69,8 @@ class Autoloader {
 		// If the class namespace is mapped to a directory, we will load the
 		// class using the PSR-0 standards from that directory accounting
 		// for the root of the namespace by trimming it off.
-		foreach (static::$namespaces as $namespace => $directory)
-		{
-			if (starts_with($class, $namespace))
-			{
+		foreach (static::$namespaces as $namespace => $directory) {
+			if (starts_with($class, $namespace)) {
 				return static::load_namespaced($class, $namespace, $directory);
 			}
 		}
@@ -87,8 +86,7 @@ class Autoloader {
 	 * @param  string  $directory
 	 * @return void
 	 */
-	protected static function load_namespaced($class, $namespace, $directory)
-	{
+	protected static function load_namespaced($class, $namespace, $directory) {
 		return static::load_psr(substr($class, strlen($namespace)), $directory);
 	}
 
@@ -99,8 +97,7 @@ class Autoloader {
 	 * @param  string  $directory
 	 * @return void
 	 */
-	protected static function load_psr($class, $directory = null)
-	{
+	protected static function load_psr($class, $directory = null) {
 		// The PSR-0 standard indicates that class namespaces and underscores
 		// should be used to indicate the directory tree in which the class
 		// resides, so we'll convert them to slashes.
@@ -113,14 +110,11 @@ class Autoloader {
 		// Once we have formatted the class name, we'll simply spin through
 		// the registered PSR-0 directories and attempt to locate and load
 		// the class file into the script.
-		foreach ((array) $directories as $directory)
-		{
-			if (file_exists($path = $directory.$lower.EXT))
-			{
+		foreach ((array) $directories as $directory) {
+			if (file_exists($path = $directory.$lower.EXT)) {
 				return require $path;
 			}
-			elseif (file_exists($path = $directory.$file.EXT))
-			{
+			elseif (file_exists($path = $directory.$file.EXT)) {
 				return require $path;
 			}
 		}
@@ -132,8 +126,7 @@ class Autoloader {
 	 * @param  array  $mappings
 	 * @return void
 	 */
-	public static function map($mappings)
-	{
+	public static function map($mappings) {
 		static::$mappings = array_merge(static::$mappings, $mappings);
 	}
 
@@ -144,8 +137,7 @@ class Autoloader {
 	 * @param  string  $alias
 	 * @return void
 	 */
-	public static function alias($class, $alias)
-	{
+	public static function alias($class, $alias) {
 		static::$aliases[$alias] = $class;
 	}
 
@@ -155,8 +147,7 @@ class Autoloader {
 	 * @param  string|array  $directory
 	 * @return void
 	 */
-	public static function directories($directory)
-	{
+	public static function directories($directory) {
 		$directories = static::format($directory);
 
 		static::$directories = array_unique(array_merge(static::$directories, $directories));
@@ -169,8 +160,7 @@ class Autoloader {
 	 * @param  string  $append
 	 * @return void
 	 */
-	public static function namespaces($mappings, $append = '\\')
-	{
+	public static function namespaces($mappings, $append = '\\') {
 		$mappings = static::format_mappings($mappings, $append);
 
 		static::$namespaces = array_merge($mappings, static::$namespaces);
@@ -182,8 +172,7 @@ class Autoloader {
 	 * @param  array  $mappings
 	 * @return void
 	 */
-	public static function underscored($mappings)
-	{
+	public static function underscored($mappings) {
 		static::namespaces($mappings, '_');
 	}
 
@@ -194,10 +183,8 @@ class Autoloader {
 	 * @param  string  $append
 	 * @return array
 	 */
-	protected static function format_mappings($mappings, $append)
-	{
-		foreach ($mappings as $namespace => $directory)
-		{
+	protected static function format_mappings($mappings, $append) {
+		foreach ($mappings as $namespace => $directory) {
 			// When adding new namespaces to the mappings, we will unset the previously
 			// mapped value if it existed. This allows previously registered spaces to
 			// be mapped to new directories on the fly.
@@ -217,13 +204,10 @@ class Autoloader {
 	 * @param  array  $directories
 	 * @return array
 	 */
-	protected static function format($directories)
-	{
-		return array_map(function($directory)
-		{
+	protected static function format($directories) {
+		return array_map(function($directory) {
 			return rtrim($directory, DS).DS;
 		
 		}, (array) $directories);
 	}
-
 }

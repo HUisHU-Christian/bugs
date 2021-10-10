@@ -94,7 +94,7 @@ class Issue extends \Eloquent {
 			switch($row->type_id) {
 				case 2:
 					//using project/issue/activity/comment.php
-						//according to db table activity, field activity's value for id = 2
+					//according to db table activity, field activity's value for id = 2
 					$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
 						'issue' => $issue,
 						'project' => $project,
@@ -129,15 +129,27 @@ class Issue extends \Eloquent {
 
 				case 6:
 					//using project/issue/activity/update-issue-tags.php
-					//according to db table activity, field activity's value for id = 6 
+					//according to db table activity, field activity's value for id = 6
 					$tag_diff = json_decode($row->data, true);
-					$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
-						'issue' => $issue,
-						'project' => $project,
-						'user' => $users[$row->user_id],
-						'tag_diff' => $tag_diff,
-						'activity' => $row
-					));
+					if (strlen($row->data) > 10) { 
+						$prem = strpos($row->data, "[");
+						$pren = strpos($row->data, "]");
+						$deux = strpos($row->data, "[", $prem+1);
+						$deuy = strpos($row->data, "]", $deux);
+						$valadd = trim(substr($row->data, $prem+1, ($pren-$prem)-1));
+						$numtag = ($valadd != '') ? $valadd : trim(substr($row->data, $deux+1, ($deuy-$deux)-1));
+								$tag_info = \DB::table('tags')->where('id', '=', $numtag)->get();
+								//2 sept 2021 insistance sur ce document.
+								$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
+									'issue' => $issue,
+									'project' => $project,
+									'user' => $users[$row->user_id],
+									'tag_diff' => $tag_diff,
+									'bgcolor' => $tag_info[0]->bgcolor,
+									'ftcolor' => ($tag_info[0]->ftcolor ? $tag_info[0]->ftcolor : 'black'),
+									'activity' => $row
+								));
+					}
 					break;
 				case 8:
 					//using project/issue/activity/ChangeIssue-project.php
@@ -246,13 +258,8 @@ class Issue extends \Eloquent {
 
 			/* Update tags */
 			$tag_ids[2] = 2;
-			if(isset($tag_ids[1])) {
-				unset($tag_ids[1]);
-			}
-
-			if(isset($tag_ids[8])) {
-				unset($tag_ids[8]);
-			}
+			if(isset($tag_ids[1])) { unset($tag_ids[1]); }
+			if(isset($tag_ids[8])) { unset($tag_ids[8]); }
 
 			/* Add to activity log */
 			\User\Activity::add(3, $this->project_id, $this->id);
@@ -401,8 +408,7 @@ class Issue extends \Eloquent {
 			foreach($tag_data_resource as $tag) {
 				$tag_data[$tag->id] = $tag->to_array();
 			}
-
-			\User\Activity::add(6, $this->project_id, $this->id, null, json_encode(array('added_tags' => $added_tags, 'removed_tags' => $removed_tags, 'tag_data' => $tag_data)));
+			\User\Activity::add(6, $this->project_id, $this->id, null, json_encode(array('added_tags' => $added_tags, 'removed_tags' => $removed_tags, 'tag_data' => $tag_data, 'tags_test' => 'Baboom en poudre')));
 		}
 	}
 

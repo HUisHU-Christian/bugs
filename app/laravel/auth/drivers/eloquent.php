@@ -30,16 +30,13 @@ class Eloquent extends Driver {
 	 * @param  array $arguments
 	 * @return void
 	 */
-	public function attempt($arguments = array())
-	{
-		$user = $this->model()->where(function($query) use($arguments)
-		{
+	public function attempt($arguments = array()) {
+		$user = $this->model()->where(function($query) use($arguments) {
 			$username = Config::get('auth.username');
 			
 			$query->where($username, '=', $arguments['username']);
 
-			foreach(array_except($arguments, array('username', 'password', 'remember')) as $column => $val)
-			{
+			foreach(array_except($arguments, array('username', 'password', 'remember')) as $column => $val) {
 			    $query->where($column, '=', $val);
 			}
 		})->first();
@@ -50,8 +47,7 @@ class Eloquent extends Driver {
 
 		$password_field = Config::get('auth.password', 'password');
 
-		if ( ! is_null($user) and Hash::check($password, $user->{$password_field}))
-		{
+		if ( ! is_null($user) and Hash::check($password, $user->{$password_field})) {
 			return $this->login($user->get_key(), array_get($arguments, 'remember'));
 		}
 
@@ -63,8 +59,7 @@ class Eloquent extends Driver {
 	 *
 	 * @return Eloquent
 	 */
-	protected function model()
-	{
+	protected function model() {
 		$model = Config::get('auth.model');
 
 		return new $model;

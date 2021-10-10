@@ -185,6 +185,8 @@ class Project extends Eloquent {
 
 				case 6:
 					$tag_diff = json_decode($row->data, true);
+					$tag_diff['added_tags'] = $tag_diff['added_tags'] ?? array();
+					$tag_diff['removed_tags'] = $tag_diff['removed_tags'] ?? array();
 					$return[] = View::make('activity/' . $activity_type[$row->type_id]->activity, array(
 						'issue' => $issues[$row->item_id],
 						'project' => $this,

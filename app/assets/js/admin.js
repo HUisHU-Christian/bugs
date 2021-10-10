@@ -28,7 +28,7 @@
 					//alert(xhttp.responseText);
 					IntroInital = intro; 
 					TxByeInital = bye;
-					Verdissons(champs);
+					Verdissons(champs,xhttp.responseText);
 				}
 			}
 		};
@@ -50,7 +50,7 @@
 			if (this.readyState == 4 && this.status == 200) {
 				if (xhttp.responseText != '' ) {
 					//alert(xhttp.responseText);
-					Verdissons(champs);
+					Verdissons(champs,xhttp.responseText);
 				}
 			}
 		};
@@ -78,7 +78,7 @@
 			if (this.readyState == 4 && this.status == 200) {
 				if (xhttp.responseText != '' ) {
 					//alert(xhttp.responseText);
-					Verdissons(champs);
+					Verdissons(champs,xhttp.responseText);
 				}
 			}
 		};
@@ -100,7 +100,11 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				if (xhttp.responseText != '' ) {
-					alert(xhttp.responseText);
+					document.getElementById('global-notice').innerHTML = xhttp.responseText;
+					document.getElementById('global-notice').style.display = 'block';   
+					setTimeout(function(){
+						document.getElementById('global-notice').style.display = 'none';   
+					}, 7500);
 				}
 			}
 		};
@@ -125,7 +129,13 @@
 			if (this.readyState == 4 && this.status == 200) {
 				if (xhttp.responseText != '' ) {
 					Affiche = Quel;
-					if (Question == 'OUI') { alert("Mise à jour complétée"); }
+					if (Question == 'OUI') { 
+						document.getElementById('global-notice').innerHTML = 'Modification apportée avec succès.  /  Successfully updated.';
+						document.getElementById('global-notice').style.display = 'block';   
+						setTimeout(function(){
+							document.getElementById('global-notice').style.display = 'none';   
+						}, 7500); 
+					}
 					var r = xhttp.responseText;
 					var recu = r.split('||');
 					TexteInital = recu[0];
@@ -138,7 +148,12 @@
 		xhttp.send(formdata); 
 	}
 	
-	function Verdissons(champs) {
+	function Verdissons(champs,msg) {
+		document.getElementById('global-notice').innerHTML = msg;
+		document.getElementById('global-notice').style.display = 'block';   
+		setTimeout(function(){
+			document.getElementById('global-notice').style.display = 'none';   
+		}, 7500);
 		for (x=0; x<champs.length; x++) {
 			document.getElementById(champs[x]).style.backgroundColor = 'green';
 		}

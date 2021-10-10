@@ -1,5 +1,10 @@
 <?php
 session_start();
+foreach (@$_GET as $ind => $val) {
+	if (strstr($val, "<") != '' || strstr(htmlspecialchars_decode($val), "<") != '' || strpos($val, "script")  !== false) {
+		unset($_GET[$ind]); 
+	}
+}
 include_once "../app/application/language/all.php";
 $EnLng = require_once("../app/application/language/en/install.php");
 if (!isset($_GET["Lng"]) || !file_exists("../app/application/language/".@$_GET["Lng"]."/install.php")) { $_GET["Lng"] = 'en'; }
@@ -77,7 +82,7 @@ if($database_check) {
 						foreach ($requirement_check as $key => $value) { echo ' - '.$value.'<br />'; }
 						die();
 					}
-					if($database_check['error']) {
+					if(@$database_check['error']) {
 						echo $MyLng['Database_check'].$database_check['error'];
 						die();
 					}

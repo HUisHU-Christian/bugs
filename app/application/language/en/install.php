@@ -46,7 +46,7 @@ return array(
 	'NoConfigApp' => 'Sorry, we need a config.app.example.php file to work with. Please re-upload this from your Bugs package.',
 	'OKconfAPPfile' => 'Looks like you do not have a <code>config.app.php</code> file setup. We need to create one before we can get started with the installation. We can attempt to create the <code>config.app.php</code> file through this setup, however not all servers will allow this.',
 	'OkAPPfile' => 'Okay, your <code>config.app.php</code> file has been created! You can now click "Run Install" below to go through the installation',
-	'preferences_gen' => 'General Prefences',
+	'preferences_gen' => 'General Preferences',
 	'preferences_coula' => 'Color attached to tickets with Priority  « Last of all » - default: #acacac (PaleGray)',
 	'preferences_coulb' => 'Color attached to tickets with Priority  « Next after normal » - default: #008B8B (DarkCyan)',
 	'preferences_coulc' => 'Color attached to tickets with Priority  « Normal » - default: #32CD32 (LimeGreen)',

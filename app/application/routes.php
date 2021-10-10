@@ -38,8 +38,7 @@ Route::controller(array(
 |--------------------------------------------------------------------------
 */
 
-View::composer('layouts.wrapper', function($view)
-{
+View::composer('layouts.wrapper', function($view) {
 	Asset::style('app', 'app/assets/css/app.css');
 	Asset::script('jquery', 'app/assets/js/jquery.js');
 	Asset::script('jquery-ui', 'app/assets/js/jquery-ui.js');
@@ -51,8 +50,7 @@ View::composer('layouts.wrapper', function($view)
 	}
 });
 
-View::composer('layouts.project', function($view)
-{
+View::composer('layouts.project', function($view) {
 	Asset::style('app', 'app/assets/css/app.css');
 	Asset::script('jquery', 'app/assets/js/jquery.js');
 	Asset::script('jquery-ui', 'app/assets/js/jquery-ui.js');
@@ -68,28 +66,23 @@ View::composer('layouts.project', function($view)
 
 	$view->active = 'projects';
 });
-View::composer('todo.index', function($view)
-{
+View::composer('todo.index', function($view) {
 	Asset::script('app', 'app/assets/js/todo.js', 'jquery');
 });
 
-View::composer('user.issues', function($view)
-{
+View::composer('user.issues', function($view) {
 	Asset::script('app', 'app/assets/js/todo-issues.js', 'jquery');
 });
 
-View::composer('layouts.login', function($view)
-{
+View::composer('layouts.login', function($view) {
 	Asset::style('login', 'app/assets/css/login.css');
 });
 
-Event::listen('404', function()
-{
+Event::listen('404', function() {
 	return Response::error('404');
 });
 
-Event::listen('500', function()
-{
+Event::listen('500', function() {
 	return Response::error('500');
 });
 
@@ -99,23 +92,19 @@ Event::listen('500', function()
 |--------------------------------------------------------------------------
 */
 
-Route::filter('before', function()
-{
+Route::filter('before', function() {
 
 });
 
-Route::filter('after', function($response)
-{
+Route::filter('after', function($response) {
 
 });
 
-Route::filter('csrf', function()
-{
+Route::filter('csrf', function() {
 	if (Request::forged()) return Response::error('500');
 });
 
-Route::filter('auth', function()
-{
+Route::filter('auth', function() {
 	if (Auth::guest()) 
 	{
 		Session::put('return', URI::current());
@@ -123,13 +112,11 @@ Route::filter('auth', function()
 	}
 });
 
-Route::filter('ajax', function()
-{
+Route::filter('ajax', function() {
 	if (!Request::ajax()) return Response::error('404');
 });
 
-Route::filter('project', function()
-{
+Route::filter('project', function() {
 	// find project id from issue object
 	if (Request::route()->parameters[0] == 0) {
 		return;
@@ -142,8 +129,7 @@ Route::filter('project', function()
 	}
 });
 
-Route::filter('issue', function()
-{
+Route::filter('issue', function() {
 	Project\Issue::load_issue(Request::route()->parameters[1]);
 
 	if(!Project\Issue::current())
@@ -163,7 +149,6 @@ Route::filter('issue', function()
 
 });
 
-Route::filter('permission', function($permission)
-{
+Route::filter('permission', function($permission) {
 	if(!Auth::user()->permission($permission)) return Response::error('500');
 });

@@ -85,7 +85,6 @@ Autoloader::namespaces(array('Laravel' => path('sys')));
 | underscores as directory hierarchy indicators.
 |
 */
-
 Autoloader::map(array(
 	'Laravel\\Database\\Eloquent\\Relationships\\Belongs_To' 
                     => path('sys').'database/eloquent/relationships/belongs_to'.EXT,
@@ -98,7 +97,6 @@ Autoloader::map(array(
 	'Laravel\\Database\\Eloquent\\Relationships\\Has_One_Or_Many' 
                     => path('sys').'database/eloquent/relationships/has_one_or_many'.EXT,
 ));
-
 /*
 |--------------------------------------------------------------------------
 | Register The Symfony Components
@@ -165,17 +163,13 @@ Request::$foundation = RequestFoundation::createFromGlobals();
 |
 */
 
-if (Request::cli())
-{
+if (Request::cli()) {
 	$environment = get_cli_option('env');
 
-	if ( ! isset($environment))
-	{
+	if ( ! isset($environment)) {
 		$environment = Request::detect_env($environments, gethostname());
 	}
-}
-else
-{
+} else {
 	$root = Request::foundation()->getRootUrl();
 
 	$environment = Request::detect_env($environments, $root);
@@ -193,8 +187,7 @@ else
 |
 */
 
-if (isset($environment))
-{
+if (isset($environment)) {
 	Request::set_env($environment);
 }
 
@@ -209,14 +202,10 @@ if (isset($environment))
 |
 */
 
-if (defined('STDIN'))
-{
+if (defined('STDIN')) {
 	$console = CLI\Command::options($_SERVER['argv']);
-
 	list($arguments, $options) = $console;
-
 	$options = array_change_key_case($options, CASE_UPPER);
-
 	$_SERVER['CLI'] = $options;
 }
 
@@ -233,7 +222,6 @@ if (defined('STDIN'))
 
 $bundles = require path('app').'bundles'.EXT;
 
-foreach ($bundles as $bundle => $config)
-{
+foreach ($bundles as $bundle => $config) {
 	Bundle::register($bundle, $config);
 }

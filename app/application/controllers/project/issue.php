@@ -43,7 +43,7 @@ class Project_Issue_Controller extends Base_Controller {
 		$followers =\DB::query("INSERT INTO following VALUES (NULL, ".Auth::user()->id.", ".Project::current()->id.", ".$issue['issue']->id.", 0, 1, 1)");
 
 		//Email to followers
-		$this->Courriel ('Project', true, Project::current()->id, 0, \Auth::user()->id, array('project'), array('tinyissue'));
+		$this->Courriel ('Project', true, Project::current()->id, $issue['issue']->id, \Auth::user()->id, array('project'), array('tinyissue'));
 
 		return Redirect::to($issue['issue']->to())
 			->with('notice', __('tinyissue.issue_has_been_created'));
@@ -93,25 +93,30 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return View
 	 */
 	public function get_edit() {
-		if (@$_GET["ticketAct"] == 'changeProject') {
+		$_GET["ticketAct"] = $_GET["ticketAct"] ?? '';
+		if ($_GET["ticketAct"] == 'changeProject') {
 			//Change the asssociation between this issue and its related project
+			$ancProj = Project::current()->name;
 			$msg = 0;
 			$NumNew = intval(Input::get('projectNew'));
 			$NumNewResp = intval(Input::get('projectNewResp'));
 			if ($NumNewResp == 0) {
 				$resu  = \DB::table('projects')->select(array('default_assignee'))->where('id', '=', $NumNew)->get();
-				$NumResp = $resu[0]; 
+				$NumResp = $resu[0];
+				$NumNewResp = $resu[0];
 			}
+			$nomResp = \DB::table('users')->select(array('firstname','lastname'))->where('id', '=', $NumNewResp)->get();
+			$nomuser = \DB::table('users')->select(array('firstname','lastname'))->where('id', '=', \Auth::user()->id)->get();
 
 			$result  = __('tinyissue.edit_issue')." : ";
-			$Modif = \DB::table('projects_issues_comments')->where('project_id', '=', intval(Input::get('projetOld')))->where('issue_id', '=', intval(Input::get('ticketNum')), 'AND')->update(array('project_id' => $NumNew, 'comment' => 'Ce billet a été changé de projet, passant de '.Input::get('projetOld').' à '.$NumNew.' ( confié à '.$NumNewResp.') par l`action de '.\Auth::user()->id.'.','created_at' => date("Y-m-d H:i:s"),'updated_at' => date("Y-m-d H:i:s")));
+			$Modif = \DB::table('projects_issues_comments')->where('project_id', '=', intval(Input::get('projetOld')))->where('issue_id', '=', intval(Input::get('ticketNum')), 'AND')->update(array('project_id' => $NumNew, 'comment' => __('tinyissue.issue_chg_resp').' '.$nomResp[0]->firstname.' '.$nomResp[0]->lastname.'.  '.__('tinyissue.issue_chg_resp_dec').' '.$nomuser[0]->firstname.' '.$nomuser[0]->lastname.'.','created_at' => date("Y-m-d H:i:s"),'updated_at' => date("Y-m-d H:i:s")));
 			$result .= ($Modif) ? "Succès" : "Échec";
 			$Modif = Project\Issue::where('project_id', '=', intval(Input::get('projetOld')))->where('id', '=', intval(Input::get('ticketNum')))->update(array('project_id' => $NumNew, 'assigned_to' => $NumNewResp, 'updated_at' => date("Y-m-d H:i:s"), 'updated_by' => \Auth::user()->id));
 			$result .= ($Modif) ? "Succès" : "Échec";
 			if (\User\Activity::add(8, intval(Input::get('projetOld')), Input::get('ticketNum'), $NumNew, "From ".Input::get('projetOld')." to ".$NumNew )) { $msg = $msg + 1; } else { $msg = $TheFile["error"]; }
 
 			//Email to followers
-			$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('issueproject'), array('tinyissue'));
+			$this->Courriel ('Issue', true, $NumNew, Project\Issue::current()->id, Auth::user()->id, array('issueproject', $ancProj), array('tinyissue', 'value'));
 
 			return Redirect::to("project/".$NumNew."/issues?tag_id=1");
 
@@ -164,11 +169,37 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return string
 	 */
 	public function post_edit_comment() {
-		if(Input::get('body')) {
-			$comment = \Project\Issue\Comment::edit_comment(str_replace('comment', '', Input::get('id')), str_replace("'", "`", Input::get('body')));
-			return true;
-		}
+//		Project\Issue\Comment::edit_comment(Input::get('id'), Project\Issue::current()->id,Input::get('content'));
+
+		$idComment = static::find(Input::get('id'));
+		if(!$idComment) { return false; }
+		$Avant = \DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
+		$edited_id = \DB::table('users_activity')->insert_get_id(array(
+						'id'=>NULL,
+						'user_id'=>\Auth::user()->id,
+						'parent_id'=>$Avant->project_id,
+						'item_id'=>$Avant->issue_id,
+						'action_id'=>Input::get('id'),
+						'type_id'=>12,
+						'data'=>$Avant->comment,
+						'created_at'=>$Avant->created_at,
+						'updated_at'=>date("Y-m-d H:i:s")
+					));
+
+		\DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->update(array('comment' => Input::get('body'), 'updated_at' => date("Y-m-d H:i:s")));
+
+		return Redirect::to(Project\Issue::current()->to())
+			->with('notice', __('tinyissue.comment_edited'));
 	}
+
+	public function get_edit_comment($id, $contenu) {
+		//Project\Issue\Comment::edit_comment(Project\Issue::current()->id,Input::get('id'));
+		Project\Issue\Comment::edit_comment(Input::get('id'), Project\Issue::current()->id,Input::get('content'));
+
+		return Redirect::to(Project\Issue::current()->to())
+			->with('notice', __('tinyissue.comment_edited'));
+	}
+
 
 	/**
 	 * Delete a comment
@@ -275,7 +306,8 @@ class Project_Issue_Controller extends Base_Controller {
 				$text .= __('tinyissue.assigned_to').' '.$WhoName.'.';
 				$text .= "<br /><br />";
 				//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, $text, __('tinyissue.following_email_assigned_tit'));
-				$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned', 'reassigned_by', 'reassigned_to', $WhoName), array('tinyissue', 'email', 'tinyissue', 'variable'));
+				//2 sept 2021 : ceci bloque les fonctions javascript
+				//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned', 'reassigned_by', 'reassigned_to', $WhoName), array('tinyissue', 'email', 'tinyissue', 'variable'));
 			}
 
 			//Show on screen what did just happened
@@ -308,7 +340,7 @@ class Project_Issue_Controller extends Base_Controller {
 
 			$Modif = (Input::get('Modif') !== NULL) ? Input::get('Modif') :  false;
 			$Quel = (Input::get('Quel')  !== NULL ) ? Input::get('Quel') : "xyzxyz";
-			$TagNum = Tag::where('tag', '=', $Quel )->first(array('id','tag','bgcolor'));
+			$TagNum = Tag::where('tag', '=', $Quel )->first(array('id','tag','bgcolor','ftcolor'));
 			if (!isset($TagNum) || @$TagNum == '' ) { $Modif = false; $Quel = "xyzxyz"; }
 
 
@@ -327,8 +359,8 @@ class Project_Issue_Controller extends Base_Controller {
 				$Action = NULL;
 				$Msg = __('tinyissue.tag_added');
 				$Show = true;
-				//Email to followers --- tags have changed
-				$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('tagsADD'), array('tinyissue'));
+				$added_tags = '"added_tags":['.$TagNum->attributes['id'].'],';
+				$removed_tags = '"removed_tags":[],';
 			}
 
 			/**
@@ -342,21 +374,22 @@ class Project_Issue_Controller extends Base_Controller {
 				$Modif = true;
 				$Msg = '<span style="color:#F00;">'.__('tinyissue.tag_removed').'</span>';
 				$Show = true;
-				$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('tagsOTE'), array('tinyissue'));
+				$added_tags = '"added_tags":[],';
+				$removed_tags = '"removed_tags":['.$TagNum->attributes['id'].'],';
 			}
 
 
 			/**
 			 * Update database
 			 */
-			if ($Show) { \User\Activity::add(6, $Action, $Issue, $TagNum->attributes['id'] ); }
+			if ($Show) { \User\Activity::add(6, Project::current()->id, $Issue, NULL, '{'.$added_tags.$removed_tags.'"tag_data":{"'.$TagNum->attributes['id'].'":{"id":'.$TagNum->attributes['id'].',"tag":"'.$TagNum->attributes['tag'].'","bgcolor":"'.$TagNum->attributes['bgcolor'].'","ftcolor":"'.$TagNum->attributes['ftcolor'].'"}},"tags_test":"Baboom en poudre"}' ); }
 
 			/**
 			 * Show on screen what just happened
 			 */
 			if (isset($TagNum) && $Quel != "xyzxyz") {
 				$content .= '<div class="insides"><div class="topbar"><div class="data">';
-				$content .= '<label style="background-color: '.$TagNum->attributes['bgcolor'].'; padding: 5px 10px; border-radius: 8px;">';
+				$content .= '<label style="color: '.$TagNum->attributes['ftcolor'].'; background-color: '.$TagNum->attributes['bgcolor'].'; padding: 5px 10px; border-radius: 8px;">';
 				$content .= $TagNum->attributes['tag'].'</label>';
 				$content .= ' : <b>'.$Msg.'</b> ';
 				$content .= __('tinyissue.by') . ' ';
@@ -448,10 +481,7 @@ class Project_Issue_Controller extends Base_Controller {
 			if (\User\Activity::add(7, $Project, $Issue, $Quel[0]->id, $fileName )) { $msg = $msg + 1; } else { $msg = $TheFile["error"]; }
 		}
 
-		//Fifth step: Notice the followers
-		$this->Courriel ('Issue', true, Project::current()->id, $Issue, Auth::user()->id, array('attached'), array('tinyissue'));
-
-		//Sixth: Show on user's desk
+		//Fifth step: Show on user's desk
 		if (is_numeric($msg)) {
 			$rep = (substr($rep, 0, 3) == '../') ? substr($rep, 3) : $rep;
 			$msg .= ';';
@@ -463,6 +493,10 @@ class Project_Issue_Controller extends Base_Controller {
 			$msg .= '<a href="'.$url.$rep.$fileName.'?'.$now.'" target="_blank" />';
 			$msg .= '<b>'.$fileName.'</b>';
 			$msg .= '</div></div></div>';
+
+			//Sixth step: Notice the followers
+			$this->Courriel ('Issue', true, Project::current()->id, $Issue, Auth::user()->id, array('attached'), array('tinyissue'));
+
 		}
 		return $msg;
 	}

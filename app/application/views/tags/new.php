@@ -10,15 +10,27 @@
 			<tr>
 				<th style="width: 10%"><?php echo __('tinyissue.tag'); ?></th>
 				<td>
-					<input type="text" name="tag" style="width: 98%;" value="<?php echo Input::old('tag', ''); ?>" />
-
+					<input type="text" name="tag" style="width: 48%;" value="<?php echo Input::old('tag', ''); ?>" onkeyup="document.getElementById('span_exemple').innerHTML = this.value;" />
 					<?php echo $errors->first('tag', '<span class="error">:message</span>'); ?>
 				</td>
 			</tr>
 			<tr>
-				<th style="width: 10%"><?php echo __('tinyissue.bgcolor'); ?></th>
+				<th style="width: 10%"><?php echo __('tinyissue.tags_ftcolor'); ?></th>
 				<td>
-					<input type="text" id="bgcolor" name="bgcolor" style="width: 98%;" value="<?php echo Input::old('bgcolor', 'teal'); ?>" />
+					<input type="text" id="ftcolor" name="ftcolor" style="width: 98%;" value="<?php echo Input::old('ftcolor', 'purple'); ?>" />
+
+					<?php echo $errors->first('ftcolor', '<span class="error">:message</span>'); ?>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span id="span_exemple" style="border-radius: 7pt; font-weight:bold; padding: 9px; background-color: purple; color: white;">Exemple<br /></span>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 10%"><?php echo __('tinyissue.tags_bgcolor'); ?></th>
+				<td>
+					<input type="text" id="bgcolor" name="bgcolor" style="width: 98%;" value="<?php echo Input::old('bgcolor', 'purple'); ?>" />
 
 					<?php echo $errors->first('bgcolor', '<span class="error">:message</span>'); ?>
 				</td>
@@ -35,7 +47,7 @@
 		
 			$(function() {		
 				$("#bgcolor").spectrum({
-					color: "teal",
+					color: "purple",
 					showInput: true,
 					className: "full-spectrum",
 					showInitial: true,
@@ -44,12 +56,23 @@
 					preferredFormat: "hex",
 					change: function(color) {
 						$('#bgcolor').val(color.toHexString());
+						document.getElementById('span_exemple').style.backgroundColor = color.toHexString();
+					}
+				});
+				$("#ftcolor").spectrum({
+					color: "white",
+					showInput: true,
+					className: "full-spectrum",
+					showInitial: true,
+					showSelectionPalette: true,
+					maxPaletteSize: 10,
+					preferredFormat: "hex",
+					change: function(color) {
+						$('#ftcolor').val(color.toHexString());
+						document.getElementById('span_exemple').style.color = color.toHexString();
 					}
 				});
 			});
-			
 		</script>
-
 	</form>
-
 </div>
