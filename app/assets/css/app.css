@@ -158,10 +158,6 @@ footer{
 }
 
 /* Notices */
-.taglev {
-	text-align: left;
-}
-
 .global-notice, .taglev {
 	align-items: center;
 	background: #222727;
@@ -179,7 +175,12 @@ footer{
 	z-index: 1000;
 }
 
-.colstate:hover ~ .taglev {
+.taglev {
+	text-align: left;
+	display: block;
+}
+
+.colstate:hover + .taglev {
 	display: block;
 }
 
@@ -1875,3 +1876,4 @@ input.inputRech:focus {
   }
 }
 */
+
