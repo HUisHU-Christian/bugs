@@ -879,6 +879,7 @@ td.project-user, th.project-user {
 	font-size: 16px;
 	color: #426e86;
 	padding: 16px;
+	min-height: 90px;
 }
 .blue-box .activity{
 	background: #ffffff;

@@ -18,8 +18,8 @@
 		$Combien = (isset($lanes[$col]) ? count($lanes[$col]) :  0);
 		$rendu = 0;
 		echo '<h4>'.$status_codes[$col].' ('.$config_app['Percent'][$col].(($col == 0) ? '' :  ' - '.($config_app['Percent'][$col+1]-1)).'% )<br />';
-		echo '<span style="color: black; font-size: 75%; margin-left:-2px;">';
-		echo '<b><span id="todo-list-span-'.$col.'">'.(($Combien > 25) ? ($rendu+1).'-'.($rendu+25).'</span> / ' : 'Total : </span>').$Combien.'</b><br />';
+		echo '<span style="color: black; font-size: 75%; margin-left:0;">';
+		echo '<b><span id="todo-list-span-'.$col.'" style="margin-left: 0px;">'.(($Combien > 25) ? ($rendu+1).'-'.($rendu+25).'</span> / ' : 'Total : </span>').$Combien.'</b><br />';
 		if ($Combien >= 25) { while ($rendu < $Combien) {
 			echo '<a href="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" style="font-size: 100%; font-weight: normal; ">'.(($rendu/25)+1).'</a>&nbsp;&nbsp;';
 			$rendu = $rendu + 25;
