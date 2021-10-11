@@ -113,8 +113,7 @@ class Todo extends Eloquent {
     $user_id = Auth::user()->id;
     
     $todo = Todo::load_todo($issue_id, $user_id);
-    if(!$todo)
-		{
+    if(!$todo) {
 			return array(
 				'success' => FALSE,
 				'errors' => __('tinyissue.todos_err_loadfailed'),
@@ -138,6 +137,7 @@ class Todo extends Eloquent {
 	public static function update_todo($issue_id = 0, $new_status = 1) {
 		$user_id = Auth::user()->id;
 		 
+		$todoData = Todo::where('issue_id', '=', $issue_id)->get();
 		$todo = Todo::load_todo($issue_id, $user_id);
 		if(!$todo) {
 			return array(
@@ -150,19 +150,24 @@ class Todo extends Eloquent {
 		// @TODO Handle N configurable status codes
 		$new_status = (int)$new_status;
 		if ($new_status >= 0 && $new_status <= 3) {
-			$todo->status = $new_status;
-			$todo->save();
 			
 			// Close issue if todo is moved to closed lane. 
-			if ($new_status != 0) {
+			$status = 0;
+			if ($new_status == 0) {
+				$todo->status = 0;
+				$todo->updated_at = date("Y-m-d H:i:s");
+				$todo->save();
+			} else {
+				$status = ($todoData->status == 0) ? 4 : $todoData->status;
 				$config_app = require path('public') . 'config.app.php';
 				$Moyenne = ($config_app['Percent'][$new_status] + $config_app['Percent'][$new_status + 1]) / 2;
+				$todo->status = $status;
 				$todo->weight = $Moyenne;
 				$todo->updated_at = date("Y-m-d H:i:s");
 				$todo->save();
 			}
 			$issue = Project\Issue::find($issue_id);
-			if (!empty($issue)) { $issue->change_status($new_status); }
+			if (!empty($issue)) { $issue->change_status($status); }
 			return array('success' => TRUE);
 		} else {
 			return array(
