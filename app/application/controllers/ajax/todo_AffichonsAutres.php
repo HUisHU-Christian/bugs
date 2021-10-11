@@ -8,21 +8,20 @@
 			LEFT JOIN users_todos AS TODO ON TODO.issue_id = ISSU.id
 			LEFT JOIN projects AS PROJ ON PROJ.id = ISSU.project_id  
 			WHERE ISSU.status = 0 
-				AND ISSU.assigned_to = 1 
+				AND ISSU.assigned_to = ".$_GET["user"]." 
 			ORDER BY TODO.status DESC, ISSU.updated_at DESC 
 			LIMIT ".$_GET["rendu"].", 25 ");
 	} else {
-		$result = \DB::table('projects_issues')
-									->join('users_todos', 'users_todos.issue_id', '=', 'projects_issues.id')
-									->join('projects', 'projects.id', '=', 'projects_issues.project_id')
-									->where('assigned_to', '=', Auth::user()->id)
-									->where('users_todos.weight', '>=', $bas)
-									->where('users_todos.weight', '<', $haut)
-									->where('projects_issues.status', $zero, 0)
-									->order_by('projects_issues.status', 'DESC')
-									->order_by('projects_issues.updated_at', 'DESC')
-									->get(['projects_issues.id','projects_issues.status','projects_issues.title','users_todos.weight','projects.name', 'projects_issues.project_id']);
- 		return $result;
+		$requISSU = Requis("SELECT ISSU.id, ISSU.status, ISSU.title, TODO.weight, PROJ.name, ISSU.project_id
+			FROM projects_issues AS ISSU
+			LEFT JOIN users_todos AS TODO ON TODO.issue_id = ISSU.id
+			LEFT JOIN projects AS PROJ ON PROJ.id = ISSU.project_id  
+			WHERE ISSU.status = 0 
+				AND ISSU.assigned_to = ".$_GET["user"]."
+				AND TODO.weight >= ".$config['Percent'][$_GET["col"]]." 
+				AND TODO.weight < ".$config['Percent'][$_GET["col"]+1]." 
+			ORDER BY TODO.status DESC, ISSU.updated_at DESC 
+			LIMIT ".$_GET["rendu"].", 25 ");
 	}
 	while ($lane = mysqli_fetch_object($requISSU)) {
 		$sortie .= '<div class="todo-list-item" id="todo-id-'.$lane->id.'" data-issue-id="'.$lane->id.'" draggable="true"  ondrag="dragStart(this.id);" ondragend="dragDrop(this.id);">';
