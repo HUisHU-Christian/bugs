@@ -102,13 +102,13 @@
 			<tr>
 			<th><?php echo __('tinyissue.website_git'); ?></th>
 				<td>
-					<input size="50" name="Git" value="<?php echo @$WebLnk['git']; ?>" placeholder="http://github.com/<?php echo Auth::user()->firstname; ?>/<?php echo Project::current()->name; ?>" />
+					<input size="50" name="Git" value="<?php echo ((isset($WebLnk['git'])) ? $WebLnk['git'] : ''); ?>" placeholder="http://github.com/<?php echo Auth::user()->firstname; ?>/<?php echo Project::current()->name; ?>" />
 				</td>
 			</tr>
 			<tr>
 			<th><?php echo __('tinyissue.website_prod'); ?></th>
 				<td>
-					<input size="50" name="Prod" value="<?php echo @$WebLnk['prod']; ?>" placeholder="http://www.<?php echo Project::current()->name; ?>" />
+					<input size="50" name="Prod" value="<?php echo ((isset($WebLnk['prod'])) ? $WebLnk['prod'] : ''); ?>" placeholder="http://www.<?php echo Project::current()->name; ?>" />
 				</td>
 			</tr>
 			<tr>
