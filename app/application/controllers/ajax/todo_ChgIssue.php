@@ -40,7 +40,7 @@ if ($_GET["Quoi"] == 3) {
 				$retour = "Fermeture du billet";
 			} else {
 				$Moyenne = ($config['Percent'][$new_status] + $config['Percent'][$new_status + 1]) / 2;
-				Requis ("INSERT INTO users_activity (id,user_id,parent_id,item_id,type_id, created_at,updated_at) VALUES (NULL, ".$_POST["userID"].", ".$QuelISSU["project_id"].", ".$issue_id.", 10, NOW(), NOW() ) on duplicate key UPDATE updated_at = NOW()");
+				Requis ("INSERT INTO users_activity (id,user_id,parent_id,item_id,type_id, created_at,updated_at) VALUES (NULL, ".$_POST["userID"].", ".$QuelISSU["project_id"].", ".$issue_id.", 4, NOW(), NOW() ) on duplicate key UPDATE updated_at = NOW()");
 				Requis ("UPDATE users_todos SET status = ".(($QuelISSU["status"] == 0) ? 4 : $QuelISSU["status"] ).", weight = ".$Moyenne.", updated_at = NOW() WHERE issue_id = ".$issue_id);
 				Requis ("UPDATE projects_issues SET closed_by = NULL, closed_at = NULL, status = ".(($QuelISSU["status"] == 0) ? 4 : $QuelISSU["status"] ).", weight = ".$Moyenne.", updated_at = NOW() WHERE id = ".$issue_id);
 				$retour = "Billet modifié";
