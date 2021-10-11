@@ -174,8 +174,10 @@ footer{
 }
 
 .taglev {
-	text-align: left;
+	background: #222727;
 	display: none;
+	min-width: 13%;
+	text-align: left;
 }
 
 .colstate:hover + .taglev {
