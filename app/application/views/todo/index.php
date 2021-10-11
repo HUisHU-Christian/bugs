@@ -16,9 +16,18 @@
 		<div class="todo-lane blue-box" id="lane-status-'.$col.'" data-status="'.$col.'" ondragover="dragOver(this.id);"  ondragleave="dragLeave(this.id);" ondrop="alert(\'Nous recevons ceci de la colonne\');dragDrop(this.id);">
 		';
 		$Combien = (isset($lanes[$col]) ? count($lanes[$col]) :  0);
-		$Combien = ($Combien > 25) ? $Combien.'; 25 montrés ici, <a href="lien.php" style="font-size: 100%; font-weight: normal; text-decoration: underline;">voir tous</a>' : $Combien;
-		echo '<h4>'.$status_codes[$col].' ('.$config_app['Percent'][$col].(($col == 0) ? '' :  ' - '.($config_app['Percent'][$col+1]-1)).'% )<br /><span style="color: black; font-size: 75%; margin-left:-2px;">('.$Combien.')</span></h4>
+		$rendu = 0;
+		echo '<h4>'.$status_codes[$col].' ('.$config_app['Percent'][$col].(($col == 0) ? '' :  ' - '.($config_app['Percent'][$col+1]-1)).'% )<br />';
+		echo '<span style="color: black; font-size: 75%; margin-left:-2px;">';
+		echo '<b><span id="todo-list-span-'.$col.'">'.(($Combien > 25) ? ($rendu+1).'-'.($rendu+25).'</span> / ' : 'Total : </span>').$Combien.'</b><br />';
+		if ($Combien >= 25) { while ($rendu < $Combien) {
+			echo '<a href="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" style="font-size: 100%; font-weight: normal; ">'.(($rendu/25)+1).'</a>&nbsp;&nbsp;';
+			$rendu = $rendu + 25;
+		}}
+		echo '</span>
+		</h4>
 		';
+		echo '<div id="lane-details-'.$col.'">';
 		if (isset($lanes[$col])) {
 			$rendu = 0;
 			foreach ($lanes[$col] as $lane) {
@@ -34,6 +43,7 @@
 				if (++$rendu > 25) { break; }
 			}
 		}
+		echo '</div>';
 		echo '</div>
 		';
 	}

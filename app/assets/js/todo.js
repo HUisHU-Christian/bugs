@@ -5,6 +5,18 @@ var divOVER = "";
 var posiX = 0;
 var posiY = 0;
 
+function AffichonsAutres(col, rendu) {
+	Exactement = Exactement + 'app/application/controllers/ajax/todo_AffichonsAutres.php?col=' + col + '&rendu=' + rendu;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById('lane-details-' + col).innerHTML = xhttp.responseText;
+			document.getElementById('todo-list-span-' + col).innerHTML = (rendu+1) + "-" + (rendu+25);
+		}
+	}
+	xhttp.open("GET", Exactement, true);
+	xhttp.send(); 
+}
 
 function dragStart(cetID) {
 	enMVT = cetID;
