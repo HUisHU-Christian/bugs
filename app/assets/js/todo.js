@@ -59,7 +59,6 @@ function dragDrop(cetID) {
 		}
 		xhttp.open("POST", Exactement, true);
 		xhttp.send(formdata); 
-
 		//alert(msgFinal);
 	}
 	document.getElementById(cetID).style.display = "block";
