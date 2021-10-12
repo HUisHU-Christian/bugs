@@ -42,6 +42,8 @@
 		}
 		++$rendu;
 	}
+	fclose($RefFichier);
+	
 	//Ajout des lignes nouvellement créées, pour ceux qui n'ont pas fait la mise à jour de leur fichier config.app.php
 	//12 octobre 2021 
 	if (!isset($NumLigne['TodoNbItems'])) {
@@ -60,8 +62,6 @@
 		$MesLignes[($rendu++)] = $passe[2];
 		$MesLignes[($rendu++)] = $passe[1];
 	}
-	fclose($RefFichier);
-	
 	//Enregistrement du nouveau fichier corrigé  
 	$NeoFichier = fopen($NomFichier, "w");
 	foreach ($MesLignes as $ind => $val) {
