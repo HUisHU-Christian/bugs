@@ -206,4 +206,8 @@ return array(
 	*/
 	'PriorityColors' => array("black","PaleGray","DarkCyan","LimeGreen","Darkorange","Crimson"),
 
+	/** Todo : Number of items per column		
+	*/ 
+	'TodoNbItems' => 25,
+
 );

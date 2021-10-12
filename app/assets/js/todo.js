@@ -4,7 +4,7 @@ function AffichonsAutres(col, rendu) {
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			document.getElementById('lane-details-' + col).innerHTML = xhttp.responseText;
-			document.getElementById('todo-list-span-' + col).innerHTML = (rendu+1) + "-" + (rendu+25);
+			document.getElementById('todo-list-span-' + col).innerHTML = (rendu+1) + "-" + (rendu+NbIssues);
 		}
 	}
 	xhttp.open("GET", Exactement, true);

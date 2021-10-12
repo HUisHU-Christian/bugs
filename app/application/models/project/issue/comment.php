@@ -122,15 +122,6 @@ class Comment extends  \Eloquent {
 		$src = array('tinyissue');
 		include_once "application/controllers/ajax/SendMail.php";
 
-//		$project = \Project::current();
-//		$subject = sprintf(__('email.new_comment'), $issue->title, $project->name);
-//		$text = \View::make('email.commented_issue', array(
-//				'actor' => \Auth::user()->firstname . ' ' . \Auth::user()->lastname,
-//				'project' => $project,
-//				'issue' => $issue,
-//				'comment' => $comment->comment
-//			));
-
 		return $comment;
 	}
 
@@ -183,7 +174,6 @@ class Comment extends  \Eloquent {
 		\DB::table('projects_issues_comments')->where('id', '=', $comment->id)->delete();
 
 		if(!$comment) { return false; }
-
 
 //		/* Delete attachments and files */
 //		$path = \Config::get('application.upload_path').$issue->project_id;
