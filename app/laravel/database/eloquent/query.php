@@ -132,7 +132,7 @@ class Query {
 				// If the relationship is nested, we will skip loading it here and let
 				// the load method parse and set the nested eager loads on the right
 				// relationship when it is getting ready to eager load.
-				if (str_contains($relationship, '.'))
+				if (fctstr_contains($relationship, '.'))
 				{
 					continue;
 				}

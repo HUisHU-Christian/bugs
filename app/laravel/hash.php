@@ -41,8 +41,7 @@ class Hash {
 	 * @param  string  $hash
 	 * @return bool
 	 */
-	public static function check($value, $hash)
-	{
+	public static function check($value, $hash) {
 		return crypt($value, $hash) === $hash;
 	}
 

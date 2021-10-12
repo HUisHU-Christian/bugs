@@ -12,7 +12,6 @@ body {
 }
 
 #container{
-	*/ min-width: 1000px; */
 	min-width: 100%;
 	height: 100%;
 }
@@ -124,8 +123,8 @@ code{
   white-space: nowrap;
   background-color: #bfbfbf;
   -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
   border-radius: 3px;
+  margin-right: 5px;
 }
 .label.important {
   background-color: #c43c35;
@@ -157,21 +156,46 @@ footer{
 }
 
 /* Notices */
-.global-notice{
-	min-width: 30%;
-	position: absolute;
-	top: 55%; left: 30%;
+.global-notice, .taglev {
+	align-items: center;
 	background: #222727;
-	font-size: 15px;
-	color: #f8e81c;
-	text-decoration: none;
-	text-align: center;
-	opacity: .85;
-	padding:  20px 0;
-	display: none;
-	z-index: 1000;
 	border-radius: 15px;
+	color: #f8e81c;
+	display: none;
+	font-size: 15px;
+	min-width: 33%;
+	opacity: .85;
+	padding:  20px;
+	position: fixed;
+	text-align: center;
+	text-decoration: none;
+	top: 45%; left: 33%; 
+	z-index: 1000;
 }
+
+.taglev {
+	background: #424747;
+	display: none;
+	min-width: 13%;
+	text-align: left;
+}
+
+.colstate:hover + .taglev {
+	display: block;
+}
+
+.colstate, span.Affcolstate {
+	font-size: 300%;
+}
+
+.hide {
+	display: none;
+}
+
+.global-error{
+	background: #de2e2e;
+}
+
 .global-notice.global-error{
 	background: #de2e2e!important;
 }
@@ -193,14 +217,10 @@ footer{
 	opacity: .95;
 	padding: 11px 0 11px 5px;
 	display: block;
-	-webkit-border-bottom-right-radius: 8px;
-	-webkit-border-bottom-left-radius: 8px;
-	-moz-border-radius-bottomright: 8px;
-	-moz-border-radius-bottomleft: 8px;
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;
 }
-.global-saving:hover, .global-notice:hover{
+.global-saving:hover, .global-notice:hover {
 	text-decoration: none;
 }
 
@@ -214,7 +234,9 @@ textarea, input[type=text], input[type=password]{
 	box-shadow: 0 -1px 1px #b6b6b6;
 }
 .action,
-input[type=submit], input.button2 {
+input[type=submit], 
+input.button2,
+input.button1 {
 	font: bold 13px Helvetica, "Lucida Grande", Arial, sans-serif;
 	color: #fff;
 	padding: 10px 13px;
@@ -230,14 +252,17 @@ input[type=submit]{
 input[type=submit]:hover,
 input.button2:hover,
 input[type=submit]:focus,
-input.button2:focus{
+input.button2:focus,
+input.button1:focus,
+input.button1:hover {
 	cursor: pointer;
 	background: #424242;
 	border: 1px solid #262626;
 	color: white;
 }
-input.button2{
-	background: #034d91;
+input.button1{
+	background: #34Bd61;
+	color: black;
 }
 
 p{
@@ -258,7 +283,8 @@ p{
   margin: 0 0 18px;
   padding: 0;
   list-style: none;
-  zoom: 1;
+  width: 100%;
+  height: 100%;
 }
 .tabs:before,
 .pills:before,
@@ -266,8 +292,24 @@ p{
 .pills:after {
   display: table;
   content: "";
-  zoom: 1;
+  width: 100%;
 }
+
+summary, select.sombre {
+	margin-top: 10px;
+	font-size: 125%;
+	font-weight: bold;
+	padding: 10px;
+	background-color: #373e4e; 
+	color: #f8e81c;
+	border-radius: 10px;
+}
+
+select.sombre {
+	background-color: #d8d0cf;
+	color: black;
+}
+
 .tabs:after, .pills:after {
   clear: both;
 }
@@ -291,8 +333,6 @@ p{
   margin-right: 2px;
   line-height: 34px;
   border: 1px solid transparent;
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
 }
 .tabs > li > a:hover {
@@ -310,8 +350,6 @@ p{
 .tabs .menu-dropdown, .tabs .dropdown-menu {
   top: 35px;
   border-width: 1px;
-  -webkit-border-radius: 0 6px 6px 6px;
-  -moz-border-radius: 0 6px 6px 6px;
   border-radius: 0 6px 6px 6px;
 }
 .tabs a.menu:after, .tabs .dropdown-toggle:after {
@@ -837,6 +875,7 @@ td.project-user, th.project-user {
 	font-size: 16px;
 	color: #426e86;
 	padding: 16px;
+	min-height: 90px;
 }
 .blue-box .activity{
 	background: #ffffff;
@@ -987,6 +1026,13 @@ td.project-user, th.project-user {
 }
 .issue-discussion li .topbar .edit-comment a{
 	background: url('../images/layout/icon-edit.png') no-repeat;
+	width: 16px; height: 15px;
+}
+.issue-discussion li .topbar .edit-comment a:hover{
+	background: url('../images/layout/icon-edit_1.png') no-repeat;
+}
+.deleted-comment a{
+	background: url('../images/layout/icon-comments_2.png') no-repeat;
 	width: 16px; height: 15px;
 }
 .issue-discussion li .issue{
@@ -1265,12 +1311,22 @@ ul.isssues li {
 .todo-button.del {
   background: url("../images/layout/icon-delete.png") no-repeat scroll center center transparent;
 }
+
 .todo-lane {
-  float: left;
-  margin-right: 10px; 
-  border: 2px solid #D4EFFF;
+/*
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+*/
+	float: left;  
+	margin-right: 10px; 
+	border: 2px solid #D4EFFF;
+	width: 24%;
 }
 
+.drag-over {
+    border: dashed 3px red;
+}
 
 #lane-status-0 {
   float: right; 
@@ -1823,3 +1879,4 @@ input.inputRech:focus {
   }
 }
 */
+

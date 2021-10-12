@@ -16,22 +16,18 @@
 		$follower["tags"] = $following[0]->tags ?? 0;
 		$follower["comment"] = $following[0]->comment ?? 0;
 	}
+
+	echo '<h3>';
+	if (Auth::user()->role_id != 1) { 
+		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
+	}
+	echo '<span class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
+	echo '<a href="'.((Auth::user()->permission('issue-modify') && $issue->status > 0 ) ? $issue->to('edit') : $issue->to() ).'" class="edit-issue" style="font-size: 60%; font-weight: bold;">'.$issue->title.'</a>';
+	echo '</span>';	
+	echo '<span>'.__('tinyissue.on_project').' <a href="'.$project->to().'">'.$project->name.'</a></span>';
+	echo '</h3>';
 ?>
-<h3>
-	<?php if (Auth::user()->role_id != 1) { ?>
-	<a href="<?php echo Project::current()->to('issue/new'); ?>" class="newissue"><?php echo __('tinyissue.new_issue'); ?></a>
-   <?php } ?> 
 
-	<span style="color: <?php echo $config_app['PriorityColors'][$issue->status]; ?>; font-size: 200%;">&#9899;
-	<?php if(Auth::user()->permission('issue-modify') && $issue->status > 0 ): ?>
-	<a href="<?php echo $issue->to('edit'); ?>" class="edit-issue" style="font-size: 80%; font-weight: bold;"><?php echo $issue->title; ?></a>
-	<?php else: ?>
-	<a href="<?php echo $issue->to(); ?>" style="font-size: 80%; font-weight: bold;"><?php echo $issue->title; ?></a>
-	<?php endif; ?>
-	</span>	
-
-	<span><?php echo __('tinyissue.on_project'); ?> <a href="<?php echo $project->to(); ?>"><?php echo $project->name; ?></a></span>
-</h3>
 <div class="pad">
 
 	<div style="background-color: #ededed; width: 20%; float: right; ">
@@ -62,7 +58,8 @@
 			$SizeX = $SizeXtot / 100;
 			echo __('tinyissue.issue_percent').' : ';
 			$EtatTodo = Todo::load_todo($issue->id);
-			////Here we show the progress bar
+
+		////Here we show the progress bar
 		if (Auth::user()->role_id != 1) {
 			if (is_object($EtatTodo)) {
 				echo '<div class="Percent">';
@@ -70,8 +67,8 @@
 				echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$EtatTodo->weight.'%; width: '.(100-$EtatTodo->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.(100-$EtatTodo->weight).'%</div>';
 				echo '</div>';
 			}
+			if (is_bool($EtatTodo)) { unset($EtatTodo); }
 	
-			//Time's going fast!
 			//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 			////Calculations
 			$config_app = require path('public') . 'config.app.php';
@@ -82,8 +79,8 @@
 			$Dur = round($Dur);
 			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > $config_app['Percent'][3]) ? 'white' : 'black') ;
 			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
-			if ($DurRelat >= 50 && @$EtatTodo->weight <= 50 ) { $DurColor = 'yellow'; }
-			if ($DurRelat >= 75 && @$EtatTodo->weight <= 50 ) { $DurColor = 'red'; }
+			if ($DurRelat >= 50 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'yellow'; }
+			if ($DurRelat >= 75 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'red'; }
 			$TxtColor = ($DurColor == 'green') ? 'white' : 'black' ;
 			////Here we show to progress bar
 			echo __('tinyissue.countdown').' ('.__('tinyissue.day').'s) : ';
@@ -99,7 +96,9 @@
 		$IssueTags = array();
 		if(!empty($issue->tags)) {
 			foreach($issue->tags()->order_by('tag', 'ASC')->get() as $tag) {
-			echo '<label class="label"' . ($tag->bgcolor ? ' style="background: ' . $tag->bgcolor . '"' : '') . '>' . $tag->tag . '</label>&nbsp;';
+			//2 sept 2021 : la ligne suivante a été remplacée temporairement par l'autre suit afin de déboguer un appel de ftcolor
+			echo '<label class="label" style="background-color: '.$tag->bgcolor.';'.($tag->ftcolor ? 'color: '.$tag->ftcolor.'; ' : '').'">' . $tag->tag . '</label>&nbsp;';
+			//echo '<label class="label" style="background-color: '.$tag->bgcolor.';color: '.((isset($tag->ftcolor)) ? $tag->ftcolor : 'black') . ';">' . $tag->tag . '</label>&nbsp;';
 			$IssueTags[] = $tag->tag;
 			}  //endforeach
 		} //endif
@@ -120,7 +119,7 @@
 				</div>
 
 				<ul class="attachments">
-					<?php foreach($issue->attachments()->get() as $attachment): ?>
+					<?php foreach($issue->attachments()->get() as $attachment) { ?>
 					<li>
 						<?php if(in_array($attachment->fileextension, Config::get('application.image_extensions'))): ?>
 							<a href="<?php echo \URL::home() . Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><img src="<?php echo \URL::home() . Config::get('application.attachment_path') . $project->id . '/' . $attachment->upload_token . '/' . $attachment->filename; ?>" style="max-width: 100px;"  alt="<?php echo $attachment->filename; ?>" /></a>
@@ -128,7 +127,7 @@
 							<a href="<?php echo \URL::home() . Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><?php echo \URL::home().$attachment->filename; ?></a>
 						<?php endif; ?>
 					</li>
-					<?php endforeach; ?>
+					<?php } ?>
 				</ul>
 
 				<div class="clr"></div>
@@ -202,7 +201,8 @@
 				<br />
 				<span style="text-align: left;">
 				<?php 
-					$percent = ((is_object($EtatTodo)) ? (($EtatTodo->weight == 100) ? 91 : $EtatTodo->weight+1) : 10 );
+					if (!isset($EtatTodo)) { $EtatTodo = 1; }
+					$percent = ((is_object($EtatTodo)) ? (($EtatTodo->weight == 100) ? 91 : $EtatTodo->weight+1) : 2 );
 					if (Project\Issue::current()->assigned->id == \Auth::user()->id ) { 
 						echo '<b>'.__('tinyissue.percentage_of_work_done').'</b> : ';
 						echo '<input type="number" name="Pourcentage" value="'.$percent.'" min="'.$percent.'" max="100" /> %';
@@ -225,7 +225,7 @@
 				<div style="text-align: right; width: 98%; margin-top: -25px;"><br /><br /></div>
 			<?php  if (Auth::user()->role_id != 1) { ?>
 					<!-- Tags modification  -->
-					<span style="float:left; font-weight: bold; margin: 7px;"><?php echo  __('tinyissue.tags'); ?></span>
+					<span style="float:left; font-weight: bold; margin: 7px;"><?php echo  __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span></span>
 					<div style="width: 73%; float: left">
 						<?php
 							$TAGS = new Project_Issue_Controller();
@@ -291,6 +291,7 @@
 
 
 <script type="text/javascript">
+var path = '<?php echo $url; ?>app/application/controllers/ajax/';
 var d = new Date();
 var t = d.getTime();
 var AllTags = "";
@@ -301,7 +302,7 @@ function AddTag (Quel,d) {
 	var Modif = "AddOneTag";
 	var IDcomment = 'comment' + new Date().getTime();
 	var xhttpTAG = new XMLHttpRequest();
-	var NextPage = '<?php echo $_SERVER['REQUEST_URI']; ?>/retag?Modif=' + Modif + '&Quel=' + Quel;
+	var NextPage = '<?php echo $url.substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'project')); ?>/retag?Modif=' + Modif + '&Quel=' + Quel;
 	xhttpTAG.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		if (xhttpTAG.responseText != '' ) {
@@ -315,6 +316,19 @@ function AddTag (Quel,d) {
 	};
 	xhttpTAG.open("GET", NextPage, true);
 	xhttpTAG.send(); 
+
+	var xhttpMAIL = new XMLHttpRequest();
+	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsADD&src=tinyissue";
+	xhttpMAIL.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (xhttpMAIL.responseText != '' ) {
+				alert("Courriels envoyés avec retour = \n" + this.responseText);
+			}
+		}
+	};
+	xhttpMAIL.open("GET", NextPage, true);
+	xhttpMAIL.send(); 
+
 }
 
 function Following(Quoi, etat) {
@@ -327,7 +341,7 @@ function Following(Quoi, etat) {
 		document.getElementById('img_following').src = "<?php echo \URL::home();?>app/assets/images/layout/icon-comments_1.png";
 	}
 	var xhttp = new XMLHttpRequest();
-	var NextPage = '<?php echo $url; ?>app/application/controllers/ajax/Following.php?Quoi=1&Qui=<?php echo \Auth::user()->id; ?>&Quel=<?php echo Project\Issue::current()->id; ?>&Project=<?php echo Project::current()->id; ?>&Etat=' + ((etat) ? 0 : 1);
+	var NextPage = path + 'Following.php?Quoi=1&Qui=<?php echo \Auth::user()->id; ?>&Quel=<?php echo Project\Issue::current()->id; ?>&Project=<?php echo Project::current()->id; ?>&Etat=' + ((etat) ? 0 : 1);
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			if (xhttp.responseText != '' ) {
@@ -418,6 +432,18 @@ function OteTag(Quel) {
 	};
 	xhttpTAG.open("GET", NextPage, true);
 	xhttpTAG.send(); 
+
+	var xhttpMAIL = new XMLHttpRequest();
+	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsOTE&src=tinyissue";
+	xhttpMAIL.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (xhttpMAIL.responseText != '' ) {
+				alert("Courriels envoyés avec retour = \n" + this.responseText);
+			}
+		}
+	};
+	xhttpMAIL.open("GET", NextPage, true);
+	xhttpMAIL.send(); 
 }
 
 function Reassignment (Project, Prev, Suiv, Issue) {
@@ -458,9 +484,21 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 	};
 	xhttpASGMT.open("GET", NextPage, true);
 	xhttpASGMT.send(); 
-}
 
+	var xhttpMAIL = new XMLHttpRequest();
+	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=assigned&src=tinyissue";
+	xhttpMAIL.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (xhttpMAIL.responseText != '' ) {
+				alert("Courriels envoyés avec retour = \n" + this.responseText);
+			}
+		}
+	};
+	xhttpMAIL.open("GET", NextPage, true);
+	xhttpMAIL.send(); 
+}
 <?php
+	$rendu = 0;
 	$wysiwyg = Config::get('application.editor');
 	if (trim(@$wysiwyg['directory']) != '') {
 		if (file_exists($wysiwyg['directory']."/Bugs_code/showeditor.js")) {
@@ -468,11 +506,12 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 			if ($wysiwyg['name'] == 'ckeditor') {
 				echo "
 				setTimeout(function() {
-					showckeditor ('comment');
+					showckeditor ('comment', ".$rendu++.");
 				} , 567);
 				";
 			}
 		} 
 	} 
 ?>
+
 </script>

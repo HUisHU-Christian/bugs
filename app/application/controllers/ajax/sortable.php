@@ -4,8 +4,7 @@ class Ajax_Sortable_Controller extends Base_Controller {
 
 	public $layout = null;
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
     
 		$this->filter('before', 'permission:issue-modify')->only(array(
@@ -13,11 +12,9 @@ class Ajax_Sortable_Controller extends Base_Controller {
 		));
 	}
 
-	public function post_project_issue()
-	{
+	public function post_project_issue() {
     $issues = Input::get('weights');
-    foreach ($issues as $index => $id) 
-    {
+    foreach ($issues as $index => $id) {
       $issue = Project\Issue::load_issue($id);
       $issue->weight = $index;
       $issue->save();

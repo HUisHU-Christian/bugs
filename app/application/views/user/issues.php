@@ -21,15 +21,18 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 				<li>
 					<a href="<?php echo $row->to(); ?>" class="comments"><?php echo $row->comment_count(); ?></a>
 					
-					<?php if(!empty($row->tags)): ?>
-					<div class="tags">
-						<?php foreach($row->tags()->order_by('tag', 'ASC')->get() as $tag): ?>
-						<?php echo '<label class="label"' . ($tag->bgcolor ? ' style="background: ' . $tag->bgcolor . '"' : '') . '>' . $tag->tag . '</label>'; ?>
-						<?php endforeach; ?>
-					</div>
-					<?php endif; ?>
+					<?php 
+					if(!empty($row->tags)) {
+						echo '<div class="tags">';
+						foreach($row->tags()->order_by('tag', 'ASC')->get() as $tag) { 
+							//2 sept 2021 recherche d'un bogue lié à ftcolor
+							echo '<label class="label" style="'.($tag->ftcolor ? 'color: '.$tag->ftcolor . ';' : '').($tag->bgcolor ? 'background-color: '.$tag->bgcolor . ';' : '').'">' . $tag->tag . '</label>';
+						}
+						echo '</div>';
+					} 
+					?>
 
-					<a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?><br /><span style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>; font-size: 200%;">&#9899;</span></span></a>
+					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>;"  onmouseover="document.getElementById('taglev').style.display = 'block';" onmouseout="document.getElementById('taglev').style.display = 'none';">&#9899;</span></div>
 					<div class="data">
 						<a href="<?php echo $row->to(); ?>"><?php echo $row->title; ?></a>
 						<div class="info">
@@ -38,7 +41,7 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 							<?php echo Time::age(strtotime($row->created_at)); ?>
 
 							<?php if(!is_null($row->updated_by)): ?>
-							- <?php echo __('tinyissue.updated_by'); ?> <strong><?php echo $row->updated->firstname . ' ' . $row->updated->lastname; ?></strong>
+							- <?php echo __('tinyissue.updated_by'); ?>&nbsp;&nbsp;<strong><?php echo $row->updated->firstname . ' ' . $row->updated->lastname; ?></strong>
 							<?php echo Time::age(strtotime($row->updated_at)); ?>
 							<?php endif; ?>
 						</div>
@@ -55,11 +58,11 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 							echo '<div style="position: relative; top: -11px; left: 70px; background-color: green; color:white; width: '.($Percent*$SizeX).'px; height: 4px; line-height:4px;" /></div>'; 
 							echo '<div style="position: relative; top: -15px; left: '.(70 + ($Percent*$SizeX)).'px; margin-bottom: -4px; background-color: gray; color:white; width: '.($SizeXtot-($Percent*$SizeX)).'px; height: 4px; text-align: center; line-height:4px;" /></div>';
 						} else { $Percent = 10; }
-						//Time's going fast!
+						//Time is going fast!
 						//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 						$Deb = strtotime($row->created_at);
 						$Dur = (time() - $Deb) / 86400;
-						if (@$issue->duration === 0) { $row->duration = 30; }
+						if (!isset($issue->duration) || $issue->duration === 0) { $row->duration = 30; }
 						$DurRelat = round(($Dur / $row->duration) * 100);
 						$Dur = round($Dur);
 						$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;

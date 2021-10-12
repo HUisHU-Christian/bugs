@@ -2,8 +2,7 @@
 
 class Tags_Controller extends Base_Controller {
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 
 		$this->filter('before', 'permission:administration');
@@ -14,8 +13,7 @@ class Tags_Controller extends Base_Controller {
 	 *
 	 * @return View
 	 */
-	public function get_index()
-	{
+	public function get_index() {
 		return $this->layout->with('active', 'dashboard')->nest('content', 'tags.index', array(
 			'tags' => Tag::order_by('tag', 'ASC')->get()
 		));
@@ -26,29 +24,28 @@ class Tags_Controller extends Base_Controller {
 	 *
 	 * @return View
 	 */
-	public function get_new()
-	{
+	public function get_new() {
 		Asset::add('spectrum-js', '/app/assets/js/spectrum.js', array('jquery'));
 		Asset::add('spectrum-css', '/app/assets/css/spectrum.css');
 				
 		return $this->layout->with('active', 'dashboard')->nest('content', 'tags.new');
 	}
 	
-	public function post_new()
-	{
+	public function post_new() {
 		$rules = array(
 			'tag' => 'unique:tags|required|max:255',
-			'bgcolor' => array('max:50', 'match:/^#(?:[0-9a-f]+)$/i')
+			'bgcolor' => array('max:50', 'match:/^#(?:[0-9a-f]+)$/i'),
+			'ftcolor' => array('max:50', 'match:/^#(?:[0-9a-f]+)$/i')
 		);
 
 		$input = Input::all();
 		$validator = \Validator::make($input, $rules);
 		
-		if ($validator->passes())
-		{
+		if ($validator->passes()) {
 			$tag = new Tag;
 			$tag->tag = $input['tag'];
-			$tag->bgcolor = $input['bgcolor'];
+			$tag->bgcolor = strtoupper($input['bgcolor']);
+			$tag->ftcolor = strtoupper(@$input['ftcolor']);
 			$tag->save();
 			
 			return Redirect::to('tags')
@@ -66,8 +63,7 @@ class Tags_Controller extends Base_Controller {
 	 *
 	 * @return View
 	 */
-	public function get_edit($tag_id)
-	{
+	public function get_edit($tag_id) {
 		Asset::add('spectrum-js', '/app/assets/js/spectrum.js', array('jquery'));
 		Asset::add('spectrum-css', '/app/assets/css/spectrum.css');
 				
@@ -78,23 +74,23 @@ class Tags_Controller extends Base_Controller {
 		));
 	}
 	
-	public function post_edit($tag_id)
-	{
+	public function post_edit($tag_id) {
 		$tag = Tag::find($tag_id);
 
 		$rules = array(
 			'tag' => 'unique:tags,tag,' . $tag_id . '|required|max:255',
-			'bgcolor' => array('max:50', 'match:/^#(?:[0-9a-f]+)$/i')
+			'bgcolor' => array('max:50', 'match:/^#(?:[0-9a-f]+)$/i'),
+			'ftcolor' => array('max:50', 'match:/^#(?:[0-9a-f]+)$/i')
 		);
 
 		$input = Input::all();
 
 		$validator = \Validator::make($input, $rules);
 		
-		if ($validator->passes())
-		{
+		if ($validator->passes()) {
 			$tag->tag = $input['tag'];
-			$tag->bgcolor = $input['bgcolor'];
+			$tag->bgcolor = strtoupper($input['bgcolor']);
+			$tag->ftcolor = strtoupper(@$input['ftcolor']);
 			$tag->save();
 			
 			return Redirect::to('tags')

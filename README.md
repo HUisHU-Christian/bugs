@@ -11,6 +11,8 @@
 - set  www-data  ( CHOWN -R www-data:www-data )  as owner of the Bugs's main directory and sub-directories
 - Open index.php ... it should bring you to ./install/index.php page and open the installation forms
 	( ex.:   http://127.0.0.1/Bugs/index.php  ) 
+- Create users
+- Create first project
 
 Enjoy!
 
@@ -42,11 +44,12 @@ If your version is older than september 2018
 ## Requirements:
 
 - Tested on: Apache, IIS;
-- PHP 7.0+;   
+- PHP 7.3+;   (since 2021/09/21, no longer PHP 7.0 is no longer supported)   
 - MySQL 5+;
 - PDO Extension for PHP (MySQL);
 - MCrypt Extension for PHP : soon MCrypt will be removed from Bugs project;
 - Javascript Enabled - Bugs also heavily uses Javascript.
+- PHP rewrite module
 
 ### How to contribute
 
@@ -63,13 +66,14 @@ Then, push your modifications through a new branch. NEVER push on master.
     - november 2019: attach files form the issue creating menu
     - november 2019: wysiwyg editor problems fixed; it could work on every comment
     - november 2019: you can move issue from project A to project B if you have access to both projects
-    - January 2021 : no more reference to FlashPlayer 
-    - February 2021: One can move ticket from project A to project B and assigns the ticket to a B's member
-    - March 2021: Owner can change the Ticket's status when he comments it
-    - March 2021: Reader can no longer edit ticket, nor watch stats
-    - March 2021: Search field now will search also into comments' content ( not only title or projects' name )
-    - March 2021: Comment and close at once - new button added.
-    - Arpil 2021: User can follow project / ticket and receive email when something appends.
+    - January 2021 : no more reference to FlashPlayer  (rev 2).
+    - February 2021: One can move ticket from project A to project B and assigns the ticket to a B's member (rev 3).
+    - March 2021: Owner can change the Ticket's status when he comments it (rev 3).
+    - March 2021: Reader can no longer edit ticket, nor watch stats (rev 3).
+    - March 2021: Search field now will search also into comments' content ( not only title or projects' name  (rev 3).
+    - March 2021: Comment and close at once - new button added (rev 3).
+    - Arpil 2021: User can follow project / ticket and receive email when something appends ( rev 4x ).
+    - May 2021: Admin may change some options and edit texts sent when activity occurs in issues or projects  ( rev 5 ).
 - v.1.7 : July 2019 
 	- reports are now totally integrated to BUGS which produces pdf files
 - v.1.6 : February 2019 

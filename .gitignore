@@ -11,10 +11,19 @@ README.md
 .gitignore~
 install/mysql-structure.php
 install/surete_config-setup.php
+install/config-setup.php_surete
 app/vendor/Trumbowyg/
 app/vendor/Reports/BugsRepConfig.php
 app/storage/reports/*.pdf
 images/
+php7.4_errors.log
+php8.0_errors.log
+php8.1_errors.log
+php8.2_errors.log
+php8.3_errors.log
+php8.4_errors.log
+php8.5_errors.log
+php8.6_errors.log
 temp/
 version
 

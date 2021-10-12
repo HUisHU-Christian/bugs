@@ -23,8 +23,7 @@ class Form {
 	 * @param  Closure  $macro
 	 * @return void
 	 */
-	public static function macro($name, $macro)
-	{
+	public static function macro($name, $macro) {
 		static::$macros[$name] = $macro;
 	}
 
@@ -51,8 +50,7 @@ class Form {
 	 * @param  bool     $https
 	 * @return string
 	 */
-	public static function open($action = null, $method = 'POST', $attributes = array(), $https = null)
-	{
+	public static function open($action = null, $method = 'POST', $attributes = array(), $https = null) {
 		$method = strtoupper($method);
 
 		$attributes['method'] =  static::method($method);
@@ -86,8 +84,7 @@ class Form {
 	 * @param  string  $method
 	 * @return string
 	 */
-	protected static function method($method)
-	{
+	protected static function method($method) {
 		return ($method !== 'GET') ? 'POST' : $method;
 	}
 
@@ -100,8 +97,7 @@ class Form {
 	 * @param  bool     $https
 	 * @return string
 	 */
-	protected static function action($action, $https)
-	{
+	protected static function action($action, $https) {
 		$uri = (is_null($action)) ? URI::current() : $action;
 
 		return HTML::entities(URL::to($uri, $https));
@@ -115,8 +111,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function open_secure($action = null, $method = 'POST', $attributes = array())
-	{
+	public static function open_secure($action = null, $method = 'POST', $attributes = array()) {
 		return static::open($action, $method, $attributes, true);
 	}
 
@@ -129,8 +124,7 @@ class Form {
 	 * @param  bool    $https
 	 * @return string
 	 */
-	public static function open_for_files($action = null, $method = 'POST', $attributes = array(), $https = null)
-	{
+	public static function open_for_files($action = null, $method = 'POST', $attributes = array(), $https = null) {
 		$attributes['enctype'] = 'multipart/form-data';
 
 		return static::open($action, $method, $attributes, $https);
@@ -144,8 +138,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function open_secure_for_files($action = null, $method = 'POST', $attributes = array())
-	{
+	public static function open_secure_for_files($action = null, $method = 'POST', $attributes = array()) {
 		return static::open_for_files($action, $method, $attributes, true);
 	}
 
@@ -154,8 +147,7 @@ class Form {
 	 *
 	 * @return string
 	 */
-	public static function close()
-	{
+	public static function close() {
 		return '</form>';
 	}
 
@@ -164,8 +156,7 @@ class Form {
 	 *
 	 * @return string
 	 */
-	public static function token()
-	{
+	public static function token() {
 		return static::input('hidden', Session::csrf_token, Session::token());
 	}
 
@@ -182,8 +173,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function label($name, $value, $attributes = array())
-	{
+	public static function label($name, $value, $attributes = array()) {
 		static::$labels[] = $name;
 
 		$attributes = HTML::attributes($attributes);
@@ -210,8 +200,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function input($type, $name, $value = null, $attributes = array())
-	{
+	public static function input($type, $name, $value = null, $attributes = array()) {
 		$name = (isset($attributes['name'])) ? $attributes['name'] : $name;
 
 		$id = static::id($name, $attributes);
@@ -229,8 +218,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function text($name, $value = null, $attributes = array())
-	{
+	public static function text($name, $value = null, $attributes = array()) {
 		return static::input('text', $name, $value, $attributes);
 	}
 
@@ -241,8 +229,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function password($name, $attributes = array())
-	{
+	public static function password($name, $attributes = array()) {
 		return static::input('password', $name, null, $attributes);
 	}
 
@@ -254,8 +241,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function hidden($name, $value = null, $attributes = array())
-	{
+	public static function hidden($name, $value = null, $attributes = array()) {
 		return static::input('hidden', $name, $value, $attributes);
 	}
 
@@ -267,8 +253,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function search($name, $value = null, $attributes = array())
-	{
+	public static function search($name, $value = null, $attributes = array()) {
 		return static::input('search', $name, $value, $attributes);
 	}
 
@@ -280,8 +265,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function email($name, $value = null, $attributes = array())
-	{
+	public static function email($name, $value = null, $attributes = array()) {
 		return static::input('email', $name, $value, $attributes);
 	}
 
@@ -293,8 +277,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function telephone($name, $value = null, $attributes = array())
-	{
+	public static function telephone($name, $value = null, $attributes = array()) {
 		return static::input('tel', $name, $value, $attributes);
 	}
 
@@ -353,8 +336,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function textarea($name, $value = '', $attributes = array())
-	{
+	public static function textarea($name, $value = '', $attributes = array()) {
 		$attributes['name'] = $name;
 
 		$attributes['id'] = static::id($name, $attributes);
@@ -383,27 +365,20 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function select($name, $options = array(), $selected = null, $attributes = array())
-	{
+	public static function select($name, $options = array(), $selected = null, $attributes = array()) 	{
 		$attributes['id'] = static::id($name, $attributes);
-
 		$attributes['name'] = $name;
-
 		$html = array();
 
-		foreach ($options as $value => $display)
-		{
-			if (is_array($display))
-			{
+		foreach ($options as $value => $display) {
+			if (is_array($display)) {
 				$html[] = static::optgroup($display, $value, $selected);
-			}
-			else
-			{
+			} else {
 				$html[] = static::option($value, $display, $selected);
 			}
 		}
 
-		return '<select'.HTML::attributes($attributes).'>'.implode('', $html).'</select>';
+		return '<select '.((!isset($attributes["id"]) || trim($attributes["id"]) == "") ? 'id="formSelect_'.$name.'"' : '').HTML::attributes($attributes).'>'.implode('', $html).'</select>';
 	}
 
 	/**
@@ -414,8 +389,7 @@ class Form {
 	 * @param  string  $selected
 	 * @return string
 	 */
-	protected static function optgroup($options, $label, $selected)
-	{
+	protected static function optgroup($options, $label, $selected) {
 		$html = array();
 
 		foreach ($options as $value => $display)
@@ -434,8 +408,7 @@ class Form {
 	 * @param  string  $selected
 	 * @return string
 	 */
-	protected static function option($value, $display, $selected)
-	{
+	protected static function option($value, $display, $selected) {
 		if (is_array($selected))
 		{
 			$selected = (in_array($value, $selected)) ? 'selected' : null;
@@ -467,8 +440,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function checkbox($name, $value = 1, $checked = false, $attributes = array())
-	{
+	public static function checkbox($name, $value = 1, $checked = false, $attributes = array()) {
 		return static::checkable('checkbox', $name, $value, $checked, $attributes);
 	}
 
@@ -489,8 +461,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function radio($name, $value = null, $checked = false, $attributes = array())
-	{
+	public static function radio($name, $value = null, $checked = false, $attributes = array()) {
 		if (is_null($value)) $value = $name;
 
 		return static::checkable('radio', $name, $value, $checked, $attributes);
@@ -506,8 +477,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	protected static function checkable($type, $name, $value, $checked, $attributes)
-	{
+	protected static function checkable($type, $name, $value, $checked, $attributes) {
 		if ($checked) $attributes['checked'] = 'checked';
 
 		$attributes['id'] = static::id($name, $attributes);
@@ -522,8 +492,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function submit($value = null, $attributes = array())
-	{
+	public static function submit($value = null, $attributes = array()) {
 		return static::input('submit', null, $value, $attributes);
 	}
 
@@ -534,8 +503,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function reset($value = null, $attributes = array())
-	{
+	public static function reset($value = null, $attributes = array()) {
 		return static::input('reset', null, $value, $attributes);
 	}
 
@@ -552,8 +520,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function image($url, $name = null, $attributes = array())
-	{
+	public static function image($url, $name = null, $attributes = array()) {
 		$attributes['src'] = URL::to_asset($url);
 
 		return static::input('image', $name, null, $attributes);
@@ -566,8 +533,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function button($value = null, $attributes = array())
-	{
+	public static function button($value = null, $attributes = array()) {
 		return '<button'.HTML::attributes($attributes).'>'.HTML::entities($value).'</button>';
 	}
 
@@ -578,8 +544,7 @@ class Form {
 	 * @param  array   $attributes
 	 * @return mixed
 	 */
-	protected static function id($name, $attributes)
-	{
+	protected static function id($name, $attributes) {
 		// If an ID has been explicitly specified in the attributes, we will
 		// use that ID. Otherwise, we will look for an ID in the array of
 		// label names so labels and their elements have the same ID.
@@ -601,8 +566,7 @@ class Form {
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
-	public static function __callStatic($method, $parameters)
-	{
+	public static function __callStatic($method, $parameters) {
 		if (isset(static::$macros[$method]))
 		{
 			return call_user_func_array(static::$macros[$method], $parameters);

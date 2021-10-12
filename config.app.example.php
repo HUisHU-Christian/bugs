@@ -1,5 +1,5 @@
 <?php
-
+//This program uses UTF-8 (without BOM) and database utf8_general_ci. Your files must respect this standard.
 return array(
 	/**  URL
 	 * You can define your URL or leave blank to let us figure it out
@@ -31,8 +31,11 @@ return array(
 	),
 
 	/**  Database
-	 * Fill out your database settings. Make sure that the driver is correct: 'mysql' for MySQL, 'sqlsrv' for MSSQL,
-	 * 'pgsql' for PostgreSQL, or 'sqlite' for SQLite
+	 * Fill out your database settings. Make sure that the driver is correct: 
+	 ** 'mysql' for MySQL, 
+	 ** 'sqlsrv' for MSSQL,
+	 ** 'pgsql' for PostgreSQL, 
+	 ** 'sqlite' for SQLite
 	 */
 	'database' => array(
 		'driver' => 'mysql',
@@ -141,7 +144,9 @@ return array(
 		*/
 		'plainHTML' => 'multipart/mixed',
 		'linelenght' => 80,
-		
+		// Output after error on sending email
+		// 0 = no output, 1 = errors and messages, 2 = messages only.
+		'mailerrormsg' => '1',
 		/*
 		* Every emails you'll send from here will start by  intro and end by bye
 		* Use those to include the recepient values:
@@ -150,7 +155,7 @@ return array(
 		*   - {full} for his full name  ( first name and last name )
 		*/
 		'intro' => 'Hello {first},',
-		'bye' => 'Bye.'
+		'bye' => 'Bye.',
 	),
 
 	/**  Session key
@@ -200,5 +205,9 @@ return array(
 	****'PriorityColors' => array("transparent","transparent","transparent","transparent","transparent","transparent "),
 	*/
 	'PriorityColors' => array("black","PaleGray","DarkCyan","LimeGreen","Darkorange","Crimson"),
+
+	/** Todo : Number of items per column		
+	*/ 
+	'TodoNbItems' => 25,
 
 );

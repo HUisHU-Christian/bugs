@@ -28,7 +28,8 @@
 			</tr>
 
 			<tr>
-				<th><?php echo __('tinyissue.tags'); ?></th>
+				<th><?php echo __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span>
+				</th>
 				<td>
 					<?php echo Form::text('tags', Input::old('tags', $issue_tags), array('id' => 'tags')); ?>
 					<?php echo $errors->first('tags', '<span class="error">:message</span>'); ?>
@@ -41,6 +42,7 @@
 						});
 					});
 					</script>
+					&nbsp;&nbsp;&nbsp;
 				</td>
 			</tr>
 			<tr>
@@ -53,12 +55,12 @@
 			<tr>
 				<th><?php echo __('tinyissue.priority'); ?></th>
 				<td>
-					<?php echo Form::select('status', array(1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), $issue->status); ?>
+					<?php echo Form::select('status', array(1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), $issue->status, array('id'=>'select_status', 'onmouseover'=>'document.getElementById(\'taglev\').style.display = \'block\';', 'onmouseout'=>'document.getElementById(\'taglev\').style.display = \'none\';')); ?>
 				</td>
 			</tr>
 
 			<tr>
-				<th><?php echo __('tinyissue.assigned_to'); ?></th>
+				<th><?php echo __('tinyissue.assigned_to'); ?>&nbsp;&nbsp;</th>
 				<td>
 					<?php echo Form::select('assigned_to', array(0 => '') + Project\User::dropdown($project->users()->get()), Input::old('asigned_to', $issue->assigned_to)); ?>
 				</td>

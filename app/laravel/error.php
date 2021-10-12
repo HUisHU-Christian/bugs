@@ -9,8 +9,7 @@ class Error {
 	 * @param  bool       $trace
 	 * @return void
 	 */
-	public static function exception($exception, $trace = true)
-	{
+	public static function exception($exception, $trace = true) {
 		static::log($exception);
 		ob_get_level() and ob_end_clean();
 		$message = $exception->getMessage();
@@ -18,7 +17,7 @@ class Error {
 		// For Laravel view errors we want to show a prettier error:
 		$file = $exception->getFile();
 
-		if (str_contains($exception->getFile(), 'eval()') and str_contains($exception->getFile(), 'laravel/view.php'))
+		if (fctstr_contains($exception->getFile(), 'eval()') and fctstr_contains($exception->getFile(), 'laravel/view.php'))
 		{
 			$message = 'Error rendering view: ['.View::$last['name'].']'.PHP_EOL.PHP_EOL.$message;
 
@@ -60,7 +59,6 @@ class Error {
 		$response->render();
 		$response->send();
 		$response->foundation->finish();
-
 		exit(1);
 	}
 
@@ -73,8 +71,7 @@ class Error {
 	 * @param  int     $line
 	 * @return void
 	 */
-	public static function native($code, $error, $file, $line)
-	{
+	public static function native($code, $error, $file, $line) {
 		if (error_reporting() === 0) return;
 
 		// For a PHP error, we'll create an ErrorException and then feed that
@@ -95,8 +92,7 @@ class Error {
 	 *
 	 * @return void
 	 */
-	public static function shutdown()
-	{
+	public static function shutdown() {
 		// If a fatal error occurred that we have not handled yet, we will
 		// create an ErrorException and feed it to the exception handler,
 		// as it will not yet have been handled.
@@ -116,8 +112,7 @@ class Error {
 	 * @param  Exception  $exception
 	 * @return void
 	 */
-	public static function log($exception)
-	{
+	public static function log($exception) {
 		if (Config::get('error.log'))
 		{
 			call_user_func(Config::get('error.logger'), $exception);

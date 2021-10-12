@@ -88,18 +88,13 @@ class Issue extends \Eloquent {
 			}
 		}
 
-
-
-
 		/* Loop through the projects and activity again, building the views for each activity */
 		$return = array();
-
-
 		foreach($activities as $row) {
 			switch($row->type_id) {
 				case 2:
 					//using project/issue/activity/comment.php
-						//according to db table activity, field activity's value for id = 2
+					//according to db table activity, field activity's value for id = 2
 					$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
 						'issue' => $issue,
 						'project' => $project,
@@ -134,15 +129,26 @@ class Issue extends \Eloquent {
 
 				case 6:
 					//using project/issue/activity/update-issue-tags.php
-					//according to db table activity, field activity's value for id = 6 
+					//according to db table activity, field activity's value for id = 6
 					$tag_diff = json_decode($row->data, true);
-					$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
-						'issue' => $issue,
-						'project' => $project,
-						'user' => $users[$row->user_id],
-						'tag_diff' => $tag_diff,
-						'activity' => $row
-					));
+					if (strlen($row->data) > 10) { 
+						$prem = strpos($row->data, "[");
+						$pren = strpos($row->data, "]");
+						$deux = strpos($row->data, "[", $prem+1);
+						$deuy = strpos($row->data, "]", $deux);
+						$valadd = trim(substr($row->data, $prem+1, ($pren-$prem)-1));
+						$numtag = ($valadd != '') ? $valadd : trim(substr($row->data, $deux+1, ($deuy-$deux)-1));
+								$tag_info = \DB::table('tags')->where('id', '=', $numtag)->get();
+								$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
+									'issue' => $issue,
+									'project' => $project,
+									'user' => $users[$row->user_id],
+									'tag_diff' => $tag_diff,
+									'bgcolor' => (isset($tag_info[0]->bgcolor) ? $tag_info[0]->bgcolor : 'green'),
+									'ftcolor' => (isset($tag_info[0]->ftcolor) ? $tag_info[0]->ftcolor : 'black'),
+									'activity' => $row
+								));
+					}
 					break;
 				case 8:
 					//using project/issue/activity/ChangeIssue-project.php
@@ -218,39 +224,14 @@ class Issue extends \Eloquent {
 	* @return void
 	*/
 	public function reassign($user_id) {
-//		$text  = __('tinyissue.following_email_assigned_a');
-//		$text .= __('tinyissue.following_email_assigned_b');
-//		$text .= __('tinyissue.following_email_assigned_c');
 		$old_assignee = $this->assigned_to;
 
 		$this->assigned_to = $user_id;
 		$this->save();
 
-		/* Notify the person being assigned to unless that person is doing the actual assignment */
-/*		if($this->assigned_to && $this->assigned_to != \Auth::user()->id) {
-			$project_id = $this->project_id;
-			$project = \Project::find($project_id);
-
-			$subject = sprintf(__('email.reassignment'),$this->title,$project->name);
-			$text = \View::make('email.reassigned_issue', array(
-				'actor' => \Auth::user()->firstname . ' ' . \Auth::user()->lastname,
-				'project' => $project,
-				'issue' => $this
-			));
-
-			\Mail::send_email($text, $this->assigned->email, $subject);
-		}
-
-		//Notify all followers about the change of assignation
-		$followers =\DB::query("SELECT USR.email, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, TIK.title FROM following AS FAL LEFT JOIN users AS USR ON USR.id = FAL.user_id LEFT JOIN projects_issues TIK ON TIK.id = FAL.issue_id WHERE FAL.project_id = ".$project->id." AND FAL.project = 0 AND FAL.issue_id = ".$this->id." ");
-		foreach ($followers as $ind => $follower) { 
-			\Mail::send_mail(__('tinyissue.following_email_comment')." « ".$follower->title." ».", $follower->email, __('tinyissue.following_email_comment_tit'));
-			//mail($follower->email, __('tinyissue.following_email_assigned_tit'), __('tinyissue.following_email_assigned')." « ".$follower->title." ».");
-		} 
-*/
 		//Notify all followers about the new status
 		$text .= __('tinyissue.following_email_assigned');
-		$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, $text, __('tinyissue.following_email_assigned_tit'));
+		$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
 
 		add($type_id, $parent_id, $item_id = null, $action_id = null, $data = null);
 		\User\Activity::add(5, $this->project_id, $this->id, $user_id, null);
@@ -263,7 +244,6 @@ class Issue extends \Eloquent {
 	* @return void
 	*/
 	public function change_status($status) {
-		$text = __('tinyissue.following_email_status');
 		/* Retrieve all tags */
 		$tags = $this->tags;
 		$tag_ids = array();
@@ -277,17 +257,13 @@ class Issue extends \Eloquent {
 
 			/* Update tags */
 			$tag_ids[2] = 2;
-			if(isset($tag_ids[1])) {
-				unset($tag_ids[1]);
-			}
-
-			if(isset($tag_ids[8])) {
-				unset($tag_ids[8]);
-			}
+			if(isset($tag_ids[1])) { unset($tag_ids[1]); }
+			if(isset($tag_ids[8])) { unset($tag_ids[8]); }
 
 			/* Add to activity log */
 			\User\Activity::add(3, $this->project_id, $this->id);
-			$text = __('tinyissue.following_email_status_bis').__('email.closed').'.<br /><br />'.$text;
+			//$text = __('tinyissue.following_email_status_bis').__('email.closed').'.<br /><br />'.$text;
+			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('closed','status','status_bis'), array('tinyissue','tinyissue','tinyissue'));
 		} else {
 			$this->closed_by = NULL;
 			$this->closed_at = NULL;
@@ -300,15 +276,12 @@ class Issue extends \Eloquent {
 
 			/* Add to activity Log */
 			\User\Activity::add(4, $this->project_id, $this->id);
-			$text = __('tinyissue.following_email_status_bis').__('email.reopened').'.<br /><br />'.$text;
+			//Notify all followers about the new status
+			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('reopened','status','status_bis'), array('tinyissue','tinyissue','tinyissue'));
 		}
 		$this->tags()->sync($tag_ids);
 		$this->status = $status;
 		$this->save();
-
-		//Notify all followers about the new status
-		$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, $text, __('tinyissue.following_email_status_tit'));
-					
 	}
 
 	/**
@@ -344,7 +317,7 @@ class Issue extends \Eloquent {
 		/* Add to activity log for assignment if changed */
 		if($input['assigned_to'] != $this->assigned_to) {
 			\DB::query("INSERT INTO users_activity VALUES (NULL, ".\Auth::user()->id.", NULL, ".$this->id.", ".$input['assigned_to'].", 5, NULL, NOW(), NOW()) ");
-			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, __('tinyissue.following_email_assigned'), __('tinyissue.following_email_assigned_tit'));
+			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
 		}
 
 		$this->fill($fill);
@@ -434,12 +407,7 @@ class Issue extends \Eloquent {
 			foreach($tag_data_resource as $tag) {
 				$tag_data[$tag->id] = $tag->to_array();
 			}
-
-			\User\Activity::add(6, $this->project_id, $this->id, null, json_encode(array('added_tags' => $added_tags, 'removed_tags' => $removed_tags, 'tag_data' => $tag_data)));
-//			$followers =\DB::query("SELECT USR.email, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, PRO.name FROM following AS FAL LEFT JOIN users AS USR ON USR.id = FAL.user_id LEFT JOIN projects PRO ON PRO.id = FAL.project_id WHERE FAL.project_id = ".\Project::current()->id." AND FAL.project = 1 AND FAL.user_id NOT IN (".$deja.") ");
-//			foreach ($followers as $ind => $follower) {
-//				\Mail::send_email(__('tinyissue.following_email_tags')." « ".$follower->title." ».", $follower->email, __('tinyissue.following_email_tags_tit')); 
-//			} 
+			\User\Activity::add(6, $this->project_id, $this->id, null, json_encode(array('added_tags' => $added_tags, 'removed_tags' => $removed_tags, 'tag_data' => $tag_data, 'tags_test' => 'Baboom en poudre')));
 		}
 	}
 
@@ -628,8 +596,7 @@ class Issue extends \Eloquent {
 		);
 	}
 
-	private function Courriel ($Type, $SkipUser, $ProjectID, $IssueID, $User, $contenu, $subject) {
+	private function Courriel ($Type, $SkipUser, $ProjectID, $IssueID, $User, $contenu, $src) {
 		include_once "application/controllers/ajax/SendMail.php";
 	}
-
 }

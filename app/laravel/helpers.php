@@ -33,7 +33,7 @@ function __($key, $replacements = array(), $language = null) {
 function dd($value) {
 	echo "<pre>";
 	//Patrick a ôté ici un var_dump
-	echo "Likes an error occured here.  Please report the app/laravel/helpers.php page which was reading value = ".$value.'<br />';;
+	echo "Likes an error occured here.  Please report the app/laravel/helpers.php page which was reading value = ".$value.'<br />';
 	echo "</pre>";
 	die;
 }
@@ -386,7 +386,7 @@ function ends_with($haystack, $needle) {
  * @param  string|array  $needle
  * @return bool
  */
-function str_contains($haystack, $needle) {
+function fctstr_contains($haystack, $needle) {
 	foreach ((array) $needle as $n) {
 		if (strpos($haystack, $n) !== false) return true;
 	}
@@ -423,7 +423,7 @@ function str_object($value) {
  * @return string
  */
 function root_namespace($class, $separator = '\\') {
-	if (str_contains($class, $separator)) {
+	if (fctstr_contains($class, $separator)) {
 		return head(explode($separator, $class));
 	}
 }

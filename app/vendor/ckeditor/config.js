@@ -28,14 +28,25 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Remove some buttons provided by the standard plugins, which are
 	// not needed in the Standard(s) toolbar.
-	config.extraPlugins = 'horizontalrule';
-	config.removeButtons = 'Underline,Subscript,Superscript';
-	// Set the most common block elements.
-	config.format_tags = 'p;h1;h2;h3;pre';
+		config.language = 'fr',
+		config.uicolor = '#6E9BFF',
+		config.contentsLanguage = 'fr',
+		config.entities = false,
+		config.entities_greek = false,
+		config.entities_latin = false,
+		config.enterMode = CKEDITOR.ENTER_BR,
+//		config.filebrowserImageBrowseUrl = 'app/vendor/ckeditor/ckeditor_ChoisirImage.php', 
+//		config.filebrowserImageUploadUrl = 'app/vendor/ckeditor/ckeditor_RecevoirImage.php',
+		config.forcePasteAsPlainText = true,
+		config.language_list =[ 'fr-ca:French:Canada', 'en:English', 'es:Spanish' ],
+		config.protectedSource.push( /<\?[\s\S]*?\?>/g ),
+		config.shiftEnterMode = CKEDITOR.ENTER_P;
+		config.extraPlugins = 'pastecode';
+		config.extraPlugins = 'justify';
 
 	// Simplify the dialog windows.
-	config.removeDialogTabs = 'image:advanced;link:advanced';
 	config.entities = false;
 	config.entities_latin = false;
 	config.htmlEncodeOutput = false;
 };
+

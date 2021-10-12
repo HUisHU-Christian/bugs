@@ -1,3 +1,4 @@
+<?php if ($activity) { ?>
 <?php
 //if you change this file, don't forget to copy the new version to
 // /app/application/views/activity/attached-file.php  
@@ -36,3 +37,4 @@ $What = \DB::table('projects_issues_attachments')->where('id', '=', $activity->a
 
 	<div class="clr"></div>
 </li>
+<?php } ?>

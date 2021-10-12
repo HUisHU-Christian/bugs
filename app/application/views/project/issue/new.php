@@ -50,7 +50,7 @@ if (file_exists($chemin)) {
 		</tr>
 
 		<tr>
-			<th><?php echo __('tinyissue.tags'); ?></th>
+			<th><?php echo __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span></th>
 				<td>
 					<?php echo Form::text('tags', Input::old('tags', Tag::find(1)->first()->tag), array('id' => 'tags')); ?>
 					<?php echo $errors->first('tags', '<span class="error">:message</span>'); ?>
@@ -82,7 +82,7 @@ if (file_exists($chemin)) {
 
 			<?php if(Auth::user()->permission('issue-modify')): ?>
 			<tr>
-				<th><?php echo __('tinyissue.assigned_to'); ?></th>
+				<th><?php echo __('tinyissue.assigned_to'); ?>&nbsp;&nbsp;</th>
 				<td>
 					<?php echo Form::select('assigned_to', array(0 => '') + Project\User::dropdown($project->users()->get()), $project->default_assignee); ?>
 				</td>
@@ -136,7 +136,6 @@ function IMGupload(input) {
 	var fil = document.getElementById("file_upload").files[0];
 	var ext = fil['name'].substring(fil['name'].lastIndexOf('.') + 1).toLowerCase();
 	var img = "app/assets/images/icons/file_01.png?"; 
-	var formdata = new FormData();
 	var formdata = new FormData();
 	formdata.append("Loading", fil);
 	if (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg") { 

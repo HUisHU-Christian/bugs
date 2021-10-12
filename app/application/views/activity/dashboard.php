@@ -8,7 +8,7 @@
 <div class="pad">
 <?php
 	$SansAccent = array();
-	foreach(Auth::user()->dashboard() as $project):
+	foreach(Auth::user()->dashboard() as $project) {
 		if(!$project['activity']) continue;
 
 		$id = $project['project']->attributes['id'];
@@ -22,27 +22,20 @@
 			$actiProj[$id][] =  $activity;
 		}
 		asort($SansAccent);
-	endforeach;
+	}
 
-	foreach ($SansAccent as $id => $name):
+	foreach ($SansAccent as $id => $name) {
+		echo '<div class="blue-box">';
+		echo '	<div class="inside-pad">';
+		echo '		<h4>';
+		echo '			<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
+		echo '		</h4>';
+		echo '		<ul class="activity">';
+		foreach($actiProj[$id] as $activity) { echo $activity; }
+		echo '		</ul>';
+		echo '		<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
+		echo '	</div>';
+		echo '</div>';
+	}
 ?>
-
-	<div class="blue-box">
-		<div class="inside-pad">
-
-			<h4>
-				<a href="project/<?php echo $id; ?>"><?php echo $NomProjet[$id]; ?></a>
-			</h4>
-
-			<ul class="activity">
-				<?php foreach($actiProj[$id] as $activity): ?>
-				<?php echo $activity; ?>
-				<?php endforeach; ?>
-			</ul>
-
-			<a href="project/<?php echo $id; ?>"><?php echo $NomProjet[$id]; ?></a>
-
-		</div>
-	</div>
-	<?php endforeach; ?>
 </div>

@@ -4,10 +4,24 @@ function ChgLng(Lng = 'en') { document.location.href = 'index.php?Lng=' + Lng; }
 </script>
 
 <?php
+foreach (@$_GET as $ind => $val) {
+	if (strstr($val, "<") != '' || strstr(htmlspecialchars_decode($val), "<") != '' || strstr($val, "script") != '') {
+		unset($_GET[$ind]); 
+	}
+}
+foreach (@$_POST as $ind => $val) {
+	if (strstr($ind, "password") == '' && (strstr($val, "<") != '' || strstr(htmlspecialchars_decode($val), "<") != '' || strstr($val, "script") != '')) {
+		unset($_POST[$ind]); 
+	}
+}
 if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	if(!file_exists('../config.app.example.php')) { die($NoConfigApp); }
 	$config_file = file_get_contents('../config.app.example.php');
 
+	/* Edit URL Information */
+	$_POST['URL'] = (substr($_POST['URL'], -1) == '/') ? $_POST['URL'] : $_POST['URL'].'/';
+	$config_file = str_replace("'url' => '',", "'url' => '".$_POST['URL']."',", $config_file);
+	
 	/* Edit Database Information */
 	$config_file = str_replace('localhost', $_POST['database_host'], $config_file);
 	$config_file = str_replace('database_user', $_POST['database_username'], $config_file);
@@ -152,8 +166,20 @@ if(!file_exists('../config.app.php')){ ?>
 				</td>
 			</tr>
 			<tr style="background-color: #DDD;">
+				<td>
+					<h3 style="font-weight: bold; font-size: 150%; ">URL</h3>
+				</td>
+				<td>
+					<?php
+						$url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+						$url = substr($url, 0, strpos($url, 'install'));
+					?>
+					<input type="text" name="URL" value="<?php echo $url; ?>" />
+				</td>
+			</tr>
+			<tr style="background-color: #DDD;">
 				<td colspan="2">
-				<h3 style="font-weight: bold; font-size: 150%; ">MySQL</h3>
+				<h3 style="font-weight: bold; font-size: 150%; ">SQL</h3>
 				</td>
 			</tr>
 			<tr style="background-color: #DDD;">
@@ -290,4 +316,5 @@ if(!file_exists('../config.app.php')){ ?>
 			</table>
 		</form>
 	</div>
+
 <?php exit(); } ?>
