@@ -2,9 +2,13 @@
 	include_once "db.php";
 
 	//Préférences de l'usager
-	if (@$_GET["contenu"] == 'tagsADD' || @$_GET["contenu"] == 'tagsOTE' || @$_GET["contenu"] == 'assigned') { $contenu[] = $_GET["contenu"]; $src[] = $_GET["src"]; } 
-	//if (@$_GET["contenu"] == 'contenutagsADD') { $contenu[] = $_GET["contenu"]; } 
-	$contenu = $contenu ?? $_GET["contenu"] ?? "comment";
+	if (isset($_GET["contenu"])) {
+		if ($_GET["contenu"] == 'tagsADD' || $_GET["contenu"] == 'tagsOTE' || $_GET["contenu"] == 'assigned') { $contenu[] = $_GET["contenu"]; $src[] = $_GET["src"]; } 
+		//if (@$_GET["contenu"] == 'contenutagsADD') { $contenu[] = $_GET["contenu"]; }
+		$contenu = $contenu ?? $_GET["contenu"] ?? "comment";
+	} else {
+		$contenu = $contenu ?? "comment";
+	}
 	$dir = $prefixe.$config['attached']['directory'];
 	$IssueID = $IssueID ?? $_GET["IssueID"] ?? 0;
 	$ProjectID = $ProjectID ?? $_GET["ProjectID"] ?? 0;
@@ -175,7 +179,7 @@
 	}
 	
 	
-function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url) {
+function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL) {
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 	$lfin = $tit ? ' »' : '</a>';
 	//$liss = $tit ? ' « ' : '<a href="'.(str_replace("issue/new", "issue/".$IssueID."/", $link)).'">';

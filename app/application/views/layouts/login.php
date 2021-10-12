@@ -1,5 +1,4 @@
 <?php
-	session_start();
 	include "application/language/all.php";
 	$lng = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
 	if (file_exists("../install/config-setup.php")) { unlink ("../install/config-setup.php"); }
@@ -38,8 +37,6 @@
 
 			<h1><span id="span_Welcome"><?php echo (isset($Welcome[$lng])) ? $Welcome[$lng] : $Welcome["en"]; ?></span><br><img src="<?php echo URL::to_asset('app/assets/images/layout/tinyissue.svg');?>" alt="<?php echo Config::get('application.my_bugs_app.name'); ?>" style="width:350px;;"></h1>
 			<form method="post">
-
-
 				<table class="form" >
 					<tr>
 						<td colspan="2" style="color: #a31500;">
@@ -51,11 +48,11 @@
 					<tr><th colspan="2" id="th_Title"><?php echo (isset($Title[$lng])) ? $Title[$lng] : $Title["en"]; ?></th></tr>
 					<tr>
 						<th><label for="email" id="label_Email"><?php echo (isset($Email[$lng])) ? $Email[$lng] : $Email["en"]; ?></label></th>
-						<td><input type="text" id="input_Email" name="email" id="email" autofocus value="<?php echo @$_SESSION["usr"]; ?>" /></td>
+						<td><input type="text" id="input_Email" name="email" id="email" autofocus value="<?php echo $_SESSION["usr"] ?? ''; ?>" /></td>
 					</tr>
 					<tr>
 						<th><label for="password" id="label_Password"><?php echo (isset($Password[$lng])) ? $Password[$lng] : $Password["en"]; ?></label></th>
-						<td><input type="password" id="password" name="password" value="<?php echo @$_SESSION["psw"]; ?>" /></td>
+						<td><input type="password" id="password" name="password" value="<?php echo $_SESSION["psw"] ?? ''; ?>" /></td>
 					</tr>
 					<tr>
 						<th></th>
@@ -82,7 +79,11 @@
 	</div>
 </body>
 
-<?php unset ($_SESSION["Msg"],$_SESSION["psw"],$_SESSION["usr"]) ?>
+<?php
+	if (isset($_SESSION)) { 
+		unset ($_SESSION["Msg"],$_SESSION["psw"],$_SESSION["usr"]);
+	} 
+?>
 <?php echo Asset::scripts(); ?>
 <script type="text/javascript">
 var values = new Array();

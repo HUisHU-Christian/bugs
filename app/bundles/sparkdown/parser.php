@@ -1,7 +1,7 @@
 <?php namespace Sparkdown;
 
 // Config options for Sparkdown
-define('MARKDOWN_EMPTY_ELEMENT_SUFFIX', '>');
+define('MARKDOWN_EMPTY_ELEMENT_SUFFIX', ' />');
 define('MARKDOWN_PARSER_CLASS', 'Sparkdown\\MarkdownLaravel_Parser');
 
 
@@ -28,7 +28,7 @@ define( 'MARKDOWNEXTRA_VERSION',  "1.2.5" ); # Sun 8 Jan 2012
 #
 
 # Change to ">" for HTML output
-@define( 'MARKDOWN_EMPTY_ELEMENT_SUFFIX',  " />");
+//@define( 'MARKDOWN_EMPTY_ELEMENT_SUFFIX',  " />");
 
 # Define the width of a tab for code blocks.
 @define( 'MARKDOWN_TAB_WIDTH',     4 );
@@ -54,7 +54,7 @@ define( 'MARKDOWNEXTRA_VERSION',  "1.2.5" ); # Sun 8 Jan 2012
 
 ### Standard Function Interface ###
 
-@define( 'MARKDOWN_PARSER_CLASS',  'MarkdownExtra_Parser' );
+//@define( 'MARKDOWN_PARSER_CLASS',  'MarkdownExtra_Parser' );
 
 function Markdown($text) {
 #

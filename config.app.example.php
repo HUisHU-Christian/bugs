@@ -31,8 +31,11 @@ return array(
 	),
 
 	/**  Database
-	 * Fill out your database settings. Make sure that the driver is correct: 'mysql' for MySQL, 'sqlsrv' for MSSQL,
-	 * 'pgsql' for PostgreSQL, or 'sqlite' for SQLite
+	 * Fill out your database settings. Make sure that the driver is correct: 
+	 ** 'mysql' for MySQL, 
+	 ** 'sqlsrv' for MSSQL,
+	 ** 'pgsql' for PostgreSQL, 
+	 ** 'sqlite' for SQLite
 	 */
 	'database' => array(
 		'driver' => 'mysql',
@@ -202,5 +205,9 @@ return array(
 	****'PriorityColors' => array("transparent","transparent","transparent","transparent","transparent","transparent "),
 	*/
 	'PriorityColors' => array("black","PaleGray","DarkCyan","LimeGreen","Darkorange","Crimson"),
+
+	/** Todo : Number of items per column		
+	*/ 
+	'TodoNbItems' => 25,
 
 );

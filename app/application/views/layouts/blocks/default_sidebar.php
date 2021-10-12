@@ -41,7 +41,7 @@
 		echo '</ul>';
 
 	$ceci = array_keys($_GET);
-	$prefixe = (in_array(@$ceci[0], array("/administration/users","/projects/reports","/user/settings","/user/issues","/project/5"))) ? "../" : "";
+	$prefixe = isset($ceci[0]) ? (in_array($ceci[0], array("/administration/users","/projects/reports","/user/settings","/user/issues","/project/5"))) ? "../" : "" : "";
 	include_once path('public').'app/vendor/searchEngine/index.php'; 
 ?>
 </div>

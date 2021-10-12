@@ -25,6 +25,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title><?php echo Config::get('application.my_bugs_app.name'); ?></title>
 		<script>
+			//La branche PHP8 est vouée à disparaître si - comme il semble - toutes les corrections ont été apportées adéquatement aux nom de fonctions qui ne doivent pas être identiques aux noms des classes correspondantes
 			var siteurl = '<?php echo URL::to(); ?>';
 			var current_url = '<?php echo URL::to(Request::uri()); ?>';
 			var baseurl = '<?php echo URL::base(); ?>';
@@ -32,16 +33,17 @@
 		<?php echo Asset::styles(); ?>
 		<?php echo Asset::scripts(); ?>
 		<?php
-			//Testons si l'usager en ligne en faisant ping 8.8.8.8
-			$pingresult = exec("/bin/ping -n 3 8.8.8.8", $outcome, $status);
-			$EnLigne = (0 == $status) ? true : false;
+			//Testons de savoir si l'usager en ligne en faisant ping 8.8.8.8
+			$status = 0;
+			$pingresult = shell_exec('ping -c 1 -w 1 8.8.8.8');
+			$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
 			if (date("Y-m-d", fileatime ("../install/get_updates_list")) != date("Y-m-d") && $EnLigne) {
 				include "../app/application/libraries/checkVersion.php";
 				$Etat =  ($verActu == $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
 				file_put_contents ("../install/get_updates_list", $Etat);
 			}
-			$styleAdmin = file_get_contents ("../install/get_updates_list");
 
+			$styleAdmin = file_get_contents ("../install/get_updates_list");
 			$wysiwyg = Config::get('application.editor');
 			if (trim($wysiwyg['BasePage']) != '') {
 				if (file_exists($wysiwyg['directory'].'/Bugs_code/header.php')) { include_once $wysiwyg['directory'].'/Bugs_code/header.php'; }

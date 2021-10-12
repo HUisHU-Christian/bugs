@@ -139,14 +139,13 @@ class Issue extends \Eloquent {
 						$valadd = trim(substr($row->data, $prem+1, ($pren-$prem)-1));
 						$numtag = ($valadd != '') ? $valadd : trim(substr($row->data, $deux+1, ($deuy-$deux)-1));
 								$tag_info = \DB::table('tags')->where('id', '=', $numtag)->get();
-								//2 sept 2021 insistance sur ce document.
 								$return[] = \View::make('project/issue/activity/' . $activity_type[$row->type_id]->activity, array(
 									'issue' => $issue,
 									'project' => $project,
 									'user' => $users[$row->user_id],
 									'tag_diff' => $tag_diff,
-									'bgcolor' => $tag_info[0]->bgcolor,
-									'ftcolor' => ($tag_info[0]->ftcolor ? $tag_info[0]->ftcolor : 'black'),
+									'bgcolor' => (isset($tag_info[0]->bgcolor) ? $tag_info[0]->bgcolor : 'green'),
+									'ftcolor' => (isset($tag_info[0]->ftcolor) ? $tag_info[0]->ftcolor : 'black'),
 									'activity' => $row
 								));
 					}
