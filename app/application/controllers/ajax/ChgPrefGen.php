@@ -35,10 +35,33 @@
 			$MesLignes[$rendu] = "	'PriorityColors' => array ('".$_POST["coulo"]."', '".$_POST["coula"]."','".$_POST["coulb"]."','".$_POST["coulc"]."','".$_POST["could"]."','".$_POST["coule"]."'), 
 ";
 		}
+		if (strpos($MesLignes[$rendu], "'TodoNbItems'") !== false && !isset($NumLigne['TodoNbItems']))  { 
+			$NumLigne['TodoNbItems'] = $rendu; 
+			$MesLignes[$rendu] = "	'TodoNbItems' => ".$_POST["TodoNbItems"].",
+";
+		}
 		++$rendu;
 	}
 	fclose($RefFichier);
 	
+	//Ajout des lignes nouvellement créées, pour ceux qui n'ont pas fait la mise à jour de leur fichier config.app.php
+	//12 octobre 2021 
+	if (!isset($NumLigne['TodoNbItems'])) {
+		$passe[1] = $MesLignes[($rendu-1)]; 
+		$passe[2] = $MesLignes[($rendu-2)];
+		unset($MesLignes[($rendu-1)], $MesLignes[($rendu-2)]); 
+		$rendu = $rendu -2;
+		$MesLignes[($rendu++)] = "	/** Todo : Number of items per column
+		";
+		$MesLignes[($rendu++)] = "	*/
+		";
+		$MesLignes[($rendu++)] = "	'TodoNbItems' => ".$_POST["TodoNbItems"].",
+		";
+		$MesLignes[($rendu++)] = "
+		";
+		$MesLignes[($rendu++)] = $passe[2];
+		$MesLignes[($rendu++)] = $passe[1];
+	}
 	//Enregistrement du nouveau fichier corrigé  
 	$NeoFichier = fopen($NomFichier, "w");
 	foreach ($MesLignes as $ind => $val) {

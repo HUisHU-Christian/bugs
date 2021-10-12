@@ -15,8 +15,7 @@ class Project extends Eloquent {
 	* @param  string  $url
 	* @return string
 	*/
-	public function to($url = '')
-	{
+	public function to($url = '') {
 		return URL::to('project/' . $this->id . (($url) ? '/'. $url : ''));
 	}
 
@@ -36,29 +35,24 @@ class Project extends Eloquent {
 	* @param  int   $role_id
 	* @return void
 	*/
-	public function assign_user($user_id, $role_id = 0)
-	{
+	public function assign_user($user_id, $role_id = 0) {
 		Project\User::assign($user_id, $this->id, $role_id);
 	}
 
-	public function users()
-	{
+	public function users() {
 		return $this->has_many_and_belongs_to('\User', 'projects_users', 'project_id', 'user_id');
 	}
 
-	public function users_not_in()
-	{
+	public function users_not_in() {
 		$users = array();
 
-		foreach($this->users()->get(array('user_id')) as $user)
-		{
+		foreach($this->users()->get(array('user_id')) as $user) {
 			$users[] = $user->id;
 		}
 
 		$results = User::where('deleted', '=', 0);
 
-		if(count($users) > 0)
-		{
+		if(count($users) > 0) {
 			$results->where_not_in('id', $users);
 		}
 
@@ -71,10 +65,8 @@ class Project extends Eloquent {
 	* @param  int  $user_id
 	* @return int
 	*/
-	public function count_assigned_issues($user_id = null)
-	{
-		if(is_null($user_id))
-		{
+	public function count_assigned_issues($user_id = null) {
+		if(is_null($user_id)) {
 			$user_id = \Auth::user()->id;
 		}
 		return \Tag::find(1)->issues()
@@ -83,15 +75,13 @@ class Project extends Eloquent {
 				->count();
 	}
 
-	public function count_open_issues()
-	{
+	public function count_open_issues() {
 		return \Tag::find(1)->issues()
 				->where('project_id', '=', $this->id)
 				->count();
 	}
 
-	public function count_closed_issues()
-	{
+	public function count_closed_issues() {
 		return \Tag::find(2)->issues()
 				->where('project_id', '=', $this->id)
 				->count();
@@ -102,13 +92,11 @@ class Project extends Eloquent {
 	* @param  int    $activity_limit
 	* @return array
 	*/
-	public function activity($activity_limit)
-	{
+	public function activity($activity_limit) {
 		$users = $issues = $comments = $activity_type = array();
 
 		/* Load the activity types */
-		foreach(Activity::all() as $row)
-		{
+		foreach(Activity::all() as $row) {
 			$activity_type[$row->id] = $row;
 		}
 
@@ -118,38 +106,28 @@ class Project extends Eloquent {
 			->take($activity_limit)
 			->get();
 
-		if(!$project_activity)
-		{
+		if(!$project_activity) {
 			return null;
 		}
 
-		foreach($project_activity as $activity)
-		{
-			if(!isset($issues[$activity->item_id]))
-			{
+		foreach($project_activity as $activity) {
+			if(!isset($issues[$activity->item_id])) {
 				$issues[$activity->item_id] = Project\Issue::find($activity->item_id);
 			}
 
-			if(!isset($users[$activity->user_id]))
-			{
+			if(!isset($users[$activity->user_id])) {
 				$users[$activity->user_id] = User::find($activity->user_id);
 			}
 
-			if(!isset($comments[$activity->action_id]))
-			{
+			if(!isset($comments[$activity->action_id])) {
 				$comments[$activity->action_id] = Project\Issue\Comment::find($activity->action_id);
 			}
 
-			if($activity->type_id == 5)
-			{
-				if(!isset($users[$activity->action_id]))
-				{
-					if($activity->action_id > 0)
-					{
+			if($activity->type_id == 5) {
+				if(!isset($users[$activity->action_id])) {
+					if($activity->action_id > 0) {
 						$users[$activity->action_id] =  User::find($activity->action_id);
-					}
-					else
-					{
+					} else {
 						$users[$activity->action_id] = array();
 					}
 				}
@@ -159,10 +137,8 @@ class Project extends Eloquent {
 		/* Loop through the projects and activity again, building the views for each activity */
 		$return = array();
 
-		foreach($project_activity as $row)
-		{
-			switch($row->type_id)
-			{
+		foreach($project_activity as $row) {
+			switch($row->type_id) {
 				case 2:
 					$return[] = View::make('activity/' . $activity_type[$row->type_id]->activity, array(
 						'issue' => $issues[$row->item_id],
@@ -237,8 +213,7 @@ class Project extends Eloquent {
 	*
 	* @return Project
 	*/
-	public static function current()
-	{
+	public static function current() {
 		return static::$current;
 	}
 
@@ -248,8 +223,7 @@ class Project extends Eloquent {
 	* @param   int  $id
 	* @return  void
 	*/
-	public static function load_project($id)
-	{
+	public static function load_project($id) {
 		static::$current = static::find($id);
 	}
 
@@ -259,16 +233,14 @@ class Project extends Eloquent {
 	* @param  array  $input
 	* @return array
 	*/
-	public static function create_project($input)
-	{
+	public static function create_project($input) {
 		$rules = array(
 			'name' => 'required|max:250'
 		);
 
 		$validator = \Validator::make($input, $rules);
 
-		if($validator->fails())
-		{
+		if($validator->fails()) {
 			return array(
 				'success' => false,
 				'errors' => $validator->errors
@@ -285,10 +257,8 @@ class Project extends Eloquent {
 		$project->save();
 
 		/* Assign selected users to the project */
-		if(isset($input['user']) && count($input['user']) > 0)
-		{
-			foreach($input['user'] as $id)
-			{
+		if(isset($input['user']) && count($input['user']) > 0) {
+			foreach($input['user'] as $id) {
 				$project->assign_user($id);
 			}
 		}
@@ -306,16 +276,14 @@ class Project extends Eloquent {
 	* @param \Project  $project
 	* @return array
 	*/
-	public static function update_project($input, $project)
-	{
+	public static function update_project($input, $project) {
 		$rules = array(
 			'name' => 'required|max:250'
 		);
 
 		$validator = \Validator::make($input, $rules);
 
-		if($validator->fails())
-		{
+		if($validator->fails()) {
 			return array(
 				'success' => false,
 				'errors' => $validator->errors
@@ -351,8 +319,7 @@ class Project extends Eloquent {
 	* @param  Project  $project
 	* @return void
 	*/
-	public static function delete_project($project)
-	{
+	public static function delete_project($project) {
 		$id = $project->id;
 		$project->delete();
 

@@ -28,11 +28,13 @@
 						$valadd = trim(substr($activity->attributes['data'], $prem+1, ($pren-$prem)-1));
 						$numtag = ($valadd != '') ? $valadd : intval(trim(substr($activity->attributes['data'], $deux+1, ($deuy-$deux)-1))) * -1;
 						$tag_info = \DB::table('tags')->where('id', '=', abs($numtag))->get();
-					 	echo '<label style="background-color: '.$tag_info[0]->bgcolor.'; '.($tag_info[0]->ftcolor ? 'color: '.$tag_info[0]->ftcolor.'; ' : '').' padding: 5px 10px; border-radius: 8px;">'.$tag_info[0]->tag.'</label><b>';
-					 	echo ' ';
-					 	echo ($numtag > 0) ? '<span style="color: green;">'.__('tinyissue.tag_added').'</span>' : '<span style="color: red;">'.__('tinyissue.tag_removed').'</span>'; 
-						echo ' '.__('tinyissue.by').' '.$user->attributes["firstname"].' '.$user->attributes["lastname"].'</b></a> ';
-						echo ' &nbsp;&nbsp; '.date(Config::get('application.my_bugs_app.date_format'), strtotime($activity->attributes['updated_at'])).'';
+						if (count($tag_info) > 0) {
+						 	echo '<label style="background-color: '.$tag_info[0]->bgcolor.'; '.($tag_info[0]->ftcolor ? 'color: '.$tag_info[0]->ftcolor.'; ' : '').' padding: 5px 10px; border-radius: 8px;">'.$tag_info[0]->tag.'</label><b>';
+						 	echo ' ';
+						 	echo ($numtag > 0) ? '<span style="color: green;">'.__('tinyissue.tag_added').'</span>' : '<span style="color: red;">'.__('tinyissue.tag_removed').'</span>'; 
+							echo ' '.__('tinyissue.by').' '.$user->attributes["firstname"].' '.$user->attributes["lastname"].'</b></a> ';
+							echo ' &nbsp;&nbsp; '.date(Config::get('application.my_bugs_app.date_format'), strtotime($activity->attributes['updated_at'])).'';
+						 }
 					}
 				?>
 			</div>
