@@ -6,7 +6,7 @@ var posiX = 0;
 var posiY = 0;
 
 function AffichonsAutres(col, rendu) {
-	Exactement = Exactement + 'app/application/controllers/ajax/todo_AffichonsAutres.php?col=' + col + '&rendu=' + rendu;
+	Exactement = Exactement + 'app/application/controllers/ajax/todo_AffichonsAutres.php?user=' + usr + '&col=' + col + '&rendu=' + rendu;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {

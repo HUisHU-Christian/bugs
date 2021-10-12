@@ -113,8 +113,7 @@ class Todo extends Eloquent {
     $user_id = Auth::user()->id;
     
     $todo = Todo::load_todo($issue_id, $user_id);
-    if(!$todo)
-		{
+    if(!$todo) {
 			return array(
 				'success' => FALSE,
 				'errors' => __('tinyissue.todos_err_loadfailed'),

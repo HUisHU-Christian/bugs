@@ -56,5 +56,4 @@
 	var msgFinal = "<?php echo __('tinyissue.issue_has_been_updated');?> ";
 	var Exactement = "<?php echo $config_app['url']; ?>"; 
 	var usr = <?php echo Auth::user()->id; ?>; 
-
 </script>
