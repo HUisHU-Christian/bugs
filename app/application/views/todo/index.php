@@ -7,6 +7,7 @@
 	if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = array("black","Orchid","Cyan","Lime","orange","red"); }
 	if (!isset($config_app['Percent'])) { $config_app['Percent'] = array (100,0,10,80,100); }
 	$config_app['Percent'][5] = 0;
+	$NbIssues = $config_app["TodoNbItems"] ?? 25;
 	$column = array(1,2,3,0);
 
 	echo '<div class="pad" id="todo-lanes">
@@ -19,10 +20,11 @@
 		$rendu = 0;
 		echo '<h4>'.$status_codes[$col].' ('.$config_app['Percent'][$col].(($col == 0) ? '' :  ' - '.($config_app['Percent'][$col+1]-1)).'% )<br />';
 		echo '<span style="color: black; font-size: 75%; margin-left:0;">';
-		echo '<b><span id="todo-list-span-'.$col.'" style="margin-left: 0px;">'.(($Combien > 25) ? ($rendu+1).'-'.($rendu+25).'</span> / ' : 'Total : </span>').$Combien.'</b><br />';
-		if ($Combien >= 25) { while ($rendu < $Combien) {
-			echo '<a href="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" style="font-size: 100%; font-weight: normal; ">'.(($rendu/25)+1).'</a>&nbsp;&nbsp;';
-			$rendu = $rendu + 25;
+		echo '<b><span id="todo-list-span-'.$col.'" style="margin-left: 0px;">'.(($Combien > $NbIssues) ? ($rendu+1).'-'.($rendu+$NbIssues).'</span> / ' : 'Total : </span>').$Combien.'</b><br />';
+		if ($Combien >= $NbIssues) { while ($rendu < $Combien) {
+			echo '<a href="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" style="font-size: 100%; font-weight: normal; ">'.(($rendu/$NbIssues)+1).'</a>&nbsp;&nbsp;';
+			if (((($rendu+$NbIssues)/$NbIssues)/10) == round((($rendu+$NbIssues)/$NbIssues)/10)) { echo '<br />'; }
+			$rendu = $rendu + $NbIssues;
 		}}
 		echo '</span>
 		</h4>
@@ -40,7 +42,7 @@
 				echo '	</div>';
 				echo '</div>
 				';
-				if (++$rendu > 25) { break; }
+				if (++$rendu > $NbIssues) { break; }
 			}
 		}
 		echo '</div>';
@@ -54,6 +56,7 @@
 ?>
 <script type="text/javascript" >
 	var msgFinal = "<?php echo __('tinyissue.issue_has_been_updated');?> ";
+	var NbIssues = <?php echo $NbIssues; ?>;
 	var Exactement = "<?php echo $config_app['url']; ?>"; 
 	var usr = <?php echo Auth::user()->id; ?>; 
 

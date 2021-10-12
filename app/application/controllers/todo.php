@@ -28,7 +28,6 @@ class Todo_Controller extends Base_Controller {
 			}
 		}
 
-
 		return $this->layout->with('active', 'todo')->nest('content', 'todo.index', array(
 			'lanes'   => $lanes,
 			'status_codes'  => $status_codes,
