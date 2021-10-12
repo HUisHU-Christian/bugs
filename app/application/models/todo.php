@@ -113,8 +113,7 @@ class Todo extends Eloquent {
     $user_id = Auth::user()->id;
     
     $todo = Todo::load_todo($issue_id, $user_id);
-    if(!$todo)
-		{
+    if(!$todo) {
 			return array(
 				'success' => FALSE,
 				'errors' => __('tinyissue.todos_err_loadfailed'),
@@ -154,7 +153,10 @@ class Todo extends Eloquent {
 			$todo->save();
 			
 			// Close issue if todo is moved to closed lane. 
-			if ($new_status != 0) {
+			if ($new_status == 0) {
+				\DB::table('projects_issues')->where('id', '=', $issue_id)->update(array('closed_by' =>$user,'closed_at' => date("Y-m-d H:i:s")));
+				\DB::table('users_activity')->insert(array('id' => NULL, 'user_id' => $user, 'parent_id' => $project->id, 'item_id' => $issue, 'action_id' => 3, 'data' => 'Closed through the Kanban Drag & Drop','created_at' => date("Y-m-d H:i:s"),'updated_at' => date("Y-m-d H:i:s")));
+			} else {
 				$config_app = require path('public') . 'config.app.php';
 				$Moyenne = ($config_app['Percent'][$new_status] + $config_app['Percent'][$new_status + 1]) / 2;
 				$todo->weight = $Moyenne;

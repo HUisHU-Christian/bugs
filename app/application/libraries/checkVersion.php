@@ -17,8 +17,5 @@ if (@fopen("https://github.com/pixeline/bugs/blob/master/app/application/config/
 	$Lisons = substr($Lisons, strpos($Lisons, "LC4"), 400);
 	$verCod = substr($Lisons, 123,3).'_'.substr($Lisons, 386, 2);
 	$Lisons = substr($Lisons, 300);
-//	$f = fopen("BAboom.txt", "w");
-//	fputs($f, $Lisons);
-//	$verCod .= '_'.substr($Lisons, 86, 2);
 }
 ?>
