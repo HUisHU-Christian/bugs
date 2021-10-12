@@ -294,12 +294,13 @@
 				<?php echo $LngSRV["preferences_coule"]; ?> : <input name="coule" id="input_coule" value="<?php echo ($Conf[5] == 'Crimson')	? '#DC143C' : $Conf[5]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_coulo"]; ?> : <input name="coulo" id="input_coulo" value="<?php echo ($Conf[0] == 'black') 	? '#000000' : $Conf[0]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<br />
-				<?php echo $LngSRV["preferences_duree"]; ?> : <input name="duree" id="input_duree" value="<?php echo $config_app['duration']; ?>" size="4" type="number" max="365" min="2" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_duree"]; ?> (30) : <input name="duree" id="input_duree" value="<?php echo $config_app['duration']; ?>" size="4" type="number" max="365" min="2" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<br />
 				<?php $Conf = $config_app['Percent']; ?>
 				<span style="float: right; vertical-align: middle;">				<input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: AppliquerPrefGen();" class="button2"/></span>
-				<?php echo $LngSRV["preferences_pct_prog"]; ?> : <input name="prog" id="input_prog" value="<?php echo $Conf[2]; ?>" type="number" size="3" min="2" max="85" onchange="this.style.backgroundColor = 'yellow';" /><br />
-				<?php echo $LngSRV["preferences_pct_test"]; ?> : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_pct_prog"]; ?> (10) : <input name="prog" id="input_prog" value="<?php echo $Conf[2]; ?>" type="number" size="3" min="2" max="85" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_pct_test"]; ?> (80) : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo $config_app['TodoNbItems'] ?? 25; ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
 	<br />
 	</div>
