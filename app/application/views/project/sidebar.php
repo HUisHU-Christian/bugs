@@ -24,7 +24,7 @@ if(count($active_projects)>1) {
 	asort($SansAccent);
 
 	foreach($SansAccent as $ind => $val) {
-		$selected = (substr($ind, strrpos($ind, "/")+1) == Project::current()->id) ? 'selected':'';
+		$selected = (substr($ind, strrpos($ind, "/")+1) == Project::current()->id) ? 'selected' : '';
 		echo '<option value="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" '.$selected.'>'.$Proj[$ind].'</option>';
 	 }
 ?>
