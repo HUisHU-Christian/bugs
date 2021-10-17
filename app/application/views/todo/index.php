@@ -14,19 +14,17 @@
 	';
 	foreach ($column as $col) {
 		echo '
-		<div class="todo-lane blue-box" id="lane-status-'.$col.'" data-status="'.$col.'">
+		<div class="todo-lane blue-box" id="lane-status-'.$col.'" data-status="'.$col.'" ondragover="dragOver(this.id);"  ondragleave="dragLeave(this.id);" ondrop="alert(\'Nous recevons ceci de la colonne\');dragDrop(this.id);">
 		';
 		$Combien = (isset($lanes[$col]) ? count($lanes[$col]) :  0);
 		$rendu = 0;
 		echo '<h4>'.$status_codes[$col].' ('.$config_app['Percent'][$col].(($col == 0) ? '' :  ' - '.($config_app['Percent'][$col+1]-1)).'% )<br />';
-
 		echo '<span style="color: black; font-size: 75%; margin-left:0;">';
 		echo '<b><span id="todo-list-span-'.$col.'" style="margin-left: 0px;">'.(($Combien > $NbIssues) ? ($rendu+1).'-'.($rendu+$NbIssues).'</span> / ' : 'Total : </span>').$Combien.'</b><br />';
 		if ($Combien >= $NbIssues) { while ($rendu < $Combien) {
 			echo '<a href="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" style="font-size: 100%; font-weight: normal; ">'.(($rendu/$NbIssues)+1).'</a>&nbsp;&nbsp;';
 			if (((($rendu+$NbIssues)/$NbIssues)/10) == round((($rendu+$NbIssues)/$NbIssues)/10)) { echo '<br />'; }
 			$rendu = $rendu + $NbIssues;
-
 		}}
 		echo '</span>
 		</h4>
