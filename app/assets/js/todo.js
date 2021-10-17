@@ -47,10 +47,8 @@ function dragDrop(cetID) {
 		formdata.append("cetDIV", cetDIV.id);
 		formdata.append("userID", usr);
 
-		document.getElementById(divORIG).removeChild(cetDIV);
 		document.getElementById(divOVER).appendChild(cetDIV);
 
-		//alert("Nous ferons quelque chose ici avec \ncetID = " + cetID + "\n et la div réceptrice : " + divOVER + "\nOrigine = " + divORIG);
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {

@@ -340,7 +340,7 @@ class Issue extends \Eloquent {
 	*/
 	public function set_tags($mode) {
 		if ($mode == 'create') {
-			/* Set old tag ids to contain just the status:open tag */
+			/* Set old tag ids to contain only the status:open tag */
 			$old_tag_ids = array(1);
 		} else {
 			/* Save old tags to determine if we need to record activity */
@@ -408,7 +408,17 @@ class Issue extends \Eloquent {
 			foreach($tag_data_resource as $tag) {
 				$tag_data[$tag->id] = $tag->to_array();
 			}
-			\User\Activity::add(6, $this->project_id, $this->id, null, json_encode(array('added_tags' => $added_tags, 'removed_tags' => $removed_tags, 'tag_data' => $tag_data, 'tags_test' => 'Baboom en poudre')));
+			
+			//17 octobre 2021, j'annule ici la fonction de commentaire dans l'historique (relativement aux étiquettes), car ça alourdit beaucoup la présentation et l'historique du billet
+			////Les six lignes ci-bas font fonctionnelles et remplacent la méthode initiale qui créaient des soucis d'affichage.
+			////Les trois lignes ci-bas indiquent l'ajout d'étiquettes (lors de l'édition ou la création d'un billet)
+//			foreach($added_tags as $tag) {
+//				\User\Activity::add(6, $this->project_id, $this->id, null, '{"added_tags":['.$tag.'],"removed_tags":[],"tag_data":{"'.$tag.'":{"id":'.$tag.',"tag":"Test: un ami en veux aux renards roux","bgcolor":"#001f80","ftcolor":"#7dd6dd"}},"Creation billet":"Nous sommes ici en ligne 411 de project issue.php"}');
+//			}
+//			////Les trois lignes ci-bas indiquent la suppresion d'étiquettes (lors de l'édition)
+//			foreach($removed_tags as $tag) {
+//				\User\Activity::add(6, $this->project_id, $this->id, null, '{"added_tags":[],"removed_tags":['.$tag.'],"tag_data":{"'.$tag.'":{"id":'.$tag.',"tag":"Test: un ami en veux aux renards roux","bgcolor":"#001f80","ftcolor":"#7dd6dd"}},"Creation billet":"Nous sommes ici en ligne 411 de project issue.php"}');
+//			}
 		}
 	}
 
