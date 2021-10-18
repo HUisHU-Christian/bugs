@@ -477,13 +477,15 @@ class Issue extends \Eloquent {
 		}
 
 		//Create the new issue into database
-		$input['duration'] = ((isset($input['duration'])) ? $input['duration'] : 30);
+		$input['duration'] = $input['duration'] ?? 30;
+		$input['start_at'] = $input['start_at'] ?? date("Y-m-d");
 		$fill = array(
 			'created_by' => \Auth::user()->id,
 			'project_id' => $project->id,
 			'title' => $input['title'],
 			'body' => $input['body'],
 			'duration' => $input['duration'],
+			'start_at' => $input['start_at'],
 			'status' => $input['status'],
 			'assigned_to' => $input['assigned_to']
 		);
