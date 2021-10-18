@@ -14,7 +14,7 @@
 	';
 	foreach ($column as $col) {
 		echo '
-		<div class="todo-lane blue-box" id="lane-status-'.$col.'" data-status="'.$col.'" ondragover="dragOver(this.id);"  ondragleave="dragLeave(this.id);" ondrop="alert(\'Nous recevons ceci de la colonne\');dragDrop(this.id);">
+		<div class="todo-lane blue-box'.(($col == 0) ? ' todo-closed' : '').'" id="lane-status-'.$col.'" data-status="'.$col.'" ondragover="dragOver(this.id);"  ondragleave="dragLeave(this.id);" ondrop="alert(\'Nous recevons ceci de la colonne\');dragDrop(this.id);">
 		';
 		$Combien = (isset($lanes[$col]) ? count($lanes[$col]) :  0);
 		$rendu = 0;
@@ -49,8 +49,8 @@
 		echo '</div>
 		';
 	}
-	echo '<div class="todo-line">&nbsp;</div>
-	';
+//	echo '<div class="todo-line">&nbsp;</div>
+//	';
 	echo '</div>
 	';
 ?>
