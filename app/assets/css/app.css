@@ -1332,6 +1332,15 @@ ul.isssues li {
   margin-right: 0;
 }
 
+.todo-closed {
+	border-left-color: #333333;
+	border-left-style: dotted;
+	border-left-width: thick;
+	padding-left: 25px;
+	width: 25%;
+	background-clip: content-box;
+}
+
 .todo-line {
 	float: right; 
 	margin-right: 1%;
