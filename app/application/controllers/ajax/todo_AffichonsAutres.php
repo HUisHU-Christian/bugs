@@ -1,14 +1,14 @@
 <?php
 	include_once "db.php";
 	$sortie = "";
-	
+	$NbIssues = $config["TodoNbItems"] ?? 25;
 	if ($_GET["col"] == 0) {
 		$requISSU = Requis("SELECT ISSU.id, ISSU.status, ISSU.title, TODO.weight, PROJ.name, ISSU.project_id
 			FROM projects_issues AS ISSU
 			LEFT JOIN users_todos AS TODO ON TODO.issue_id = ISSU.id
 			LEFT JOIN projects AS PROJ ON PROJ.id = ISSU.project_id  
 			WHERE ISSU.status = 0 
-				AND ISSU.assigned_to = 1 
+				AND ISSU.assigned_to = ".$_GET["user"]."
 			ORDER BY TODO.status DESC, ISSU.updated_at DESC 
 			LIMIT ".$_GET["rendu"].", 25 ");
 	} else {

@@ -209,7 +209,7 @@
 						echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 						echo '<b>'.__('tinyissue.priority').'</b> : ';
 						echo '&nbsp;&nbsp;&nbsp;';
-						echo Form::select('status', array(0=>__('tinyissue.priority_desc_0'),1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), $issue->status); 
+						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1'),0=>__('tinyissue.priority_desc_0')), $issue->status); 
 					} else {
 						if (Auth::user()->role_id != 1 ) { 
 							echo '<br />'; 

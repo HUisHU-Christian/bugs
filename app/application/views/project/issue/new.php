@@ -52,7 +52,7 @@ if (file_exists($chemin)) {
 		<tr>
 			<th><?php echo __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span></th>
 				<td>
-					<?php echo Form::text('tags', Input::old('tags', Tag::find(1)->first()->tag), array('id' => 'tags')); ?>
+					<?php echo Form::text('tags', Input::old('tags', Tag::find(1)->where('id', '=', 1)->first()->tag), array('id' => 'tags')); ?>
 					<?php echo $errors->first('tags', '<span class="error">:message</span>'); ?>
 					<script type="text/javascript">
 					$(function(){
@@ -75,7 +75,7 @@ if (file_exists($chemin)) {
 			<tr>
 				<th><?php echo __('tinyissue.priority'); ?></th>
 				<td>
-					<?php echo Form::select('status', array(1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), 3); ?>
+					<?php echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1')), 3); ?>
 				</td>
 			</tr>
 
