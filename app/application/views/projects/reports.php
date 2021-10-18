@@ -382,8 +382,8 @@
 		<input type="hidden" name="RapType" id="input_TypeCus" value="users_customized" />		
 		</form>
 	</div>
-	
 </div>
+
 <script type="text/javascript" >
 	var CetteVal = new Array("","","","","","","");
 	var NbCol = 0;

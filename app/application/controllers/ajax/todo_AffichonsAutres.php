@@ -1,7 +1,7 @@
 <?php
 	include_once "db.php";
 	$sortie = "";
-	
+	$NbIssues = $config["TodoNbItems"] ?? 25;
 	if ($_GET["col"] == 0) {
 		$requISSU = Requis("SELECT ISSU.id, ISSU.status, ISSU.title, TODO.weight, PROJ.name, ISSU.project_id
 			FROM projects_issues AS ISSU

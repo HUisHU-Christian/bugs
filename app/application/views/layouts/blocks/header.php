@@ -25,6 +25,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title><?php echo Config::get('application.my_bugs_app.name'); ?></title>
 		<script>
+			//La branche PHP8 est vouée à disparaître si - comme il semble - toutes les corrections ont été apportées adéquatement aux nom de fonctions qui ne doivent pas être identiques aux noms des classes correspondantes
 			var siteurl = '<?php echo URL::to(); ?>';
 			var current_url = '<?php echo URL::to(Request::uri()); ?>';
 			var baseurl = '<?php echo URL::base(); ?>';
