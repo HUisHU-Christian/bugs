@@ -29,6 +29,7 @@ class Todo extends Eloquent {
 									->where('users_todos.weight', '>=', $bas)
 									->where('users_todos.weight', '<', $haut)
 									->where('projects_issues.status', $zero, 0)
+									->where('projects.status', '>', 0)
 									->order_by('projects_issues.status', 'DESC')
 									->order_by('projects_issues.updated_at', 'DESC')
 									->get(['projects_issues.id','projects_issues.status','projects_issues.title','users_todos.weight','projects.name', 'projects_issues.project_id']);
