@@ -55,7 +55,9 @@
 			<tr>
 				<th><?php echo __('tinyissue.priority'); ?></th>
 				<td>
-					<?php echo Form::select('status', array(1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), $issue->status, array('id'=>'select_status', 'onmouseover'=>'document.getElementById(\'taglev\').style.display = \'block\';', 'onmouseout'=>'document.getElementById(\'taglev\').style.display = \'none\';')); ?>
+					<?php 
+						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1')), $issue->status, array('id'=>'select_status', 'onmouseover'=>'document.getElementById(\'taglev\').style.display = \'block\';', 'onmouseout'=>'document.getElementById(\'taglev\').style.display = \'none\';')); 
+					?>
 				</td>
 			</tr>
 
