@@ -41,15 +41,19 @@
 	<option value="0"><?php echo __('tinyissue.reports_allusers');?></option>
 	<?php 
 		foreach($users as $user) {
-			if ($user->firstname !='admin' && $user->lastname != 'admin' ) { echo '<option value="'.$user->id.'" '.((@$_POST["FilterUser"] == $user->id) ? 'selected="selected"' : '' ).'>'.$user->firstname.' '.$user->lastname.'</option>'; }
+			if(isset($_POST["FilterUser"])) {
+				if ($user->firstname !='admin' && $user->lastname != 'admin' ) { 
+					echo '<option value="'.$user->id.'" '.(($_POST["FilterUser"] == $user->id) ? 'selected="selected"' : '' ).'>'.$user->firstname.' '.$user->lastname.'</option>'; }
+			}
 		} 
 	?>
 	</select>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<select name="Papier" id="select_papier">
-	<option value="Letter" 	<?php echo (@$_POST["Papier"] == 'Letter') ? 'selected="selected"' : '';  ?>	>Lettre</option>
-	<option value="A4"		<?php echo (@$_POST["Papier"] == 'A4') 	 ? 'selected="selected"' : '';  ?>	>A4</option>
-	<option value="Legal"	<?php echo (@$_POST["Papier"] == 'Legal')  ? 'selected="selected"' : '';  ?>	>Legal</option>
+	<?php $_POST["Papier"] = $_POST["Papier"] ?? 'Letter'; ?>
+	<option value="Letter" 	<?php echo ($_POST["Papier"] == 'Letter') ? 'selected="selected"' : '';  ?>	>Lettre</option>
+	<option value="A4"		<?php echo ($_POST["Papier"] == 'A4') 	 ? 'selected="selected"' : '';  ?>	>A4</option>
+	<option value="Legal"	<?php echo ($_POST["Papier"] == 'Legal')  ? 'selected="selected"' : '';  ?>	>Legal</option>
 	</select>
 	</form>
 	</div>

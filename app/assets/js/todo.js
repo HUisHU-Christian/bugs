@@ -11,76 +11,46 @@ function AffichonsAutres(col, rendu) {
 	xhttp.send(); 
 }
 
+function dragStart(cetID) {
+	enMVT = cetID;
+	document.getElementById(cetID).style.display = "none";
+	document.body.addEventListener("mousemove", (event) => { posiX = event.x ; posiY = event.y; });
+}
 
-$(function(){ 
-  // Set widths of lanes (dynamically to allow configurable N lanes).
-  var laneSpacing = 10;
-  var borderWidth = 4;
-  var totalWidth  = parseInt($('#todo-lanes').width());
-  var laneCount   = parseInt($('.todo-lane').size());
-  var laneWidth   = (totalWidth - (laneSpacing * laneCount)) / laneCount;
-  $('.todo-lane').each(function() {
-    $(this).css( "width", laneWidth - borderWidth);
-  });
-  
-  // Draggable interaction.
-  $('.todo-list-item.draggable').draggable({
-     snap: '.todo-lane',
-     snapMode: "inner",
-     revert: "invalid",
-     revertDuration: 200
-  });
-  
-  // Droppable interaction.
-  $('.todo-lane').droppable({
-    activeClass: "todo-state-active",
-    hoverClass:  "todo-state-hover",
-    drop: function( event, ui ) {
-      var new_status = $(this).data('status');
-      var issue_id   = $(ui.draggable).data("issue-id");
-      
-      // Add the dragged todo to the new lane, reset css.
-      var this_id = $(this).attr('id');
-      $(ui.draggable).prependTo($('#' + this_id + ' .todo-lane-inner'));
-      $(ui.draggable).css('left', 0);
-      $(ui.draggable).css('top', 0);
-      
-      // Prevent closed items from being moved again.
-      if (new_status == 0) {
-        $(ui.draggable).draggable( "option", "disabled", true );
-      }
-      
-      // POST the new status.
-      $.post(
-        siteurl + 'ajax/todo/update_todo', 
-        { "issue_id" : issue_id, "new_status" : new_status}, 
-        function( data ) {
-          if (!data.success) {
-            alert(data.errors);
-          } else {
-	        	    document.location.href="todo";
-          }
-        }, "json" );
-    }
-  });
-  
-  // Remove a todo.
-  $('a.todo-button.del').click(function(event) {
-    event.preventDefault();
-    
-    var issue_id = $(this).data('issue-id');
-    $.post(
-      siteurl + 'ajax/todo/remove_todo', 
-      { "issue_id" : issue_id }, 
-      function( data ) {
-        if (data.success) {
-          $('#todo-id-' + issue_id).hide(300);
-        }
-        else {
-          alert(data.errors);
-        }
-      }, "json" 
-    );
-  });
+function dragOver(cetID) {
+	if (divORIG == "") { divORIG = cetID; }
+	document.getElementById(cetID).style.borderStyle = "dashed";
+	document.getElementById(cetID).style.borderColor = "red";
+	document.getElementById(cetID).style.borderWidth = "2px";
+	divOVER = cetID;
+}
 
-});
+function dragLeave(cetID) {
+	document.getElementById(cetID).style.borderStyle = "none";
+}
+
+function dragDrop(cetID) {
+	if (divOVER != divORIG) {
+		var cetDIV = document.getElementById(cetID);
+		Exactement = Exactement + 'app/application/controllers/ajax/todo_ChgIssue.php';
+		var formdata = new FormData();
+		formdata.append("Quoi", 3);
+		formdata.append("divORIG", divORIG);
+		formdata.append("divOVER", divOVER);
+		formdata.append("cetDIV", cetDIV.id);
+		formdata.append("userID", usr);
+
+		document.getElementById(divOVER).appendChild(cetDIV);
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//alert(xhttp.responseText);
+			}
+		}
+		xhttp.open("POST", Exactement, true);
+		xhttp.send(formdata); 
+		//alert(msgFinal);
+	}
+	document.getElementById(cetID).style.display = "block";
+}
