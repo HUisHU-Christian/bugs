@@ -1,3 +1,4 @@
+<?php if (isset($issue)) { ?>
 <li onclick="window.location='<?php echo $issue->to(); ?>';">
 	<div class="tag">
 		<label class="label info"><?php echo __('tinyissue.tag_update'); ?></label>
@@ -42,3 +43,4 @@
 
 	<div class="clr"></div>
 </li>
+<?php } ?>
