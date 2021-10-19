@@ -21,4 +21,5 @@ if (substr(exec("ping 8.8.8.8 -4 -c 1"), 0, 12) != '') {
 		$Lisons = substr($Lisons, 300);
 	}
 }
+
 ?>
