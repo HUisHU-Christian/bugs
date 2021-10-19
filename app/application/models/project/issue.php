@@ -310,7 +310,8 @@ class Issue extends \Eloquent {
 			'body' => $input['body'],
 			'assigned_to' => $input['assigned_to'],
 			'duration' => $input['duration'],
-			'status' => $input['status']
+			'status' => $input['status'],
+			'start_at' => $input['start_at']
 		);
 		\DB::query("INSERT INTO users_activity VALUES (NULL, ".\Auth::user()->id.", NULL, ".$this->id.", NULL, 10, NULL, NOW(), NOW()) ");
 
