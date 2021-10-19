@@ -1,13 +1,12 @@
 <div id="sidebar_MenuDefault_title" class="sidebarTitles"><?php echo __('tinyissue.active_projects'); ?></div>
 <div id="sidebar_MenuDefault" class="sidebarItem">
 <h2>
-	<?php if(Auth::user()->permission('project-create')): ?>
-	<a href="<?php echo URL::to('projects/new'); ?>" class="add" title="New Project" style="margin-top: -18px;"><?php __('tinyissue.new'); ?></a>
-	<?php endif; ?>
-	<?php 
-		///echo __('tinyissue.active_projects');
-	?>
-	<span><?php echo __('tinyissue.active_projects_description');?></span>
+<?php 
+	if(Auth::user()->permission('project-create')) {
+		echo '<a href="'.URL::to('projects/new').'" class="add" title="New Project" style="margin-top: -18px;">'.__('tinyissue.new').'</a>';
+	}
+	echo '<span>'.__('tinyissue.active_projects_description').'</span>';
+?>
 </h2>
 
 	<?php
