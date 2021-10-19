@@ -2,11 +2,21 @@
 $active_projects = Project\User::active_projects();
 if(count($active_projects)>1) {
 ?>
-<div id="sidebar_Projects_title" class="sidebarTitles"><?php echo __('tinyissue.select_a_project'); ?></div>
 <div id="sidebar_Projects" class="sidebarItem">
+
+<!-- 
 <form class="projects_selector">
-<fieldset class="sidebar_Projects_label"><label for="projects_select"><?php echo __('tinyissue.select_a_project');?></label>
-<select name="projects_select" id="projects_select"  onchange="if (this.value) window.location.href=this.value">
+ -->
+<br />
+<div class="menuprojetsgauche">
+	<button class="button_menuprojetsgauche">
+	<?php 
+			echo __('tinyissue.select_a_project');
+//			echo Project::current()->name;
+//			echo .' ( '.Project::current()->count_open_issues().' )'; 
+	?>
+	</button>
+	<div class="div_menuprojetsgauche">
 <?php
 	$NbIssues = array();
 	$Proj = array();
@@ -25,12 +35,13 @@ if(count($active_projects)>1) {
 
 	foreach($SansAccent as $ind => $val) {
 		$selected = (substr($ind, strrpos($ind, "/")+1) == Project::current()->id) ? 'selected' : '';
-		echo '<option value="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" '.$selected.'>'.$Proj[$ind].'</option>';
+		echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';
 	 }
 ?>
-</select>
-</fieldset>
-</form>
+	</div>
+</div>
+<br /><br />
+
 <?php
 	$ceci = array_keys($_GET);
 	$prefixe = (substr($ceci[0], 0, 9) == '/project/' && strpos($ceci[0],'issue') == 0) ? '../' : '../../../';
@@ -130,4 +141,14 @@ if (count($WebLnk) > 0 ) {
 	$('#sidebar_Projects_title').click(function() {
 	    $('#sidebar_Projects').toggle('slow');
 	});
+	
+function AfficheNomProjet(Quel) {
+	document.getElementById('global-notice').style.display = "block";
+	document.getElementById('global-notice').innerHTML = "Voici le projet : " + Quel;
+}
+function CacheNomProjet(Quel) {
+	document.getElementById('global-notice').style.display = "none";
+	document.getElementById('global-notice').innerHTML = "Voici le projet : " + Quel;
+}
+
 </script>
