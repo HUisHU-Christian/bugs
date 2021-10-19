@@ -87,6 +87,12 @@ class User extends Eloquent {
 
 			/* Loop through all the logic from the project and cache all the needed data so we don't load the same data twice */
 			foreach(User\Activity::where('parent_id', '=', $project->id)->order_by('created_at', 'DESC')->take($activity_limit)->get() as $activity) {
+// La version ci-bas pourrait être utile
+//			foreach(User\Activity::where('parent_id', '=', $project->id)
+//				->join('projects_issues', 'projects_issues.id', '=', 'users_activity.item_id')
+//				->where('projects_issues.start_at', '<=', date())
+//				->order_by('created_at', 'DESC')
+//				->take($activity_limit)->get() as $activity) {
 				$dashboard[$project->id][] = $activity;
 
 				switch($activity->type_id) {
