@@ -1,3 +1,4 @@
+<?php if (isset($issue)) { ?>
 <li onclick="window.location='<?php echo $issue->to(); ?>';">
 
 	<div class="tag">
@@ -16,3 +17,4 @@
 
 	<div class="clr"></div>
 </li>
+<?php } ?>

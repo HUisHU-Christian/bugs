@@ -62,7 +62,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 <div class="blue-box">
 	<div class="inside-pad">
 		<?php 
-			if(!$issues) {
+		if(!$issues) {
 				echo '<p>'.__('tinyissue.no_issues').'</p>';
 		} else {
 			echo '<ul class="issues" id="sortable">';

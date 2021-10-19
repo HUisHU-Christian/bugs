@@ -8,19 +8,17 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 </h3>
 
 <div class="pad">
-
 	<?php foreach($projects as $project): ?>
 
 	<div class="blue-box">
 		<div class="inside-pad">
-
 			<h4><a href="<?php echo $project['detail']->to(); ?>/issues?tag_id=1"><?php echo $project['detail']->name; ?></a></h4>
-
 			<ul class="issues">
-				<?php foreach($project['issues'] as $row):  ?>
+				<?php foreach($project['issues'] as $row):
+					if ($row->start_at > date("Y-m-d")) { continue; }  
+				?>
 				<li>
 					<a href="<?php echo $row->to(); ?>" class="comments"><?php echo $row->comment_count(); ?></a>
-					
 					<?php 
 					if(!empty($row->tags)) {
 						echo '<div class="tags">';
@@ -31,7 +29,6 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 						echo '</div>';
 					} 
 					?>
-
 					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>;"  onmouseover="document.getElementById('taglev').style.display = 'block';" onmouseout="document.getElementById('taglev').style.display = 'none';">&#9899;</span></div>
 					<div class="data">
 						<a href="<?php echo $row->to(); ?>"><?php echo $row->title; ?></a>
@@ -78,7 +75,6 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 
 		</div>
 	</div>
-
 	<?php endforeach; ?>
 
 </div>
