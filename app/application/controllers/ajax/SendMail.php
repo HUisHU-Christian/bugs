@@ -43,7 +43,8 @@
 
 	//Titre et corps du message selon les configurations choisies par l'administrateur
 	$message = "";
-	if (is_array(@$contenu)) {
+	$contenu = $contenu ?? "";
+	if (is_array($contenu)) {
 		$subject = (file_exists($dir.$contenu[0].'_tit.html')) ? file_get_contents($dir.$contenu[0].'_tit.html') : $Lng[$src[0]]['following_email_'.strtolower($contenu[0]).'_tit'];
 		foreach ($contenu as $ind => $val) {
 			if ($src[$ind] == 'value') {
@@ -53,7 +54,7 @@
 			}
 		}
 	} else {
-		$message = (@$contenu != 'comment') ? @$contenu : "";
+		$message = ($contenu != 'comment') ? $contenu : "";
 	}
 	
 	$subject = $subject ?? 'BUGS';
@@ -70,11 +71,12 @@
 		$subject = $Lng['tinyissue']["email_test_tit"];
 		echo $Lng['tinyissue']["email_test_tit"];
 	} else {
+		$IssueID = $IssueID ?? 0;
 		$query  = "SELECT DISTINCT FAL.project, FAL.attached, FAL.tags, ";
 		$query .= "		USR.email, USR.firstname AS first, ";
 		$query .= "		USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
 		$query .= "		PRO.name, ";
-		$query .= "	(SELECT title FROM projects_issues WHERE id = ".@$IssueID.") AS title ";
+		$query .= "	(SELECT title FROM projects_issues WHERE id = ".$IssueID.") AS title ";
 		$query .= "FROM following AS FAL ";
 		$query .= "LEFT JOIN users AS USR ON USR.id = FAL.user_id "; 
 		$query .= "LEFT JOIN projects AS PRO ON PRO.id = FAL.project_id ";
@@ -92,7 +94,7 @@
 
 	if (Nombre($followers) > 0) {
 		while ($follower = Fetche($followers)) {
-			$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url);
+			$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url, $config["my_bugs_app"]["name"]);
 			$passage_ligne = (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $follower["email"])) ? "\r\n" : "\n";
 			$message = str_replace('"', "``", $message);
 			$message = stripslashes($message);
@@ -178,14 +180,14 @@
 		}
 	}
 	
-	
-function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL) {
+function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS") {
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 	$lfin = $tit ? ' »' : '</a>';
 	//$liss = $tit ? ' « ' : '<a href="'.(str_replace("issue/new", "issue/".$IssueID."/", $link)).'">';
 	//$lpro = $tit ? ' « ' : '<a href="'.substr($link, 0, strpos($link, "issue"))."issues?tag_id=1".'">';
 	$liss = $tit ? ' « ' : '<a href="'.$link."project/".$ProjectID."/issue/".$IssueID."/".'">';
 	$lpro = $tit ? ' « ' : '<a href="'.$link."project/".$ProjectID."/issues?tag_id=1".'">';
+	$body = str_replace('BUGS', $appName.' (BUGS)', $body);
 	$body = str_replace('{frst}', ucwords($follower["first"]), $body);
 	$body = str_replace('{firt}', ucwords($follower["first"]), $body);
 	$body = str_replace('{firs}', ucwords($follower["first"]), $body);

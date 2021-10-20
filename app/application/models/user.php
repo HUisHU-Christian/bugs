@@ -58,8 +58,7 @@ class User extends Eloquent {
 	* @return mixed
 	*/
 /*
-	public function issues($status = 1)
-	{
+	public function issues($status = 1) {
 		return $this->has_many('Project\Issue', 'created_by')
 			->where('status', '=', 1)
 			->where('assigned_to', '=', $this->id);
@@ -308,8 +307,7 @@ class User extends Eloquent {
 	* @param  int   $id
 	* @return bool
 	*/
-	public static function delete_user($id)
-	{
+	public static function delete_user($id) {
 		$update = array(
 			'email' => '',
 			'deleted' => 1

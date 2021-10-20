@@ -1,6 +1,9 @@
 <?php
 return array(
 	'Already_installed' => 'L`application BUGS est déjà isntallée.\nSi vous lisez le présent message et que BUGS ne fonctionne pas correctement, veuillez :  \n-effacer le fichier config.app.php, \n-copier le fichier install/config-setup.php depuis le dépôt git  \n-installer de nouveau. \nVos données ne devraient pas être perdues.',
+	'Backup_BDD' => 'Base de données',
+	'Backup_BDDemail' => 'Votre adresse courriel de connexion',
+	'Backup_BDDpassword' => 'Votre mot de passe de connexion',
 	'Button_CreateConfig' => 'Créer',
 	'Complete_awesome' => 'Félicitations!',
 	'Complete_login' => 'Entrez ...et profitez-en.',
