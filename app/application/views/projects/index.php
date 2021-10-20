@@ -8,7 +8,6 @@ $_GET["status"] = $_GET["status"] ?? 1;
 </h3>
 
 <div class="pad">
-
 	<ul class="tabs">
 		<li <?php echo $active == 'active' ? 'class="active"' : ''; ?>>
 			<a href="<?php echo URL::to('projects'); ?>">

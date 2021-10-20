@@ -12,6 +12,7 @@ return array(
 	'administration_update' => 'Administration - update',
 	'administration_update_description' => 'Update the « Bugs » system and databases.',
 	'ago' => 'ago',
+	'aide' => 'Wiki - Help',
 	'archived_project' => 'Archived Project',
 	'archived_projects' => 'Archived Projects',
 	'archived' => 'Archived',

@@ -25,8 +25,7 @@ class Auth {
 	public static function driver($driver = null) {
 		if (is_null($driver)) $driver = Config::get('auth.driver');
 
-		if ( ! isset(static::$drivers[$driver]))
-		{
+		if ( ! isset(static::$drivers[$driver])) {
 			static::$drivers[$driver] = static::factory($driver);
 		}
 
@@ -40,15 +39,13 @@ class Auth {
 	 * @return Driver
 	 */
 	protected static function factory($driver) {
-		if (isset(static::$registrar[$driver]))
-		{
+		if (isset(static::$registrar[$driver])) {
 			$resolver = static::$registrar[$driver];
 
 			return $resolver();
 		}
 
-		switch ($driver)
-		{
+		switch ($driver) {
 			case 'fluent':
 				return new Auth\Drivers\Fluent(Config::get('auth.table'));
 

@@ -111,6 +111,27 @@
 		xhttp.open("GET", NextPage, true);
 		xhttp.send(); 
 	}
+	
+	function BackupBDD() {
+		var formdata = new FormData();
+		formdata.append("Courriel", document.getElementById('input_databaseCourriel').value );
+		formdata.append("MotPasse", document.getElementById('input_databaseMotPasse').value );
+		var xhttp = new XMLHttpRequest();
+		var NextPage = 'app/application/controllers/ajax/Sauvegarde_BDD.php';
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				if (xhttp.responseText == 'Échec') {
+					alert("Vérifiez vos configurations, nous n`avons pas pu enregistrer");
+				} else if (xhttp.responseText == 'Non') {
+					document.getElementById('span_BackupBDD').innerHTML = alert("Vous ne disposez pas de droits nécessaires");
+				} else {
+					document.getElementById('span_BackupBDD').innerHTML = xhttp.responseText;
+				}
+			}
+		};
+		xhttp.open("POST", NextPage, true);
+		xhttp.send(formdata); 
+	}
 
 	function ChangeonsText(Quel, Langue, Question) {
 		var texte = CachonsEditor(9);
