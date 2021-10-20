@@ -316,7 +316,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			<?php echo $LngSRV["Backup_BDDpassword"]; ?> : <input name="MotPasse" id="input_databaseMotPasse" value="" type="password" />
 			<span style="float: right; vertical-align: middle;">
-			<input name="Lancer" type="button" class="button2" value="Lancer" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
+			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
 			</span>
 			</span>
 			<br /><br />

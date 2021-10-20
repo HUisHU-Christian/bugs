@@ -298,6 +298,8 @@ return array(
 	'update_user_description' => 'Change the information for user',
 	'update_user' => 'Update User',
 	'update' => 'Update',
+	'update_my' => 'Update my file',
+	'update_mypref' => 'Update my preferences',
 	'updating' => 'Update',
 	'updated_by' => 'Updated By',
 	'user_added' => 'User Added',
