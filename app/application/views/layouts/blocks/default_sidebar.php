@@ -8,7 +8,7 @@
 	<div class="div_menuprojetsgauche">
 <?php
 	$Preferences['orderSidebar'] = $Preferences['orderSidebar'] ?? "asc";
-	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 0;
+	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 999;
 
 	//Liste des projets dans un menu déroulant
 	////Collecte des informations
@@ -40,6 +40,7 @@
 </div>
 <br /><br />
 <?php
+	if ($Preferences['numSidebar'] != 0) {
 		echo '<ul>';
 		$NbIssues = array();
 		$Proj = array();
@@ -57,18 +58,19 @@
 		}
 		asort($SansAccent);
 
-		$rendu = 0;
-		foreach($SansAccent as $ind => $val) {
-			$id = $idProj[$ind];
-			$follower = \DB::table('following')->where('project','=',1)->where('project_id','=',$id)->where('user_id','=',\Auth::user()->id)->count();
-			$follower = ($follower > 0) ? 1 : 0;
-			echo '<a href="javascript: Following('.$follower.', '.$id.', '.\Auth::user()->id.');" title="'.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" ><img id="img_follow_'.$id.'" src="'.\URL::home().'app/assets/images/layout/icon-comments_'.$follower.'.png" align="left" style="min-height:'.$follower.'px " /></a>';
-			echo '<li>';
-			echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'">'.$Proj[$ind].' </a>';
-			echo '</li>';
-			if (++$rendu > $Preferences['numSidebar'] && $Preferences['numSidebar'] > 0) { break; }
-		}
+			$rendu = 0;
+			foreach($SansAccent as $ind => $val) {
+				$id = $idProj[$ind];
+				$follower = \DB::table('following')->where('project','=',1)->where('project_id','=',$id)->where('user_id','=',\Auth::user()->id)->count();
+				$follower = ($follower > 0) ? 1 : 0;
+				echo '<a href="javascript: Following('.$follower.', '.$id.', '.\Auth::user()->id.');" title="'.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" ><img id="img_follow_'.$id.'" src="'.\URL::home().'app/assets/images/layout/icon-comments_'.$follower.'.png" align="left" style="min-height:'.$follower.'px " /></a>';
+				echo '<li>';
+				echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'">'.$Proj[$ind].' </a>';
+				echo '</li>';
+				if (++$rendu > $Preferences['numSidebar'] && $Preferences['numSidebar'] < 999) { break; }
+			}
 		echo '</ul>';
+	}
 ?>
 
 <?php

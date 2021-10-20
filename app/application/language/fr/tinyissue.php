@@ -300,6 +300,8 @@ return array(
 	'update_user_description' => 'Modifier les informations de l`utilisateur',
 	'update_user' => 'Modifier l`utilisateur',
 	'update' => 'Mettre à jour le projet',
+	'update_my' => 'Mettre mon profil à jour',
+	'update_mypref' => 'Mettre mes préférences à jour',
 	'updating' => 'Mettre à jour',
 	'updated_by' => 'Mis à jour par',
 	'user_added' => 'Utilisateur ajouté',
