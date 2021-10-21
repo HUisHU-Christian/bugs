@@ -4,6 +4,8 @@ return array(
 	'Backup_BDD' => 'Base de données',
 	'Backup_BDDemail' => 'Votre adresse courriel de connexion',
 	'Backup_BDDpassword' => 'Votre mot de passe de connexion',
+	'Backup_BDDwindowers_1' => 'Usager Window ?  Ce lien (site en anglais) peut vous aider ',
+	'Backup_BDDwindowers_2' => 'Dump and Restore MySQL Databases using Windows Command Prompt',
 	'Button_CreateConfig' => 'Créer',
 	'Complete_awesome' => 'Félicitations!',
 	'Complete_login' => 'Entrez ...et profitez-en.',
