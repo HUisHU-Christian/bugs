@@ -318,6 +318,7 @@
 			<span style="float: right; vertical-align: middle;">
 			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
 			</span>
+			<?php echo $LngSRV["Backup_BDDwindowers_1"]; ?> :  <a href="https://john-dugan.com/dump-and-restore-mysql-databases-in-windows/"><?php echo $LngSRV["Backup_BDDwindowers_2"]; ?></a> ) 
 			</span>
 			<br /><br />
 			<br /><br />
