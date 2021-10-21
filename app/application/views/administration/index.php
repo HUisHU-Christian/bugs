@@ -24,6 +24,8 @@
 ?>
 
 <div class="pad">
+<details id="details_main" open="open">
+	<summary><?php echo __('tinyissue.admin_head'); ?></summary>
 	<div class="pad2">
 		<table class="table" width="60%">
 			<tr>
@@ -123,11 +125,12 @@
 			}
 		?>
 	</div>
+	</details>
 </div>
 	<br />
 	<div class="pad" style="border-top-style: solid; border-bottom-style: solid; border-color: grey; border-width: 2px;">
 		<?php $Conf = Config::get('application.mail'); ?>
-		<details id="details_email_head" open="open">
+		<details id="details_email_head">
 			<summary><?php echo __('tinyissue.email_head'); ?></summary>
 			<br />
 			<div class="pad2">
@@ -302,7 +305,23 @@
 				<?php echo $LngSRV["preferences_pct_test"]; ?> (80) : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo $config_app['TodoNbItems'] ?? 25; ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
-	<br />
+
+		<details id="details_sauvegardes">
+			<summary><?php echo __('tinyissue.admin_backup'); ?></summary>
+			<br /><br />
+			<h4><strong><?php echo $LngSRV["Backup_BDD"]; ?></strong> : </h4>
+			<span id="span_BackupBDD">
+			<?php echo $LngSRV["Backup_BDDemail"]; ?> : 	 <input name="Courriel" id="input_databaseCourriel" value="" type="email" />
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<?php echo $LngSRV["Backup_BDDpassword"]; ?> : <input name="MotPasse" id="input_databaseMotPasse" value="" type="password" />
+			<span style="float: right; vertical-align: middle;">
+			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
+			</span>
+			</span>
+			<br /><br />
+			<br /><br />
+		</details>
 	</div>
 
 <script type="text/javascript" src="app/assets/js/admin.js" async ></script>

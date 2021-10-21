@@ -77,14 +77,17 @@ class Project_Controller extends Base_Controller {
 		$issues = \Project\Issue::with('tags');
 
 		$issues = $issues->where('project_id', '=', Project::current()->id);
-		if (Input::get('tag_id', '') == '2') {
+		//Moduler l'affichage selon le taquet activé:
+		if (Input::get('tag_id', '') == '2') {								//Taquet des messages fermés
 			$issues->where_null('closed_at', 'and', true);
-		} elseif (Input::get('tag_id', '') == '3') {
+		} elseif (Input::get('tag_id', '') == '3') {						//Taquet des messages futurs
 			$issues->where_null('closed_at', 'and', false)->where('start_at', '>', date('Y-m-d'));
-		} else {
+		} else {																		//Taquet des messages ouverts ou de l'historique
 			$issues->where_null('closed_at', 'and', false);
+			if (Input::get('tag_id') == 1) {									//Taquet des messages ouverts
+				$issues = $issues->where('projects_issues.start_at', '<=', date("Y-m-d"));
+			}
 		}
-//		$issues = (Input::get('tag_id', '') == '2') ? $issues->where_null('closed_at', 'and', true) : $issues->where_null('closed_at', 'and', false); 
 
 		if ($assigned_to) {
 			$issues = $issues->where(Input::get('limit_contrib','assigned_to'), '=', $assigned_to);

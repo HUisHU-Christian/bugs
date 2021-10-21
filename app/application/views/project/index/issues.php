@@ -99,7 +99,8 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 					} 
 					echo '</div>';
 
-					if (@$_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
+					$_GET["tag_id"] = $_GET["tag_id"] ?? 0;
+					if ($_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
 						echo '<br /><br />';
 								//Percentage of work done
 								////Calculations
