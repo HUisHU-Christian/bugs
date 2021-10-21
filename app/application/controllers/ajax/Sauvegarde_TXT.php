@@ -11,13 +11,10 @@
 	chdir($namedir);
 	foreach($_POST as $ind => $val) {
 		if (file_exists($origpath.$val.".html")) {
-			exec("cp ".$origpath.$val.".html .");
-			exec("cp ".$origpath.$val."_tit.html .");
-			if (file_exists($origpath.$val.".html")) 		{ $compte = $compte + 1; }
-			if (file_exists($origpath.$val."_tit.html"))	{ $compte = $compte + 1; }
+			$compte = (copy ($origpath.$val.".html .")) ? $compte + 1 : $compte;
+			$compte = (copy ($origpath.$val."_tit.html .")) ? $compte + 1 : $compte;
 		}
 	}
 	chdir("../../");
 	if ($compte > 0) { $retour = $compte." files copied into temp/".$namedir."<br />"; }
 	echo $retour;
-?>
