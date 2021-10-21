@@ -105,8 +105,7 @@ abstract class Model {
 	 * @param  bool   $exists
 	 * @return void
 	 */
-	public function __construct($attributes = array(), $exists = false)
-	{
+	public function __construct($attributes = array(), $exists = false) {
 		$this->exists = $exists;
 
 		$this->fill($attributes);
@@ -119,15 +118,12 @@ abstract class Model {
 	 * @param  bool   $raw
 	 * @return Model
 	 */
-	public function fill(array $attributes, $raw = false)
-	{
-		foreach ($attributes as $key => $value)
-		{
+	public function fill(array $attributes, $raw = false) {
+		foreach ($attributes as $key => $value) {
 			// If the "raw" flag is set, it means that we'll just load every value from
 			// the array directly into the attributes, without any accessibility or
 			// mutators being accounted for. What you pass in is what you get.
-			if ($raw)
-			{
+			if ($raw) {
 				$this->set_attribute($key, $value);
 
 				continue;
@@ -136,8 +132,7 @@ abstract class Model {
 			// If the "accessible" property is an array, the developer is limiting the
 			// attributes that may be mass assigned, and we need to verify that the
 			// current attribute is included in that list of allowed attributes.
-			if (is_array(static::$accessible))
-			{
+			if (is_array(static::$accessible)) {
 				if (in_array($key, static::$accessible))
 				{
 					$this->$key = $value;
@@ -147,8 +142,7 @@ abstract class Model {
 			// If the "accessible" property is not an array, no attributes have been
 			// white-listed and we are free to set the value of the attribute to
 			// the value that has been passed into the method without a check.
-			else
-			{
+			else {
 				$this->$key = $value;
 			}
 		}
@@ -156,8 +150,7 @@ abstract class Model {
 		// If the original attribute values have not been set, we will set
 		// them to the values passed to this method allowing us to easily
 		// check if the model has changed since hydration.
-		if (count($this->original) === 0)
-		{
+		if (count($this->original) === 0) {
 			$this->original = $this->attributes;
 		}
 
@@ -172,8 +165,7 @@ abstract class Model {
 	 * @param  array  $attributes
 	 * @return Model
 	 */
-	public function fill_raw(array $attributes)
-	{
+	public function fill_raw(array $attributes) {
 		return $this->fill($attributes, true);
 	}
 
@@ -183,8 +175,7 @@ abstract class Model {
 	 * @param  array  $attributes
 	 * @return void
 	 */
-	public static function accessible($attributes = null)
-	{
+	public static function accessible($attributes = null) {
 		if (is_null($attributes)) return static::$accessible;
 
 		static::$accessible = $attributes;
@@ -198,8 +189,7 @@ abstract class Model {
 	 * @param  array        $attributes
 	 * @return Model|false
 	 */
-	public static function create($attributes)
-	{
+	public static function create($attributes) {
 		$model = new static($attributes);
 
 		$success = $model->save();
@@ -214,8 +204,7 @@ abstract class Model {
 	 * @param  array  $attributes
 	 * @return int
 	 */
-	public static function update($id, $attributes)
-	{
+	public static function update($id, $attributes) {
 		$model = new static(array(), true);
 
 		$model->fill($attributes);
@@ -232,8 +221,7 @@ abstract class Model {
 	 * @param  array   $columns
 	 * @return Model
 	 */
-	public function _find($id, $columns = array('*'))
-	{
+	public function _find($id, $columns = array('*')) {
 		return $this->query()->where(static::$key, '=', $id)->first($columns);
 	}
 
@@ -242,8 +230,7 @@ abstract class Model {
 	 *
 	 * @return array
 	 */
-	public static function all()
-	{
+	public static function all() {
 		return with(new static)->query()->get();
 	}
 
@@ -253,8 +240,7 @@ abstract class Model {
 	 * @param  array  $includes
 	 * @return Model
 	 */
-	public function _with($includes)
-	{
+	public function _with($includes) {
 		$this->includes = (array) $includes;
 
 		return $this;
@@ -267,8 +253,7 @@ abstract class Model {
 	 * @param  string        $foreign
 	 * @return Relationship
 	 */
-	public function has_one($model, $foreign = null)
-	{
+	public function has_one($model, $foreign = null) {
 		return $this->has_one_or_many(__FUNCTION__, $model, $foreign);
 	}
 
@@ -279,8 +264,7 @@ abstract class Model {
 	 * @param  string        $foreign
 	 * @return Relationship
 	 */
-	public function has_many($model, $foreign = null)
-	{
+	public function has_many($model, $foreign = null) {
 		return $this->has_one_or_many(__FUNCTION__, $model, $foreign);
 	}
 
@@ -292,14 +276,11 @@ abstract class Model {
 	 * @param  string        $foreign
 	 * @return Relationship
 	 */
-	protected function has_one_or_many($type, $model, $foreign)
-	{
-		if ($type == 'has_one')
-		{
+	protected function has_one_or_many($type, $model, $foreign) {
+		if ($type == 'has_one') {
 			return new Relationships\Has_One($this, $model, $foreign);
 		}
-		else
-		{
+		else {
 			return new Relationships\Has_Many($this, $model, $foreign);
 		}
 	}
@@ -311,13 +292,11 @@ abstract class Model {
 	 * @param  string        $foreign
 	 * @return Relationship
 	 */
-	public function belongs_to($model, $foreign = null)
-	{
+	public function belongs_to($model, $foreign = null) {
 		// If no foreign key is specified for the relationship, we will assume that the
 		// name of the calling function matches the foreign key. For example, if the
 		// calling function is "manager", we'll assume the key is "manager_id".
-		if (is_null($foreign))
-		{
+		if (is_null($foreign)) {
 			list(, $caller) = debug_backtrace(false);
 
 			$foreign = "{$caller['function']}_id";
@@ -335,8 +314,7 @@ abstract class Model {
 	 * @param  string        $other
 	 * @return Has_Many_And_Belongs_To
 	 */
-	public function has_many_and_belongs_to($model, $table = null, $foreign = null, $other = null)
-	{
+	public function has_many_and_belongs_to($model, $table = null, $foreign = null, $other = null) {
 		return new Has_Many_And_Belongs_To($this, $model, $table, $foreign, $other);
 	}
 
@@ -345,22 +323,18 @@ abstract class Model {
 	 *
 	 * @return bool
 	 */
-	public function push()
-	{
+	public function push() {
 		$this->save();
 
 		// To sync all of the relationships to the database, we will simply spin through
 		// the relationships, calling the "push" method on each of the models in that
 		// given relationship, this should ensure that each model is saved.
-		foreach ($this->relationships as $name => $models)
-		{
-			if ( ! is_array($models))
-			{
+		foreach ($this->relationships as $name => $models) {
+			if ( ! is_array($models)) {
 				$models = array($models);
 			}
 
-			foreach ($models as $model)
-			{
+			foreach ($models as $model) {
 				$model->push();
 			}
 		}
@@ -371,12 +345,10 @@ abstract class Model {
 	 *
 	 * @return bool
 	 */
-	public function save()
-	{
+	public function save() {
 		if ( ! $this->dirty()) return true;
 
-		if (static::$timestamps)
-		{
+		if (static::$timestamps) {
 			$this->timestamp();
 		}
 
@@ -385,8 +357,7 @@ abstract class Model {
 		// If the model exists, we only need to update it in the database, and the update
 		// will be considered successful if there is one affected row returned from the
 		// fluent query instance. We'll set the where condition automatically.
-		if ($this->exists)
-		{
+		if ($this->exists) {
 			$query = $this->query()->where(static::$key, '=', $this->get_key());
 
 			$result = $query->update($this->get_dirty()) === 1;
@@ -397,8 +368,7 @@ abstract class Model {
 		// If the model does not exist, we will insert the record and retrieve the last
 		// insert ID that is associated with the model. If the ID returned is numeric
 		// then we can consider the insert successful.
-		else
-		{
+		else {
 			$id = $this->query()->insert_get_id($this->attributes, $this->key());
 
 			$this->set_key($id);
@@ -413,8 +383,7 @@ abstract class Model {
 		// dirty and subsequent calls won't hit the database.
 		$this->original = $this->attributes;
 
-		if ($result)
-		{
+		if ($result) {
 			$this->fire_event('saved');
 		}
 
@@ -426,10 +395,8 @@ abstract class Model {
 	 *
 	 * @return int
 	 */
-	public function delete()
-	{
-		if ($this->exists)
-		{
+	public function delete() {
+		if ($this->exists) {
 			$this->fire_event('deleting');
 
 			$result = $this->query()->where(static::$key, '=', $this->get_key())->delete();
@@ -445,8 +412,7 @@ abstract class Model {
 	 *
 	 * @return void
 	 */
-	public function timestamp()
-	{
+	public function timestamp() {
 		$this->updated_at = new \DateTime;
 
 		if ( ! $this->exists) $this->created_at = $this->updated_at;
@@ -457,8 +423,7 @@ abstract class Model {
 	 *
 	 * @return void
 	 */
-	public function touch()
-	{
+	public function touch() {
 		$this->timestamp();
 		$this->save();
 	}
@@ -468,8 +433,7 @@ abstract class Model {
 	 *
 	 * @return Query
 	 */
-	protected function query()
-	{
+	protected function query() {
 		return new Query($this);
 	}
 
@@ -478,8 +442,7 @@ abstract class Model {
 	 *
 	 * @return bool
 	 */
-	final public function sync()
-	{
+	final public function sync() {
 		$this->original = $this->attributes;
 
 		return true;
@@ -491,8 +454,7 @@ abstract class Model {
 	 * @param  string  $attribute
 	 * @return bool
 	 */
-	public function changed($attribute)
-	{
+	public function changed($attribute) {
 		return array_get($this->attributes, $attribute) != array_get($this->original, $attribute);
 	}
 
@@ -503,8 +465,7 @@ abstract class Model {
 	 *
 	 * @return bool
 	 */
-	public function dirty()
-	{
+	public function dirty() {
 		return ! $this->exists or count($this->get_dirty()) > 0;
 	}
 
@@ -513,8 +474,7 @@ abstract class Model {
 	 *
 	 * @return string
 	 */
-	public function table()
-	{
+	public function table() {
 		return static::$table ?: strtolower(Str::plural(class_basename($this)));
 	}
 
@@ -523,14 +483,11 @@ abstract class Model {
 	 *
 	 * @return array
 	 */
-	public function get_dirty()
-	{
+	public function get_dirty() {
 		$dirty = array();
 
-		foreach ($this->attributes as $key => $value)
-		{
-			if ( ! array_key_exists($key, $this->original) or $value != $this->original[$key])
-			{
+		foreach ($this->attributes as $key => $value) {
+			if ( ! array_key_exists($key, $this->original) or $value != $this->original[$key]) {
 				$dirty[$key] = $value;
 			}
 		}
@@ -543,8 +500,7 @@ abstract class Model {
 	 *
 	 * @return int
 	 */
-	public function get_key()
-	{
+	public function get_key() {
 		return array_get($this->attributes, static::$key);
 	}
 
@@ -554,8 +510,7 @@ abstract class Model {
 	 * @param  int   $value
 	 * @return void
 	 */
-	public function set_key($value)
-	{
+	public function set_key($value) {
 		return $this->set_attribute(static::$key, $value);
 	}
 
@@ -564,8 +519,7 @@ abstract class Model {
 	 *
 	 * @param  string  $key
 	 */
-	public function get_attribute($key)
-	{
+	public function get_attribute($key) {
 		return array_get($this->attributes, $key);
 	}
 
@@ -576,8 +530,7 @@ abstract class Model {
 	 * @param  mixed   $value
 	 * @return void
 	 */
-	public function set_attribute($key, $value)
-	{
+	public function set_attribute($key, $value) {
 		$this->attributes[$key] = $value;
 	}
 
@@ -586,8 +539,7 @@ abstract class Model {
 	 *
 	 * @param  string  $key
 	 */
-	final public function purge($key)
-	{
+	final public function purge($key) {
 		unset($this->original[$key]);
 
 		unset($this->attributes[$key]);
@@ -598,36 +550,30 @@ abstract class Model {
 	 *
 	 * @return array
 	 */
-	public function to_array()
-	{
+	public function to_array() {
 		$attributes = array();
 
 		// First we need to gather all of the regular attributes. If the attribute
 		// exists in the array of "hidden" attributes, it will not be added to
 		// the array so we can easily exclude things like passwords, etc.
-		foreach (array_keys($this->attributes) as $attribute)
-		{
-			if ( ! in_array($attribute, static::$hidden))
-			{
+		foreach (array_keys($this->attributes) as $attribute) {
+			if ( ! in_array($attribute, static::$hidden)) {
 				$attributes[$attribute] = $this->$attribute;
 			}
 		}
 
-		foreach ($this->relationships as $name => $models)
-		{
+		foreach ($this->relationships as $name => $models) {
 			// If the relationship is not a "to-many" relationship, we can just
 			// to_array the related model and add it as an attribute to the
 			// array of existing regular attributes we gathered.
-			if ($models instanceof Model)
-			{
+			if ($models instanceof Model) {
 				$attributes[$name] = $models->to_array();
 			}
 
 			// If the relationship is a "to-many" relationship we need to spin
 			// through each of the related models and add each one with the
 			// to_array method, keying them both by name and ID.
-			elseif (is_array($models))
-			{
+			elseif (is_array($models)) {
 				$attributes[$name] = array();
 
 				foreach ($models as $id => $model)
@@ -635,8 +581,7 @@ abstract class Model {
 					$attributes[$name][$id] = $model->to_array();
 				}
 			}
-			elseif (is_null($models))
-			{
+			elseif (is_null($models)) {
 				$attributes[$name] = $models;
 			}
 		}
@@ -650,8 +595,7 @@ abstract class Model {
 	 * @param  string  $event
 	 * @return array
 	 */
-	protected function fire_event($event)
-	{
+	protected function fire_event($event) {
 		$events = array("eloquent.{$event}", "eloquent.{$event}: ".get_class($this));
 
 		Event::fire($events, array($this));
@@ -663,37 +607,32 @@ abstract class Model {
 	 * @param  string  $key
 	 * @return mixed
 	 */
-	public function __get($key)
-	{
+	public function __get($key) {
 		// First we will check to see if the requested key is an already loaded
 		// relationship and return it if it is. All relationships are stored
 		// in the special relationships array so they are not persisted.
-		if (array_key_exists($key, $this->relationships))
-		{
+		if (array_key_exists($key, $this->relationships)) {
 			return $this->relationships[$key];
 		}
 
 		// Next we'll check if the requested key is in the array of attributes
 		// for the model. These are simply regular properties that typically
 		// correspond to a single column on the database for the model.
-		elseif (array_key_exists($key, $this->attributes))
-		{
+		elseif (array_key_exists($key, $this->attributes)) {
 			return $this->{"get_{$key}"}();
 		}
 
 		// If the item is not a loaded relationship, it may be a relationship
 		// that hasn't been loaded yet. If it is, we will lazy load it and
 		// set the value of the relationship in the relationship array.
-		elseif (method_exists($this, $key))
-		{
+		elseif (method_exists($this, $key)) {
 			return $this->relationships[$key] = $this->$key()->results();
 		}
 
 		// Finally we will just assume the requested key is just a regular
 		// attribute and attempt to call the getter method for it, which
 		// will fall into the __call method if one doesn't exist.
-		else
-		{
+		else {
 			return $this->{"get_{$key}"}();
 		}
 	}
@@ -705,8 +644,7 @@ abstract class Model {
 	 * @param  mixed   $value
 	 * @return void
 	 */
-	public function __set($key, $value)
-	{
+	public function __set($key, $value) {
 		$this->{"set_{$key}"}($value);
 	}
 
@@ -716,10 +654,8 @@ abstract class Model {
 	 * @param  string  $key
 	 * @return bool
 	 */
-	public function __isset($key)
-	{
-		foreach (array('attributes', 'relationships') as $source)
-		{
+	public function __isset($key) {
+		foreach (array('attributes', 'relationships') as $source) {
 			if (array_key_exists($key, $this->$source)) return true;
 		}
 
@@ -732,10 +668,8 @@ abstract class Model {
 	 * @param  string  $key
 	 * @return void
 	 */
-	public function __unset($key)
-	{
-		foreach (array('attributes', 'relationships') as $source)
-		{
+	public function __unset($key) {
+		foreach (array('attributes', 'relationships') as $source) {
 			unset($this->$source[$key]);
 		}
 	}
@@ -747,15 +681,13 @@ abstract class Model {
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
-	public function __call($method, $parameters)
-	{
+	public function __call($method, $parameters) {
 		$meta = array('key', 'table', 'connection', 'sequence', 'per_page', 'timestamps');
 
 		// If the method is actually the name of a static property on the model we'll
 		// return the value of the static property. This makes it convenient for
 		// relationships to access these values off of the instances.
-		if (in_array($method, $meta))
-		{
+		if (in_array($method, $meta)) {
 			return static::$$method;
 		}
 
@@ -764,28 +696,24 @@ abstract class Model {
 		// Some methods need to be accessed both staticly and non-staticly so we'll
 		// keep underscored methods of those methods and intercept calls to them
 		// here so they can be called either way on the model instance.
-		if (in_array($method, $underscored))
-		{
+		if (in_array($method, $underscored)) {
 			return call_user_func_array(array($this, '_'.$method), $parameters);
 		}
 
 		// First we want to see if the method is a getter / setter for an attribute.
 		// If it is, we'll call the basic getter and setter method for the model
 		// to perform the appropriate action based on the method.
-		if (starts_with($method, 'get_'))
-		{
+		if (starts_with($method, 'get_')) {
 			return $this->get_attribute(substr($method, 4));
 		}
-		elseif (starts_with($method, 'set_'))
-		{
+		elseif (starts_with($method, 'set_')) {
 			$this->set_attribute(substr($method, 4), $parameters[0]);
 		}
 
 		// Finally we will assume that the method is actually the beginning of a
 		// query, such as "where", and will create a new query instance and
 		// call the method on the query instance, returning it after.
-		else
-		{
+		else {
 			return call_user_func_array(array($this->query(), $method), $parameters);
 		}
 	}
@@ -797,8 +725,7 @@ abstract class Model {
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
-	public static function __callStatic($method, $parameters)
-	{
+	public static function __callStatic($method, $parameters) {
 		$model = get_called_class();
 
 		return call_user_func_array(array(new $model, $method), $parameters);
