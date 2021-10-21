@@ -2,12 +2,18 @@
 $active_projects = Project\User::active_projects();
 if(count($active_projects)>1) {
 ?>
-<div id="sidebar_Projects_title" class="sidebarTitles"><?php echo __('tinyissue.select_a_project'); ?></div>
+
 <div id="sidebar_Projects" class="sidebarItem">
-<form class="projects_selector">
-<fieldset class="sidebar_Projects_label"><label for="projects_select"><?php echo __('tinyissue.select_a_project');?></label>
-<select name="projects_select" id="projects_select"  onchange="if (this.value) window.location.href=this.value">
+
+<br />
+<div class="menuprojetsgauche">
+	<button class="button_menuprojetsgauche">
+	<?php echo __('tinyissue.select_a_project'); ?>
+	</button>
+	<div class="div_menuprojetsgauche">
 <?php
+	//Liste des projets dans un menu déroulant
+	////Collecte des informations
 	$NbIssues = array();
 	$Proj = array();
 	$SansAccent = array();
@@ -15,23 +21,29 @@ if(count($active_projects)>1) {
 		$NbIssues[$row->to()] = $row->count_open_issues();
 		$Proj[$row->to()] = $row->name.' ('.$NbIssues[$row->to()].')';
 	}
+	////Préparation au tri
 	foreach ($Proj as $ind => $val ){
 		$SansAccent[$ind] = htmlentities($val, ENT_NOQUOTES, 'utf-8');
 		$SansAccent[$ind] = preg_replace('#&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring);#', '\1', $SansAccent[$ind]);
 		$SansAccent[$ind] = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $SansAccent[$ind]);
 		$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 	}
-	asort($SansAccent);
+	////Tri des données
+	$Preferences['ProjOrdreTri'] = $Preferences['ProjOrdreTri'] ?? "alpha";
+	if ($Preferences['ProjOrdreTri'] == 'alpha') { asort($SansAccent); } else { arsort($SansAccent); }
 
+	////Affichage du menu dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
 		$selected = (substr($ind, strrpos($ind, "/")+1) == Project::current()->id) ? 'selected' : '';
-		echo '<option value="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" '.$selected.'>'.$Proj[$ind].'</option>';
+		echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';
 	 }
 ?>
-</select>
-</fieldset>
-</form>
+	</div>
+</div>
+<br /><br />
+
 <?php
+	//Recherche terminologique dans les projets et billets
 	$ceci = array_keys($_GET);
 	$prefixe = (substr($ceci[0], 0, 9) == '/project/' && strpos($ceci[0],'issue') == 0) ? '../' : '../../../';
 	$prefixe = (substr($ceci[0], -6) == 'issues') ? '../../' : $prefixe;
@@ -113,6 +125,9 @@ if (count($WebLnk) > 0 ) {
 	}
 	echo '</ul>';
 }
+echo '<br /><br />'; 
+echo '<br /><br />'; 
+include_once "application/views/layouts/blocks/wiki.php";
 ?>
 </div>
 
@@ -130,4 +145,14 @@ if (count($WebLnk) > 0 ) {
 	$('#sidebar_Projects_title').click(function() {
 	    $('#sidebar_Projects').toggle('slow');
 	});
+	
+function AfficheNomProjet(Quel) {
+	document.getElementById('global-notice').style.display = "block";
+	document.getElementById('global-notice').innerHTML = "Voici le projet : " + Quel;
+}
+function CacheNomProjet(Quel) {
+	document.getElementById('global-notice').style.display = "none";
+	document.getElementById('global-notice').innerHTML = "Voici le projet : " + Quel;
+}
+
 </script>

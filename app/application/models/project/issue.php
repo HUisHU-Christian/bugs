@@ -487,6 +487,7 @@ class Issue extends \Eloquent {
 			'body' => $input['body'],
 			'duration' => $input['duration'],
 			'start_at' => $input['start_at'],
+			'temps_plan' => $input['temps_plan'],
 			'status' => $input['status'],
 			'assigned_to' => $input['assigned_to']
 		);
