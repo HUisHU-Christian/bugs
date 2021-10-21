@@ -7,8 +7,17 @@
 	</button>
 	<div class="div_menuprojetsgauche">
 <?php
+	//Valeurs par défaut
 	$Preferences['orderSidebar'] = $Preferences['orderSidebar'] ?? "asc";
 	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 999;
+	
+	//Récupération des préférences dans le dossier personnel de l'usager
+	$Pref = \Auth::user()->attributes;
+	$Prefs = explode(";", $Pref["preferences"]);
+	foreach ($Prefs as $ind => $val) {
+		$ceci = explode("=", $val);
+		if (isset($ceci[1])) { $Preferences[$ceci[0]] = $ceci[1]; }
+	}
 
 	//Liste des projets dans un menu déroulant
 	////Collecte des informations
@@ -27,10 +36,10 @@
 		$SansAccent[$ind] = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $SansAccent[$ind]);
 		$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 	}
-	////Tri des données
-	if ($Preferences['orderSidebar'] == 'alpha') { asort($SansAccent); } else { arsort($SansAccent); }
+	////Tri des données du menu déroulant
+	asort($SansAccent);
 
-	////Affichage du menu dans l'espace latéral gauche
+	////Affichage du menu déroulant dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
 		$selected = '';
 		echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';
@@ -40,6 +49,7 @@
 </div>
 <br /><br />
 <?php
+	//Les préférences de l'usager ont été récupérées plus haut
 	if ($Preferences['numSidebar'] != 0) {
 		echo '<ul>';
 		$NbIssues = array();
@@ -56,19 +66,22 @@
 			$SansAccent[$ind] = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $SansAccent[$ind]);
 			$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 		}
-		asort($SansAccent);
+		
+		////Tri des données
+		if ($Preferences['orderSidebar'] == 'asc') { asort($SansAccent); } else { arsort($SansAccent); }
 
-			$rendu = 0;
-			foreach($SansAccent as $ind => $val) {
-				$id = $idProj[$ind];
-				$follower = \DB::table('following')->where('project','=',1)->where('project_id','=',$id)->where('user_id','=',\Auth::user()->id)->count();
-				$follower = ($follower > 0) ? 1 : 0;
-				echo '<a href="javascript: Following('.$follower.', '.$id.', '.\Auth::user()->id.');" title="'.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" ><img id="img_follow_'.$id.'" src="'.\URL::home().'app/assets/images/layout/icon-comments_'.$follower.'.png" align="left" style="min-height:'.$follower.'px " /></a>';
-				echo '<li>';
-				echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'">'.$Proj[$ind].' </a>';
-				echo '</li>';
-				if (++$rendu > $Preferences['numSidebar'] && $Preferences['numSidebar'] < 999) { break; }
-			}
+		//Affichage dans le panneau de gauche
+		$rendu = 0;
+		foreach($SansAccent as $ind => $val) {
+			$id = $idProj[$ind];
+			$follower = \DB::table('following')->where('project','=',1)->where('project_id','=',$id)->where('user_id','=',\Auth::user()->id)->count();
+			$follower = ($follower > 0) ? 1 : 0;
+			echo '<a href="javascript: Following('.$follower.', '.$id.', '.\Auth::user()->id.');" title="'.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" ><img id="img_follow_'.$id.'" src="'.\URL::home().'app/assets/images/layout/icon-comments_'.$follower.'.png" align="left" style="min-height:'.$follower.'px " /></a>';
+			echo '<li>';
+			echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'">'.$Proj[$ind].' </a>';
+			echo '</li>';
+			if (++$rendu > abs(intval($Preferences['numSidebar'])) && abs(intval($Preferences['numSidebar'])) < 990) { break; }
+		}
 		echo '</ul>';
 	}
 ?>
