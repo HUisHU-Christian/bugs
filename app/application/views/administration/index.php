@@ -321,6 +321,19 @@
 			</span>
 			<br /><br />
 			<br /><br />
+			<h4><strong><?php echo $LngSRV["TXT_Database"]; ?></strong> : </h4>
+			<div id="div_divBackupTXT" style="margin-left: 20%; margin-right: 20%;">
+			<?php
+				foreach ($LesOptions as $ind => $val) {
+					echo '<input name="ChxTxt_'.$ind.'" id="input_ChxTxt_'.$ind.'" type="checkbox" checked="checked" value="'.$ind.'" />'.$val.'<br />';
+				}
+			?>
+			<span style="float: right; vertical-align: middle; margin-top: -150px;">
+			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["TXT_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupTXT();" />
+			</span>
+			</div>
+			<br /><br />
+			<br /><br />
 		</details>
 	</div>
 
