@@ -673,6 +673,43 @@ div.stat_form {
 #sidebar .pad{
 	padding: 0 18px;
 }
+.menuprojetsgauche {
+	background-color: grey;
+	position: relative;
+	display: inline-block;
+	border: solid 2px black;
+	border-radius: 4px;
+	width: 100%;
+	text-align: center;
+}
+
+.button_menuprojetsgauche{
+	background-color: grey;
+	color: white;
+	border: none;
+	cursor: pointer;
+	font-size: 125%;
+}
+.div_menuprojetsgauche{
+	display: none;
+	background-color: #CCCCCC;
+	min-width: 50px;
+}
+.div_menuprojetsgauche a{
+	background-color: #CCCCCC;
+	color: black;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	text-decoration: none;
+	display: block;
+}
+.div_menuprojetsgauche a:hover{
+	background-color: white;
+	color: #43b9f0;
+}
+.menuprojetsgauche:hover .div_menuprojetsgauche{
+	display: block;
+}
 .pad2{
 	display:inline-block; 
 	text-align:left; 
@@ -1330,6 +1367,15 @@ ul.isssues li {
 #lane-status-0 {
   float: right; 
   margin-right: 0;
+}
+
+.todo-closed {
+	border-left-color: #333333;
+	border-left-style: dotted;
+	border-left-width: thick;
+	padding-left: 20px;
+	width: 25%;
+	background-clip: content-box;
 }
 
 .todo-line {

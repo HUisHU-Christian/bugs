@@ -19,6 +19,18 @@ class User extends Eloquent {
 		return $this->id == Auth::user()->id;
 	}
 
+	public function pref() {
+		$UserPref = array();
+		$Pref = Auth::user()->preferences;
+		$Prefs = explode(";", $Pref);
+		foreach ($Prefs as $ind => $val) {
+			$ceci = explode("=", $val);
+			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }
+		}
+
+		return $UserPref;
+	}
+
 	/**
 	* Check to see if current user has given permission
 	*
@@ -58,8 +70,7 @@ class User extends Eloquent {
 	* @return mixed
 	*/
 /*
-	public function issues($status = 1)
-	{
+	public function issues($status = 1) {
 		return $this->has_many('Project\Issue', 'created_by')
 			->where('status', '=', 1)
 			->where('assigned_to', '=', $this->id);
@@ -87,6 +98,12 @@ class User extends Eloquent {
 
 			/* Loop through all the logic from the project and cache all the needed data so we don't load the same data twice */
 			foreach(User\Activity::where('parent_id', '=', $project->id)->order_by('created_at', 'DESC')->take($activity_limit)->get() as $activity) {
+// La version ci-bas pourrait être utile
+//			foreach(User\Activity::where('parent_id', '=', $project->id)
+//				->join('projects_issues', 'projects_issues.id', '=', 'users_activity.item_id')
+//				->where('projects_issues.start_at', '<=', date())
+//				->order_by('created_at', 'DESC')
+//				->take($activity_limit)->get() as $activity) {
 				$dashboard[$project->id][] = $activity;
 
 				switch($activity->type_id) {
@@ -302,8 +319,7 @@ class User extends Eloquent {
 	* @param  int   $id
 	* @return bool
 	*/
-	public static function delete_user($id)
-	{
+	public static function delete_user($id) {
 		$update = array(
 			'email' => '',
 			'deleted' => 1

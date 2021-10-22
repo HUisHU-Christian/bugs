@@ -2,11 +2,24 @@
 	<?php echo __('tinyissue.my_settings'); ?>
 	<span><?php echo __('tinyissue.my_settings_description'); ?></span>
 </h3>
-
+<?php
+	$prefixe = "";
+	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
+	$config = require $prefixe."config.app.php";
+	$dir = $prefixe.$config['attached']['directory']."/";
+	$Lng = require_once($prefixe."app/application/language/en/install.php"); 
+	if ( file_exists($prefixe."app/application/language/".\Auth::user()->language."/install.php") && \Auth::user()->language != 'en') {
+		$LnT = require_once ($prefixe."app/application/language/".\Auth::user()->language."/install.php");
+		$LngSRV = array_merge($Lng, $LnT);
+	} else {
+		$LngSRV = $Lng;
+	}
+?>
 <div class="pad">
-
+	<details id="details_main">
+	<summary><?php echo $LngSRV["UserPref_compte"]; ?></summary>
 	<form method="post" action="" autocomplete="off" >
-
+	<input name="Quoi" value="account" type="hidden" />
 		<table class="form">
 			<tr>
 				<th><?php echo __('tinyissue.first_name'); ?></th>
@@ -70,11 +83,47 @@
 			<tr>
 				<th></th>
 				<td>
-					<input type="submit" value="<?php echo __('tinyissue.update'); ?>"  class="button	primary"/>
+					<input type="submit" value="<?php echo __('tinyissue.update_my'); ?>"  class="button	primary"/>
 				</td>
 			</tr>
 		</table>
-
 	</form>
+	</details>
 
+	<form method="post" action="settings" >
+	<details id="details_main" open="open">
+	<summary><?php echo $LngSRV["UserPref_prefer"]; ?></summary>
+	<input name="Quoi" value="Preferences" type="hidden" />
+	<?php
+		//Define default preferences values
+		$pref = array(
+			'sidebar' => true,
+			'orderSidebar' => 'desc',
+			'numSidebar' => 990,
+			'template' => 'default'
+		);
+		$prefs = explode(";", $user->preferences);
+		foreach ($prefs as $ind => $val) {
+			$ceci = explode("=", $val);
+			if (isset($ceci[1])) { $pref[$ceci[0]] = $ceci[1]; }
+		}
+	?>
+		<br />
+		<h4><?php echo $LngSRV["UserPref_modele"]; ?></h4>
+		<br />
+		<select name="template"><option value="default">Default</option></select>
+		<br /><br />
+		<br /><br />
+		<span style="float: right; vertical-align: middle;">
+		<input name="Lancer" type="submit" class="button2" value="<?php echo $LngSRV["UserPref_apply"]; ?>" id="input_databaseLancer" onclick="javascript: AppliquerPref();" />
+		</span>
+
+		<h4><?php echo $LngSRV["UserPref_projet"]; ?></h4>
+		<?php 
+			echo $LngSRV["UserPref_projet_2"].' : '.$LngSRV["UserPref_projet_2a"].'<input type="radio" name="sidebar" id="input_sidebar_oui" value="true" '.(($pref["sidebar"] == 'true') ? 'checked="chekcked"' : '').'  onclick="document.getElementById(\'input_numSidebar\').value = 100;"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_2b"].'<input type="radio"  name="sidebar" id="input_sidebar_non" value="false" '.(($pref["sidebar"] == 'false') ? 'checked="chekcked"' : '').' onclick="document.getElementById(\'input_numSidebar\').value = 0; document.getElementById(\'input_orderSidebar_desc\').checked = true;" /><br />';
+			echo $LngSRV["UserPref_projet_1"].' : <input type="number" name="numSidebar" id="input_numSidebar" max="990" min="-990" step="10" value="'.$pref['numSidebar'].'" size="4" onchange="if(this.value == 0) { document.getElementById(\'input_sidebar_non\').checked = true; } else { document.getElementById(\'input_sidebar_oui\').checked = true;} if(this.value < 1) { document.getElementById(\'input_orderSidebar_desc\').checked = true; } else { document.getElementById(\'input_orderSidebar_asc\').checked = true;}" /><br />';
+			echo $LngSRV["UserPref_projet_3"].' : '.$LngSRV["UserPref_projet_3a"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_asc" value="asc" '.(($pref["orderSidebar"] == 'asc') ? 'checked="chekcked"' : '').' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_3b"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_desc" value="desc" '.(($pref["orderSidebar"] == 'desc') ? 'checked="chekcked"' : '').' /><br />';
+		?>
+	</form>
+	</details>
 </div>

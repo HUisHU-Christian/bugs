@@ -69,6 +69,10 @@ if (file_exists($chemin)) {
 				<th><?php echo __('tinyissue.duration'); ?></th>
 				<td>
 					<input type="number" name="duration" style="width: 60px;" value="<?php echo $config_app['duration']; ?>" min="1" max="400" />&nbsp;<?php echo __('tinyissue.days'); ?>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php echo __('tinyissue.issue_start_at'); ?> : <input name="start_at" id="input_start_at" type="date" value="<?php echo date("Y-m-d"); ?>" />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php echo __('tinyissue.issue_hours_plan'); ?> : <input name="temps_plan" id="input_temps_plan" type="number" value="15" min="0" max="9999" size="5" />
 				</td>
 			</tr>
 

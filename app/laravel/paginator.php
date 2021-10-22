@@ -77,8 +77,7 @@ class Paginator {
 	 * @param  int    $last
 	 * @return void
 	 */
-	protected function __construct($results, $page, $total, $per_page, $last)
-	{
+	protected function __construct($results, $page, $total, $per_page, $last) {
 		$this->page = $page;
 		$this->last = $last;
 		$this->total = $total;
@@ -94,8 +93,7 @@ class Paginator {
 	 * @param  int        $per_page
 	 * @return Paginator
 	 */
-	public static function make($results, $total, $per_page)
-	{
+	public static function make($results, $total, $per_page) {
 		$page = static::page($total, $per_page);
 
 		$last = ceil($total / $per_page);
@@ -110,16 +108,14 @@ class Paginator {
 	 * @param  int  $per_page
 	 * @return int
 	 */
-	public static function page($total, $per_page)
-	{
+	public static function page($total, $per_page) {
 		$page = Input::get('page', 1);
 
 		// The page will be validated and adjusted if it is less than one or greater
 		// than the last page. For example, if the current page is not an integer or
 		// less than one, one will be returned. If the current page is greater than
 		// the last page, the last page will be returned.
-		if (is_numeric($page) and $page > $last = ceil($total / $per_page))
-		{
+		if (is_numeric($page) and $page > $last = ceil($total / $per_page)) {
 			return ($last > 0) ? $last : 1;
 		}
 
@@ -134,8 +130,7 @@ class Paginator {
 	 * @param  int   $page
 	 * @return bool
 	 */
-	protected static function valid($page)
-	{
+	protected static function valid($page) {
 		return $page >= 1 and filter_var($page, FILTER_VALIDATE_INT) !== false;
 	}
 
@@ -163,8 +158,7 @@ class Paginator {
 	 * @param  int     $adjacent
 	 * @return string
 	 */
-	public function links($adjacent = 3)
-	{
+	public function links($adjacent = 3) {
 		if ($this->last <= 1) return '';
 
 		// The hard-coded seven is to account for all of the constant elements in a
@@ -174,12 +168,10 @@ class Paginator {
 		// If there are not enough pages to make the creation of a slider possible
 		// based on the adjacent pages, we will simply display all of the pages.
 		// Otherwise, we will create a "truncating" sliding window.
-		if ($this->last < 7 + ($adjacent * 2))
-		{
+		if ($this->last < 7 + ($adjacent * 2)) {
 			$links = $this->range(1, $this->last);
 		}
-		else
-		{
+		else {
 			$links = $this->slider($adjacent);
 		}
 
@@ -205,8 +197,7 @@ class Paginator {
 	 * @param  int     $adjacent
 	 * @return string
 	 */
-	public function slider($adjacent = 3)
-	{
+	public function slider($adjacent = 3) {
 		$window = $adjacent * 2;
 
 		// If the current page is so close to the beginning that we do not have
@@ -218,13 +209,11 @@ class Paginator {
 		// the end of the slider. Otherwise, we'll build the range.
 		//
 		// Example: 1 [2] 3 4 5 6 ... 23 24
-		if ($this->page <= $window)
-		{
+		if ($this->page <= $window) {
 			return $this->range(1, $window + 2).' '.$this->ending();
 		}
 		// Example: 1 2 ... 32 33 34 35 [36] 37
-		elseif ($this->page >= $this->last - $window)
-		{
+		elseif ($this->page >= $this->last - $window) {
 			return $this->beginning().' '.$this->range($this->last - $window - 2, $this->last);
 		}
 
@@ -248,8 +237,7 @@ class Paginator {
 	 * @param  string  $text
 	 * @return string
 	 */
-	public function previous($text = null)
-	{
+	public function previous($text = null) {
 		$disabled = function($page) { return $page <= 1; };
 
 		return $this->element(__FUNCTION__, $this->page - 1, $text, $disabled);
@@ -269,8 +257,7 @@ class Paginator {
 	 * @param  string  $text
 	 * @return string
 	 */
-	public function next($text = null)
-	{
+	public function next($text = null) {
 		$disabled = function($page, $last) { return $page >= $last; };
 
 		return $this->element(__FUNCTION__, $this->page + 1, $text, $disabled);
@@ -285,12 +272,10 @@ class Paginator {
 	 * @param  Closure  $disabled
 	 * @return string
 	 */
-	protected function element($element, $page, $text, $disabled)
-	{
+	protected function element($element, $page, $text, $disabled) {
 		$class = "{$element}_page";
 
-		if (is_null($text))
-		{
+		if (is_null($text)) {
 			$text = Lang::line("pagination.{$element}")->get($this->language);
 		}
 
@@ -298,12 +283,10 @@ class Paginator {
 		// be used to determine if the element should be a span element or an
 		// actual link. For example, if the current page is the first page,
 		// the "first" element should be a span instead of a link.
-		if ($disabled($this->page, $this->last))
-		{
+		if ($disabled($this->page, $this->last)) {
 			return '<li'.HTML::attributes(array('class'=>"{$class} disabled")).'><a href="#">'.$text.'</a></li>';
 		}
-		else
-		{
+		else {
 			return $this->link($page, $text, $class);
 		}
 	}
@@ -313,8 +296,7 @@ class Paginator {
 	 *
 	 * @return string
 	 */
-	protected function beginning()
-	{
+	protected function beginning() {
 		return $this->range(1, 2).' '.$this->dots;
 	}
 
@@ -323,8 +305,7 @@ class Paginator {
 	 *
 	 * @return string
 	 */
-	protected function ending()
-	{
+	protected function ending() {
 		return $this->dots.' '.$this->range($this->last - 1, $this->last);
 	}
 
@@ -337,22 +318,17 @@ class Paginator {
 	 * @param  int     $end
 	 * @return string
 	 */
-	protected function range($start, $end)
-	{
+	protected function range($start, $end) {
 		$pages = array();
 
 		// To generate the range of page links, we will iterate through each page
 		// and, if the current page matches the page, we will generate a span,
 		// otherwise we will generate a link for the page. The span elements
 		// will be assigned the "current" CSS class for convenient styling.
-		for ($page = $start; $page <= $end; $page++)
-		{
-			if ($this->page == $page)
-			{
+		for ($page = $start; $page <= $end; $page++) {
+			if ($this->page == $page) {
 				$pages[] = '<li class="active"><a href="#">'.$page.'</a></li>';
-			}
-			else
-			{
+			} else {
 				$pages[] = $this->link($page, $page, null);
 			}
 		}
@@ -368,8 +344,7 @@ class Paginator {
 	 * @param  string  $class
 	 * @return string
 	 */
-	protected function link($page, $text, $class)
-	{
+	protected function link($page, $text, $class) {
 		$query = '?page='.$page.$this->appendage($this->appends);
 
 		return '<li'.HTML::attributes(array('class' => $class)).'>'. HTML::link(URI::current().$query, $text, array(), Request::secure()).'</li>';
@@ -381,15 +356,13 @@ class Paginator {
 	 * @param  array   $appends
 	 * @return string
 	 */
-	protected function appendage($appends)
-	{
+	protected function appendage($appends) {
 	 	// The developer may assign an array of values that will be converted to a
 	 	// query string and attached to every pagination link. This allows simple
 	 	// implementation of sorting or other things the developer may need.
 		if ( ! is_null($this->appendage)) return $this->appendage;
 
-		if (count($appends) <= 0)
-		{
+		if (count($appends) <= 0) {
 			return $this->appendage = '';
 		}
 
@@ -402,8 +375,7 @@ class Paginator {
 	 * @param  array      $values
 	 * @return Paginator
 	 */
-	public function appends($values)
-	{
+	public function appends($values) {
 		$this->appends = $values;
 		return $this;
 	}
@@ -414,8 +386,7 @@ class Paginator {
 	 * @param  string     $language
 	 * @return Paginator
 	 */
-	public function speaks($language)
-	{
+	public function speaks($language) {
 		$this->language = $language;
 		return $this;
 	}

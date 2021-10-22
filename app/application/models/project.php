@@ -69,21 +69,33 @@ class Project extends Eloquent {
 		if(is_null($user_id)) {
 			$user_id = \Auth::user()->id;
 		}
-		return \Tag::find(1)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
 				->where('assigned_to', '=', $user_id)
+				->where('start_at', '<=', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
 	}
 
 	public function count_open_issues() {
-		return \Tag::find(1)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
+				->where('start_at', '<=', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
 	}
 
 	public function count_closed_issues() {
-		return \Tag::find(2)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
+				->where_null('closed_at', 'and', true)
+				->count();
+ 	}
+	public function count_future_issues() {
+		return \DB::table('projects_issues')
+				->where('project_id', '=', $this->id)
+				->where('start_at', '>', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
  	}
 	/**
