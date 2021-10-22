@@ -7,10 +7,6 @@
 	</button>
 	<div class="div_menuprojetsgauche">
 <?php
-	//Valeurs par défaut
-	$Preferences['orderSidebar'] = $Preferences['orderSidebar'] ?? "asc";
-	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 999;
-	
 	//Récupération des préférences dans le dossier personnel de l'usager
 	$Preferences = \Auth::user()->pref();
 

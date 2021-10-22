@@ -96,17 +96,7 @@
 	<input name="Quoi" value="Preferences" type="hidden" />
 	<?php
 		//Define default preferences values
-		$pref = array(
-			'sidebar' => true,
-			'orderSidebar' => 'desc',
-			'numSidebar' => 990,
-			'template' => 'default'
-		);
-		$prefs = explode(";", $user->preferences);
-		foreach ($prefs as $ind => $val) {
-			$ceci = explode("=", $val);
-			if (isset($ceci[1])) { $pref[$ceci[0]] = $ceci[1]; }
-		}
+		$pref = \Auth::user()->pref();
 	?>
 		<br />
 		<h4><?php echo $LngSRV["UserPref_modele"]; ?></h4>
@@ -114,16 +104,34 @@
 		<select name="template"><option value="default">Default</option></select>
 		<br /><br />
 		<br /><br />
-		<span style="float: right; vertical-align: middle;">
-		<input name="Lancer" type="submit" class="button2" value="<?php echo $LngSRV["UserPref_apply"]; ?>" id="input_databaseLancer" onclick="javascript: AppliquerPref();" />
-		</span>
 
 		<h4><?php echo $LngSRV["UserPref_projet"]; ?></h4>
 		<?php 
 			echo $LngSRV["UserPref_projet_2"].' : '.$LngSRV["UserPref_projet_2a"].'<input type="radio" name="sidebar" id="input_sidebar_oui" value="true" '.(($pref["sidebar"] == 'true') ? 'checked="chekcked"' : '').'  onclick="document.getElementById(\'input_numSidebar\').value = 100;"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_2b"].'<input type="radio"  name="sidebar" id="input_sidebar_non" value="false" '.(($pref["sidebar"] == 'false') ? 'checked="chekcked"' : '').' onclick="document.getElementById(\'input_numSidebar\').value = 0; document.getElementById(\'input_orderSidebar_desc\').checked = true;" /><br />';
 			echo $LngSRV["UserPref_projet_1"].' : <input type="number" name="numSidebar" id="input_numSidebar" max="990" min="-990" step="10" value="'.$pref['numSidebar'].'" size="4" onchange="if(this.value == 0) { document.getElementById(\'input_sidebar_non\').checked = true; } else { document.getElementById(\'input_sidebar_oui\').checked = true;} if(this.value < 1) { document.getElementById(\'input_orderSidebar_desc\').checked = true; } else { document.getElementById(\'input_orderSidebar_asc\').checked = true;}" /><br />';
-			echo $LngSRV["UserPref_projet_3"].' : '.$LngSRV["UserPref_projet_3a"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_asc" value="asc" '.(($pref["orderSidebar"] == 'asc') ? 'checked="chekcked"' : '').' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_3b"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_desc" value="desc" '.(($pref["orderSidebar"] == 'desc') ? 'checked="chekcked"' : '').' /><br />';
+			echo $LngSRV["UserPref_projet_3"].' : '.$LngSRV["UserPref_projet_3a"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_asc" value="asc" '.(($pref["orderSidebar"] == 'asc') ? 'checked="chekcked"' : '').' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_3b"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_desc" value="desc" '.(($pref["orderSidebar"] == 'desc') ? 'checked="chekcked"' : '').' />';
+			if ($user->role_id == 4) {
+				echo '
+					<br /><br />
+					<br /><br />
+				<h4>'.$LngSRV["UserPref_Notice"].'</h4>';
+			
+				echo $LngSRV["UserPref_NoticeOnLogIn"].' : '.$LngSRV["UserPref_projet_2a"];
+				echo '<input name="noticeOnLogIn" id="radio_noticeOnLogIn_Oui" type="radio" value="true" '.(($pref['noticeOnLogIn']) ? 'checked="checked"' : '').' />';
+				echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_2b"];
+				echo '
+				';
+				echo '<input name="noticeOnLogIn" id="radio_noticeOnLogIn_Non" type="radio" value="false" '.((!$pref['noticeOnLogIn']) ? 'checked="checked"' : '').'/>';
+				echo '
+				';
+			} else {
+				echo '<input name="noticeOnLogIn" type="hidden" value="false" />';
+			}
 		?>
+		<br /><br />
+		<div style="width:100%; left: 30%;position: relative; margin-top: 30px;">
+		<input name="Lancer" type="submit" class="button2" value="<?php echo $LngSRV["UserPref_apply"]; ?>" id="input_databaseLancer" onclick="javascript: AppliquerPref();" />
+		</div>
 	</form>
 	</details>
 </div>

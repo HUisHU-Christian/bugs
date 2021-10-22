@@ -81,6 +81,8 @@ return array(
 	'UserPref_apply' => 'Appliquer',
 	'UserPref_compte' => 'Mon compte',
 	'UserPref_modele' => 'Canevas (couleur de fond, couleurs de texte)',
+	'UserPref_Notice' => 'Mes collaborateurs',
+	'UserPref_NoticeOnLogIn' => 'Faites-moi connaître chacune des connexions d`usager par courriel',
 	'UserPref_prefer' => 'Mes préférences',
 	'UserPref_projet' => 'Mes projets',
 	'UserPref_projet_1' => 'Nombre de projets affichés',
