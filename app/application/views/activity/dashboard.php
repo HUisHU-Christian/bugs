@@ -29,10 +29,10 @@
 		echo '<div class="pad">';
 		echo '<form action="'.URL::to('home/new').'" method="post" id="agissons">';
 		echo '<h3>'.__('tinyissue.create_a_new_project').'</h3>';
-		echo $LngSRV['welcome_projectname'].' : <input name="" size="80" style="font-size: 200%;"><br />';
+		echo $LngSRV['welcome_projectname'].' : <input name="projectName" size="80" style="font-size: 200%;"><br />';
 		echo '<br /><br />';
 		echo '<h3>'.__('tinyissue.create_a_new_issue').'</h3>';
-		echo $LngSRV['welcome_issuename'].' : <input name="" size="80" style="font-size: 150%;"><br />';
+		echo $LngSRV['welcome_issuename'].' : <input name="ticketName" size="80" style="font-size: 150%;"><br />';
 		echo '<br /><br />';
 		echo $LngSRV['welcome_issuedesc'].' <br /> <textarea name="body" id="texteara_body" style="width: 98%; height: 150px; background-color: #FFF; color: #000; border-width: 2px; border-color: #999;"></textarea>';
 		echo '<br />';
