@@ -27,5 +27,4 @@ class Login_Controller extends Controller {
 		return Redirect::to('login')
 			->with('error',  __('tinyissue.password_incorrect'));
 	}
-
 }
