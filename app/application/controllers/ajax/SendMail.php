@@ -50,9 +50,7 @@
 			if ($src[$ind] == 'value') {
 				$message .= '<i>'.$val.'</i>';
 			} else {
-				$message .= (file_exists($dir.$val.'.html')) 
-					? file_get_contents($dir.$val.'.html') 
-					: $Lng[$src[$ind]]['following_email_'.strtolower($val)];
+				$message .= (file_exists($dir.$val.'.html')) ? file_get_contents($dir.$val.'.html') : $Lng[$src[$ind]]['following_email_'.strtolower($val)];
 			}
 		}
 	} else {
