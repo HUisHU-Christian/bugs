@@ -19,6 +19,18 @@ class User extends Eloquent {
 		return $this->id == Auth::user()->id;
 	}
 
+	public function pref() {
+		$UserPref = array();
+		$Pref = Auth::user()->preferences;
+		$Prefs = explode(";", $Pref);
+		foreach ($Prefs as $ind => $val) {
+			$ceci = explode("=", $val);
+			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }
+		}
+
+		return $UserPref;
+	}
+
 	/**
 	* Check to see if current user has given permission
 	*

@@ -16,7 +16,7 @@
 	echo __('tinyissue.administration');
 	echo '.<span>'.__('tinyissue.administration_description').'</span>';
 	echo '</h3>';
-	
+
 	$Def = array('mailerrormsg' => 1, 'intro' => '', 'bye' => '', 'encoding' => 'UTF-8',);
 	foreach ($Def as $ind => $val) {
 		$Conf[$ind] = isset($Conf[$ind]) ? $Conf[$ind] : $val;
@@ -318,7 +318,6 @@
 			<span style="float: right; vertical-align: middle;">
 			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
 			</span>
-			<?php echo $LngSRV["Backup_BDDwindowers_1"]; ?> :  <a href="https://john-dugan.com/dump-and-restore-mysql-databases-in-windows/"><?php echo $LngSRV["Backup_BDDwindowers_2"]; ?></a> ) 
 			</span>
 			<br /><br />
 			<br /><br />

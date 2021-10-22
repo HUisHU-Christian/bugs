@@ -12,6 +12,18 @@ if(count($active_projects)>1) {
 	</button>
 	<div class="div_menuprojetsgauche">
 <?php
+	//Valeurs par défaut
+	$Preferences['orderSidebar'] = $Preferences['orderSidebar'] ?? "asc";
+	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 999;
+	
+	//Récupération des préférences dans le dossier personnel de l'usager
+	$Pref = \Auth::user()->attributes;
+	$Prefs = explode(";", $Pref["preferences"]);
+	foreach ($Prefs as $ind => $val) {
+		$ceci = explode("=", $val);
+		if (isset($ceci[1])) { $Preferences[$ceci[0]] = $ceci[1]; }
+	}
+
 	//Liste des projets dans un menu déroulant
 	////Collecte des informations
 	$NbIssues = array();
@@ -28,9 +40,8 @@ if(count($active_projects)>1) {
 		$SansAccent[$ind] = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $SansAccent[$ind]);
 		$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 	}
-	////Tri des données
-	$Preferences['ProjOrdreTri'] = $Preferences['ProjOrdreTri'] ?? "alpha";
-	if ($Preferences['ProjOrdreTri'] == 'alpha') { asort($SansAccent); } else { arsort($SansAccent); }
+	////Tri des données du menu déroulant
+	asort($SansAccent);
 
 	////Affichage du menu dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
