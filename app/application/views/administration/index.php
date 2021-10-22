@@ -219,7 +219,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			&nbsp;&nbsp;&nbsp;&nbsp;
-				{first}, {last}, {full}, {project}, {issue}
+				{first}, {last}, {full}, {project}, {issue}, {email}, {static}
 			</div>
 			<br />
 			<textarea id="txt_contenu" name="contenu" ><?php echo $con; ?></textarea>
