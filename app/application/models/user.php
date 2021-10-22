@@ -20,7 +20,15 @@ class User extends Eloquent {
 	}
 
 	public function pref() {
-		$UserPref = array();
+		//Default values
+		$UserPref = array(
+			'sidebar' => true,
+			'orderSidebar' => 'desc',
+			'noticeOnLogIn' => false,
+			'numSidebar' => 990,
+			'template' => 'default'
+		);
+		//User's preferences from 'Preferences' field  ( table 'users' ) 
 		$Pref = Auth::user()->preferences;
 		$Prefs = explode(";", $Pref);
 		foreach ($Prefs as $ind => $val) {
