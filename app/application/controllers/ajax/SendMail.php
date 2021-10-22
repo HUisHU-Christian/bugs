@@ -16,6 +16,7 @@
 	$SkipUser = $SkipUser ?? $_GET["SkipUser"] ?? false;
 	$Type = $Type ?? $_GET["Type"] ?? 'Issue';
 	$UserID = $User ?? $_GET["User"] ?? $_GET["UserID"] ?? Auth::user()->id ?? 1;
+	$values = array();
 
 	if ($Type == 'User') {
 		$resu = Requis("SELECT * FROM users WHERE email = '".$UserID."'");
@@ -49,6 +50,7 @@
 		foreach ($contenu as $ind => $val) {
 			if ($src[$ind] == 'value') {
 				$message .= '<i>'.$val.'</i>';
+				if (strpos($val, '@') > 0) { $values["email"] = $val; } else { $values["static"] = $val; }
 			} else {
 				$message .= (file_exists($dir.$val.'.html')) ? file_get_contents($dir.$val.'.html') : $Lng[$src[$ind]]['following_email_'.strtolower($val)];
 			}
@@ -169,7 +171,7 @@
 				$body .= $message;
 				$body .= '<br /><br />';
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
-				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $rl);
+				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url);
 				if ($mail->ContentType == 'html') {
 					$mail->IsHTML(true);
 					$mail->WordWrap = (isset($optMail['linelenght'])) ? $optMail['linelenght'] : 80;
@@ -186,6 +188,7 @@
 	}
 	
 function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS") {
+	global $values;
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 	$lfin = $tit ? ' »' : '</a>';
 	//$liss = $tit ? ' « ' : '<a href="'.(str_replace("issue/new", "issue/".$IssueID."/", $link)).'">';
@@ -218,6 +221,8 @@ function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = 
 	$body = str_replace('{isue}', 	$liss.$follower["title"].$lfin, $body);
 	$body = str_replace('{issue}', 	$liss.$follower["title"].$lfin, $body);
 	$body = str_replace('{issues}',	$liss.$follower["title"].$lfin, $body);
+	if (isset($values["email"])) { $body = str_replace('{email}',	$values["email"], $body);} 
+	if (isset($values["static"])) { $body = str_replace('{static}',	$values["static"], $body);}
 	return $body;
 }
 
