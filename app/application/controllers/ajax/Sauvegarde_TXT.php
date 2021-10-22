@@ -3,21 +3,22 @@
 	$retour = "Non";
 	$namedir = date("YmdHis");
 	$origpath = "../../uploads/";
+	$origpath = "../uploads/";
 	$prefixe = "";
 	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
 
 	chdir($prefixe."/temp");
-	mkdir($namedir);
-	chdir($namedir);
 	foreach($_POST as $ind => $val) {
 		if (file_exists($origpath.$val.".html")) {
-			exec("cp ".$origpath.$val.".html .");
-			exec("cp ".$origpath.$val."_tit.html .");
-			if (file_exists($origpath.$val.".html")) 		{ $compte = $compte + 1; }
-			if (file_exists($origpath.$val."_tit.html"))	{ $compte = $compte + 1; }
+				$zip = new ZipArchive ();
+				$zip-> open ('emails_'.$namedir.'.zip', ZipArchive :: CREATE); 
+				$zip-> addFile ($origpath.$val.".html"); 
+				$zip-> addFile ($origpath.$val."_tit.html"); 
+				$zip-> close ();
+				$compte = $compte + 2;
 		}
 	}
-	chdir("../../");
-	if ($compte > 0) { $retour = $compte." files copied into temp/".$namedir."<br />"; }
+	$compte = file_exists('emails_'.$namedir.'.zip') ? $compte : 0;
+	chdir("../");
+	if ($compte > 0) { $retour = $compte.' files copied into <a href="temp/emails_'.$namedir.'.zip">temp/emails_'.$namedir.'.zip</a><br />'; }
 	echo $retour;
-?>

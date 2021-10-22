@@ -32,7 +32,7 @@
 		$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 	}
 	////Tri des données du menu déroulant
-	asort($SansAccent);
+	if ($Preferences['orderSidebar'] == 'asc') { asort($SansAccent); } else { arsort($SansAccent); }
 
 	////Affichage du menu déroulant dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
@@ -62,8 +62,8 @@
 			$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 		}
 		
-		////Tri des données
-		if ($Preferences['orderSidebar'] == 'asc') { asort($SansAccent); } else { arsort($SansAccent); }
+		////Tri des données affichées dans le panneau de gauche
+		asort($SansAccent);
 
 		//Affichage dans le panneau de gauche
 		$rendu = 0;
