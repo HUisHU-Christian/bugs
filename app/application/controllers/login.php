@@ -1,5 +1,4 @@
 <?php
-
 class Login_Controller extends Controller {
 
 	public $restful = true;
