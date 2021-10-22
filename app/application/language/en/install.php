@@ -105,4 +105,10 @@ return array(
 	'version_release_date' => 'Release Date',
 	'version_release_numb' => 'Release number',
 	'version_your' => 'your actual running version',
+	'welcome_1' => 'Welcome on BUGS',
+	'welcome_2' => 'Please let`s start together with your first project & first issue',
+	'welcome_projectname' => 'New project`s name',
+	'welcome_issuedesc' => 'Global description for this issue ( Title )',
+	'welcome_issuename' => 'Description of the tasks to do ( Issue ) ',
+	'welcome_submit' => 'Let`s start ! ',
 );

@@ -90,7 +90,10 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 					if(is_null($row->updated_by)) { echo Time::age(strtotime($row->created_at)); }
 					if(!is_null($row->updated_by)) {  
 						echo ' - '.__('tinyissue.updated_by');
-						echo '&nbsp;&nbsp;<strong>'.$row->updated->firstname . ' ' . $row->updated->lastname.'</strong>';
+						echo '&nbsp;&nbsp;<strong>';
+						echo (isset($row->updated->firstname)) ? $row->updated->firstname : '';
+						echo (isset($row->updated->lastname)) ? $row->updated->lastname : '';
+						echo '</strong>';
 						echo Time::age(strtotime($row->updated_at));
 					} 
 					if($row->assigned_to != 0) {

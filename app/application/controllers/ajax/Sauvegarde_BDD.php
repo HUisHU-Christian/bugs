@@ -50,18 +50,20 @@
 					$lien2 = "";
 					mysqli_data_seek($resuCOLS, 0);
 					while ($QuelCOLS = Fetche($resuCOLS)) {
-						$sortie .= $lien2." ".(($QuelCOLS["Type"] != 'Num') ? "'" : "").$QuelVALS[$QuelCOLS["Field"]].(($QuelCOLS["Type"] != 'Num') ? "'" : "")." ";
+						$sortie .= $lien2." '".((trim($QuelCOLS["Type"]) == '') ? NULL : addslashes($QuelVALS[$QuelCOLS["Field"]]))."' ";
 						$lien2 = ",";
 					}
 					$sortie .= ")";
 					$lien = ",";
 					if (++$compte > 50) {
-						$sortie .= ");";
-						$sortie .= "INSERT INTO `".$tab."` VALUES";
+						$sortie .= ";
+						INSERT INTO `".$tab."` VALUES";
 						$compte = 0;
 						$lien = "";
 					}
 				}
+				$sortie .= ";
+				";
 			}
 			$f = fopen($fichier, "w");
 			fwrite($f, $sortie);

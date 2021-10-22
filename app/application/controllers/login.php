@@ -18,8 +18,8 @@ class Login_Controller extends Controller {
 		if(Auth::attempt($userdata)) {
 			Session::forget('return');
 			$Type = 'noticeonlogin';
-			$contenu = array('noticeonlogin','value'); 
-			$src = array('email', Input::get('email'));
+			$contenu = array('noticeonlogin', Input::get('email')); 
+			$src = array('email','value');
 			include_once "application/controllers/ajax/SendMail.php";
 			
 			return Redirect::to(Input::get('return', '/'));
@@ -27,5 +27,4 @@ class Login_Controller extends Controller {
 		return Redirect::to('login')
 			->with('error',  __('tinyissue.password_incorrect'));
 	}
-
 }
