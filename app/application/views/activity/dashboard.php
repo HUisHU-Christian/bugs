@@ -1,11 +1,3 @@
-<h3>
-	<?php echo __('tinyissue.dashboard'); ?>
-	<span>
-		<?php echo __('tinyissue.dashboard_description'); ?>
-	</span>
-</h3>
-
-<div class="pad">
 <?php
 	$SansAccent = array();
 	foreach(Auth::user()->dashboard() as $project) {
@@ -24,18 +16,70 @@
 		asort($SansAccent);
 	}
 
-	foreach ($SansAccent as $id => $name) {
-		echo '<div class="blue-box">';
-		echo '	<div class="inside-pad">';
-		echo '		<h4>';
-		echo '			<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
-		echo '		</h4>';
-		echo '		<ul class="activity">';
-		foreach($actiProj[$id] as $activity) { echo $activity; }
-		echo '		</ul>';
-		echo '		<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
-		echo '	</div>';
-		echo '</div>';
+	if (count($SansAccent) == 0) {
+		$prefixe = "../";
+		$Lng = require_once($prefixe."app/application/language/en/install.php"); 
+		if ( file_exists($prefixe."app/application/language/".\Auth::user()->language."/install.php") && \Auth::user()->language != 'en') {
+			$LnT = require_once ($prefixe."app/application/language/".\Auth::user()->language."/install.php");
+			$LngSRV = array_merge($Lng, $LnT);
+		} else {
+			$LngSRV = $Lng;
+		}
+		echo '<h3 style="background-color: yellow; font-size: 200%; color: black;">'.$LngSRV["welcome_1"].'<span style="color:black;">'.$LngSRV["welcome_2"].'</span></h3>';
+		echo '<div class="pad">';
+		echo '<form action="'.URL::to('home/new').'" method="post" id="agissons">';
+		echo '<h3>'.__('tinyissue.create_a_new_project').'</h3>';
+		echo $LngSRV['welcome_projectname'].' : <input name="" size="80" style="font-size: 200%;"><br />';
+		echo '<br /><br />';
+		echo '<h3>'.__('tinyissue.create_a_new_issue').'</h3>';
+		echo $LngSRV['welcome_issuename'].' : <input name="" size="80" style="font-size: 150%;"><br />';
+		echo '<br /><br />';
+		echo $LngSRV['welcome_issuedesc'].' <br /> <textarea name="body" id="texteara_body" style="width: 98%; height: 150px; background-color: #FFF; color: #000; border-width: 2px; border-color: #999;"></textarea>';
+		echo '<br />';
+		echo '<br /><br />';
+		echo '<div style="text-align: center;"><input type="submit" value="'.$LngSRV['welcome_submit'].'" class="button	primary"/></div>';
+		echo '</form>';
+?>
+<script type="text/javascript" >
+var AllEditors = new Array();
+function showckeditor (Quel, id) {
+	CKEDITOR.config.entities = false;
+	CKEDITOR.config.entities_latin = false;
+	CKEDITOR.config.htmlEncodeOutput = false;
+
+	AllEditors[id] = CKEDITOR.replace( Quel, {
+		language: '<?php echo \Auth::user()->language; ?>',
+		height: 175,
+		toolbar : [
+			{ name: 'Fichiers', items: ['Source']},
+			{ name: 'CopieColle', items: ['Cut','Copy','Paste','PasteText','PasteFromWord','RemoveFormat']},
+			{ name: 'FaireDefaire', items: ['Undo','Redo','-','Find','Replace','-','SelectAll']},
+			{ name: 'Polices', items: ['Bold','Italic','Underline','TextColor']},
+			{ name: 'ListeDec', items: ['horizontalrule','table','JustifyLeft','JustifyCenter','JustifyRight','Outdent','Indent','Blockquote']},
+			{ name: 'Liens', items: ['Image', 'NumberedList','BulletedList','-','Link','Unlink']}
+		]
+	} );
+}
+setTimeout(function() { showckeditor ('body', 0);} , 567);
+</script>
+<?php
+	} else {
+		echo '<h3>'.__('tinyissue.dashboard').'<span>'.__('tinyissue.dashboard_description').'</span></h3>';
+
+		echo '<div class="pad">';
+		foreach ($SansAccent as $id => $name) {
+			echo '<div class="blue-box">';
+			echo '	<div class="inside-pad">';
+			echo '		<h4>';
+			echo '			<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
+			echo '		</h4>';
+			echo '		<ul class="activity">';
+			foreach($actiProj[$id] as $activity) { echo $activity; }
+			echo '		</ul>';
+			echo '		<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
+			echo '	</div>';
+			echo '</div>';
+		}
 	}
 ?>
 </div>
