@@ -24,7 +24,7 @@
 ?>
 
 <div class="pad">
-<details id="details_main">
+<details id="details_main" open="open">
 	<summary><?php echo __('tinyissue.admin_head'); ?></summary>
 	<div class="pad2">
 		<table class="table" width="60%">
@@ -306,7 +306,7 @@
 				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo $config_app['TodoNbItems'] ?? 25; ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
 
-		<details id="details_sauvegardes"  open="open">
+		<details id="details_sauvegardes">
 			<summary><?php echo __('tinyissue.admin_backup'); ?></summary>
 			<br /><br />
 			<h4><strong><?php echo $LngSRV["Backup_BDD"]; ?></strong> : </h4>
@@ -318,7 +318,6 @@
 			<span style="float: right; vertical-align: middle;">
 			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
 			</span>
-			<?php echo $LngSRV["Backup_BDDwindowers_1"]; ?> :  <a href="https://john-dugan.com/dump-and-restore-mysql-databases-in-windows/"><?php echo $LngSRV["Backup_BDDwindowers_2"]; ?></a> ) 
 			</span>
 			<br /><br />
 			<br /><br />
