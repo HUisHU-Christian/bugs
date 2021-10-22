@@ -16,7 +16,7 @@
 	echo __('tinyissue.administration');
 	echo '.<span>'.__('tinyissue.administration_description').'</span>';
 	echo '</h3>';
-	
+
 	$Def = array('mailerrormsg' => 1, 'intro' => '', 'bye' => '', 'encoding' => 'UTF-8',);
 	foreach ($Def as $ind => $val) {
 		$Conf[$ind] = isset($Conf[$ind]) ? $Conf[$ind] : $val;
@@ -319,6 +319,7 @@
 				foreach ($LesOptions as $ind => $val) {
 					echo '<input name="ChxTxt_'.$ind.'" id="input_ChxTxt_'.$ind.'" type="checkbox" checked="checked" value="'.$ind.'" />'.$val.'<br />';
 				}
+				echo '<input name="ChxTxt_config" id="input_ChxTxt_config" type="checkbox" checked="checked" value="config" />BUGS config file<br />';
 			?>
 			<span style="float: right; vertical-align: middle; margin-top: -150px;">
 			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["TXT_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupTXT();" />
