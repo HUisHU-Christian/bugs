@@ -120,6 +120,7 @@
 		var NextPage = 'app/application/controllers/ajax/Sauvegarde_BDD.php';
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
+					document.getElementById('span_BackupBDD').innerHTML = xhttp.responseText;
 				if (xhttp.responseText == 'Échec') {
 					alert("Vérifiez vos configurations, nous n`avons pas pu enregistrer");
 				} else if (xhttp.responseText == 'Non') {
