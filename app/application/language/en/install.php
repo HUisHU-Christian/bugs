@@ -4,6 +4,8 @@ return array(
 	'Backup_BDD' => 'Data base',
 	'Backup_BDDemail' => 'Your sign-in email',
 	'Backup_BDDpassword' => 'Your sign-in password',
+	'Backup_BDDwindowers_1' => 'Windows user : You may need to activate MySQL ( follow this link',
+	'Backup_BDDwindowers_2' => 'Dump and Restore MySQL Databases using Windows Command Prompt',
 	'Button_CreateConfig' => 'Create Config',
 	'Complete_awesome' => 'Awesome!',
 	'Complete_login' => 'Proceed to Login',
