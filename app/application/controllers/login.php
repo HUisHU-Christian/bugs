@@ -16,10 +16,24 @@ class Login_Controller extends Controller {
 		
 		if(Auth::attempt($userdata)) {
 			Session::forget('return');
-			$Type = 'noticeonlogin';
-			$contenu = array('noticeonlogin', Input::get('email')); 
-			$src = array('email','value');
-			include_once "application/controllers/ajax/SendMail.php";
+			$sendmail = true;
+			
+			$Owner = \User::where('id', '=', 1)->get(array('email','preferences','language'));
+			$Prefs = $Owner[0]->Preferences;
+			$Pref = substr($Prefs, strpos($Prefs, "noticeOnLogIn=")+13, 7);
+			$Pref = substr($Pref, strpos($Pref, "=")+1);
+
+			if (substr($Pref, 0, 1) == 'f') { $sendmail = false; }			
+			if (Input::get('email') == $Owner[0]->email) { $sendmail = false; }
+			if (Input::get('email') == Config::get('mail.from.email')) { $sendmail = false; }
+			
+			if ($sendmail) {
+				$Type = 'noticeonlogin';
+				$Langue = $Owner[0]->language;
+				$contenu = array('noticeonlogin', 'email:'.Input::get('email'), 'lang:'.$Owner[0]->language); 
+				$src = array('email','value','value');
+				include_once "application/controllers/ajax/SendMail.php";
+			}
 			
 			return Redirect::to(Input::get('return', '/'));
 		}
