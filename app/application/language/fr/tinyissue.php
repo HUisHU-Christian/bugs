@@ -103,7 +103,7 @@ return array(
 	'following_email_project_tit'  => 'Nouveau billet',
 	'following_email_projectdel'  => 'Le project que vous suiviez a été supprimé.  Voici le nom qu`il portait : {project}.',
 	'following_email_projectdel_tit'  => 'Projet supprimé',
-	'following_email_projectmod'  => 'Vous trouverez le projet <i>{static}</i> que vous suiviez sous son nouveau nom : « <b>{project}</b> ». ',
+	'following_email_projectmod'  => 'Vous trouverez le projet <i>{static}</i> que vous suiviez sous son nouveau nom : « <b>{project}</b> ».',
 	'following_email_projectmod_tit'  => 'Projet modifié',
 	'following_email_reopened' => 'Le billet a été ré-ouvert. Vous pouvez maintenant y contribuer.',
 	'following_email_reopened_tit' => 'Billet rouvert',
