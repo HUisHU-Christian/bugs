@@ -139,9 +139,7 @@ class User extends \Eloquent {
 	 * @return array
 	 */
 	public static function active_projects($all = false, $user = null) {
-		if(is_null($user)) {
-			$user = \Auth::user();
-		}
+		if(is_null($user)) { $user = \Auth::user(); }
 
 		if($all) {
 			if($user->permission('project-all')) {
@@ -152,12 +150,8 @@ class User extends \Eloquent {
 		}
 
 		$projects = array();
-
 		foreach(static::with('project')->where('user_id', '=', $user->id)->get() as $row) {
-			if($row->project->status != 1) {
-				continue;
-			}
-
+			if($row->project->status != 1) { continue; }
 			$projects[] = $row->project;
 		}
 
