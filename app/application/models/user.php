@@ -306,7 +306,7 @@ class User extends Eloquent {
 		$user->fill($insert)->save();
 
 		//Émission d'un courriel à l'adresse du nouveau membre
-		$contenu = array('useradded',$password);
+		$contenu = array('useradded','static:'.$password);
 		$src = array('email', 'value');
 		$Type = 'User';
 		$SkipUser = false;
