@@ -188,7 +188,6 @@
 						}, 7500); 
 					}
 					var r = xhttp.responseText;
-					alert(r);
 					var recu = r.split('||');
 					TexteInital = recu[0];
 					ChangeonsEditor(9, TexteInital);
