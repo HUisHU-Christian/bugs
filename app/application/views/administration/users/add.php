@@ -13,7 +13,6 @@
 				</th>
 				<td>
 					<input type="text" name="firstname" value="<?php echo Input::old('firstname'); ?>" />
-
 					<?php echo $errors->first('firstname', '<span class="error">:message</span>'); ?>
 				</td>
 			</tr>
@@ -23,7 +22,6 @@
 				</th>
 				<td>
 					<input type="text" name="lastname" value="<?php echo Input::old('lastname');?>" />
-
 					<?php echo $errors->first('lastname', '<span class="error">:message</span>'); ?>
 				</td>
 			</tr>
@@ -33,7 +31,6 @@
 				</th>
 				<td>
 					<input type="text" name="email" value="<?php echo Input::old('email')?>" />
-
 					<?php echo $errors->first('email', '<span class="error">:message</span>'); ?>
 				</td>
 			</tr>
@@ -61,11 +58,45 @@
 				</td>
 			</tr>
 				<tr>
-					<th></th>
+					<th>
+						<?php echo __('tinyissue.project'); ?>
+					</th>
 					<td>
-						<input type="submit" value="<?php echo __('tinyissue.add_user'); ?>" class="button	primary"/>
+						<select name="Project"> 
+						<?php 
+							//Liste de tous les projects auxquels a accès l'admin qui inscrit le nouvel usager
+							foreach(Project\User::active_projects() as $row) {
+								$NbIssues[$row->to()] = $row->count_open_issues();
+								$Proj[$row->to()] = $row->name.'&nbsp;<span class="info-open-issues" title="Number of Open Tickets">('.$NbIssues[$row->to()].')</span>';
+								$idProj[$row->to()] = $row->id;
+							}
+							foreach ($Proj as $ind => $val ){
+								$SansAccent[$ind] = htmlentities($val, ENT_NOQUOTES, 'utf-8');
+								$SansAccent[$ind] = preg_replace('#&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring);#', '\1', $SansAccent[$ind]);
+								$SansAccent[$ind] = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $SansAccent[$ind]);
+								$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
+							}
+							
+							////Tri des données affichées dans le panneau de gauche
+							asort($SansAccent);
+					
+							//Affichage dans le panneau de gauche
+							foreach($SansAccent as $ind => $val) {
+								$id = $idProj[$ind];
+								echo '<option value="'.$id.'">';
+								echo $Proj[$ind];
+								echo '</option>';
+							}
+						?>
+						</select>
 					</td>
 				</tr>
+			<tr>
+				<th></th>
+				<td>
+					<input type="submit" value="<?php echo __('tinyissue.add_user'); ?>" class="button	primary"/>
+				</td>
+			</tr>
 		</table>
 
 		<?php echo Form::token(); ?>
