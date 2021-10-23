@@ -16,7 +16,7 @@
 		fclose($f);
 	}
 
-	////Texte retourné en sortie
+	////Texte retourné en sortie 
 	$emailLng = require ($prefixe."app/application/language/en/tinyissue.php");
 	$Lng = require ($prefixe."app/application/language/en/email.php");
 	$Lng = array_merge($emailLng, $Lng);
