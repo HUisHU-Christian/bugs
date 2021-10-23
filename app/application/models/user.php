@@ -291,7 +291,7 @@ class User extends Eloquent {
 				'errors' => $validator->errors
 			);
 		}
-		$MotPasse = Hash::make($password = Str::random(6));
+		$MotPasse =  Str::random(6);
 
 		//Inscription du nouveau membre dans la bdd
 		$insert = array(
@@ -300,11 +300,22 @@ class User extends Eloquent {
 			'lastname' => $info['lastname'],
 			'language' => $info['language'],
 			'role_id' => $info['role_id'],
-			'password' => $MotPasse
+			'password' => Hash::make($password = $MotPasse)
 		);
-
 		$user = new User;
 		$user->fill($insert)->save();
+
+		
+		//Attribution d'un premier projet à ce nouvel usager
+		$NewUser = \User::where('id', '>', 1)->order_by('id','DESC')->get(array('id'));
+		$ID = $NewUser[0]->id;
+		\DB::table('projects_users')->insert(array(
+			'id'=>NULL, 
+			'user_id'=>$ID,
+			'project_id'=>$info['Project'],
+			'role_id'=>$info['role_id'],
+			'created_at'=>date("Y-m-d H:i:s")
+		));
 
 		//Émission d'un courriel à l'adresse du nouveau membre
 		$contenu = array('useradded','static:'.$MotPasse);
