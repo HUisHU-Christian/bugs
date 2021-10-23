@@ -17,7 +17,7 @@ return array(
 	
 	'following_email_noticeonlogin' => 'Hello<br /><br />New connection to BUGS system occured with username: <b>{email}</b>.<br /><br /><br />Sincerely.<br />',
 	'following_email_noticeonlogin_tit' => 'User connected to BUGS',
-	'following_email_useradded' => 'Welcome as new member and user of BUGS.  <br />An administrator added your name and email into the BUGS system so you can collaborate with his group.  First of all, you need to define your password.  For now, you temporary password is : ',
+	'following_email_useradded' => 'Welcome as new member and user of BUGS.  <br />An administrator added your name and email into the BUGS system so you can collaborate with his group.  First of all, you need to define your password.  For now, you temporary password is : {static}',
 	'following_email_useradded_tit' => 'Welcome on BUGS',
 
 	'submitted_by' => 'Submitted by: %s',
