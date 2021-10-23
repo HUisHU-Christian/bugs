@@ -11,7 +11,7 @@ return array(
 	'new_issue' => 'New issue "%s" was submitted to "%s" project',
 	'new_comment' => 'Issue "%s" in "%s" project has a new comment',
 	'assignment' => 'New issue "%s" was submitted to "%s" project and assigned to you',
-	'assigned_by' => 'Assigned by: ',
+	'assigned_by' => 'Assigned by: ', 
 	'reassignment' => 'Issue "%s" in "%s" project was reassigned to you',
 	'update' => 'Issue "%s" in "%s" project was updated',
 	

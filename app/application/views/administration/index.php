@@ -301,7 +301,6 @@
 		<details id="details_sauvegardes">
 			<summary><?php echo __('tinyissue.admin_backup'); ?></summary>
 			<br /><br />
-			
 			<?php if (strtolower(substr(php_uname('s'), 0, 3)) != 'win') { ?>
 				<h4><strong><?php echo $LngSRV["Backup_BDD"]; ?></strong> : </h4>
 				<span id="span_BackupBDD">
