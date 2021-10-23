@@ -46,15 +46,9 @@ class Project extends Eloquent {
 	public function users_not_in() {
 		$users = array();
 
-		foreach($this->users()->get(array('user_id')) as $user) {
-			$users[] = $user->id;
-		}
-
+		foreach($this->users()->get(array('user_id')) as $user) { $users[] = $user->id; }
 		$results = User::where('deleted', '=', 0);
-
-		if(count($users) > 0) {
-			$results->where_not_in('id', $users);
-		}
+		if(count($users) > 0) { $results->where_not_in('id', $users); }
 
 		return $results->get();
 	}
