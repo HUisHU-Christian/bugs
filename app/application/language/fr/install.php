@@ -81,6 +81,8 @@ return array(
 	'UserPref_apply' => 'Appliquer',
 	'UserPref_compte' => 'Mon compte',
 	'UserPref_modele' => 'Canevas (couleur de fond, couleurs de texte)',
+	'UserPref_Notice' => 'Mes collaborateurs',
+	'UserPref_NoticeOnLogIn' => 'Faites-moi connaître chacune des connexions d`usager par courriel',
 	'UserPref_prefer' => 'Mes préférences',
 	'UserPref_projet' => 'Mes projets',
 	'UserPref_projet_1' => 'Nombre de projets affichés',
@@ -102,5 +104,11 @@ return array(
 	'version_offline' => 'Nous ne pouvons pas vérifier la version disponible, <br />car les fichiers en ligne ne sont pas accessibles.<br /><br />Veuillez vous référer au dépôt git ci-bas:',
 	'version_release_date' => 'Date de lancement',
 	'version_release_numb' => 'Correctif',
-	'version_your' => 'Votre version actuelle'
+	'version_your' => 'Votre version actuelle',
+	'welcome_1' => 'Bienvenue sur BUGS',
+	'welcome_2' => 'Si cela vous convient, nous pouvons amorcer le travail en créant votre premier projet et votre premiet ticket.',
+	'welcome_projectname' => 'Nom du nouveau projet',
+	'welcome_issuedesc' => 'Description globale de la tâche à accomplir par ce billet (Titre)',
+	'welcome_issuename' => 'Titre du nouveau billet (le billet comme tel)',
+	'welcome_submit' => 'Allons-y ! ',
 );

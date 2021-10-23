@@ -20,7 +20,15 @@ class User extends Eloquent {
 	}
 
 	public function pref() {
-		$UserPref = array();
+		//Default values
+		$UserPref = array(
+			'sidebar' => true,
+			'orderSidebar' => 'desc',
+			'noticeOnLogIn' => false,
+			'numSidebar' => 990,
+			'template' => 'default'
+		);
+		//User's preferences from 'Preferences' field  ( table 'users' ) 
 		$Pref = Auth::user()->preferences;
 		$Prefs = explode(";", $Pref);
 		foreach ($Prefs as $ind => $val) {
@@ -298,7 +306,7 @@ class User extends Eloquent {
 		$user->fill($insert)->save();
 
 		//Émission d'un courriel à l'adresse du nouveau membre
-		$contenu = array('useradded',$password);
+		$contenu = array('useradded','static:'.$password);
 		$src = array('email', 'value');
 		$Type = 'User';
 		$SkipUser = false;

@@ -16,6 +16,7 @@
 	$SkipUser = $SkipUser ?? $_GET["SkipUser"] ?? false;
 	$Type = $Type ?? $_GET["Type"] ?? 'Issue';
 	$UserID = $User ?? $_GET["User"] ?? $_GET["UserID"] ?? Auth::user()->id ?? 1;
+	$values = array();
 
 	if ($Type == 'User') {
 		$resu = Requis("SELECT * FROM users WHERE email = '".$UserID."'");
@@ -24,6 +25,7 @@
 		$resu = Requis("SELECT * FROM users WHERE id = ".$UserID);
 	}
 	$QuelUser = Fetche($resu);
+	$QuelUser["language"] = $Langue ?? $QuelUser["language"];
 
 	//Chargement des fichiers linguistiques
 	$emailLng = require ($prefixe."app/application/language/en/tinyissue.php");
@@ -48,7 +50,10 @@
 		$subject = (file_exists($dir.$contenu[0].'_tit.html')) ? file_get_contents($dir.$contenu[0].'_tit.html') : $Lng[$src[0]]['following_email_'.strtolower($contenu[0]).'_tit'];
 		foreach ($contenu as $ind => $val) {
 			if ($src[$ind] == 'value') {
-				$message .= '<i>'.$val.'</i>';
+				$vals = explode(":", $val);
+				$values[$vals[0]] = $vals[1];
+//				$message .= '<i>'.$val.'</i>';
+//				if (strpos($val, '@') > 0) { $values["email"] = $val; } else { $values["static"] = $val; }
 			} else {
 				$message .= (file_exists($dir.$val.'.html')) ? file_get_contents($dir.$val.'.html') : $Lng[$src[$ind]]['following_email_'.strtolower($val)];
 			}
@@ -70,6 +75,11 @@
 		$message .= " ".$Lng['tinyissue']["email_test"].$config['my_bugs_app']['name'].').';
 		$subject = $Lng['tinyissue']["email_test_tit"];
 		echo $Lng['tinyissue']["email_test_tit"];
+	} else if ($Type == 'noticeonlogin') {
+		$query  = "SELECT DISTINCT 0 AS project, 0 AS attached, 0 AS tages, USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', ";
+		$query .= "USR.lastname) AS user, USR.language, ";
+		$query .= "'Robot of BUGS system' AS name, 'A user just connected to BUGS' AS title ";
+		$query .= "FROM users AS USR WHERE USR.role_id = 4 ORDER BY USR.id ASC LIMIT 0, 1";
 	} else {
 		$IssueID = $IssueID ?? 0;
 		$query  = "SELECT DISTINCT FAL.project, FAL.attached, FAL.tags, ";
@@ -94,7 +104,7 @@
 
 	if (Nombre($followers) > 0) {
 		while ($follower = Fetche($followers)) {
-			$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url, $config["my_bugs_app"]["name"]);
+			$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url, $config["my_bugs_app"]["name"], $values);
 			$passage_ligne = (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $follower["email"])) ? "\r\n" : "\n";
 			$message = str_replace('"', "``", $message);
 			$message = stripslashes($message);
@@ -120,7 +130,7 @@
 				$body .= $passage_ligne;
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
 				$body .= $passage_ligne.'';
-				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url);
+				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
 				mail($follower["email"], $subject, $body, $headers);
 			} else {
 				$mail = new PHPMailer();
@@ -164,7 +174,7 @@
 				$body .= $message;
 				$body .= '<br /><br />';
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
-				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $rl);
+				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
 				if ($mail->ContentType == 'html') {
 					$mail->IsHTML(true);
 					$mail->WordWrap = (isset($optMail['linelenght'])) ? $optMail['linelenght'] : 80;
@@ -180,7 +190,8 @@
 		}
 	}
 	
-function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS") {
+function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS", $values = array()) {
+	echo '<script>alert("BOnjour ");';
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 	$lfin = $tit ? ' »' : '</a>';
 	//$liss = $tit ? ' « ' : '<a href="'.(str_replace("issue/new", "issue/".$IssueID."/", $link)).'">';
@@ -213,6 +224,8 @@ function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = 
 	$body = str_replace('{isue}', 	$liss.$follower["title"].$lfin, $body);
 	$body = str_replace('{issue}', 	$liss.$follower["title"].$lfin, $body);
 	$body = str_replace('{issues}',	$liss.$follower["title"].$lfin, $body);
+	if (isset($values["email"])) 	{ $body = str_replace('{email}',	 $values["email"], $body); } 
+	if (isset($values["static"])) { $body = str_replace('{static}', $values["static"], $body);}
 	return $body;
 }
 

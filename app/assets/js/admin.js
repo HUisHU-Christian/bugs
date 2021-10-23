@@ -147,6 +147,7 @@
 		formdata.append('status', document.getElementById('input_ChxTxt_status').value );
 		formdata.append('tagsADD', document.getElementById('input_ChxTxt_tagsADD').value );
 		formdata.append('tagsOTE', document.getElementById('input_ChxTxt_tagsOTE').value );
+		formdata.append("config", document.getElementById('input_ChxTxt_config').value);
 		var xhttp = new XMLHttpRequest();
 		var NextPage = 'app/application/controllers/ajax/Sauvegarde_TXT.php';
 		xhttp.onreadystatechange = function() {
@@ -187,6 +188,7 @@
 						}, 7500); 
 					}
 					var r = xhttp.responseText;
+					alert(r);
 					var recu = r.split('||');
 					TexteInital = recu[0];
 					ChangeonsEditor(9, TexteInital);
