@@ -301,17 +301,20 @@
 		<details id="details_sauvegardes">
 			<summary><?php echo __('tinyissue.admin_backup'); ?></summary>
 			<br /><br />
-			<h4><strong><?php echo $LngSRV["Backup_BDD"]; ?></strong> : </h4>
-			<span id="span_BackupBDD">
-			<?php echo $LngSRV["Backup_BDDemail"]; ?> : 	 <input name="Courriel" id="input_databaseCourriel" value="" type="email" />
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<?php echo $LngSRV["Backup_BDDpassword"]; ?> : <input name="MotPasse" id="input_databaseMotPasse" value="" type="password" />
-			<span style="float: right; vertical-align: middle;">
-			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
-			</span>
-			</span>
-			<br /><br />
+			
+			<?php if (strtolower(substr(php_uname('s'), 0, 3)) != 'win') { ?>
+				<h4><strong><?php echo $LngSRV["Backup_BDD"]; ?></strong> : </h4>
+				<span id="span_BackupBDD">
+				<?php echo $LngSRV["Backup_BDDemail"]; ?> : 	 <input name="Courriel" id="input_databaseCourriel" value="" type="email" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["Backup_BDDpassword"]; ?> : <input name="MotPasse" id="input_databaseMotPasse" value="" type="password" />
+				<span style="float: right; vertical-align: middle;">
+				<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
+				</span>
+				</span>
+				<br /><br />
+			<?php } ?>
 			<br /><br />
 			<h4><strong><?php echo $LngSRV["TXT_Database"]; ?></strong> : </h4>
 			<div id="div_divBackupTXT" style="margin-left: 20%; margin-right: 20%;">
