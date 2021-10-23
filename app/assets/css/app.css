@@ -1060,11 +1060,11 @@ td.project-user, th.project-user {
 	background: url('../images/layout/icon-delete.png') no-repeat 0 1px;
 	width: 12px; height: 15px;
 }
-.issue-discussion li .topbar .edit-comment a{
+.issue-discussion li .topbar .edit-comment a, .divEditProj a {
 	background: url('../images/layout/icon-edit.png') no-repeat;
 	width: 16px; height: 15px;
 }
-.issue-discussion li .topbar .edit-comment a:hover{
+.issue-discussion li .topbar .edit-comment a:hover,  .divEditProj a:hover{
 	background: url('../images/layout/icon-edit_1.png') no-repeat;
 }
 .deleted-comment a{
