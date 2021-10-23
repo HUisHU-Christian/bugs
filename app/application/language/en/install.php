@@ -81,7 +81,7 @@ return array(
 	'UserPref_apply' => 'Apply',
 	'UserPref_compte' => 'My account',
 	'UserPref_modele' => 'Template (background color, text colors)',
-	'UserPref_Notice' => 'Mu users',
+	'UserPref_Notice' => 'My users', 
 	'UserPref_NoticeOnLogIn' => 'Notice me (email) every time some user log in.',
 	'UserPref_prefer' => 'My preferences',
 	'UserPref_projet' => 'My projects',
