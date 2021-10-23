@@ -168,12 +168,12 @@
 		var Enreg = (Question == 'OUI') ? true : false;
 		if (texte != TexteInital && Enreg == false) { Enreg = confirm(Question); }
 		var formdata = new FormData();
-		formdata.append("Quel", Affiche);
 		formdata.append("Enreg", Enreg);
+		formdata.append("Lang", Langue);
 		formdata.append("Prec", texte);
+		formdata.append("Quel", Affiche);
 		formdata.append("Suiv", Quel);
 		formdata.append("Titre", document.getElementById('input_TitreMsg').value);
-		formdata.append("Lang", Langue);
 		var xhttp = new XMLHttpRequest();
 		var NextPage = 'app/application/controllers/ajax/ChgConfEmail_Textes.php';
 		xhttp.onreadystatechange = function() {
@@ -188,7 +188,6 @@
 						}, 7500); 
 					}
 					var r = xhttp.responseText;
-					alert(r);
 					var recu = r.split('||');
 					TexteInital = recu[0];
 					ChangeonsEditor(9, TexteInital);
