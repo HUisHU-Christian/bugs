@@ -291,6 +291,7 @@ class User extends Eloquent {
 				'errors' => $validator->errors
 			);
 		}
+		$MotPasse = Hash::make($password = Str::random(6)); 
 
 		//Inscription du nouveau membre dans la bdd
 		$insert = array(
@@ -299,14 +300,14 @@ class User extends Eloquent {
 			'lastname' => $info['lastname'],
 			'language' => $info['language'],
 			'role_id' => $info['role_id'],
-			'password' => Hash::make($password = Str::random(6))
+			'password' => $MotPasse
 		);
 
 		$user = new User;
 		$user->fill($insert)->save();
 
 		//Émission d'un courriel à l'adresse du nouveau membre
-		$contenu = array('useradded','static:'.$password);
+		$contenu = array('useradded','static:'.$MotPasse);
 		$src = array('email', 'value');
 		$Type = 'User';
 		$SkipUser = false;
@@ -317,7 +318,7 @@ class User extends Eloquent {
 
 		return array(
 			'success' => true,
-			'password' => $password
+			'password' => $MotPasse
 		);
 	}
 
