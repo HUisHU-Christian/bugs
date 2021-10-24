@@ -3,16 +3,18 @@
 
 	$compte = 0;
 	$retour = "Non";
-	$nameDte = date("YmdHis");
+	$fichier = "temp/database_".date("YmdHis");
 	$prefixe = "";
 	$sortie = "";
+
 
 	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
 	chdir ($prefixe);
 
 	$config = require "config.app.php";
-	$fichier = "temp/database_".$nameDte;
 	
+var_dump($config['database']);
+
 //	$resuUSER = Requis("SELECT * FROM users WHERE email = '".$_POST["Courriel"]."' ");
 //	if(Nombre($resuUSER) == 1) {
 //		require_once("app/laravel/hash.php");
