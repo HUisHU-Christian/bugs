@@ -83,7 +83,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 
 				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.$config_app['PriorityColors'][$row->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span></span></div>';
 				echo '<div class="data">';
-					echo '<a href="'.$row->to().'">'.$row->title.'</a>';
+					echo '<a href="'.$row->to().'" style="font-size: 130%; ">'.$row->title.'</a>';
 					echo '<div class="info">';
 					echo __('tinyissue.created_by'); 
 					echo '&nbsp;&nbsp;<strong>'.$row->user->firstname . ' ' . $row->user->lastname.'</strong>';
@@ -98,7 +98,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 					} 
 					if($row->assigned_to != 0) {
 						echo ' - '.__('tinyissue.assigned_to'); 
-						echo '&nbsp;&nbsp;<strong>'.$row->assigned->firstname . ' ' . $row->assigned->lastname.'</strong>';
+						echo '&nbsp;&nbsp;<strong>'.((isset($row->assigned->firstname)) ? $row->assigned->firstname : '') . ' ' . ((isset($row->assigned->lastname)) ? $row->assigned->lastname : '').'</strong>';
 					} 
 					echo '</div>';
 

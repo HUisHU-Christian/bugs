@@ -119,8 +119,11 @@
 			<tr>
 				<th></th>
 				<td>
-					<input type="submit" value="<?php echo __('tinyissue.update'); ?>" />
-					<input type="submit" name="delete" value="<?php echo __('tinyissue.delete'); ?> <?php echo Project::current()->name; ?>" onclick="return confirm('<?php echo __('tinyissue.delete_project_confirm'); ?>');" />
+					<input type="submit" value="<?php echo __('tinyissue.update').' << '.Project::current()->name; ?> >>" />
+					<br /><br />
+					<br /><br />
+					<br /><br />
+					<input type="submit" name="delete" value="<?php echo __('tinyissue.delete').' << '.Project::current()->name; ?> >>" onclick="return confirm('<?php echo __('tinyissue.delete_project_confirm'); ?>');" style="background-color: red; border-color: black;"/>
 				</td>
 			</tr>
 		</table>

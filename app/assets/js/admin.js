@@ -171,7 +171,7 @@
 		formdata.append("Enreg", Enreg);
 		formdata.append("Lang", Langue);
 		formdata.append("Prec", texte);
-		formdata.append("Quel", Affiche);
+		formdata.append("Quel", Affiche); 
 		formdata.append("Suiv", Quel);
 		formdata.append("Titre", document.getElementById('input_TitreMsg').value);
 		var xhttp = new XMLHttpRequest();
