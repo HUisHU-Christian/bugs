@@ -763,12 +763,16 @@ div.stat_form {
 	padding: 8px 18px;
 	border-bottom: 1px solid #eee;
 }
-#sidebar ul li .delete, .assign-users li .delete, #uploaded-attachments .delete{
-	background: url('../images/layout/icon-delete.png') no-repeat 0 1px;
+
+#sidebar ul li .delete, .assign-users li .delete, #uploaded-attachments .delete, .issue-discussion li .topbar .delete-comment a {
+	background: url('../images/layout/icon-delete_gris.png') no-repeat 0 1px;
 	width: 12px; height: 15px;
 	float: right;
 	display: block;
 	text-indent: -999999px;
+}
+#sidebar ul li .delete:hover, .assign-users li .delete:hover, #uploaded-attachments .delete:hover, .issue-discussion li .topbar .delete-comment a:hover {
+	background: url('../images/layout/icon-delete.png') no-repeat 0 1px;
 }
 #sidebar ul li a{
 	background: url('../images/layout/icon-li-arrow.png') right center no-repeat;
@@ -1058,10 +1062,6 @@ td.project-user, th.project-user {
 .issue-discussion li .topbar ul li a{
 	display: block;
 	text-indent: -999999px;
-}
-.issue-discussion li .topbar .delete-comment a{
-	background: url('../images/layout/icon-delete.png') no-repeat 0 1px;
-	width: 12px; height: 15px;
 }
 .issue-discussion li .topbar .edit-comment a, .divEditProj a {
 	background: url('../images/layout/icon-edit.png') no-repeat;
