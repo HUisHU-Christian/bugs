@@ -34,7 +34,7 @@ $_GET["status"] = $_GET["status"] ?? 1;
 						$etcday = 0;
 						if($velocity > 0){ $etcday = ceil($issues / $velocity); }else{ $etcday = $issues / 1; }
 						$etc = date("d-m-Y",strtotime("+".$etcday." days"));
-						echo '<li>';
+						echo '<li style="position: relative;">';
 							echo '<a href="'.$row->to().'">'.$row->name.'</a><br />';
 							echo $issues == 1 ? '1 '. __('tinyissue.open_issue') : $issues . ' '. __('tinyissue.open_issues');
 							echo '&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;'; 
@@ -44,6 +44,15 @@ $_GET["status"] = $_GET["status"] ?? 1;
 								echo '<strong>'.__('tinyissue.velocity_velocity').':</strong>&nbsp;'.$velocity.'&nbsp;'.__('tinyissue.velocity_rate').'&nbsp;&nbsp;&nbsp;';
 								echo '<strong>'.__('tinyissue.velocity_etc').':</strong>&nbsp;'.$etc;
 							}
+							echo '
+								<div class="divEditProj" style="position: absolute; right: 0; bottom: 25px; ">
+								<a href="'.$row->to().'/edit">
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<br />
+								</a>
+								</div>
+							';
 							echo '<br />';
 						echo '</li>';
 					} 

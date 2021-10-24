@@ -21,10 +21,16 @@
 	if (Auth::user()->role_id != 1) { 
 		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
 	}
-	echo '<span class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
-	echo '<a href="'.((Auth::user()->permission('issue-modify') && $issue->status > 0 ) ? $issue->to('edit') : $issue->to() ).'" class="edit-issue" style="font-size: 60%; font-weight: bold;">'.$issue->title.'</a>';
-	echo '</span>';	
-	echo '<span>'.__('tinyissue.on_project').' <a href="'.$project->to().'">'.$project->name.'</a></span>';
+	echo '<div style="position: relative; min-height: 70px;">';
+		echo '<div class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; position: absolute; left: 0; top: 0;" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
+		echo '</div>';
+		echo '<span style="position: absolute; top: 10px; left: 5%; font-size: 150%; font-weight: bold; ">';	
+		echo ''.$issue->title.'';
+		echo '<a href="'.((Auth::user()->permission('issue-modify') && $issue->status > 0 ) ? $issue->to('edit') : $issue->to() ).'" class="edit-issue" style="font-size: 60%; font-weight: bold;"></a>';
+		echo '</span>';	
+		echo '<br clear="all" />';
+		echo '<span style="position: absolute; left: 5%; margin-top: 7px; font-size: 70%; ">'.__('tinyissue.on_project').' <a href="'.$project->to().'">'.$project->name.'</a></span>';
+	echo '</div>';
 	echo '</h3>';
 ?>
 

@@ -64,6 +64,7 @@
 					<td>
 						<select name="Project"> 
 						<?php 
+							//Liste de tous les projects auxquels a accès l'admin qui inscrit le nouvel usager
 							foreach(Project\User::active_projects() as $row) {
 								$NbIssues[$row->to()] = $row->count_open_issues();
 								$Proj[$row->to()] = $row->name.'&nbsp;<span class="info-open-issues" title="Number of Open Tickets">('.$NbIssues[$row->to()].')</span>';
