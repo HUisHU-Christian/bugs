@@ -30,7 +30,7 @@ var_dump($config['database']);
 			$compte = file_exists($fichier.".sql") ? ++$compte : 0;
 			$retour = file_exists($fichier.".sql") ? 'Voici votre base de données archivée : <a href="'.$fichier.'.sql">'.$fichier.'.sql</a><br />' : "Échec";
 			$compte = file_exists($fichier.".zip") ? ++$compte : 0;
-			$retour .= file_exists($fichier.".zip") ? 'Voici votre base de données archivée : <a href="'.$fichier.'.zip">'.$fichier.'.zip</a><br />' : "Échec";
+			$retour .= file_exists($fichier.".zip") ? 'Voici votre base de données compressée : <a href="'.$fichier.'.zip">'.$fichier.'.zip</a><br />' : "Échec";
 //		}
 //	}
 	echo ($compte == 0) ? 'Échec' : $retour;
