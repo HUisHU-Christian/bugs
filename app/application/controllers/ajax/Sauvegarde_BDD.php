@@ -14,7 +14,8 @@
 		require_once("app/laravel/hash.php");
 		$QuelUSER = Fetche($resuUSER);	
 		if (Laravel\Hash::check($_POST["MotPasse"], $QuelUSER["password"]) && $QuelUSER["role_id"] == 4 ) {
-			if (strtolower(substr(php_uname('s'), 0, 3)) != 'win') {
+//			if (strtolower(substr(php_uname('s'), 0, 3)) != 'win') {
+			if (1==1) {
 				$commande = "mysqldump -u ".$config['database']['username']." --password=".$config['database']['password']." ".$config['database']['database']." > ".$fichier;
 				exec($commande);
 			} else {
