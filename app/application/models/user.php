@@ -307,7 +307,7 @@ class User extends Eloquent {
 
 		
 		//Attribution d'un premier projet à ce nouvel usager
-		$NewUser = \User::where('id', '>', 1)->order_by('id','DESC')->get(array('id')); 
+		$NewUser = \User::where('id', '>', 1)->order_by('id','DESC')->get(array('id'));
 		$ID = $NewUser[0]->id;
 		\DB::table('projects_users')->insert(array(
 			'id'=>NULL, 

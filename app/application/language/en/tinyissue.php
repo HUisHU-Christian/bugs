@@ -11,7 +11,7 @@ return array(
 	'administration' => 'Administration',
 	'administration_update' => 'Administration - update',
 	'administration_update_description' => 'Update the « Bugs » system and databases.',
-	'admin_backup' => 'Backup', 
+	'admin_backup' => 'Backup',
 	'admin_head' => 'Main configurations',
 	'ago' => 'ago',
 	'aide' => 'Wiki - Help',

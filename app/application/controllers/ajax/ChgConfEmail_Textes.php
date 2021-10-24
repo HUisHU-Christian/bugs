@@ -7,7 +7,7 @@
 	$dir = $prefixe.$config['attached']['directory']."/";
 
 	//Texte reçu et devant être enregistré
-	if ($_POST["Enreg"]) {
+	if ($_POST["Enreg"] != 'false') {
 		$f = fopen($dir.$_POST["Quel"].".html", "w");
 		fputs($f, $_POST["Prec"]);
 		fclose($f);
@@ -19,12 +19,12 @@
 	////Texte retourné en sortie 
 	$emailLng = require ($prefixe."app/application/language/en/tinyissue.php");
 	$Lng = require ($prefixe."app/application/language/en/email.php");
-	$Lng = array_merge($emailLng, $Lng);
+	$Lng = array_merge($Lng,$emailLng);
 	if ( file_exists($prefixe."app/application/language/".$_POST["Lang"]."/tinyissue.php") && $_POST["Lang"] != 'en') {
-		$emailLng = require ($prefixe."app/application/language/".$_POST["Lang"]."/tinyissue.php");
-		$Lng = array_merge($emailLng, $Lng);
 		$emailLng = require ($prefixe."app/application/language/".$_POST["Lang"]."/email.php");
-		$Lng = array_merge($emailLng, $Lng);
+		$Lng = array_merge($Lng,$emailLng);
+		$emailLng = require ($prefixe."app/application/language/".$_POST["Lang"]."/tinyissue.php");
+		$Lng = array_merge($Lng,$emailLng);
 	}
 
 	$Sortie = $Lng["following_email_".$_POST["Suiv"]].'||'.$Lng["following_email_".$_POST["Suiv"].'_tit'];
@@ -36,6 +36,5 @@
 			$Sortie .= '||'.$Lng["following_email_".$_POST["Suiv"].'_tit'];
 		}
 	}
-	
 	echo $Sortie;
 ?>
