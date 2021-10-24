@@ -138,16 +138,17 @@
 		var formdata = new FormData();
 		formdata.append('assigned', document.getElementById('input_ChxTxt_assigned').value ); 	
 		formdata.append('attached', document.getElementById('input_ChxTxt_attached').value );	
+		formdata.append("config", document.getElementById('input_ChxTxt_config').value);
 		formdata.append('comment', document.getElementById('input_ChxTxt_comment').value ); 	
 		formdata.append('issue', document.getElementById('input_ChxTxt_issue').value );		
 		formdata.append('issueproject', document.getElementById('input_ChxTxt_issueproject').value );
+		formdata.append('OS', document.getElementsByName('OS').value );		
 		formdata.append('project', document.getElementById('input_ChxTxt_project').value );
 		formdata.append('projectdel', document.getElementById('input_ChxTxt_projectdel').value );
 		formdata.append('projectmod', document.getElementById('input_ChxTxt_projectmod').value );
 		formdata.append('status', document.getElementById('input_ChxTxt_status').value );
 		formdata.append('tagsADD', document.getElementById('input_ChxTxt_tagsADD').value );
 		formdata.append('tagsOTE', document.getElementById('input_ChxTxt_tagsOTE').value );
-		formdata.append("config", document.getElementById('input_ChxTxt_config').value);
 		var xhttp = new XMLHttpRequest();
 		var NextPage = 'app/application/controllers/ajax/Sauvegarde_TXT.php';
 		xhttp.onreadystatechange = function() {
