@@ -1,14 +1,17 @@
 <?php
+	require_once "db.php";
+
 	$compte = 0;
 	$retour = "Non";
-	$prefixe = "";
-	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
-	require_once "db.php";
-	chdir ($prefixe);
-	$config = require "config.app.php";
 	$nameDte = date("YmdHis");
-	$fichier = "temp/database_".$nameDte;
+	$prefixe = "";
 	$sortie = "";
+
+	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
+	chdir ($prefixe);
+
+	$config = require "config.app.php";
+	$fichier = "temp/database_".$nameDte;
 	
 	$resuUSER = Requis("SELECT * FROM users WHERE email = '".$_POST["Courriel"]."' ");
 	if(Nombre($resuUSER) == 1) {
