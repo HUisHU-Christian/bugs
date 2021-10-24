@@ -19,6 +19,7 @@
 	if (isset($_POST["config"])) {
 		if (trim($_POST["config"]) != '') {
 				$zip-> addFile ("config.app.php"); 
+				$compte = $compte + 1;
 		} 
 	}
 	$zip-> close ();
