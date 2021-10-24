@@ -736,11 +736,14 @@ div.stat_form {
 	text-indent: -999999px;
 }
 #sidebar h2 .edit{
-	background: url('../images/layout/icon-bigedit.png') no-repeat;
+	background: url('../images/layout/icon-bigedit_gris.png') no-repeat;
 	width: 26px; height: 26px;
 	display: block;
 	float: right;
 	text-indent: -999999px;
+}
+#sidebar h2 .edit:hover{
+	background: url('../images/layout/icon-bigedit.png') no-repeat;
 }
 .info-open-issues{
 	color: #989898;
