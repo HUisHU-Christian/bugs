@@ -777,6 +777,9 @@ div.stat_form {
 #sidebar ul li a{
 	background: url('../images/layout/icon-li-arrow.png') right center no-repeat;
 }
+#sidebar ul li a:hover{
+	background: url('../images/layout/icon-li-arrow_noire.png') right center no-repeat;
+}
 #sidebar ul li a.links{
 	background: url('../images/layout/icon-website.png') right center no-repeat;
 }
