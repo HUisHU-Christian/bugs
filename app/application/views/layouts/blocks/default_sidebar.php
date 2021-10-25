@@ -28,7 +28,7 @@
 		$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 	}
 	////Tri des données du menu déroulant
-	if ($Preferences['orderSidebar'] == 'asc') { asort($SansAccent); } else { arsort($SansAccent); }
+	if ($Preferences['orderSidebar'] == 'desc') { asort($SansAccent); } else { arsort($SansAccent); }
 
 	////Affichage du menu déroulant dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
@@ -39,6 +39,7 @@
 	</div>
 </div>
 <br /><br />
+<div style="max-height: 600px; overflow-y: auto;">
 <?php
 	//Les préférences de l'usager ont été récupérées plus haut
 	if ($Preferences['numSidebar'] != 0) {
@@ -59,7 +60,7 @@
 		}
 		
 		////Tri des données affichées dans le panneau de gauche
-		asort($SansAccent);
+		if ($Preferences['orderSidebar'] == 'asc') { asort($SansAccent); } else { arsort($SansAccent); }
 
 		//Affichage dans le panneau de gauche
 		$rendu = 0;
@@ -76,7 +77,7 @@
 		echo '</ul>';
 	}
 ?>
-
+</div>
 <?php
 	$ceci = array_keys($_GET);
 	$prefixe = isset($ceci[0]) ? (in_array($ceci[0], array("/administration/users","/projects/reports","/user/settings","/user/issues","/project/5"))) ? "../" : "" : "";
