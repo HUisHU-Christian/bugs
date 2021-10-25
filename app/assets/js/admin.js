@@ -124,7 +124,7 @@
 			if (this.readyState == 4 && this.status == 200) {
 					document.getElementById('span_BackupBDD').innerHTML = xhttp.responseText;
 				if (xhttp.responseText == 'Échec') {
-					document.getElementById('span_BackupBDD').innerHTML = "<font color="red">Vérifiez vos configurations, nous n`avons pas pu enregistrer</font>";
+					document.getElementById('span_BackupBDD').innerHTML = "<font color=\"red\">Vérifiez vos configurations, nous n`avons pas pu enregistrer</font>";
 				} else if (xhttp.responseText == 'Non') {
 					document.getElementById('span_BackupBDD').innerHTML = "Vous ne disposez pas de droits nécessaires";
 				} else {
@@ -145,6 +145,7 @@
 		formdata.append('comment', document.getElementById('input_ChxTxt_comment').value ); 	
 		formdata.append('issue', document.getElementById('input_ChxTxt_issue').value );		
 		formdata.append('issueproject', document.getElementById('input_ChxTxt_issueproject').value );
+		formdata.append('OS', document.getElementsByName('OS').value );		
 		formdata.append('project', document.getElementById('input_ChxTxt_project').value );
 		formdata.append('projectdel', document.getElementById('input_ChxTxt_projectdel').value );
 		formdata.append('projectmod', document.getElementById('input_ChxTxt_projectmod').value );
@@ -234,4 +235,3 @@
 	setTimeout(function() { IntroInital = CachonsEditor(7); } , 1500);
 	setTimeout(function() { TxByeInital = CachonsEditor(8); } , 1500);
 	setTimeout(function() { TexteInital = CachonsEditor(9); } , 1500);
-
