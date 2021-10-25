@@ -39,7 +39,7 @@
 			$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
 			if (date("Y-m-d", fileatime ("../install/get_updates_list")) != date("Y-m-d") && $EnLigne) {
 				include "../app/application/libraries/checkVersion.php";
-				$Etat =  ($verActu == $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
+				$Etat =  ($verActu == $verNum || $verActu > $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
 				file_put_contents ("../install/get_updates_list", $Etat);
 			}
 
