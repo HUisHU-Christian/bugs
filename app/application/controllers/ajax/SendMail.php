@@ -228,5 +228,4 @@ function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = 
 	if (isset($values["static"])) { $body = str_replace('{static}', $values["static"], $body);}
 	return $body;
 }
-
 ?>
