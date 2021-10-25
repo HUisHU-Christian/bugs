@@ -29,6 +29,8 @@ class Todo extends Eloquent {
 									->where('users_todos.weight', '>=', $bas)
 									->where('users_todos.weight', '<', $haut)
 									->where('projects_issues.status', $zero, 0)
+									->where('projects.status', '>', 0)
+									->where('projects_issues.start_at', '<=', date("Y-m-d"))
 									->order_by('projects_issues.status', 'DESC')
 									->order_by('projects_issues.updated_at', 'DESC')
 									->get(['projects_issues.id','projects_issues.status','projects_issues.title','users_todos.weight','projects.name', 'projects_issues.project_id']);
@@ -154,11 +156,9 @@ class Todo extends Eloquent {
 			// Close issue if todo is moved to closed lane. 
 			$status = 0;
 			if ($new_status == 0) {
-				$todo->status = 0;
-				$todo->updated_at = date("Y-m-d H:i:s");
-				$todo->save();
+				\DB::table('projects_issues')->where('id', '=', $issue_id)->update(array('closed_by' =>$user,'closed_at' => date("Y-m-d H:i:s")));
+				\DB::table('users_activity')->insert(array('id' => NULL, 'user_id' => $user, 'parent_id' => $project->id, 'item_id' => $issue, 'action_id' => 3, 'data' => 'Closed through the Kanban Drag & Drop','created_at' => date("Y-m-d H:i:s"),'updated_at' => date("Y-m-d H:i:s")));
 			} else {
-				$status = ($todoData->status == 0) ? 4 : $todoData->status;
 				$config_app = require path('public') . 'config.app.php';
 				$Moyenne = ($config_app['Percent'][$new_status] + $config_app['Percent'][$new_status + 1]) / 2;
 				$todo->status = $status;

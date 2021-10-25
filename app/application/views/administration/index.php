@@ -16,7 +16,7 @@
 	echo __('tinyissue.administration');
 	echo '.<span>'.__('tinyissue.administration_description').'</span>';
 	echo '</h3>';
-	
+
 	$Def = array('mailerrormsg' => 1, 'intro' => '', 'bye' => '', 'encoding' => 'UTF-8',);
 	foreach ($Def as $ind => $val) {
 		$Conf[$ind] = isset($Conf[$ind]) ? $Conf[$ind] : $val;
@@ -24,6 +24,8 @@
 ?>
 
 <div class="pad">
+<details id="details_main" open="open">
+	<summary><?php echo __('tinyissue.admin_head'); ?></summary>
 	<div class="pad2">
 		<table class="table" width="60%">
 			<tr>
@@ -123,11 +125,12 @@
 			}
 		?>
 	</div>
+	</details>
 </div>
 	<br />
 	<div class="pad" style="border-top-style: solid; border-bottom-style: solid; border-color: grey; border-width: 2px;">
 		<?php $Conf = Config::get('application.mail'); ?>
-		<details id="details_email_head" open="open">
+		<details id="details_email_head">
 			<summary><?php echo __('tinyissue.email_head'); ?></summary>
 			<br />
 			<div class="pad2">
@@ -190,12 +193,14 @@
 					"comment" 	=> __('tinyissue.following_email_comment_tit'),
 					"issue" 		=> __('tinyissue.following_email_issue_tit'),
 					"issueproject" => __('tinyissue.following_email_issueproject_tit'),
+					"noticeonlogin" => __('email.following_email_noticeonlogin_tit'),
 					"project" 	=> __('tinyissue.following_email_project_tit'),
 					"projectdel"=> __('tinyissue.following_email_projectdel_tit'),
 					"projectmod"=> __('tinyissue.following_email_projectmod_tit'),
 					"status" 	=> __('tinyissue.following_email_status_tit'),
 					"tagsADD" 	=> __('tinyissue.following_email_tagsADD_tit'),
-					"tagsOTE" 	=> __('tinyissue.following_email_tagsOTE_tit')
+					"tagsOTE" 	=> __('tinyissue.following_email_tagsOTE_tit'),
+					"useradded" => __('email.following_email_useradded_tit')
 				);
 				asort($LesOptions, SORT_LOCALE_STRING );
 				foreach ($LesOptions as $ind => $val) {
@@ -204,30 +209,20 @@
 			?>
 			</select>
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<?php echo __('tinyissue.title'); ?> : <input name="TitreMsg" id="input_TitreMsg" value="<?php
-				if (file_exists($dir."attached_tit.html")) {
-					$f = file_get_contents($dir."/attached_tit.html");
-					echo $f;
-				} else {
-					echo  __('tinyissue.tinyissue.following_email_attached_tit');
-				}
-			?>" size="40" />
+			<?php
+				$con = __('tinyissue.tinyissue.following_email_comment');
+				$tit = __('tinyissue.tinyissue.following_email_comment_tit');
+				if (file_exists($dir."attached.html")) { $con = file_get_contents($dir."/comment.html"); }
+				if (file_exists($dir."attached_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
+			?>
+			<?php echo __('tinyissue.title'); ?> : <input name="TitreMsg" id="input_TitreMsg" value="<?php echo $tit; ?>" size="40" />
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			&nbsp;&nbsp;&nbsp;&nbsp;
-				{first}, {last}, {full}, {project}, {issue}
+				{first}, {last}, {full}, {project}, {issue}, {email}, {static}
 			</div>
 			<br />
-			<textarea id="txt_contenu" name="contenu" >
-			<?php
-				if (file_exists($dir."attached.html")) {
-					$f = file_get_contents($dir."attached.html");
-					echo $f;
-				} else {
-					echo  __('tinyissue.tinyissue.following_email_attached');
-				}
-			?>
-			</textarea>
+			<textarea id="txt_contenu" name="contenu" ><?php echo $con; ?></textarea>
 			<input name="Modifies" type="hidden" id="input_modifies" value="0" />
 			<br />
 			<div style="text-align: center;"><input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: ChangeonsText(document.getElementById('select_ChxTxt').value, '<?php echo \Auth::user()->language; ?>', 'OUI');" class="button2"/></div>
@@ -302,7 +297,48 @@
 				<?php echo $LngSRV["preferences_pct_test"]; ?> (80) : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo $config_app['TodoNbItems'] ?? 25; ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
-	<br />
+
+		<details id="details_sauvegardes">
+			<summary><?php echo __('tinyissue.admin_backup'); ?></summary>
+			<br /><br />
+				<h4><strong><?php echo $LngSRV["Backup_BDD"]; ?></strong> : </h4>
+				<span id="span_BackupBDD">
+				<?php echo $LngSRV["Backup_BDDemail"]; ?> : 	 <input name="Courriel" id="input_databaseCourriel" value="" type="email" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["Backup_BDDpassword"]; ?> : <input name="MotPasse" id="input_databaseMotPasse" value="" type="password" />
+				<br />
+				<?php echo $LngSRV["Backup_BDDosOS"]; ?>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<input name="OS" id="input_databaseOSl" value="Linux" type="radio" <?php if (strtolower(substr(php_uname('s'), 0, 3)) != 'win') { echo ' checked="checked"'; } ?> />
+				<?php echo $LngSRV["Backup_BDDosLIN"]; ?> 
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<input name="OS" id="input_databaseOSw" value="Windows" type="radio" <?php if (strtolower(substr(php_uname('s'), 0, 3)) == 'win') { echo ' checked="checked"'; } ?>/>
+				<?php echo $LngSRV["Backup_BDDosWIN"]; ?> 
+				<br />
+				<span style="float: right; vertical-align: middle;">
+				<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["SQL_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupBDD();" />
+				</span>
+				</span>
+				<br /><br />
+			<br /><br />
+			<h4><strong><?php echo $LngSRV["TXT_Database"]; ?></strong> : </h4>
+			<div id="div_divBackupTXT" style="margin-left: 20%; margin-right: 20%;">
+			<?php
+				foreach ($LesOptions as $ind => $val) {
+					echo '<input name="ChxTxt_'.$ind.'" id="input_ChxTxt_'.$ind.'" type="checkbox" checked="checked" value="'.$ind.'" />'.$val.'<br />';
+				}
+				echo '<input name="ChxTxt_config" id="input_ChxTxt_config" type="checkbox" checked="checked" value="config" />BUGS config file<br />';
+			?>
+			<span style="float: right; vertical-align: middle; margin-top: -150px;">
+			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["TXT_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupTXT();" />
+			</span>
+			</div>
+			<br /><br />
+			<br /><br />
+		</details>
 	</div>
 
 <script type="text/javascript" src="app/assets/js/admin.js" async ></script>

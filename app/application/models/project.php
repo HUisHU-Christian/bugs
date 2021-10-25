@@ -27,6 +27,23 @@ class Project extends Eloquent {
 	public function issues() {
 		return $this->has_many('Project\Issue', 'project_id')->order_by('status', 'DESC')->order_by('weight', 'ASC');
 	}
+	
+	
+	public function nextissuesThisTab($tag_id, $thisCount, $NbIssues) {
+		if ($thisCount > $NbIssues || 1==1) {
+			$rendu = 0;
+			$col = 0;
+			if ($thisCount >= $NbIssues) {
+				echo '&nbsp;&nbsp;&nbsp;'; 
+				while ($rendu < $thisCount) {
+					echo '<span class="smallNum" onclick="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" sytle="cursor: url();" >'.(($rendu/$NbIssues)+1).'</span>&nbsp;&nbsp;';
+					if (((($rendu+$NbIssues)/$NbIssues)/6) == round((($rendu+$NbIssues)/$NbIssues)/5)) { echo '<br />&nbsp;&nbsp;&nbsp;'; }
+					$rendu = $rendu + $NbIssues;
+				}
+			}
+		}  
+	}
+
 
 	/**
 	* Assign a user to a project
@@ -46,15 +63,9 @@ class Project extends Eloquent {
 	public function users_not_in() {
 		$users = array();
 
-		foreach($this->users()->get(array('user_id')) as $user) {
-			$users[] = $user->id;
-		}
-
+		foreach($this->users()->get(array('user_id')) as $user) { $users[] = $user->id; }
 		$results = User::where('deleted', '=', 0);
-
-		if(count($users) > 0) {
-			$results->where_not_in('id', $users);
-		}
+		if(count($users) > 0) { $results->where_not_in('id', $users); }
 
 		return $results->get();
 	}
@@ -69,21 +80,33 @@ class Project extends Eloquent {
 		if(is_null($user_id)) {
 			$user_id = \Auth::user()->id;
 		}
-		return \Tag::find(1)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
 				->where('assigned_to', '=', $user_id)
+				->where('start_at', '<=', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
 	}
 
 	public function count_open_issues() {
-		return \Tag::find(1)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
+				->where('start_at', '<=', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
 	}
 
 	public function count_closed_issues() {
-		return \Tag::find(2)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
+				->where_null('closed_at', 'and', true)
+				->count();
+ 	}
+	public function count_future_issues() {
+		return \DB::table('projects_issues')
+				->where('project_id', '=', $this->id)
+				->where('start_at', '>', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
  	}
 	/**

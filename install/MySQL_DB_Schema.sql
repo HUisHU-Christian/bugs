@@ -43,7 +43,11 @@ CREATE TABLE `projects_issues` (
   `title` varchar(255) DEFAULT NULL,
   `body` text,
   `created_at` datetime DEFAULT NULL,
+  `start_at` date DEFAULT NULL,
   `duration` smallint(3) NOT NULL DEFAULT '30',
+  `temps_plan` smallint(4) DEFAULT 30,
+  `temps_fact` smallint(4) DEFAULT 30,
+  `temps_paye` smallint(4) DEFAULT 30,
   `updated_at` datetime DEFAULT NULL,
   `closed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -73,6 +77,9 @@ CREATE TABLE IF NOT EXISTS `projects_issues_comments` (
   `project_id` bigint(20) default NULL,
   `issue_id` bigint(20) default '0',
   `comment` text character set UTF8,
+  `temps_fait` smallint(4) DEFAULT 0,
+  `temps_fait_deb` time DEFAULT NULL,
+  `temps_fait_fin` time DEFAULT NULL,
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
@@ -189,6 +196,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `firstname` varchar(255) default NULL,
   `lastname` varchar(255) default NULL,
   `language` varchar(5) default 'en',
+  `preferences` text default 'sidebar=true;orderSidebar=desc;numSidebar=999;template=default',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   `deleted` int(1) NOT NULL default '0',
@@ -295,7 +303,8 @@ VALUES
 	(9,'User starts or stop following issue or project', 'Follow'),
 	(10,'Updated an issue', 'IssueEdit'),
 	(11,'Deleted a comment', 'delete_comment'),
-	(12,'Edited a comment','edit_comment' );
+	(12,'Edited a comment','edit_comment' ),
+	(13,'Elapsed time worked on an issue', 'issue_chrono');
 #--
 
 #--#Create default tags : id 10

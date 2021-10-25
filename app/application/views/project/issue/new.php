@@ -69,13 +69,17 @@ if (file_exists($chemin)) {
 				<th><?php echo __('tinyissue.duration'); ?></th>
 				<td>
 					<input type="number" name="duration" style="width: 60px;" value="<?php echo $config_app['duration']; ?>" min="1" max="400" />&nbsp;<?php echo __('tinyissue.days'); ?>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php echo __('tinyissue.issue_start_at'); ?> : <input name="start_at" id="input_start_at" type="date" value="<?php echo date("Y-m-d"); ?>" />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php echo __('tinyissue.issue_hours_plan'); ?> : <input name="temps_plan" id="input_temps_plan" type="number" value="15" min="0" max="9999" size="5" />
 				</td>
 			</tr>
 
 			<tr>
 				<th><?php echo __('tinyissue.priority'); ?></th>
 				<td>
-					<?php echo Form::select('status', array(1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), 3); ?>
+					<?php echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1')), 3); ?>
 				</td>
 			</tr>
 

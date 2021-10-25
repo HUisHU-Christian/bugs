@@ -58,15 +58,40 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 		</div>
 	</div>
 </div>
+</div>
+</div>
 
+<div class="pad">
+<?php
+	$NbIssues = $config_app["TodoNbItems"] ?? 25;
+	$page = $_GET["page"] ?? 1;
+	if (count($issues) > $NbIssues) {
+		echo '<br />';
+		$compte = 0;
+		$rendu = 0;
+		echo '<ul class="tabs">';
+		while ($rendu<=count($issues)) {
+			echo '<li'.((++$compte == $page) ? ' class="active"' : '').'><a href="issues?tag_id='.$_GET["tag_id"].'&page='.$compte.'">'.$compte.'</a></li>';
+			$rendu = $rendu + $NbIssues;
+		}
+		echo '</ul>';
+	}
+?>
+
+<div class="inside-tabs">
 <div class="blue-box">
-	<div class="inside-pad">
+	<div class="inside-pad" id="lane-details-0">
 		<?php 
-			if(!$issues) {
+		if(!$issues) {
 				echo '<p>'.__('tinyissue.no_issues').'</p>';
 		} else {
+			$rendu = 0;
 			echo '<ul class="issues" id="sortable">';
 			foreach($issues as $row) {
+				$rendu = $rendu + 1;
+				if ($rendu <= (($page-1)*$NbIssues)) { continue; }
+				if ($rendu > ($page*$NbIssues)) { break; }
+//				echo $rendu.'<br />';
 				$follower = \DB::table('following')->where('project','=',0)->where('issue_id','=',$row->id)->where('user_id','=',\Auth::user()->id)->count();
 				$follower = ($follower > 0) ? 1 : 0;
 				
@@ -83,23 +108,27 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 
 				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.$config_app['PriorityColors'][$row->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span></span></div>';
 				echo '<div class="data">';
-					echo '<a href="'.$row->to().'">'.$row->title.'</a>';
+					echo '<a href="'.$row->to().'" style="font-size: 130%; ">'.$row->title.'</a>';
 					echo '<div class="info">';
 					echo __('tinyissue.created_by'); 
 					echo '&nbsp;&nbsp;<strong>'.$row->user->firstname . ' ' . $row->user->lastname.'</strong>';
 					if(is_null($row->updated_by)) { echo Time::age(strtotime($row->created_at)); }
 					if(!is_null($row->updated_by)) {  
 						echo ' - '.__('tinyissue.updated_by');
-						echo '&nbsp;&nbsp;<strong>'.$row->updated->firstname . ' ' . $row->updated->lastname.'</strong>';
+						echo '&nbsp;&nbsp;<strong>';
+						echo (isset($row->updated->firstname)) ? $row->updated->firstname : '';
+						echo (isset($row->updated->lastname)) ? $row->updated->lastname : '';
+						echo '</strong>';
 						echo Time::age(strtotime($row->updated_at));
 					} 
 					if($row->assigned_to != 0) {
 						echo ' - '.__('tinyissue.assigned_to'); 
-						echo '&nbsp;&nbsp;<strong>'.$row->assigned->firstname . ' ' . $row->assigned->lastname.'</strong>';
+						echo '&nbsp;&nbsp;<strong>'.((isset($row->assigned->firstname)) ? $row->assigned->firstname : '') . ' ' . ((isset($row->assigned->lastname)) ? $row->assigned->lastname : '').'</strong>';
 					} 
 					echo '</div>';
 
-					if (@$_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
+					$_GET["tag_id"] = $_GET["tag_id"] ?? 0;
+					if ($_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
 						echo '<br /><br />';
 								//Percentage of work done
 								////Calculations
@@ -114,7 +143,6 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 									echo '</div>';
 								}
 						
-								//Time's going fast!
 								//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 								////Calculations
 								$config_app = require path('public') . 'config.app.php';

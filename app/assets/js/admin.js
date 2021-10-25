@@ -111,18 +111,73 @@
 		xhttp.open("GET", NextPage, true);
 		xhttp.send(); 
 	}
+	
+	function BackupBDD() {
+		monOS = (document.getElementById('input_databaseOSl').checked) ? 'Linux' : 'Windows';
+		var formdata = new FormData();
+		formdata.append("Courriel", document.getElementById('input_databaseCourriel').value );
+		formdata.append("MotPasse", document.getElementById('input_databaseMotPasse').value );
+		formdata.append('OS', monOS );		
+		var xhttp = new XMLHttpRequest();
+		var NextPage = 'app/application/controllers/ajax/Sauvegarde_BDD.php';
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+					document.getElementById('span_BackupBDD').innerHTML = xhttp.responseText;
+				if (xhttp.responseText == 'Échec') {
+					document.getElementById('span_BackupBDD').innerHTML = "<font color=\"red\">Vérifiez vos configurations, nous n`avons pas pu enregistrer</font>";
+				} else if (xhttp.responseText == 'Non') {
+					document.getElementById('span_BackupBDD').innerHTML = "Vous ne disposez pas de droits nécessaires";
+				} else {
+					document.getElementById('span_BackupBDD').innerHTML = xhttp.responseText;
+				}
+			}
+		};
+		xhttp.open("POST", NextPage, true);
+		xhttp.send(formdata); 
+	}
+
+	function BackupTXT() {
+		alert(document.getElementsByName('OS').value);
+		var formdata = new FormData();
+		formdata.append('assigned', document.getElementById('input_ChxTxt_assigned').value ); 	
+		formdata.append('attached', document.getElementById('input_ChxTxt_attached').value );	
+		formdata.append("config", document.getElementById('input_ChxTxt_config').value);
+		formdata.append('comment', document.getElementById('input_ChxTxt_comment').value ); 	
+		formdata.append('issue', document.getElementById('input_ChxTxt_issue').value );		
+		formdata.append('issueproject', document.getElementById('input_ChxTxt_issueproject').value );
+		formdata.append('OS', document.getElementsByName('OS').value );		
+		formdata.append('project', document.getElementById('input_ChxTxt_project').value );
+		formdata.append('projectdel', document.getElementById('input_ChxTxt_projectdel').value );
+		formdata.append('projectmod', document.getElementById('input_ChxTxt_projectmod').value );
+		formdata.append('status', document.getElementById('input_ChxTxt_status').value );
+		formdata.append('tagsADD', document.getElementById('input_ChxTxt_tagsADD').value );
+		formdata.append('tagsOTE', document.getElementById('input_ChxTxt_tagsOTE').value );
+		var xhttp = new XMLHttpRequest();
+		var NextPage = 'app/application/controllers/ajax/Sauvegarde_TXT.php';
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				if (xhttp.responseText == 'Non') {
+					alert("Aucune copie réussie.");
+				} else {
+					document.getElementById('div_divBackupTXT').innerHTML = xhttp.responseText;
+				}
+			}
+		};
+		xhttp.open("POST", NextPage, true);
+		xhttp.send(formdata); 
+	}
 
 	function ChangeonsText(Quel, Langue, Question) {
 		var texte = CachonsEditor(9);
 		var Enreg = (Question == 'OUI') ? true : false;
 		if (texte != TexteInital && Enreg == false) { Enreg = confirm(Question); }
 		var formdata = new FormData();
-		formdata.append("Quel", Affiche);
 		formdata.append("Enreg", Enreg);
+		formdata.append("Lang", Langue);
 		formdata.append("Prec", texte);
+		formdata.append("Quel", Affiche); 
 		formdata.append("Suiv", Quel);
 		formdata.append("Titre", document.getElementById('input_TitreMsg').value);
-		formdata.append("Lang", Langue);
 		var xhttp = new XMLHttpRequest();
 		var NextPage = 'app/application/controllers/ajax/ChgConfEmail_Textes.php';
 		xhttp.onreadystatechange = function() {

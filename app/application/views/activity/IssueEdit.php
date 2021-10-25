@@ -1,3 +1,4 @@
+<?php if (isset($issue) && isset($comment)) { ?>
 <li onclick="window.location='<?php echo $issue->to(); ?>#comment<?php echo $comment->id; ?>';">
 
 	<div class="tag">
@@ -18,3 +19,4 @@
 
 	<div class="clr"></div>
 </li>
+<?php } ?>

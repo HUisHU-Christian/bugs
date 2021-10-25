@@ -2,14 +2,15 @@
 	include_once "db.php";
 	$sortie = "";
 	$NbIssues = $config["TodoNbItems"] ?? 25;
-	
+
 	if ($_GET["col"] == 0) {
 		$resuISSU = Requis("SELECT ISSU.id, ISSU.status, ISSU.title, TODO.weight, PROJ.name, ISSU.project_id
 			FROM projects_issues AS ISSU
 			LEFT JOIN users_todos AS TODO ON TODO.issue_id = ISSU.id
 			LEFT JOIN projects AS PROJ ON PROJ.id = ISSU.project_id  
 			WHERE ISSU.status = 0 
-				AND ISSU.assigned_to = ".$_GET["user"]." 
+				AND ISSU.assigned_to = ".$_GET["user"]."
+				AND ISSU.start_at <= NOW()  
 			ORDER BY TODO.status DESC, ISSU.updated_at DESC 
 			LIMIT ".$_GET["rendu"].", ".$NbIssues." ");
 	} else {
@@ -21,6 +22,7 @@
 				AND ISSU.assigned_to = ".$_GET["user"]."
 				AND TODO.weight >= ".$config['Percent'][$_GET["col"]]." 
 				AND TODO.weight < ".$config['Percent'][$_GET["col"]+1]." 
+				AND ISSU.start_at <= NOW()  
 			ORDER BY TODO.status DESC, ISSU.updated_at DESC 
 			LIMIT ".$_GET["rendu"].", ".$NbIssues." ");
 	}

@@ -19,6 +19,26 @@ class User extends Eloquent {
 		return $this->id == Auth::user()->id;
 	}
 
+	public function pref() {
+		//Default values
+		$UserPref = array(
+			'sidebar' => true,
+			'orderSidebar' => 'desc',
+			'noticeOnLogIn' => false,
+			'numSidebar' => 990,
+			'template' => 'default'
+		);
+		//User's preferences from 'Preferences' field  ( table 'users' ) 
+		$Pref = Auth::user()->preferences;
+		$Prefs = explode(";", $Pref);
+		foreach ($Prefs as $ind => $val) {
+			$ceci = explode("=", $val);
+			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }
+		}
+
+		return $UserPref;
+	}
+
 	/**
 	* Check to see if current user has given permission
 	*
@@ -58,8 +78,7 @@ class User extends Eloquent {
 	* @return mixed
 	*/
 /*
-	public function issues($status = 1)
-	{
+	public function issues($status = 1) {
 		return $this->has_many('Project\Issue', 'created_by')
 			->where('status', '=', 1)
 			->where('assigned_to', '=', $this->id);
@@ -87,6 +106,12 @@ class User extends Eloquent {
 
 			/* Loop through all the logic from the project and cache all the needed data so we don't load the same data twice */
 			foreach(User\Activity::where('parent_id', '=', $project->id)->order_by('created_at', 'DESC')->take($activity_limit)->get() as $activity) {
+// La version ci-bas pourrait être utile
+//			foreach(User\Activity::where('parent_id', '=', $project->id)
+//				->join('projects_issues', 'projects_issues.id', '=', 'users_activity.item_id')
+//				->where('projects_issues.start_at', '<=', date())
+//				->order_by('created_at', 'DESC')
+//				->take($activity_limit)->get() as $activity) {
 				$dashboard[$project->id][] = $activity;
 
 				switch($activity->type_id) {
@@ -266,6 +291,7 @@ class User extends Eloquent {
 				'errors' => $validator->errors
 			);
 		}
+		$MotPasse =  Str::random(6);
 
 		//Inscription du nouveau membre dans la bdd
 		$insert = array(
@@ -274,14 +300,25 @@ class User extends Eloquent {
 			'lastname' => $info['lastname'],
 			'language' => $info['language'],
 			'role_id' => $info['role_id'],
-			'password' => Hash::make($password = Str::random(6))
+			'password' => Hash::make($password = $MotPasse)
 		);
-
 		$user = new User;
 		$user->fill($insert)->save();
 
+		
+		//Attribution d'un premier projet à ce nouvel usager
+		$NewUser = \User::where('id', '>', 1)->order_by('id','DESC')->get(array('id'));
+		$ID = $NewUser[0]->id;
+		\DB::table('projects_users')->insert(array(
+			'id'=>NULL, 
+			'user_id'=>$ID,
+			'project_id'=>$info['Project'],
+			'role_id'=>$info['role_id'],
+			'created_at'=>date("Y-m-d H:i:s")
+		));
+
 		//Émission d'un courriel à l'adresse du nouveau membre
-		$contenu = array('useradded',$password);
+		$contenu = array('useradded','static:'.$MotPasse);
 		$src = array('email', 'value');
 		$Type = 'User';
 		$SkipUser = false;
@@ -292,7 +329,7 @@ class User extends Eloquent {
 
 		return array(
 			'success' => true,
-			'password' => $password
+			'password' => $MotPasse
 		);
 	}
 
@@ -302,8 +339,7 @@ class User extends Eloquent {
 	* @param  int   $id
 	* @return bool
 	*/
-	public static function delete_user($id)
-	{
+	public static function delete_user($id) {
 		$update = array(
 			'email' => '',
 			'deleted' => 1

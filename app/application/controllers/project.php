@@ -4,8 +4,7 @@ class Project_Controller extends Base_Controller {
 
 	public $layout = 'layouts.project';
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 
 		$this->filter('before', 'project');
@@ -27,7 +26,8 @@ class Project_Controller extends Base_Controller {
 			'active' => 'activity',
 			'open_count' => Project::current()->count_open_issues(),
 			'closed_count' => Project::current()->count_closed_issues(),
-			'assigned_count' => Project::current()->count_assigned_issues()
+			'assigned_count' => Project::current()->count_assigned_issues(),
+			'future_count' => Project::current()->count_future_issues()
 		));
 	}
 
@@ -77,9 +77,17 @@ class Project_Controller extends Base_Controller {
 		$issues = \Project\Issue::with('tags');
 
 		$issues = $issues->where('project_id', '=', Project::current()->id);
-		$issues = (Input::get('tag_id', '') == '2') ? $issues->where_null('closed_at', 'and', true) : $issues->where_null('closed_at', 'and', false); 
-////		$issues = $issues->left_join('following', 'following.issue', '=', 'projects_issues.id')->where('following.user', '=', Auth::user()->id);
-//		$issues = $issues->left_join('following', 'following.issue', '=', 'projects_issues.id');
+		//Moduler l'affichage selon le taquet activé:
+		if (Input::get('tag_id', '') == '2') {								//Taquet des messages fermés
+			$issues->where_null('closed_at', 'and', true);
+		} elseif (Input::get('tag_id', '') == '3') {						//Taquet des messages futurs
+			$issues->where_null('closed_at', 'and', false)->where('start_at', '>', date('Y-m-d'));
+		} else {																		//Taquet des messages ouverts ou de l'historique
+			$issues->where_null('closed_at', 'and', false);
+			if (Input::get('tag_id') == 1) {									//Taquet des messages ouverts
+				$issues = $issues->where('projects_issues.start_at', '<=', date("Y-m-d"));
+			}
+		}
 
 		if ($assigned_to) {
 			$issues = $issues->where(Input::get('limit_contrib','assigned_to'), '=', $assigned_to);
@@ -96,7 +104,6 @@ class Project_Controller extends Base_Controller {
 			$tags_amount = count($tags_collection);
 			if ($tags_amount < 1) { $tag = false; } else { $issues = $issues->where_in('tags.tag', $tags_collection); }  //->get();
 		}
-		//if ($tags || $tag || $sort_by != 'updated') {
 		if ($tags || $tag || !in_array($sort_by, $sort_keys)) {
 			$issues = $issues
 				->left_join('projects_issues_tags', 'projects_issues_tags.issue_id', '=', 'projects_issues.id')
@@ -118,6 +125,7 @@ class Project_Controller extends Base_Controller {
 		} else if (Input::get('tags', '') == 'status:closed') { $active = 'closed';
 		} else if (Input::get('tag_id', '') == '1') { $active = 'open';
 		} else if (Input::get('tag_id', '') == '2') { $active = 'closed';
+		} else if (Input::get('tag_id', '') == '3') { $active = 'future';
 		} else { $active = 'open';
 		}
 
@@ -151,7 +159,8 @@ class Project_Controller extends Base_Controller {
 			'active' => $active,
 			'open_count' => Project::current()->count_open_issues(),
 			'closed_count' => Project::current()->count_closed_issues(),
-			'assigned_count' => Project::current()->count_assigned_issues()
+			'assigned_count' => Project::current()->count_assigned_issues(),
+			'future_count' => Project::current()->count_future_issues()
 		));
 	}
 
@@ -185,7 +194,7 @@ class Project_Controller extends Base_Controller {
 
 		if($update['success']) {
 			//Email to all of this project's followers
-			$this->Courriel ('Project', true, Project::current()->id, Project::current()->id, Auth::user()->id, array('projectmod',$ancProj), array('tinyissue','value'));
+			$this->Courriel ('Project', true, Project::current()->id, Project::current()->id, Auth::user()->id, array('projectmod','static:'.$ancProj), array('tinyissue','value'));
 			return Redirect::to(Project::current()->to('edit'))
 				->with('notice', __('tinyissue.project_has_been_updated'));
 		}

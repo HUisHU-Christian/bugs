@@ -49,13 +49,19 @@
 				<th><?php echo __('tinyissue.duration'); ?></th>
 				<td>
 					<input type="number" name="duration" style="width: 60px;" value="<?php echo Input::old('duration', $issue->duration); ?>" min="1" max="400" />&nbsp;<?php echo __('tinyissue.days'); ?>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php echo __('tinyissue.issue_start_at'); ?> : <input name="start_at" id="input_start_at" type="date" value="<?php echo $issue->start_at; ?>" />
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php echo __('tinyissue.issue_hours_plan'); ?> : <b><?php echo $issue->temps_plan; ?></b>
 				</td>
 			</tr>
 			<?php if(Auth::user()->permission('issue-modify')): ?>
 			<tr>
 				<th><?php echo __('tinyissue.priority'); ?></th>
 				<td>
-					<?php echo Form::select('status', array(1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), $issue->status, array('id'=>'select_status', 'onmouseover'=>'document.getElementById(\'taglev\').style.display = \'block\';', 'onmouseout'=>'document.getElementById(\'taglev\').style.display = \'none\';')); ?>
+					<?php 
+						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1')), $issue->status, array('id'=>'select_status', 'onmouseover'=>'document.getElementById(\'taglev\').style.display = \'block\';', 'onmouseout'=>'document.getElementById(\'taglev\').style.display = \'none\';')); 
+					?>
 				</td>
 			</tr>
 
