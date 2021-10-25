@@ -58,15 +58,40 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 		</div>
 	</div>
 </div>
+</div>
+</div>
 
+<br />
+<div class="pad">
+<?php
+	$NbIssues = $config_app["TodoNbItems"] ?? 25;
+	$page = $_GET["page"] ?? 1;
+	if (count($issues) > $NbIssues) {
+		$compte = 0;
+		$rendu = 0;
+		echo '<ul class="tabs">';
+		while ($rendu<=count($issues)) {
+			echo '<li'.((++$compte == $page) ? ' class="active"' : '').'><a href="issues?tag_id='.$_GET["tag_id"].'&page='.$compte.'">'.$compte.'</a></li>';
+			$rendu = $rendu + $NbIssues;
+		}
+		echo '</ul>';
+	}
+?>
+
+<div class="inside-tabs">
 <div class="blue-box">
-	<div class="inside-pad">
+	<div class="inside-pad" id="lane-details-0">
 		<?php 
 		if(!$issues) {
 				echo '<p>'.__('tinyissue.no_issues').'</p>';
 		} else {
+			$rendu = 0;
 			echo '<ul class="issues" id="sortable">';
 			foreach($issues as $row) {
+				$rendu = $rendu + 1;
+				if ($rendu <= (($page-1)*$NbIssues)) { continue; }
+				if ($rendu > ($page*$NbIssues)) { break; }
+//				echo $rendu.'<br />';
 				$follower = \DB::table('following')->where('project','=',0)->where('issue_id','=',$row->id)->where('user_id','=',\Auth::user()->id)->count();
 				$follower = ($follower > 0) ? 1 : 0;
 				
@@ -118,7 +143,6 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 									echo '</div>';
 								}
 						
-								//Time's going fast!
 								//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 								////Calculations
 								$config_app = require path('public') . 'config.app.php';
