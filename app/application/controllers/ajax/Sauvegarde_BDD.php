@@ -1,6 +1,5 @@
 <?php
 	require_once "db.php";
-	$_POST["OS"] = 'Win';
 	$_POST["Courriel"] = $_POST["Courriel"] ?? '';
 
 	$compte = 0;

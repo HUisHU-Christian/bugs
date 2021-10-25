@@ -113,16 +113,18 @@
 	}
 	
 	function BackupBDD() {
+		monOS = (document.getElementById('input_databaseOSl').checked) ? 'Linux' : 'Windows';
 		var formdata = new FormData();
 		formdata.append("Courriel", document.getElementById('input_databaseCourriel').value );
 		formdata.append("MotPasse", document.getElementById('input_databaseMotPasse').value );
+		formdata.append('OS', monOS );		
 		var xhttp = new XMLHttpRequest();
 		var NextPage = 'app/application/controllers/ajax/Sauvegarde_BDD.php';
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 					document.getElementById('span_BackupBDD').innerHTML = xhttp.responseText;
 				if (xhttp.responseText == 'Échec') {
-					alert("Vérifiez vos configurations, nous n`avons pas pu enregistrer");
+					document.getElementById('span_BackupBDD').innerHTML = "<font color="red">Vérifiez vos configurations, nous n`avons pas pu enregistrer</font>";
 				} else if (xhttp.responseText == 'Non') {
 					document.getElementById('span_BackupBDD').innerHTML = "Vous ne disposez pas de droits nécessaires";
 				} else {
@@ -135,6 +137,7 @@
 	}
 
 	function BackupTXT() {
+		alert(document.getElementsByName('OS').value);
 		var formdata = new FormData();
 		formdata.append('assigned', document.getElementById('input_ChxTxt_assigned').value ); 	
 		formdata.append('attached', document.getElementById('input_ChxTxt_attached').value );	
@@ -232,3 +235,4 @@
 	setTimeout(function() { IntroInital = CachonsEditor(7); } , 1500);
 	setTimeout(function() { TxByeInital = CachonsEditor(8); } , 1500);
 	setTimeout(function() { TexteInital = CachonsEditor(9); } , 1500);
+

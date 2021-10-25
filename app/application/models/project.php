@@ -27,6 +27,23 @@ class Project extends Eloquent {
 	public function issues() {
 		return $this->has_many('Project\Issue', 'project_id')->order_by('status', 'DESC')->order_by('weight', 'ASC');
 	}
+	
+	
+	public function nextissuesThisTab($tag_id, $thisCount, $NbIssues) {
+		if ($thisCount > $NbIssues || 1==1) {
+			$rendu = 0;
+			$col = 0;
+			if ($thisCount >= $NbIssues) {
+				echo '&nbsp;&nbsp;&nbsp;'; 
+				while ($rendu < $thisCount) {
+					echo '<span class="smallNum" onclick="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" sytle="cursor: url();" >'.(($rendu/$NbIssues)+1).'</span>&nbsp;&nbsp;';
+					if (((($rendu+$NbIssues)/$NbIssues)/6) == round((($rendu+$NbIssues)/$NbIssues)/5)) { echo '<br />&nbsp;&nbsp;&nbsp;'; }
+					$rendu = $rendu + $NbIssues;
+				}
+			}
+		}  
+	}
+
 
 	/**
 	* Assign a user to a project
