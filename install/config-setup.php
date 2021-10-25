@@ -21,7 +21,7 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	/* Edit URL Information */
 	$_POST['URL'] = (substr($_POST['URL'], -1) == '/') ? $_POST['URL'] : $_POST['URL'].'/';
 	$config_file = str_replace("'url' => '',", "'url' => '".$_POST['URL']."',", $config_file);
-	
+
 	/* Edit Database Information */
 	$config_file = str_replace('localhost', $_POST['database_host'], $config_file);
 	$config_file = str_replace('database_user', $_POST['database_username'], $config_file);
@@ -292,16 +292,14 @@ if(!file_exists('../config.app.php')){ ?>
 					<select name="timezone">
 						<?php
 						$timezones = timezone_identifiers_list();
-						
+
 						echo 'select name="timezone" size="10">' . "\n";
-						
 						foreach($timezones as $timezone)
 						{
 						  echo '<option';
 						  echo $timezone == date("e") ? ' selected' : '';
 						  echo '>' . $timezone . '</option>' . "\n";
 						}
-						
 						echo '</select>' . "\n";
 						?>
 					</select>
