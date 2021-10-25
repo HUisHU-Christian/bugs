@@ -61,12 +61,12 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 </div>
 </div>
 
-<br />
 <div class="pad">
 <?php
 	$NbIssues = $config_app["TodoNbItems"] ?? 25;
 	$page = $_GET["page"] ?? 1;
 	if (count($issues) > $NbIssues) {
+		echo '<br />';
 		$compte = 0;
 		$rendu = 0;
 		echo '<ul class="tabs">';
