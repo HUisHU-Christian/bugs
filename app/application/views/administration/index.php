@@ -103,8 +103,8 @@
 				echo '<a href="https://github.com/pixeline/bugs/" target="_blank">https://github.com/pixeline/bugs/</a>';
 			} else if ($verNum < $verActu) {
 				echo '<h4><b>'.$LngSRV["version_ahead"].'</b></h4>';
-				echo $LngSRV["version_disp"].' : '.$verNum.'<br />';
-				echo $LngSRV["version_commit"].' : '.$verCommit.'<br />';
+				//echo $LngSRV["version_disp"].' : '.$verNum.'<br />';
+				//echo $LngSRV["version_commit"].' : '.$verCommit.'<br />';
 				echo '<br />';
 				echo '<a href="https://github.com/pixeline/bugs/releases" target="_blank">'.$LngSRV["version_details"].'</a> <br />';
 			} else {

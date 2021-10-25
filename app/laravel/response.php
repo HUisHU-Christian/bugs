@@ -280,6 +280,7 @@ class Response {
 		}
 	}
 
+
 	/**
 	 * Add a header to the array of response headers.
 	 *

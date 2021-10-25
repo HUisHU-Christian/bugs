@@ -43,7 +43,7 @@ CREATE TABLE `projects_issues` (
   `title` varchar(255) DEFAULT NULL,
   `body` text,
   `created_at` datetime DEFAULT NULL,
-  `start_at` date DEFAULT NULL,
+  `start_at` datetime DEFAULT NULL,
   `duration` smallint(3) NOT NULL DEFAULT '30',
   `temps_plan` smallint(4) DEFAULT 30,
   `temps_fact` smallint(4) DEFAULT 30,
