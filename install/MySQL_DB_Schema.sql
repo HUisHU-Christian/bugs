@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `projects` (
 #--
 
 #--#Create Projects Issues Table
-CREATE TABLE `projects_issues` (
+CREATE TABLE IF NOT EXISTS  `projects_issues` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `created_by` bigint(20) NOT NULL DEFAULT '1',
   `closed_by` bigint(20) DEFAULT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE `projects_issues` (
 #--
 
 #--#Create Projects Issues Attachments Table
-CREATE TABLE `projects_issues_attachments` (
+CREATE TABLE IF NOT EXISTS  `projects_issues_attachments` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `issue_id` bigint(20) default NULL,
   `comment_id` bigint(20) default '0',
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `projects_issues_comments` (
 #--
 
 #--#Create issue-tag relationship table
-CREATE TABLE `projects_issues_tags` (
+CREATE TABLE IF NOT EXISTS  `projects_issues_tags` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `issue_id` bigint(20) unsigned NOT NULL,
   `tag_id` bigint(20) unsigned NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE `projects_issues_tags` (
 #--
 
 #--#Create Projects Links Table
-CREATE TABLE `projects_links` (
+CREATE TABLE IF NOT EXISTS  `projects_links` (
   `id_link` int(11) NOT NULL AUTO_INCREMENT,
   `id_project` int(11) NOT NULL DEFAULT '1',
   `category` enum('dev','git','prod') NOT NULL DEFAULT 'dev',
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 #--
 
 #--#Create tags table
-CREATE TABLE `tags` (
+CREATE TABLE IF NOT EXISTS  `tags` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(255) NOT NULL,
   `bgcolor` varchar(50) DEFAULT '#330033',

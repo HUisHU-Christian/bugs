@@ -32,7 +32,6 @@ $install = new install();
 $database_check = $install->check_connect();
 $requirement_check = $install->check_requirements();
 
-//if(!$database_check['error']) {
 if($database_check) {
 	if(isset($_POST['email'])) {
 		if($_POST['email'] != ''&& $_POST['first_name'] != '' && $_POST['last_name'] != '' && $_POST['password'] != '') {
