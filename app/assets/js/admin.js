@@ -137,7 +137,6 @@
 	}
 
 	function BackupTXT() {
-		alert(document.getElementsByName('OS').value);
 		var formdata = new FormData();
 		formdata.append('assigned', document.getElementById('input_ChxTxt_assigned').value ); 	
 		formdata.append('attached', document.getElementById('input_ChxTxt_attached').value );	
