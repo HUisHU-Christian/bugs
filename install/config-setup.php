@@ -342,5 +342,4 @@ if(!file_exists('../config.app.php')){ ?>
 			</table>
 		</form>
 	</div>
-
 <?php exit(); } ?>
