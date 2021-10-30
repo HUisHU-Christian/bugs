@@ -68,6 +68,38 @@ echo '<br /><br />';
 				echo $rendu.' commandes de restaurations accomplies.<br /><br />';
 				echo '<br /><br />';
 				echo '<hr />';
+				
+				//Il faut ici s'assurer que la base de données est à jour.
+				////Cherchons les fichiers de mise à jour disponibles sur github
+				$verDisp = scandir( "https://github.com/pixeline/bugs/install");
+				$updateDisp = array();
+				foreach ($verDisp as $name) {
+					if ( substr($name, 0, 6) == 'update' && substr($name, -4) == '.sql' ) {
+						$updateDisp[] = $name;
+					}
+				}
+						
+				////Éliminons les fichiers déjà installés (selon le contenu du présent répertoire)
+				$verInst = scandir(".");
+				$updateInst = array();
+				foreach ($verInst as $name) {
+					if ( substr($name, 0, 6) == 'update' && substr($name, -4) == '.sql' ) {
+						$updateInst[] = $name;
+					}
+				}
+				$updateRest = array_diff($updateDisp, $updateInst);
+				
+				if (count($updateRest) > 0) {
+					////Copions depuis GitHub les fichiers update manquant ici
+					foreach($updateRest as $name) {
+						copy("https://github.com/pixeline/bugs/install/".$name, $name);
+						////Appliquons les modifications (lecture est exécution des fichiers sql récupérés)
+						$sql = file_get_contents($name);
+						mysqli_query($connect, $sql);
+						////À chaque fois, comme toute mise à jour, nous inscrivons cela dans la BDD, table update
+						mysqli_query($connect, "INSERT INTO update_history VALUES (NULL, 'Rattrapage via restore', '".$name."', NOW(), NOW() );");
+					}
+				}
 			}
 		}
 	}

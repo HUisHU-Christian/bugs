@@ -73,6 +73,7 @@ if (($venant == $valableAdmin  || $venant == $valableUpadte) && isset($_POST["Et
 	$val = \DB::query("SHOW tables");
 	if (in_array('update_history', $val)) {
 		\DB::table('update_history')->insert(array(
+			'Footprint'=>'Administration update',
 			'Description'=>$CetteVersion['version'].$CetteVersion['release'], 
 			'DteRelease'=>$CetteVersion["release_date"], 
 			'DteInstall'=>date("Y-m-d H:i:s")
