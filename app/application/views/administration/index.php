@@ -211,8 +211,8 @@
 			<?php
 				$con = __('tinyissue.tinyissue.following_email_comment');
 				$tit = __('tinyissue.tinyissue.following_email_comment_tit');
-				if (file_exists($dir."attached.html")) { $con = file_get_contents($dir."/comment.html"); }
-				if (file_exists($dir."attached_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
+				if (file_exists($dir."comment.html")) { $con = file_get_contents($dir."/comment.html"); }
+				if (file_exists($dir."comment_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
 			?>
 			<?php echo __('tinyissue.title'); ?> : <input name="TitreMsg" id="input_TitreMsg" value="<?php echo $tit; ?>" size="40" />
 			&nbsp;&nbsp;&nbsp;&nbsp;
