@@ -125,7 +125,6 @@ class Comment extends  \Eloquent {
 		return $comment;
 	}
 
-
 	/**
 	 * Delete a comment and its attachments
 	 *

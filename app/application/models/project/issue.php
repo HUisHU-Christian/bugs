@@ -306,10 +306,7 @@ class Issue extends \Eloquent {
 		}
 
 		$input['duration'] = $input['duration'] ?? 30;
-		$input['start_at'] = ($input['start_at'] == '') ? date("Y-m-d") : $input['start_at'];
-		$input['start_at'] = $input['start_at'] ?? date("Y-m-d");
-		//$input['body'] = addslashes($input['body']);
-		//$input['title'] = addslashes($input['title']);
+		$input['start_at'] = (trim($input['start_at']) == '') ? date("Y-m-d") : $input['start_at'];
 		$fill = array(
 			'title' => $input['title'],
 			'body' => $input['body'],
