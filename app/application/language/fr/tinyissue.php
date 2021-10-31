@@ -139,7 +139,7 @@ return array(
 	'issue_has_been_reopened' => 'Le billet a été ré-ouvert. Vous pouvez maintenant y contribuer.',
 	'issue_has_been_updated' => 'Le billet a été mis à jour !',
 	'issue_hours_plan' => 'Heures planifiées (soumission)',
-	'issue_hours_done' => 'Nombre d`heures que vous avez mises dans cette tâche',
+	'issue_hours_done' => 'Heures travaillées',
 	'issue_hours_char' => 'Total des heures ouvrées par nos techniciens (facturées)',
 	'issue_hours_paid' => 'Total des heures payées par notre client',
 	'issue_percent' => 'Pourcentage accompli',
