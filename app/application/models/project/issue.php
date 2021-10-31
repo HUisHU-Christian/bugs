@@ -305,6 +305,7 @@ class Issue extends \Eloquent {
 			);
 		}
 
+		$input['start_at'] = (trim($input['start_at']) == '') ? date("Y-m-d") : $input['start_at'];
 		$fill = array(
 			'title' => $input['title'],
 			'body' => $input['body'],

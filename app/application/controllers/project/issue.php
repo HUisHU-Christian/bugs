@@ -171,7 +171,6 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return string
 	 */
 	public function post_edit_comment() {
-//		Project\Issue\Comment::edit_comment(Input::get('id'), Project\Issue::current()->id,Input::get('content'));
 		$idComment = static::find(Input::get('id'));
 		if(!$idComment) { return false; }
 		$Avant = \DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
