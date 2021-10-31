@@ -132,9 +132,22 @@ class Comment extends  \Eloquent {
 	 * @return bool
 	 */
 	public static function edit_comment($id, $project, $content) {
+		//Patrick 2021-oct-31:  J'ai des doutes quant à l'utilité réelle de la présente procédure, car seules les modifications apportées à controllers/project/issue.php semblent prises en considération
+		//Après un ou deux tests, il semble la réponse soit négative, c'est-à-dire que le présent code n'est jamais appelé.
+		//Laissons-le ici quelque temps encore, le temps qu'il faudra pour le tester plus rigoureusement.
+//		echo 'Test:  ici la ligne 135 de models/project/issue/comment.php<br />';
+//		echo 'Est-ce que l`arrêt de la ligne suivante saura arrêter le processus? <br />';
+//		exit();
 		$idComment = static::find($id);
 		if(!$idComment) { return false; }
 		$Avant = \DB::table('projects_issues_comments')->where('id', '=', $id)->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
+		$Avant->comment = str_replace("`", "'", $Avant->comment );
+		$Avant->comment = str_replace("<li>", "&nbsp;&nbsp;&nbsp;-&nbsp;", $Avant->comment );
+		$Avant->comment = str_replace("</li>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ul>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ul>", "<br />", $Avant->comment );
 		$edited_id = \DB::table('users_activity')->insert_get_id(array(
 						'id'=>NULL,
 						'user_id'=>\Auth::user()->id,
@@ -142,7 +155,7 @@ class Comment extends  \Eloquent {
 						'item_id'=>$Avant->issue_id,
 						'action_id'=>$id,
 						'type_id'=>12,
-						'data'=> addslashes( str_replace("`", "'", $Avant->comment )),
+						'data'=> addslashes($Avant->comment),
 						'created_at'=>$Avant->created_at,
 						'updated_at'=>date("Y-m-d H:i:s")
 					));

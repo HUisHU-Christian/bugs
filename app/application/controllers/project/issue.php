@@ -176,6 +176,13 @@ class Project_Issue_Controller extends Base_Controller {
 		$idComment = static::find(Input::get('id'));
 		if(!$idComment) { return false; }
 		$Avant = \DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
+		$Avant->comment = str_replace("`", "'", $Avant->comment );
+		$Avant->comment = str_replace("<li>", "&nbsp;&nbsp;&nbsp;-&nbsp;", $Avant->comment );
+		$Avant->comment = str_replace("</li>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ul>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ul>", "<br />", $Avant->comment );
 		$edited_id = \DB::table('users_activity')->insert_get_id(array(
 						'id'=>NULL,
 						'user_id'=>\Auth::user()->id,
