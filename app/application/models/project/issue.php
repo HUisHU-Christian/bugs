@@ -177,6 +177,7 @@ class Issue extends \Eloquent {
 						'issue' => $issue,
 						'project' => $project,
 						'user' => $users[$row->user_id],
+						'start_at' => $issue->start_at,
 						'activity' => $row
 					));
 					break;
@@ -295,7 +296,6 @@ class Issue extends \Eloquent {
 			'title' => 'required|max:200',
 			'body' => 'required'
 		);
-
 		$validator = \Validator::make($input, $rules);
 
 		if($validator->fails()) 	{
@@ -305,6 +305,7 @@ class Issue extends \Eloquent {
 			);
 		}
 
+		$input['duration'] = $input['duration'] ?? 30;
 		$input['start_at'] = (trim($input['start_at']) == '') ? date("Y-m-d") : $input['start_at'];
 		$fill = array(
 			'title' => $input['title'],
@@ -321,7 +322,6 @@ class Issue extends \Eloquent {
 			\DB::query("INSERT INTO users_activity VALUES (NULL, ".\Auth::user()->id.", NULL, ".$this->id.", ".$input['assigned_to'].", 5, NULL, NOW(), NOW()) ");
 			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
 		}
-
 		$this->fill($fill);
 		$this->save();
 
@@ -452,7 +452,6 @@ class Issue extends \Eloquent {
 	*/
 	public static function load_issue($id) {
 		static::$current = static::find($id);
-
 		return static::$current;
 	}
 
@@ -602,7 +601,6 @@ class Issue extends \Eloquent {
 								->where('projects.status', '=', 0)
 								->count();
 		$issues_closed_project = !$count ? 0 : $count;
-
 		$closed_issues = ($closed_issues_open_project + $issues_closed_project);
 
 		return array(
