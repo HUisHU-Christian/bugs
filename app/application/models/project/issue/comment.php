@@ -142,7 +142,7 @@ class Comment extends  \Eloquent {
 						'item_id'=>$Avant->issue_id,
 						'action_id'=>$id,
 						'type_id'=>12,
-						'data'=>$Avant->comment,
+						'data'=> addslashes( str_replace("`", "'", $Avant->comment )),
 						'created_at'=>$Avant->created_at,
 						'updated_at'=>date("Y-m-d H:i:s")
 					));
