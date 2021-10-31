@@ -88,6 +88,7 @@
 	<div class="pad2">
 		<br />
 		<?php
+			//Vérification des mises à jour disponibles
 			include "application/libraries/checkVersion.php";
 			echo '<h4><b>'.$LngSRV["version_check"].'</b> : ';
 			echo '<br /><br />';
@@ -103,8 +104,6 @@
 				echo '<a href="https://github.com/pixeline/bugs/" target="_blank">https://github.com/pixeline/bugs/</a>';
 			} else if ($verNum < $verActu) {
 				echo '<h4><b>'.$LngSRV["version_ahead"].'</b></h4>';
-				//echo $LngSRV["version_disp"].' : '.$verNum.'<br />';
-				//echo $LngSRV["version_commit"].' : '.$verCommit.'<br />';
 				echo '<br />';
 				echo '<a href="https://github.com/pixeline/bugs/releases" target="_blank">'.$LngSRV["version_details"].'</a> <br />';
 			} else {
@@ -212,8 +211,8 @@
 			<?php
 				$con = __('tinyissue.tinyissue.following_email_comment');
 				$tit = __('tinyissue.tinyissue.following_email_comment_tit');
-				if (file_exists($dir."attached.html")) { $con = file_get_contents($dir."/comment.html"); }
-				if (file_exists($dir."attached_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
+				if (file_exists($dir."comment.html")) { $con = file_get_contents($dir."/comment.html"); }
+				if (file_exists($dir."comment_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
 			?>
 			<?php echo __('tinyissue.title'); ?> : <input name="TitreMsg" id="input_TitreMsg" value="<?php echo $tit; ?>" size="40" />
 			&nbsp;&nbsp;&nbsp;&nbsp;

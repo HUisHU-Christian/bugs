@@ -18,7 +18,7 @@ if(count($active_projects)>1) {
 	
 	//Récupération des préférences dans le dossier personnel de l'usager
 	$Pref = \Auth::user()->attributes;
-	$Prefs = explode(";", $Pref["preferences"]);
+	$Prefs = explode("&", $Pref["preferences"]);
 	foreach ($Prefs as $ind => $val) {
 		$ceci = explode("=", $val);
 		if (isset($ceci[1])) { $Preferences[$ceci[0]] = $ceci[1]; }

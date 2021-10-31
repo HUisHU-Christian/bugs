@@ -140,7 +140,7 @@ return array(
 	'issue_has_been_reopened' => 'This issue has been reopened. You can now work the issue.',
 	'issue_has_been_updated' => 'This issue has been updated!',
 	'issue_hours_plan' => 'Duration (hours) quoted',
-	'issue_hours_done' => 'Duration (hours) of you work today on this ticket',
+	'issue_hours_done' => 'Today`s work (hours)',
 	'issue_hours_char' => 'Total of hours worked on this ticket',
 	'issue_hours_paid' => 'Total of hours client paid us upto now',
 	'issue_percent' => 'Percentage done',

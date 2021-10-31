@@ -35,7 +35,8 @@ class Comment extends  \Eloquent {
 			'created_by' => \Auth::user()->id,
 			'project_id' => $project->id,
 			'issue_id' => $issue->id,
-			'comment' => $input['comment']
+			'comment' => $input['comment'],
+			'temps_fait' => $input['temps_fait']
 		);
 
 		$comment = new static;
@@ -126,32 +127,6 @@ class Comment extends  \Eloquent {
 	}
 
 	/**
-	 * Edit a comment 
-	 *
-	 * @param int    $content
-	 * @return bool
-	 */
-	public static function edit_comment($id, $project, $content) {
-		$idComment = static::find($id);
-		if(!$idComment) { return false; }
-		$Avant = \DB::table('projects_issues_comments')->where('id', '=', $id)->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
-		$edited_id = \DB::table('users_activity')->insert_get_id(array(
-						'id'=>NULL,
-						'user_id'=>\Auth::user()->id,
-						'parent_id'=>$Avant->project_id,
-						'item_id'=>$Avant->issue_id,
-						'action_id'=>$id,
-						'type_id'=>12,
-						'data'=>$Avant->comment,
-						'created_at'=>$Avant->created_at,
-						'updated_at'=>date("Y-m-d H:i:s")
-					));
-
-		\DB::table('projects_issues_comments')->where('id', '=', $id)->update(array('comment' => $content, 'updated_at' => date("Y-m-d H:i:s")));
-		return true;
-	}
-
-	/**
 	 * Delete a comment and its attachments
 	 *
 	 * @param int    $comment
@@ -174,13 +149,6 @@ class Comment extends  \Eloquent {
 		\DB::table('projects_issues_comments')->where('id', '=', $comment->id)->delete();
 
 		if(!$comment) { return false; }
-
-//		/* Delete attachments and files */
-//		$path = \Config::get('application.upload_path').$issue->project_id;
-//		foreach($comment->attachments()->get() as $row) {
-//			Attachment::delete_file($path . '/' . $row->upload_token, $row->filename);
-//			$row->delete();
-//		}
 
 		return true;
 	}
