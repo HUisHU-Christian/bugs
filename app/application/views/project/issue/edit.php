@@ -48,6 +48,9 @@
 			<tr>
 				<th><?php echo __('tinyissue.duration'); ?></th>
 				<td>
+				<br />---------------------------<br />
+				<?php echo $issue->start_at; ?>
+				<br /><br />
 					<input type="number" name="duration" style="width: 60px;" value="<?php echo Input::old('duration', $issue->duration); ?>" min="1" max="400" />&nbsp;<?php echo __('tinyissue.days'); ?>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<?php echo __('tinyissue.issue_start_at'); ?> : <input name="start_at" id="input_start_at" type="date" value="<?php echo $issue->start_at; ?>" />

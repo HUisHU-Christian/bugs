@@ -132,6 +132,7 @@ class Project_Issue_Controller extends Base_Controller {
 			foreach(Project\Issue::current()->tags as $tag) {
 				$issue_tags .= (!empty($issue_tags) ? ',' : '') . $tag->tag;
 			}
+			// Get issue content
 			return $this->layout->nest('content', 'project.issue.edit', array(
 				'issue' => Project\Issue::current(),
 				'issue_tags' => $issue_tags,
