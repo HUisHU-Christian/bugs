@@ -40,7 +40,7 @@ class Setting extends \Eloquent {
 		foreach($info as $ind => $val)  {
 			if (in_array($ind, $notThem)) { continue; }
 			$valeurs .= $lien.$ind.'='.$val;
-			$lien = ';';
+			$lien = '&';
 		}
 		$update = array('Preferences' => $valeurs);
 		\User::find($user_id)->fill($update)->save();

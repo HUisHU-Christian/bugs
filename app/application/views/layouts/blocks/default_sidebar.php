@@ -18,7 +18,7 @@
 	$SansAccent = array();
 	foreach($active_projects as $row) {
 		$NbIssues[$row->to()] = $row->count_open_issues();
-		$Proj[$row->to()] = $row->name.' ('.$NbIssues[$row->to()].')';
+		$Proj[$row->to()] = $row->name.' ('.$row->count_open_issues().'/'.$row->count_closed_issues().')';
 	}
 	////Préparation au tri
 	foreach ($Proj as $ind => $val ){
@@ -49,7 +49,7 @@
 		$SansAccent = array();
 		foreach(Project\User::active_projects() as $row) {
 			$NbIssues[$row->to()] = $row->count_open_issues();
-			$Proj[$row->to()] = $row->name.'&nbsp;<span class="info-open-issues" title="Number of Open Tickets">('.$NbIssues[$row->to()].')</span>';
+			$Proj[$row->to()] = $row->name.'&nbsp;<span class="info-open-issues" title="Number of Open Tickets">(<b>'.$row->count_open_issues().'</b>/'.$row->count_closed_issues().')</span>';
 			$idProj[$row->to()] = $row->id;
 		}
 		foreach ($Proj as $ind => $val ){

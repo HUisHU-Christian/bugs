@@ -32,7 +32,35 @@ $install = new install();
 $database_check = $install->check_connect();
 $requirement_check = $install->check_requirements();
 
+?>
+<!DOCTYPE html>
+<html>
+<title>Installation BUGS</title>
+<head>
+
+	<link href="../app/assets/css/install.css" media="all" type="text/css" rel="stylesheet">
+
+</head>
+<body>
+<div class="InstallLogo"></div>
+
+<?php
 if($database_check) {
+	//La base de données est peut-être déjà là
+	$prefixe = "";
+	while (!file_exists($prefixe."config.app.php")) {
+		$prefixe .= "../";
+	}
+	$config = require $prefixe."config.app.php";
+	$dataSrc = mysqli_connect($config['database']['host'], $config['database']['username'], $config['database']['password'], $config['database']['database']);
+	$resuUSER = mysqli_query($dataSrc, "SELECT * FROM users");
+	//Puisque la base de données est déjà installée, procédons à l'ouverture d'une session d'usager.
+	if (mysqli_num_rows($resuUSER) > 0) {
+		echo '<script>document.location.href = "../";</script>';
+		die();
+	}
+
+	//Comme la base de données n'est pas encore installée, procédons à l'inscription de l'administrateur du système et l'installation de la BDD
 	if(isset($_POST['email'])) {
 		if($_POST['email'] != ''&& $_POST['first_name'] != '' && $_POST['last_name'] != '' && $_POST['password'] != '') {
 			$finish = $install->create_tables($_POST);
@@ -58,16 +86,6 @@ if($database_check) {
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-<title>Installation BUGS</title>
-<head>
-
-	<link href="../app/assets/css/install.css" media="all" type="text/css" rel="stylesheet">
-
-</head>
-<body>
-<div class="InstallLogo"></div>
 
 <div id="container">
 	<form method="post" action="index.php?Lng=<?php echo $_GET["Lng"]; ?>" autocomplete="off">
@@ -88,27 +106,26 @@ if($database_check) {
 					echo $MyLng['Installation_Thanks'];
 				?>
 
-				
+				<br /><br />
 				</td>
 			</tr>
 
 			<tr>
-				<th><label for="first_name"><?php echo $MyLng['Name_first']; ?></label></th>
-				<td>
+				<th><label for="first_name"><?php echo $MyLng['Name_first']; ?></label>
 					<input autocomplete="off" type="text" name="first_name" id="first_name" value="<?php echo $_POST['first_name']; ?>"/>
 					<span class="error"><?php echo $first_name_error ?></span>
-				</td>
+					<br />
+				</th>
 			</tr>
 			<tr>
-				<th><label for="last_name"><?php echo $MyLng['Name_last']; ?></label></th>
-					<td>
-						<input autocomplete="off" type="text" name="last_name" id="last_name" value="<?php echo $_POST['last_name']; ?>"/>
-						<span class="error"><?php echo $last_name_error ?></span>
-				</td>
+				<th><label for="last_name"><?php echo $MyLng['Name_last']; ?></label>
+					<input autocomplete="off" type="text" name="last_name" id="last_name" value="<?php echo $_POST['last_name']; ?>"/>
+					<span class="error"><?php echo $last_name_error ?></span>
+					<br />
+				</th>
 			</tr>
 			<tr>
-				<th><label for="language"><?php echo $MyLng['Name_lang']; ?></label></th>
-				<td>
+				<th><label for="language"><?php echo $MyLng['Name_lang']; ?></label>
 				<select name="language" id="language" style="background-color: #FFF;">
 				<?php
 					foreach ($Language as $ind => $lang) {
@@ -116,26 +133,30 @@ if($database_check) {
 					}
 				?>
 				</select>
-				</td>
+				<br /><br />
+				</th>
 			</tr>
 			<tr>
-				<th><label for="email"><?php echo $MyLng['Name_email']; ?></label></th>
-				<td>
+				<th><label for="email"><?php echo $MyLng['Name_email']; ?></label>
 					<input autocomplete="off" type="text" name="email" id="email" value="<?php echo $_POST['email']; ?>"/>
 					<span class="error"><?php echo $email_error ?></span>
-				</td>
+					<br />
+				</th>
 			</tr>
 			<tr>
-				<th><label for="password"><?php echo $MyLng['Name_pswd']; ?></label></th>
-				<td>
+				<th><label for="password"><?php echo $MyLng['Name_pswd']; ?></label>
 					<input type="password" name="autocompletion_off" value="" style="display:none;">
 					<input autocomplete="off" type="password" name="password" id="password" />
 					<span class="error"><?php echo $pass_error ?></span>
-				</td>
+					<br />
+				</th>
 			</tr>
 			<tr>
-				<th></th>
-				<td><input type="submit" value="<?php echo $MyLng['Name_finish']; ?>" class="button primary"/></td>
+				<td style="text-align: center;">
+					<br />
+					<input type="submit" value="<?php echo $MyLng['Name_finish']; ?>" class="button primary"/>
+					<br /><br />
+				</td>
 			</tr>
 		</table>
 	</form>

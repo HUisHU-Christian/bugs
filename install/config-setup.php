@@ -5,12 +5,12 @@ function ChgLng(Lng = 'en') { document.location.href = 'index.php?Lng=' + Lng; }
 
 <?php
 foreach (@$_GET as $ind => $val) {
-	if (strstr($val, "<") != '' || strstr(htmlspecialchars_decode($val), "<") != '' || strstr($val, "script") != '') {
+	if (strstr($val, "<") != '' || strstr(htmlspecialchars_decode($val), "<") != '' || strstr($val, "script") != '' || trim($val) == '') {
 		unset($_GET[$ind]); 
 	}
 }
 foreach (@$_POST as $ind => $val) {
-	if (strstr($ind, "password") == '' && (strstr($val, "<") != '' || strstr(htmlspecialchars_decode($val), "<") != '' || strstr($val, "script") != '')) {
+	if (strstr($ind, "password") == '' && (strstr($val, "<") != '' || strstr(htmlspecialchars_decode($val), "<") != '' || strstr($val, "script") != '')  || trim($val) == '') {
 		unset($_POST[$ind]); 
 	}
 }
@@ -21,7 +21,7 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	/* Edit URL Information */
 	$_POST['URL'] = (substr($_POST['URL'], -1) == '/') ? $_POST['URL'] : $_POST['URL'].'/';
 	$config_file = str_replace("'url' => '',", "'url' => '".$_POST['URL']."',", $config_file);
-
+	
 	/* Edit Database Information */
 	$config_file = str_replace('localhost', $_POST['database_host'], $config_file);
 	$config_file = str_replace('database_user', $_POST['database_username'], $config_file);
@@ -154,7 +154,7 @@ if(!file_exists('../config.app.php')){ ?>
 	?>
 	</select>
 	</p>
-	<form method="post" action="index.php?Lng=<?php echo $_GET["Lng"]; ?>" autocomplete="off">
+	<form method="post" action="index.php?Lng=<?php echo $_GET["Lng"] ?? 'en'; ?>" autocomplete="off">
 		<table class="form">
 			<tr>
 				<td colspan="2">
@@ -292,14 +292,16 @@ if(!file_exists('../config.app.php')){ ?>
 					<select name="timezone">
 						<?php
 						$timezones = timezone_identifiers_list();
-
+						
 						echo 'select name="timezone" size="10">' . "\n";
+						
 						foreach($timezones as $timezone)
 						{
 						  echo '<option';
 						  echo $timezone == date("e") ? ' selected' : '';
 						  echo '>' . $timezone . '</option>' . "\n";
 						}
+						
 						echo '</select>' . "\n";
 						?>
 					</select>
@@ -313,6 +315,31 @@ if(!file_exists('../config.app.php')){ ?>
 				</tr>
 			</table>
 		</form>
+		<br /><br />
+		<form method="post" action="restore.php?Lng=<?php echo $_GET["Lng"] ?? 'en'; ?>" enctype="multipart/form-data">
+			<table class="form">
+				<tr>
+					<td colspan="2"><h2><?php echo $MyLng['restore']; ?></h2></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label><?php echo $MyLng['restore_srvr']; ?>        </label><input name="srvr" id="inputRestore_srvr" type="text" value="localhost" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label><?php echo $MyLng['restore_user']; ?>        </label><input name="user" id="inputRestore_user" type="text" value="" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label><?php echo $MyLng['restore_pswd']; ?>        </label><input name="pswd" id="inputRestore_pswd" type="text" value="" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label><?php echo $MyLng['restore_bdds']; ?> ( SQL )</label><input name="bdds" id="inputRestore_bdds"  type="file" value="" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label><?php echo $MyLng['restore_txte']; ?> ( zip )</label><input name="txte" id="inputRestore_txte"  type="file" value="" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: center;"><input name="butRestore" type="submit" value="<?php echo $MyLng['restore_butt']; ?>" class="button primary"/></td>
+				</tr>
+			</table>
+		</form>
 	</div>
-
 <?php exit(); } ?>
