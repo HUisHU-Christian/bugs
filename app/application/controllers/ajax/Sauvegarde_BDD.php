@@ -49,35 +49,23 @@
 						////Récupération des données
 						$compte = 0;
 						$lien = "";
-						$sortie .= "INSERT INTO `".$tab."` VALUES";
 						$resuVALS = Requis("SELECT * FROM ".$tab." ");
-						while ($QuelVALS = Fetche($resuVALS)) {
-							$sortie .= $lien." (";
-							$lien2 = "";
-							mysqli_data_seek($resuCOLS, 0);
-							while ($QuelCOLS = Fetche($resuCOLS)) {
-								$sortie .= $lien2." '".((trim($QuelCOLS["Type"]) == '') ? NULL : addslashes($QuelVALS[$QuelCOLS["Field"]]))."' ";
-								$lien2 = ",";
-							}
-							$sortie .= ")";
-							$lien = ",";
-							if (++$compte > 50) {
-								$sortie .= ";
-								INSERT INTO `".$tab."` VALUES";
-								$compte = 0;
-								$lien = "";
+						if (Nombre($resuVALS) > 0) {
+							while ($QuelVALS = Fetche($resuVALS)) {
+								$sortie .= "INSERT INTO `".$tab."` VALUES";
+								$sortie .= $lien." (";
+								$lien2 = "";
+								mysqli_data_seek($resuCOLS, 0);
+								while ($QuelCOLS = Fetche($resuCOLS)) {
+									$sortie .= $lien2." '".((trim($QuelCOLS["Type"]) == '') ? NULL : addslashes($QuelVALS[$QuelCOLS["Field"]]))."' ";
+									$lien2 = ",";
+								}
+								$sortie .= ");
+								";
 							}
 						}
-						$sortie .= ";
-						";
 					}
-		
-					$sortie .= "
-					*/--
-					-- Dump completed on 
-					".date("Y-m-d H:i:s")."						
-					--*/";
-					
+							
 					$f = fopen($fichier.".sql", "w");
 					fwrite($f, $sortie);
 					fclose($f);
