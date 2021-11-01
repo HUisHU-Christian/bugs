@@ -29,7 +29,12 @@ if ($comment !== NULL) {
 		</div>
 
 		<div class="issue" id="div_comment_<?php echo @$comment->id; ?>_issue">
-			<?php echo Project\Issue\Comment::format(@$comment->comment); ?>
+			<?php echo Project\Issue\Comment::format(@$comment->comment);
+			 	if ($comment->temps_fait > 0) {
+			 		echo '<br />';
+			 		echo __('tinyissue.comment_tempsfait').' '.$comment->temps_fait.'h';
+			 	}
+			?>
 		</div>
 		<?php
 			if ($comment !== NULL) {

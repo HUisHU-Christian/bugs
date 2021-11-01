@@ -33,6 +33,12 @@ $rendu = "";
 $SautPage = false;
 $untel = "";
 
+function EnPied ($pdf, $page) {
+	$pdf->SetFont("Times", "", 9);
+	$pdf->Text(16, 258,date("Y-m-d H:m"));
+	$pdf->Text(186, 258, "p.".$page);
+}
+
 function EnTete ($pdf, $colonnes, $untel, $rappLng) {
 	global $_POST;
 	$pdf->AddPage();
@@ -102,9 +108,10 @@ if ($_POST["RapType"] != 'users_customized') {
 	
 	//Production du rapport lui-même
 	EnTete ($pdf, $colonnes, $untel,$rappLng);
+	$page = 1;
 	
 	foreach($results as $result) {
-		if ($SautPage && $rendu != $result->zero && $rendu != '') { EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
+		if ($SautPage && $rendu != $result->zero && $rendu != '') { EnPied ($pdf, $page++); EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
 		$rendu = $result->zero;
 		$pdf->SetFillColor($colorStatus[$result->status][0],$colorStatus[$result->status][1],$colorStatus[$result->status][2]);
 		$pdf->Cell($colonnes[0],10, 	utf8_decode($result->zero), 	1, 0, (($colonnes[0]  > 23) ? "L" : "C"), true, "");
@@ -121,6 +128,9 @@ if ($_POST["RapType"] != 'users_customized') {
 		if (isset($PosiX['special1']) && isset($result->special1)) { $pdf->Text($PosiX['special1'], ($pdf->GetY())-1,  $result->special1); }
 		if (isset($PosiX['special2']) && isset($result->special2)) { $pdf->Text($PosiX['special2'], ($pdf->GetY())-1,  $result->special2); }
 		if (isset($PosiX['special3']) && isset($result->special3)) { $pdf->Text($PosiX['special3'], ($pdf->GetY())-1,  $result->special3); }
-		if (++$compte >= $NbLignes) { EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
+		if (++$compte >= $NbLignes) { EnPied ($pdf, $page++); EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
 	}
+	
+	EnPied ($pdf, $page);
+
 }
