@@ -49,7 +49,6 @@ return array(
 	'create_a_new_project_description' => 'Créer un nouveau projet et sélectionner les utilisateurs à lui attribuer. Vous pourrez bien sûr ajouter des utilisateurs plus tard.',
 	'create_a_new_project' => 'Créer un nouveau projet',
 	'create_issue' => 'Créer un billet',
-	'create_project' => 'Créer un nouveau projet !',
 	'create_project' => 'Créer un projet',
 	'create_tag' => 'Créer une étiquette',
 	'created_by' => 'Créé par',
