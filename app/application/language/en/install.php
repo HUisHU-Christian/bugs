@@ -65,6 +65,7 @@ return array(
 	'preferences_pct_prog' => 'Percentage done for a ticket to step from « open » to « in Progress » ',
 	'preferences_pct_test' => 'Percentage done for a ticket to step from « in progress » to « testing » ',
 	'preferences_todonbitems' => 'Column`s lenght (number of issues shown) in the TODO page ',
+	'preferences_tempsfait' => 'Every coment representes, at least, such time work (hours): ',
 	'requirement_check' => 'Please install all required extensions',
 	'restore' => 'Restore BUGS from previous installation',
 	'restore_bdds' => 'File contains database',
