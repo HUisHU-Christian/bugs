@@ -25,7 +25,13 @@
 						</li>
 						<?php endif; ?>
 						<li class="edit">
-							<a href="<?php echo URL::to('administration/users/edit/' . $user->id);?>"><?php echo __('tinyissue.edit'); ?></a>
+						<?php 
+							if($user->me()) {
+								echo '<a href="'.URL::to('user/settings').'">'. __('tinyissue.edit').'</a>';
+							} else {
+								echo '<a href="'.URL::to('administration/users/edit/' . $user->id).'">'. __('tinyissue.edit').'</a>';
+							}
+						?>
 						</li>
 					</ul>
 

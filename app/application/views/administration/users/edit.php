@@ -3,7 +3,9 @@
 	<span><?php echo __('tinyissue.update_user_description'); ?></span>
 </h3>
 
-<div class="pad">
+<div class="pad" style="postion: relative;">
+
+	<div id="preferences" style="border: none black 2px; padding-right: 100px; width:50%; float:left; ">
 
 	<form method="post" action="">
 
@@ -79,6 +81,38 @@
 				</td>
 			</tr>
 		</table>
+	</div>
+
+	<div id="projects_list" style="border: solid black 2px; float:right; width: 25%; margin-right: 100px;">
+		<?php
+			$coul = array('FFFFFF','CCCCCC');
+			$rang = 1;
+			echo '<h3>'.__('tinyissue.project_roleuser').'</h3>';
+			$active_projects = Project\User::active_projects();
+			echo '<table width="100%">';
+			foreach($active_projects as $row) {
+				$Proj[$row->to()] = $row->name;
+				$roles = User::myPermissions_onThisProject($row->id);
+				$userRole = Project\User::check_role($user->id, $row->id);
+				if (count($roles) == 0) { 
+					continue; 
+				} else {
+					echo '<tr style="background-color: #'.$coul[$rang].'">';
+					echo '<td>';
+					echo $row->name;
+					echo '</td>';
+					echo '<td style="text-align: right; padding-bottom: 5px; padding-top: 7px;">';
+					echo Project\User::list_roles(Auth::user()->id, $row->id, $userRole);
+					echo '</td>';
+					echo '</tr>';
+					$rang = abs($rang-1);
+				}
+			}
+			echo '</table>';
+
+		?>
+	</div>
+
 
 		<?php echo Form::token(); ?>
 	</form>
