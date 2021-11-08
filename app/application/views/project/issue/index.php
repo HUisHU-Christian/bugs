@@ -218,7 +218,7 @@
 						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1'),0=>__('tinyissue.priority_desc_0')), $issue->status); 
 						echo '&nbsp;&nbsp;&nbsp;';
 						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
-						echo '<input type="number" name="temps_fait" value="1" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
+						echo '<input type="number" name="temps_fait" value="'.((isset($config_app['TempsFait'])) ? $config_app['TempsFait'] : 1).'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
 					} else {
 						if (Auth::user()->role_id != 1 ) { 
 							echo '<br />'; 
