@@ -207,6 +207,7 @@ return array(
 	'project' => 'Project',
 	'projects_description' => 'List of all your projects',
 	'projects' => 'Projects',
+	'project_roleuser' => 'Rôle dans chacun de nos projets',
 	'projsuppmbre' => 'Are you sure you want to remove this user from the project?',
 	'ptickets' => 'Project`s tickets',
 	'release_disp' => 'Latest stable release',

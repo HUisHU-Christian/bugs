@@ -70,6 +70,15 @@ class User extends Eloquent {
 
 		return false;
 	}
+	
+	public static function myPermissions_onThisProject($project_id = null) {
+		$role = array();
+		if (is_null($project_id)) { return false; }
+		if(Project\User::check_assign(Auth::user()->id, $project_id)) {
+			$role[] =  Project\User::check_role(Auth::user()->id, $project_id);
+		}
+		return $role;
+	}
 
 	/**
 	* Select all issues assigned to a user
