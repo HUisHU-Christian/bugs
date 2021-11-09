@@ -17,6 +17,7 @@ app/vendor/Reports/BugsRepConfig.php
 app/storage/reports/*.pdf
 images/
 wiki/
+BUGSwiki/
 php7.4_errors.log
 php8.0_errors.log
 php8.1_errors.log
