@@ -96,7 +96,7 @@
 			<tr>
 			<th><?php echo __('tinyissue.website_dev'); ?></th>
 				<td>
-					<input size="50" name="Dev" value="<?php echo @$WebLnk['dev']; ?>" placeholder="http://127.0.0.1/<?php echo Project::current()->name; ?>" />
+					<input size="50" name="Dev" value="<?php echo ((isset($WebLnk['dev'])) ? $WebLnk['dev'] : ''); ?>" placeholder="http://127.0.0.1/<?php echo Project::current()->name; ?>" />
 				</td>
 			</tr>
 			<tr>

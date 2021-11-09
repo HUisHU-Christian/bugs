@@ -131,7 +131,7 @@
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
 				$body .= $passage_ligne.'';
 				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
-				mail($follower["email"], $subject, $body, $headers);
+				if (!mail($follower["email"], $subject, $body, $headers)) { die(); } 
 			} else {
 				$mail = new PHPMailer();
 				$mail->Mailer = $optMail['transport'];

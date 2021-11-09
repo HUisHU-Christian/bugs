@@ -35,7 +35,8 @@ class Comment extends  \Eloquent {
 			'created_by' => \Auth::user()->id,
 			'project_id' => $project->id,
 			'issue_id' => $issue->id,
-			'comment' => $input['comment']
+			'comment' => $input['comment'],
+			'temps_fait' => $input['temps_fait']
 		);
 
 		$comment = new static;
@@ -124,7 +125,6 @@ class Comment extends  \Eloquent {
 
 		return $comment;
 	}
-
 
 	/**
 	 * Delete a comment and its attachments
