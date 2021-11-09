@@ -17,9 +17,9 @@
 		$follower["comment"] = $following[0]->comment ?? 0;
 	}
 
-	echo '<h3>';
+	echo '<h3 '.((Auth::user()->role_id != 1) ? 'onclick="document.location.href=\''.Project::current()->to('issue/new').'\';"' : '').'>';
 	if (Auth::user()->role_id != 1) { 
-		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
+		echo '<a href="javascript: null(0);" class="newissue">'.__('tinyissue.new_issue').'</a>';
 	}
 	echo '<div style="position: relative; min-height: 70px;">';
 		echo '<div class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; position: absolute; left: 0; top: 0;" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
@@ -211,11 +211,14 @@
 					$percent = ((is_object($EtatTodo)) ? (($EtatTodo->weight == 100) ? 91 : $EtatTodo->weight+1) : 2 );
 					if (Project\Issue::current()->assigned->id == \Auth::user()->id ) { 
 						echo '<b>'.__('tinyissue.percentage_of_work_done').'</b> : ';
-						echo '<input type="number" name="Pourcentage" value="'.$percent.'" min="'.$percent.'" max="100" /> %';
+						echo '<input type="number" name="Pourcentage" value="'.$percent.'" min="'.$percent.'" max="100"  size="4" /> %';
 						echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 						echo '<b>'.__('tinyissue.priority').'</b> : ';
 						echo '&nbsp;&nbsp;&nbsp;';
 						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1'),0=>__('tinyissue.priority_desc_0')), $issue->status); 
+						echo '&nbsp;&nbsp;&nbsp;';
+						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
+						echo '<input type="number" name="temps_fait" value="'.((isset($config_app['TempsFait'])) ? $config_app['TempsFait'] : 1).'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
 					} else {
 						if (Auth::user()->role_id != 1 ) { 
 							echo '<br />'; 

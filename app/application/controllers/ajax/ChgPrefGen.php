@@ -40,6 +40,11 @@
 			$MesLignes[$rendu] = "	'TodoNbItems' => ".$_POST["TodoNbItems"].",
 ";
 		}
+		if (strpos($MesLignes[$rendu], "'TempsFait'") !== false && !isset($NumLigne['TempsFait']))  { 
+			$NumLigne['TempsFait'] = $rendu; 
+			$MesLignes[$rendu] = "	'TempsFait' => ".$_POST["TempsFait"].",
+";
+		}
 		++$rendu;
 	}
 	fclose($RefFichier);
@@ -56,6 +61,24 @@
 		$MesLignes[($rendu++)] = "	*/
 		";
 		$MesLignes[($rendu++)] = "	'TodoNbItems' => ".$_POST["TodoNbItems"].",
+		";
+		$MesLignes[($rendu++)] = "
+		";
+		$MesLignes[($rendu++)] = $passe[2];
+		$MesLignes[($rendu++)] = $passe[1];
+	}
+	if (!isset($NumLigne['TempsFait'])) {
+		$passe[1] = $MesLignes[($rendu-1)]; 
+		$passe[2] = $MesLignes[($rendu-2)];
+		unset($MesLignes[($rendu-1)], $MesLignes[($rendu-2)]); 
+		$rendu = $rendu -2;
+		$MesLignes[($rendu++)] = "	/** TempsFait
+		";
+		$MesLignes[($rendu++)] = "	*	Default duration of work (in hours) to be charged to your client for every comment debribing a job done
+*  Default value is 1
+	*/
+		";
+		$MesLignes[($rendu++)] = "	'TempsFait' => ".$_POST["TempsFait"].",
 		";
 		$MesLignes[($rendu++)] = "
 		";

@@ -1,4 +1,15 @@
+<?php if(Auth::user()->permission('project-create')): ?>
+<div id="sidebar_MenuDefault_renouveau" style="position: relative; width: 100%; padding-bottom: 10px; padding-top: 8px;">
+<div id="sidebar_MenuDefault_nouveau" class="sidebarTitles" style="position: relative;"><?php echo __('tinyissue.create_project'); ?></div>
+	<h2 style="position: absolute; top: 5px; text-align: right; width: 100%;">
+	<a href="<?php echo URL::to('projects/new'); ?>" class="add" title="New Project" style="margin-top: -18px;"><?php __('tinyissue.new'); ?></a>
+	</h2>
+	</div>
+	<br /><br />
+<?php endif; ?>
+
 <div id="sidebar_MenuDefault_title" class="sidebarTitles"><?php echo __('tinyissue.active_projects'); ?></div>
+<span><?php echo __('tinyissue.active_projects_description');?></span>
 <div id="sidebar_MenuDefault" class="sidebarItem">
 <br />
 <div class="menuprojetsgauche">
@@ -49,7 +60,7 @@
 		$SansAccent = array();
 		foreach(Project\User::active_projects() as $row) {
 			$NbIssues[$row->to()] = $row->count_open_issues();
-			$Proj[$row->to()] = $row->name.'&nbsp;<span class="info-open-issues" title="Number of Open Tickets">(<b>'.$row->count_open_issues().'</b>/'.$row->count_closed_issues().')</span>';
+			$Proj[$row->to()] = $row->name.'&nbsp;<span class="info-open-issues" title="'.$row->count_open_issues().' '.__('tinyissue.open_issues').' & '.$row->count_closed_issues().' '.__('tinyissue.reports_inactissues').'">(<b>'.$row->count_open_issues().'</b>/'.$row->count_closed_issues().')</span>';
 			$idProj[$row->to()] = $row->id;
 		}
 		foreach ($Proj as $ind => $val ){

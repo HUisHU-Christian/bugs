@@ -601,7 +601,6 @@ class Issue extends \Eloquent {
 								->where('projects.status', '=', 0)
 								->count();
 		$issues_closed_project = !$count ? 0 : $count;
-
 		$closed_issues = ($closed_issues_open_project + $issues_closed_project);
 
 		return array(

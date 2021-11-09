@@ -65,6 +65,7 @@ return array(
 	'preferences_pct_prog' => 'Pourcentage minimum pour passer de « ouvert » à  « <b>En progression</b> » ',
 	'preferences_pct_test' => 'Pourcentage minimum pour passer de « En progression » à  « <b>En test</b> » ',
 	'preferences_todonbitems' => 'Nombre d`items par colonne dans la page « Tâches » ',
+	'preferences_tempsfait' => 'Nombre d`heure(s) facturée(s) par commentaire',
 	'Requirement_Check' => 'Veuillez installer toutes les extensions, tous les modules PHP requis.',
 	'restore' => 'Reprenez là où vous étiez: restaurez votre BUGS depuis les données d`une installation antérieure',
 	'restore_bdds' => 'Source des données',
