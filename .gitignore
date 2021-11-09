@@ -16,6 +16,7 @@ app/vendor/Trumbowyg/
 app/vendor/Reports/BugsRepConfig.php
 app/storage/reports/*.pdf
 images/
+wiki/
 php7.4_errors.log
 php8.0_errors.log
 php8.1_errors.log
