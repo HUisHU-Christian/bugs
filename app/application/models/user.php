@@ -30,7 +30,7 @@ class User extends Eloquent {
 		);
 		//User's preferences from 'Preferences' field  ( table 'users' ) 
 		$Pref = Auth::user()->preferences;
-		$Prefs = explode(";", $Pref);
+		$Prefs = explode("&", $Pref);
 		foreach ($Prefs as $ind => $val) {
 			$ceci = explode("=", $val);
 			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }
@@ -69,6 +69,15 @@ class User extends Eloquent {
 		}
 
 		return false;
+	}
+	
+	public static function myPermissions_onThisProject($project_id = null) {
+		$role = array();
+		if (is_null($project_id)) { return false; }
+		if(Project\User::check_assign(Auth::user()->id, $project_id)) {
+			$role[] =  Project\User::check_role(Auth::user()->id, $project_id);
+		}
+		return $role;
 	}
 
 	/**

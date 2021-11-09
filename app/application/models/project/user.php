@@ -86,6 +86,45 @@ class User extends \Eloquent {
 	}
 
 	/**
+	 * Checks the role an user for a project
+	 *
+	 * @param  int   $user_id
+	 * @param  int   $project_id
+	 * @return bool
+	 */
+	public static function check_role($user_id, $project_id) {
+		$roles = array();
+		$val = static::where('user_id', '=', $user_id)
+				->where('project_id', '=', $project_id)
+				->get(array('role_id'));
+		if (!isset($val[0]->role_id)) { return 0; }
+		$role = ($val[0]->role_id == 0) ? 4 : $val[0]->role_id;
+		for ($x=1; $x<5; $x++) {
+			if ($role >= $x) { $roles[] = $x; }
+		}
+		return $roles;
+	}
+
+	/**
+	 * List of available roles for a person, list ready in select roll-up form
+	 *
+	 * @param  int   $user_id
+	 * @param  int   $project_id
+	 * @return bool
+	 */
+	public static function list_roles($user_id, $project_id, $userRole) {
+		$role = User::check_role($user_id, $project_id);
+		$liste = '<select name="roles['.$project_id.']">';
+		$liste .= '<option value="0">NULL</option>';
+		$roles = \Role::where('id','<=',max($role))->get(array('id', 'name'));
+		foreach($roles as $ind => $val) {
+			$liste .= '<option value="'.$val->id.'" '.(($val->id == $userRole) ? 'selected="selected"' : '').'>'.$val->name.'</option>';
+		}
+		$liste .= '</select>';
+		return $liste;
+	}
+
+	/**
 	* Build a dropdown of all users in the project
 	*
 	* @param  object  $users

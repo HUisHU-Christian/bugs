@@ -21,7 +21,8 @@ class Home_Controller extends Base_Controller {
 			'id'=>1, 
 			'project_id'=>1,
 			'title'=>$_POST["ticketName"],
-			'body'=>$_POST["body"], 
+			'body'=>$_POST["body"],
+			'status'=>3, 
 			'created_at'=>date("Y-m-d H:i:s")
 		));
 		//projects_users
@@ -54,6 +55,7 @@ class Home_Controller extends Base_Controller {
 			'id'=>1, 
 			'issue_id'=>1,
 			'user_id'=>1,
+			'status'=>3,
 			'created_at'=>date("Y-m-d H:i:s")
 		));
 		return Redirect::to("/")->with('notice', __('tinyissue.issue_has_been_created'));

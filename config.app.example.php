@@ -210,5 +210,11 @@ return array(
 	*/ 
 	'TodoNbItems' => 25,
 
+	/** TempsFait
+	*	Default duration of work (in hours) to be charged to your client
+	*  Default value is 1
+	*/
+	'TempsFait' => 1,
+
 );
 ?>

@@ -28,7 +28,9 @@ class Project_Issue_Controller extends Base_Controller {
 		));
 	}
 
-
+	/**
+		create new issu 
+	**/
 	public function post_new() {
 		$issue = Project\Issue::create_issue(Input::all(), Project::current());
 
@@ -84,7 +86,7 @@ class Project_Issue_Controller extends Base_Controller {
 		$this->Courriel ("Issue", true, Project::current()->id, Project\Issue::current()->id, \Auth::user()->id, array('comment'), array('tinyissue'));
 
 		$message = __('tinyissue.your_comment_added').(((Input::get('status') == 0 || Input::get('Fermons') == 0) && \Auth::user()->role_id != 1) ? ' --- '.__('tinyissue.issue_has_been_closed') : '');
-		$retour = (Input::get('Fermons') == 0) ? '/project/'.Project::current()->id.'/issues?tag_id=1' : Project\Issue::current()->to() . '#comment' . $comment->id;   
+		$retour = '/project/'.Project::current()->id.'/issues?tag_id=1';   
 		return Redirect::to($retour)->with('notice', $message);
 	}
 
@@ -131,6 +133,7 @@ class Project_Issue_Controller extends Base_Controller {
 			foreach(Project\Issue::current()->tags as $tag) {
 				$issue_tags .= (!empty($issue_tags) ? ',' : '') . $tag->tag;
 			}
+			// Get issue content
 			return $this->layout->nest('content', 'project.issue.edit', array(
 				'issue' => Project\Issue::current(),
 				'issue_tags' => $issue_tags,
@@ -170,11 +173,18 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return string
 	 */
 	public function post_edit_comment() {
-//		Project\Issue\Comment::edit_comment(Input::get('id'), Project\Issue::current()->id,Input::get('content'));
-
 		$idComment = static::find(Input::get('id'));
 		if(!$idComment) { return false; }
+
 		$Avant = \DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
+		$Avant->comment = str_replace("`", "'", $Avant->comment );
+		$Avant->comment = str_replace("<li>", "&nbsp;&nbsp;&nbsp;-&nbsp;", $Avant->comment );
+		$Avant->comment = str_replace("</li>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ul>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ul>", "<br />", $Avant->comment );
+
 		$edited_id = \DB::table('users_activity')->insert_get_id(array(
 						'id'=>NULL,
 						'user_id'=>\Auth::user()->id,
