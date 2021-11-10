@@ -131,7 +131,7 @@
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
 				$body .= $passage_ligne.'';
 				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
-				if (!mail($follower["email"], $subject, $body, $headers)) { die(); } 
+				if (!mail($follower["email"], $subject, $body, $headers)) { echo 'Rien'; } 
 			} else {
 				$mail = new PHPMailer();
 				$mail->Mailer = $optMail['transport'];
@@ -191,7 +191,6 @@
 	}
 	
 function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS", $values = array()) {
-	echo '<script>alert("BOnjour ");';
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 	$lfin = $tit ? ' »' : '</a>';
 	//$liss = $tit ? ' « ' : '<a href="'.(str_replace("issue/new", "issue/".$IssueID."/", $link)).'">';
