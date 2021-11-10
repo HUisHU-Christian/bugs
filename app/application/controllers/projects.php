@@ -66,7 +66,8 @@ class Projects_Controller extends Base_Controller {
 		$create = Project::create_project(Input::all());
 
 		if($create['success']) {
-			return Redirect::to($create['project']->to());
+			//return Redirect::to($create['project']->to());
+			return Redirect::to('project/' . $create["id"] .'/issue/new')->with('notice', __('tinyissue.project_created_success'));
 		}
 
 		return Redirect::to('projects/new')

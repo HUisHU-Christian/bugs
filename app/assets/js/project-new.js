@@ -15,10 +15,13 @@ $(function(){
 			source: suggestions,
 			select: function (event, ui){
 
-				var append = '<li class="project-user' + ui.item.id + '">' +
+				var append = '<li class="project-user' + ui.item.id + '" style="min-width: 300px;">' +
 						'<a href="javascript:void(0);" onclick="$(\'.project-user' + ui.item.id + '\').remove();" class="delete">Remove</a>' +
 						'' + ui.item.label + '' +
 						'<input type="hidden" name="user[]" value="' + ui.item.id + '" />' +
+						'<div style="float: right; padding-right: 10px;">' +
+						liste + 
+						'</div><br clear="all" />' +
 						'</li>';
 
 				users.append(append);

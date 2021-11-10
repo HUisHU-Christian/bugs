@@ -204,6 +204,7 @@ return array(
 	'project_has_been_updated' => 'Le projet a été mis à jour !',
 	'project_overview' => 'Vue du projet',
 	'project' => 'Projet',
+	'project_created_success' => 'Projet créé avec succès,\n vous pouvez y créer un nouveau billet',
 	'projects_description' => 'Liste de tous vos projets',
 	'projects' => 'Projets',
 	'project_roleuser' => 'Rôle dans chacun de nos projets',
