@@ -12,10 +12,7 @@ README.md
 install/mysql-structure.php
 install/surete_config-setup.php
 install/config-setup.php_surete
-app/vendor/Trumbowyg/
-app/vendor/Reports/BugsRepConfig.php
 app/storage/reports/*.pdf
-images/
 wiki/
 BUGSwiki/
 php7.4_errors.log

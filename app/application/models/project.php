@@ -53,6 +53,9 @@ class Project extends Eloquent {
 	* @return void
 	*/
 	public function assign_user($user_id, $role_id = 0) {
+		if ($role_id == 0) {
+			$role_id = \USER::where('id', '=', $user_id)->get(array('role_id'));
+		}
 		Project\User::assign($user_id, $this->id, $role_id);
 	}
 
@@ -270,9 +273,16 @@ class Project extends Eloquent {
 			);
 		}
 
+		$id_max = $val_max = 0;
+		if(isset($input['user']) && count($input['user']) > 0) {
+			foreach($input['user'] as $ind => $id) {
+				$id_max = ($input["role"][$ind] > $val_max) ? $id : $id_max;
+			}
+		}
+
 		$fill = array(
 			'name' => $input['name'],
-			'default_assignee' => $input['default_assignee'],
+			'default_assignee' => $id_max,
 		);
 
 		$project = new Project;
@@ -280,13 +290,16 @@ class Project extends Eloquent {
 		$project->save();
 
 		/* Assign selected users to the project */
+		$id_max = 0;
+		$val_max = 0;
 		if(isset($input['user']) && count($input['user']) > 0) {
-			foreach($input['user'] as $id) {
-				$project->assign_user($id);
+			foreach($input['user'] as $ind => $id) {
+				$id_max = ($input["role"][$ind] > $val_max) ? $id : $id_max;
+				$project->assign_user($id, $input["role"][$ind]);
 			}
 		}
-
 		return array(
+			'id' => $project->attributes["id"],
 			'project' => $project,
 			'success' => true
 		);

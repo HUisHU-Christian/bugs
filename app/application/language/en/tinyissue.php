@@ -205,6 +205,7 @@ return array(
 	'project_has_been_updated' => 'Project has been updated!',
 	'project_overview' => 'Project Overview',
 	'project' => 'Project',
+	'project_created_success' => 'Project sucessfully created.\nLet create new ticket.',
 	'projects_description' => 'List of all your projects',
 	'projects' => 'Projects',
 	'project_roleuser' => 'Rôle dans chacun de nos projets',
