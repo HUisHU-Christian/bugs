@@ -25,9 +25,6 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			if ( this.responseText  != "") {
-				if (document.getElementById('projetProsedNamesList')) { document.getElementById('projetProsedNamesList').innerHTML = ""; }
-				if (document.getElementById('add-user-project')) 		{ document.getElementById('add-user-project').innerHTML = ""; }
-				if (document.getElementById('sidebar-users')) 			{ document.getElementById('sidebar-users').innerHTML = document.getElementById('sidebar-users').innerHTML + '<li id="project-user' + user + '">' + this.responseText + '</li>'; }
 				if (cettepage == 'page') {
 					var c = this.responseText;
 					var contenu = c.split("|");
@@ -54,7 +51,7 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 							ceci.appendChild(texte);
 							NouvSel.appendChild(ceci);
 						}
-						NouvSel.value = contenu[1];
+						NouvSel.value = MonRole;
 						NouvSel.addEventListener("change", function () { ChgRoleUser("this.value", project_id, contenu[0]); } );
 						NouvCol.appendChild(NouvSel);
 						NouvLigne.appendChild(NouvCol);
@@ -87,7 +84,12 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 					document.getElementById("table_ListUsers").appendChild(NouvLigne);
 					document.getElementById('projetProsedNamesPage').innerHTML = "";
 					document.getElementById('input_rechNom').value = "";
+				} else {
+					contenu[2] = this.responseText;
 				}
+				if (document.getElementById('projetProsedNamesList')) { document.getElementById('projetProsedNamesList').innerHTML = ""; }
+				if (document.getElementById('add-user-project')) 		{ document.getElementById('add-user-project').innerHTML = ""; }
+				if (document.getElementById('sidebar-users')) 			{ document.getElementById('sidebar-users').innerHTML = document.getElementById('sidebar-users').innerHTML + '<li id="project-user' + user + '">' + contenu[2] + '</li>'; }
 			}
 		}
 	};
@@ -144,18 +146,27 @@ function propose_project_user(user, project_id, cettepage, tradSupp, projsuppmbr
 
 function remove_project_user(user_id, project_id, projsuppmbre, cettepage) {
 	if(!confirm(projsuppmbre)){ return false; }
-	saving_toggle();
+//	saving_toggle();
 
 	$.post(siteurl + 'ajax/project/remove_user', {
 		user_id : user_id,
 		project_id : project_id
 	}, function(data){
-		$('#project-user' + user_id).fadeOut();
-		saving_toggle();
-		if (cettepage == 'page') {
-			var poubelle = document.getElementById('project-user_' + user_id);
-			document.getElementById("table_ListUsers").removeChild(poubelle);
+		var poubelle = "";
+		var sonpere = "";
+		if (document.getElementById("table_ListUsers")) {
+			poubelle = document.getElementById('project-user_' + user_id);
+			sonpere = poubelle.parentNode;
+			if(!sonpere.removeChild(poubelle)) {
+				document.getElementById("table_ListUsers").removeChild(poubelle);
+			}
 		}
+		if (document.getElementById('sidebar-users')) {
+			poubelle = document.getElementById('project-user' + user_id);
+			document.getElementById("sidebar-users").removeChild(poubelle);
+		}
+//		$('#project-user' + user_id).fadeOut();
+//		saving_toggle();
 	});
 
 	return true;

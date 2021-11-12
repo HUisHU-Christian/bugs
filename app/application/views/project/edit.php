@@ -50,7 +50,8 @@
 				echo '<a href="javascript:void(0);" onclick="remove_project_user('.$row->id.', '.Project::current()->id.', \''.__('tinyissue.projsuppmbre').'\', \'page\');" class="delete">'.__('tinyissue.remove').'</a>';
 			}
 			echo '	</td>';
-			echo '</tr>';
+			echo '</tr>
+			';
 		}
 		?>
 

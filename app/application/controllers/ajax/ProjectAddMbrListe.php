@@ -10,7 +10,7 @@
 	$resuUSER = Requis($requUSER);
 	
 	while ($QuelUSER = Fetche($resuUSER)) {
-		$membres .= '<a href="javascript:addUserProject('.$_GET["Projet"].','.$QuelUSER["id"].', \''.$_GET["CettePage"].'\', \''.$_GET["tradSupp"].'\', \''.$_GET["projsuppmbre"].'\','.$QuelUSER["MonRole"].');" style="margin-left: 10%;">+ '.$QuelUSER["NM"].'</a><br />';
+		$membres .= '<a href="javascript:addUserProject('.$_GET["Projet"].','.$QuelUSER["id"].', \''.$_GET["CettePage"].'\', \''.$_GET["tradSupp"].'\', \''.$_GET["projsuppmbre"].'\','.$_GET["MonRole"].');" style="margin-left: 10%;">+ '.$QuelUSER["NM"].'</a><br />';
 	}
 	$membres.= "</ul>";
 	echo $membres;
