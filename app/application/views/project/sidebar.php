@@ -1,5 +1,8 @@
 <?php
 $active_projects = Project\User::active_projects();
+$MonRole = Project\User::GetRole(Project::current()->id);
+$MonRole = $MonRole[0]->role_id;
+
 if(count($active_projects)>1) {
 ?>
 
@@ -106,7 +109,7 @@ if(count($active_projects)>1) {
 </ul>
 
 <?php if(Auth::user()->permission('project-modify')): ?>
-	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar'); }" />
+	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar', '<?php echo __('tinyissue.remove'); ?>', '<?php echo __('tinyissue.projsuppmbre'); ?>', <?php echo $MonRole; ?>); }" />
 	<div id="projetProsedNamesList">
 	</div>
 <?php endif; ?>

@@ -23,12 +23,6 @@ class Ajax_Project_Controller extends Base_Controller {
 		$project = Project::find(Input::get('project_id'));
 
 		$results = array();
-
-//		if(is_null($project)) {
-//			$users = User::all();
-//		} else {
-//			$users = $project->users_not_in();
-//		}
 		$users = (is_null($project)) ? User::all() : $project->users_not_in();
 
 		foreach($users as $row) {
@@ -43,6 +37,10 @@ class Ajax_Project_Controller extends Base_Controller {
 
 	public function post_add_user() {
 		Project\User::assign(Input::get('user_id'), Input::get('project_id'));
+	}
+
+	public function post_changeRoleUser() {
+		Project\User::change_role(Input::get('user_id'), Input::get('role_id'), Input::get('project_id'));
 	}
 
 	public function post_remove_user() {

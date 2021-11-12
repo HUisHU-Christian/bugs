@@ -48,6 +48,12 @@ class User extends \Eloquent {
 		}
 	}
 	
+	public static function GetRole($project_id) {
+		return \DB::table('projects_users')->where('user_id', '=', \Auth::user()->id)
+				->where('project_id', '=', $project_id)
+				->get(array('role_id'));
+	}
+	
 	public static function MbrProj($user_id, $project_id) {
 		$resu = false;
 		if (is_null($user_id)) { $user_id = \Auth::user(); }
@@ -83,6 +89,22 @@ class User extends \Eloquent {
 		return (bool) static::where('user_id', '=', $user_id)
 				->where('project_id', '=', $project_id)
 				->first(array('id'));
+	}
+
+	/**
+	 * Changes the role of an user for a project
+	 *
+	 * @param  int   $user_id
+	 * @param  int   $role_id
+	 * @param  int   $project_id
+	 * @return bool
+	 */
+	public static function change_role($user_id, $role_id, $project_id) {
+		$resu = \DB::table('projects_users')->where('user_id', '=', $user_id)
+				->where('project_id', '=', $project_id)
+				->update(array('role_id' => $role_id, 'updated_at' => date("Y-m-d H:i:s")));
+
+		return (bool) $resu;
 	}
 
 	/**
