@@ -118,9 +118,10 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 						echo '&nbsp;&nbsp;<strong>';
 						echo (isset($row->updated->firstname)) ? $row->updated->firstname : '';
 						echo (isset($row->updated->lastname)) ? $row->updated->lastname : '';
-						echo '</strong>';
+						echo '</strong> ';
 						echo Time::age(strtotime($row->updated_at));
 					} 
+					if ($row->start_at > date("Y-m-d")) { echo ' '.__('tinyissue.issue_start_at').' '.substr($row->start_at, 0, 10); }
 					if($row->assigned_to != 0) {
 						echo ' - '.__('tinyissue.assigned_to'); 
 						echo '&nbsp;&nbsp;<strong>'.((isset($row->assigned->firstname)) ? $row->assigned->firstname : '') . ' ' . ((isset($row->assigned->lastname)) ? $row->assigned->lastname : '').'</strong>';
@@ -146,9 +147,11 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 								////Calculations
 								$config_app = require path('public') . 'config.app.php';
-								$Deb = strtotime($row->created_at);
+								$Deb = strtotime($row->start_at);
 								$Dur = (time() - $Deb) / 86400;
-								if (@$row->duration === 0 || @is_null($row->duration)) { $row->duration = 30; }
+								$Dur = ($Dur < 0) ? 0 : $Dur;
+								if (!isset($row->duration)) { $row->duration = 30; }
+								if ($row->duration === 0 || is_null($row->duration)) { $row->duration = 30; }
 								$DurRelat = round(($Dur / $row->duration) * 100);
 								$Dur = round($Dur);
 								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;

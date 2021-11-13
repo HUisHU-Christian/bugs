@@ -281,7 +281,7 @@ class User extends Eloquent {
 				if ($role == 0) { continue; }
 				\DB::query("INSERT INTO projects_users (user_id, project_id, role_id, created_at) VALUES (".$id.", ".$proj.", ".$role.", NOW() ) ");
 				\DB::query("DELETE FROM following WHERE user_id = ".$id." AND project_id = ".$proj." AND issue_id = 0 ");
-				\DB::query("INSERT INTO following (user_id, project_id, project, attached, tag) VALUES (".$id.", ".$proj.", 1, 1, 1) ");
+				\DB::query("INSERT INTO following (user_id, project_id, project, attached, tags) VALUES (".$id.", ".$proj.", 1, 1, 1) ");
 			}
 		}
 

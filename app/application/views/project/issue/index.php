@@ -98,9 +98,11 @@
 			//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 			////Calculations
 			$config_app = require path('public') . 'config.app.php';
-			$Deb = strtotime($issue->created_at);
+			$Deb = strtotime($issue->start_at);
 			$Dur = (time() - $Deb) / 86400;
-			if (@$issue->duration === 0 || @is_null($issue->duration)) { $issue->duration = 30; }
+			$Dur = ($Dur < 0) ? 0 : $Dur;
+			if (!isset($issue->duration)) { $issue->duration = 30; }
+			if ($issue->duration === 0 || is_null($issue->duration)) { $issue->duration = 30; }
 			$DurRelat = round(($Dur / $issue->duration) * 100);
 			$Dur = round($Dur);
 			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > $config_app['Percent'][3]) ? 'white' : 'black') ;
@@ -112,7 +114,7 @@
 			echo __('tinyissue.countdown').' ('.__('tinyissue.day').'s) : ';
 			echo '<div class="Percent">';
 			echo '<div style="color: '.$DurColoF.'; background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$issue->duration : $Dur).'</div>';
-			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.$issue->duration.'</div>'; }
+			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.(($issue->start_at > date("Y-m-d")) ? '<b>'.substr($issue->start_at, 0, 10).'</b> + ' : '').''.$issue->duration.'</div>'; }
 			echo '</div>';
 	
 	
