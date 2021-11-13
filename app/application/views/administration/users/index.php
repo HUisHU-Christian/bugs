@@ -15,7 +15,7 @@
 				<span><?php echo $role->description; ?></span>
 			</h4>
 
-			<ul>
+			<ul class="ListUsers" style="position: relative; margin-left: 8%; margin-right: 40%;">
 				<?php foreach(User::where('role_id', '=', $role->id)->where('deleted', '=', 0)->order_by('firstname', 'asc')->get() as $user): ?>
 				<li>
 					<ul>

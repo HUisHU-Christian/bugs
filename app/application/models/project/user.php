@@ -118,10 +118,10 @@ class User extends \Eloquent {
 	 */
 	public static function check_role($user_id, $project_id) {
 		$roles = array();
-		$val = static::where('user_id', '=', $user_id)
+		$val = \DB::table('projects_users')->where('user_id', '=', $user_id)
 				->where('project_id', '=', $project_id)
 				->get(array('role_id'));
-		if (!isset($val[0]->role_id)) { return 0; }
+		if (!isset($val[0]->role_id)) { return array(0); }
 		$role = ($val[0]->role_id == 0) ? 4 : $val[0]->role_id;
 		for ($x=1; $x<5; $x++) {
 			if ($role >= $x) { $roles[] = $x; }
@@ -138,11 +138,12 @@ class User extends \Eloquent {
 	 */
 	public static function list_roles($user_id, $project_id, $userRole) {
 		$role = User::check_role($user_id, $project_id);
+		$sonRole = (is_array($userRole)) ? max($userRole) : $userRole;
 		$liste = '<select name="roles['.$project_id.']">';
 		$liste .= '<option value="0">NULL</option>';
 		$roles = \Role::where('id','<=',max($role))->get(array('id', 'name'));
 		foreach($roles as $ind => $val) {
-			$liste .= '<option value="'.$val->id.'" '.(($val->id == $userRole) ? 'selected="selected"' : '').'>'.$val->name.'</option>';
+			$liste .= '<option value="'.$val->id.'" '.(($val->id == $sonRole) ? 'selected="selected"' : '').'>'.$val->name.'</option>';
 		}
 		$liste .= '</select>';
 		return $liste;

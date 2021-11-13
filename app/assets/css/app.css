@@ -1263,6 +1263,18 @@ td.project-user, th.project-user {
 	background: #c53c36;
 	border: 1px solid #a62b26;
 }
+ul.ListUsers { 
+	margin-left: 8%; 
+	margin-right: 40%;
+	position: relative; 
+}
+div.projectsList_user {
+	border: solid black 2px; 
+	float:right; 
+	margin-right: 100px;
+	position: relative;
+	width: 25%; 
+}
 
 /* Autocomplete */
 .ui-autocomplete{
