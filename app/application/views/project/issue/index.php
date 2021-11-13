@@ -1,5 +1,25 @@
 <?php 
-	$config_app = require path('public') . 'config.app.php';  
+	$config_app = require path('public') . 'config.app.php';
+	$MonRole = Project\User::GetRole(Project::current()->id);
+	$ChronoCeluiCi = false;
+	$verif = \DB::table('projects_issues_comments AS COM')->whereNotNull('temps_fait_deb')->whereNull('temps_fait_fin')->where('COM.created_by', '=', \Auth::user()->id)->left_join('projects AS PRO', 'COM.project_id', '=', 'PRO.id')->left_join('projects_issues AS TIK', 'COM.issue_id', '=', 'TIK.id')->count();
+	if ($verif > 0) {
+		if ($verif == 1) {
+			$reverif = \DB::table('projects_issues_comments')
+				->where('project_id', '=', Project::current()->id)
+				->where('issue_id', '=', Project\Issue::current()->id)
+				->whereNotNull('temps_fait_deb')
+				->whereNull('temps_fait_fin')
+				->where('created_by', '=', \Auth::user()->id)
+				->count();
+			if ($reverif == 1) { $ChronoCeluiCi = true; }
+		}
+		if ($ChronoCeluiCi == false) {
+			echo '<script>alert("Vous avez déjà un commentaire ouvert.");</script>';
+			$reverif = \DB::table('projects_issues_comments AS COM')->where('COM.id', '=', Project\Issue::current()->id)->whereNotNull('temps_fait_deb')->whereNull('temps_fait_fin')->where('COM.created_by', '=', \Auth::user()->id)->left_join('projects AS PRO', 'COM.project_id', '=', 'PRO.id')->left_join('projects_issues AS TIK', 'COM.issue_id', '=', 'TIK.id')->get(array('COM.id', 'COM.project_id', 'PRO.name', 'COM.issue_id', 'TIK.title', 'temps_fait_deb'));
+		}
+	}
+  
 	if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = array("black","Orchid","Cyan","Lime","orange","red"); }
 	$url =\URL::home();
 	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
@@ -17,8 +37,8 @@
 		$follower["comment"] = $following[0]->comment ?? 0;
 	}
 
-	echo '<h3 '.((Auth::user()->role_id != 1) ? 'onclick="document.location.href=\''.Project::current()->to('issue/new').'\';"' : '').'>';
-	if (Auth::user()->role_id != 1) { 
+	echo '<h3 '.(($MonRole != 1) ? 'onclick="document.location.href=\''.Project::current()->to('issue/new').'\';"' : '').'>';
+	if ($MonRole != 1) { 
 		echo '<a href="javascript: null(0);" class="newissue">'.__('tinyissue.new_issue').'</a>';
 	}
 	echo '<div style="position: relative; min-height: 70px;">';
@@ -66,7 +86,7 @@
 			$EtatTodo = Todo::load_todo($issue->id);
 
 		////Here we show the progress bar
-		if (Auth::user()->role_id != 1) {
+		if ($MonRole != 1) {
 			if (is_object($EtatTodo)) {
 				echo '<div class="Percent">';
 				echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($EtatTodo->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.$EtatTodo->weight.'%</div>';
@@ -141,6 +161,14 @@
 		</li>
 
 		<?php 
+			//Bouton « Commencer » / « Finir »
+			if (\User::pref("boutons") == 'true' && $MonRole != 1) {
+				$q = "on"; $r = "off";
+				if ($ChronoCeluiCi) { $q = "off"; $r = "on"; } 
+				echo '<input name="Temps" id="input_chrono" type="button" value="'.__('tinyissue.issue_chrono_'.$q.'').'" class="chrono_'.$q.'" onclick="Chronometrons(\''.$q.'\', \''.__('tinyissue.issue_chrono_'.$r).'\', '.\Auth::user()->id.', '.Project\Issue::current()->id.', '.Project::current()->id.');" />';
+			}
+
+			//Liste des commentaires et activités
 			foreach($issue->activity() as $activity) {
 				echo (strlen($activity) > 1) ? $activity : '';
 			}
@@ -220,7 +248,7 @@
 						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
 						echo '<input type="number" name="temps_fait" value="'.((isset($config_app['TempsFait'])) ? $config_app['TempsFait'] : 1).'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
 					} else {
-						if (Auth::user()->role_id != 1 ) { 
+						if ($MonRole != 1 ) { 
 							echo '<br />'; 
 							echo '<b>'.__('tinyissue.percentage_of_work_done').'</b> : ';
 							echo '<input type="hidden" name="Pourcentage" value="'.$percent.'"  /> '.$percent.' %';
@@ -232,7 +260,7 @@
 				?>					
 				</span>
 				<div style="text-align: right; width: 98%; margin-top: -25px;"><br /><br /></div>
-			<?php  if (Auth::user()->role_id != 1) { ?>
+			<?php  if ($MonRole != 1) { ?>
 					<!-- Tags modification  -->
 					<span style="float:left; font-weight: bold; margin: 7px;"><?php echo  __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span></span>
 					<div style="width: 73%; float: left">
@@ -337,7 +365,6 @@ function AddTag (Quel,d) {
 	};
 	xhttpMAIL.open("GET", NextPage, true);
 	xhttpMAIL.send(); 
-
 }
 
 function Following(Quoi, etat) {

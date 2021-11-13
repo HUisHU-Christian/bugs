@@ -43,6 +43,27 @@ class Ajax_Project_Controller extends Base_Controller {
 		Project\User::change_role(Input::get('user_id'), Input::get('role_id'), Input::get('project_id'));
 	}
 
+	public function post_chronometrons() {
+		if (Input::get("etat") == 'on') {
+		$resu=	\DB::query("INSERT INTO projects_issues_comments (created_by, project_id, issue_id, temps_fait_deb, created_at) 
+							VALUES (".Input::get("user_id").", ".Input::get("project_id").", ".Input::get("issue_id").", '".date("H:i:s")."', '".date("Y-m-d H:i:s")."') ");
+		} else {
+			$resu = \DB::query("UPDATE projects_issues_comments 
+							SET 	comment = '".addslashes(Input::get("comment"))."', 
+									temps_fait_fin = '".date("H:i:s")."', 
+									temps_fait = (HOUR(TIMEDIFF(created_at, '".date("Y-m-d H:i:s")."')) + 1), 
+									updated_at = '".date("Y-m-d H:i:s")."'
+							WHERE created_by = ".Input::get("user_id")."
+							AND project_id = ".Input::get("project_id")."
+							AND issue_id = ".Input::get("issue_id")."
+							AND temps_fait_deb IS NOT NULL
+							AND temps_fait_fin IS NULL
+							AND created_at IS NOT NULL
+							AND updated_at IS NULL");
+		}
+		return $resu;
+	}
+
 	public function post_remove_user() {
 		Project\User::remove_assign(Input::get('user_id'), Input::get('project_id'));
 	}

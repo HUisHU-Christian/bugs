@@ -103,6 +103,7 @@ return array(
 	'UserPref_projet_3' => 'Ordre d`affichage des projets',
 	'UserPref_projet_3a' => 'Alphabétique',
 	'UserPref_projet_3b' => 'Alphabétique inverse',
+	'UserPref_projet_4' => 'Utiliser de bouton « Commencer » et « Finir » pour compter mon temps de travail',
 	'version' => 'Version',
 	'version_actuelle' => 'Votre version active',
 	'version_ahead' => 'Votre version est plus avancée que celle du serveur',

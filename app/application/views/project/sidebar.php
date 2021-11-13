@@ -1,7 +1,6 @@
 <?php
 $active_projects = Project\User::active_projects();
 $MonRole = Project\User::GetRole(Project::current()->id);
-$MonRole = $MonRole[0]->role_id;
 
 if(count($active_projects)>1) {
 ?>
@@ -20,12 +19,7 @@ if(count($active_projects)>1) {
 	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 999;
 	
 	//Récupération des préférences dans le dossier personnel de l'usager
-	$Pref = \Auth::user()->attributes;
-	$Prefs = explode("&", $Pref["preferences"]);
-	foreach ($Prefs as $ind => $val) {
-		$ceci = explode("=", $val);
-		if (isset($ceci[1])) { $Preferences[$ceci[0]] = $ceci[1]; }
-	}
+	$Pref = \User::pref();
 
 	//Liste des projets dans un menu déroulant
 	////Collecte des informations

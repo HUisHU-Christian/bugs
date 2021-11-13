@@ -49,9 +49,11 @@ class User extends \Eloquent {
 	}
 	
 	public static function GetRole($project_id) {
-		return \DB::table('projects_users')->where('user_id', '=', \Auth::user()->id)
+		$MonRole =  \DB::table('projects_users')->where('user_id', '=', \Auth::user()->id)
 				->where('project_id', '=', $project_id)
 				->get(array('role_id'));
+				
+		return $MonRole[0]->role_id;
 	}
 	
 	public static function MbrProj($user_id, $project_id) {

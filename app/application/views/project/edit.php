@@ -3,7 +3,6 @@
 	$roles = array();
 	foreach($Rol as $R) {  $roles[$R->id] = $R->name;  }
 	$MonRole = Project\User::GetRole(Project::current()->id);
-	$MonRole = $MonRole[0]->role_id;
 ?>
 
 <h3>

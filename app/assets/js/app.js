@@ -6,6 +6,7 @@ $(function(){
    }
 });
 
+var chronoOnOff = "";
 var saving = false;
 
 function AffichonsVieux(url,id) {
@@ -105,6 +106,32 @@ function ChgRoleUser(role_id, project_id, user_id) {
 	}, function(data){
 		var a = 1;
 	});
+
+	return true;
+}
+
+function Chronometrons(etat, nouvText, user_id, issue_id, project_id) {
+	etat = (chronoOnOff == "") ? etat : chronoOnOff;
+	var contenu = "";
+	var nouvEtat = 'off';
+	if (etat == 'off') {
+		contenu = prompt("Veuillez décrire le travail effectué","");
+		nouvEtat = 'on';
+	}
+		$.post(siteurl + 'ajax/project/chronometrons', {
+		etat : etat,
+		comment : contenu,
+		user_id : user_id,
+		issue_id : issue_id,
+		project_id : project_id
+	}, function(data){
+		var a = data;
+	});
+
+	document.getElementById('input_chrono').value = nouvText;
+	document.getElementById('input_chrono').classList.remove("chrono_" + etat);
+	document.getElementById('input_chrono').classList.add("chrono_" + nouvEtat);
+	chronoOnOff = nouvEtat;
 
 	return true;
 }

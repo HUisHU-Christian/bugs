@@ -37,7 +37,7 @@
 	}
 	
 	function AppliquerPrefGen() {
-		champs = new Array('input_coula','input_coulb','input_coulc','input_could','input_coule','input_coulo','input_duree','input_prog','input_test','input_TodoNbItems','input_TempsFait');
+		champs = new Array('input_coula','input_coulb','input_coulc','input_could','input_coule','input_coulo','input_duree','input_prog','input_test','input_TodoNbItems','input_TempsFait', 'boutons');
 		if (!VerifChamps(champs)) { return false; }
 
 		var xhttp = new XMLHttpRequest();
