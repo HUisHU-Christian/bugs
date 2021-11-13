@@ -209,7 +209,7 @@ return array(
 	'project_created_success' => 'Projet créé avec succès,\n vous pouvez y créer un nouveau billet',
 	'projects_description' => 'Liste de tous vos projets',
 	'projects' => 'Projets',
-	'project_roleuser' => 'Rôle dans chacun de nos projets',
+	'project_roleuser' => 'Rôle de {first} {last} dans nos projets actifs',
 	'projsuppmbre' => 'Vous êtes sur le point de retirer un participant au projet.  Est-ce bien ce que vous voulez?',
 	'ptickets' => 'Billets du projet',
 	'release_disp' => 'Dernière parution stable',

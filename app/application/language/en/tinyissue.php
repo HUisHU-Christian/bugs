@@ -210,7 +210,7 @@ return array(
 	'project_created_success' => 'Project sucessfully created.\nLet create new ticket.',
 	'projects_description' => 'List of all your projects',
 	'projects' => 'Projects',
-	'project_roleuser' => 'Rôle dans chacun de nos projets',
+	'project_roleuser' => '{first} {last}`s role in our active projects',
 	'projsuppmbre' => 'Are you sure you want to remove this user from the project?',
 	'ptickets' => 'Project`s tickets',
 	'release_disp' => 'Latest stable release',

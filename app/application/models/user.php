@@ -273,8 +273,17 @@ class User extends Eloquent {
 		if($info['password']) {
 			$update['password'] = Hash::make($info['password']);
 		}
-
 		User::find($id)->fill($update)->save();
+		
+		//Modification des rôles de cet usager dans les différents projets
+		foreach ($info["roles"] as $proj => $role ) {
+			if (!\DB::query("UPDATE projects_users SET role_id = ".$role.", updated_at = NOW() WHERE user_id = ".$id." AND project_id = ".$proj." ")) {
+				if ($role == 0) { continue; }
+				\DB::query("INSERT INTO projects_users (user_id, project_id, role_id, created_at) VALUES (".$id.", ".$proj.", ".$role.", NOW() ) ");
+				\DB::query("DELETE FROM following WHERE user_id = ".$id." AND project_id = ".$proj." AND issue_id = 0 ");
+				\DB::query("INSERT INTO following (user_id, project_id, project, attached, tag) VALUES (".$id.", ".$proj.", 1, 1, 1) ");
+			}
+		}
 
 		return array(
 			'success' => true
@@ -319,13 +328,15 @@ class User extends Eloquent {
 		//Attribution d'un premier projet à ce nouvel usager
 		$NewUser = \User::where('id', '>', 1)->order_by('id','DESC')->get(array('id'));
 		$ID = $NewUser[0]->id;
-		\DB::table('projects_users')->insert(array(
-			'id'=>NULL, 
-			'user_id'=>$ID,
-			'project_id'=>$info['Project'],
-			'role_id'=>$info['role_id'],
-			'created_at'=>date("Y-m-d H:i:s")
-		));
+
+		//Attribution des rôles de cet usager dans les différents projets actifs de l'administrateur qui l'inscrit
+		foreach ($info["roles"] as $proj => $role ) {
+			if ($role == 0) { continue; }
+			\DB::query("INSERT INTO projects_users (user_id, project_id, role_id, created_at) VALUES (".$ID.", ".$proj.", ".$role.", NOW() ) ");
+			\DB::query("DELETE FROM following WHERE user_id = ".$ID." AND project_id = ".$proj." AND issue_id = 0 ");
+			\DB::query("INSERT INTO following (user_id, project_id, issue_id, project, attached, tags) VALUES (".$ID.", ".$proj.", 0, 1, 1, 1) ");
+		}
+
 
 		//Émission d'un courriel à l'adresse du nouveau membre
 		$contenu = array('useradded','static:'.$MotPasse);
