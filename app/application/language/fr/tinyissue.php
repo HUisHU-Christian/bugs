@@ -180,6 +180,7 @@ return array(
 	'my_settings_description' => 'Mettre à jour vos paramètres personnels',
 	'my_settings' => 'Mes paramètres',
 	'name' => 'Nom complet',
+	'null' => 'Aucun / Nul',
 	'new_issue' => 'Nouveau billet',
 	'new_password' => 'Nouveau mot de passe',
 	'new' => 'Nouveau',
