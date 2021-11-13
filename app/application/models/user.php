@@ -19,14 +19,15 @@ class User extends Eloquent {
 		return $this->id == Auth::user()->id;
 	}
 
-	public function pref() {
+	public static function pref($Quelle = "All") {
 		//Default values
 		$UserPref = array(
 			'sidebar' => true,
 			'orderSidebar' => 'desc',
 			'noticeOnLogIn' => false,
 			'numSidebar' => 990,
-			'template' => 'default'
+			'template' => 'default',
+			'boutons' => true
 		);
 		//User's preferences from 'Preferences' field  ( table 'users' ) 
 		$Pref = Auth::user()->preferences;
@@ -35,8 +36,8 @@ class User extends Eloquent {
 			$ceci = explode("=", $val);
 			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }
 		}
-
-		return $UserPref;
+		return ($Quelle == "All") ? $UserPref : $UserPref[$Quelle];
+		
 	}
 
 	/**

@@ -103,6 +103,7 @@ return array(
 	'UserPref_projet_3' => 'Project list ordering',
 	'UserPref_projet_3a' => 'Ascending',
 	'UserPref_projet_3b' => 'Descending',
+	'UserPref_projet_4' => 'Use buttons « IN » and « OUT » to count my worktime',
 	'version' => 'Version',
 	'version_actuelle' => 'The actual version',
 	'version_ahead' => 'Your version is ahead from the stable distributed version.',

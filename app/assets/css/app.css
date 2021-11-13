@@ -396,6 +396,38 @@ div.Percent2 {
 	margin-bottom: 2px;
 }
 
+.chrono_on, .chrono_off {
+	border: solid black 2px; 
+	border-radius: 10px; 
+	color: white; 
+	font-size: 150%; 
+	font-weight: bold; 
+	padding: 6px;  
+	text-align: center; 
+}
+
+.chrono_on {
+	background-color: green; 
+	background-image: linear-gradient(to right, green , black, green); 
+}
+.chrono_off{
+	background-color: red; 
+	background-image: linear-gradient(to right, red , black, red); 
+}
+
+.chrono_on:hover, .chrono_off:hover {
+	color: black;
+	border-width: 4px; 
+}
+
+.chrono_on:hover {
+	background-image: linear-gradient(to right, green , white, green); 
+}
+
+.chrono_off:hover {
+	background-image: linear-gradient(to right, red , white, red); 
+}
+
 /* Header */
 #header{
 	width: 100%;
