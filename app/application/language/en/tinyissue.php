@@ -184,6 +184,7 @@ return array(
 	'new_issue' => 'New Issue',
 	'new_password' => 'New Password',
 	'new' => 'New',
+	'null' => 'NULL',
 	'no_activity' => 'This project does not have any activity!',
 	'no_issues' => 'This project does not have any issues that match your search query!',
 	'no_one' => 'Not a single',

@@ -2,8 +2,7 @@
 
 class Roles_Controller extends Base_Controller {
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 
 		$this->filter('before', 'permission:administration');
@@ -14,8 +13,7 @@ class Roles_Controller extends Base_Controller {
 	 *
 	 * @return View
 	 */
-	public function get_index()
-	{
+	public function get_index() {
 		return $this->layout->with('active', 'dashboard')->nest('content', 'roles.index', array(
 			'roles' => Role::order_by('id', 'ASC')->get()
 		));
@@ -27,8 +25,7 @@ class Roles_Controller extends Base_Controller {
 	 *
 	 * @return View
 	 */	
-	public function post_index()
-	{
+	public function post_index() {
 		foreach ($_POST["RoleName"] as $id => $Name ) {
 			\DB::table('roles')->where('id', '=', $id)->update(array('name' => $Name, 'description' => $_POST["RoleDesc"][$id]));
 		}

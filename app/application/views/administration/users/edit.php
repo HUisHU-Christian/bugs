@@ -96,7 +96,7 @@
 			foreach($active_projects as $row) {
 				$Proj[$row->to()] = $row->name;
 				$roles = User::myPermissions_onThisProject($row->id);
-				$userRole = Project\User::check_role($user->id, $row->id);
+				$userRole = Project\User::check_role($user->id, $row->id, 0);
 				if (count($roles) == 0) { 
 					continue; 
 				} else {
