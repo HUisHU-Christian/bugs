@@ -51,6 +51,7 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 					<?php
 						$config_app = require path('public') . 'config.app.php';
 						echo '<br /><br />'; 
+						//Here we show the progress bar
 						//Percentage of work done
 						$SizeXtot = 500;
 						$SizeX = $SizeXtot / 100;
@@ -60,11 +61,12 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 							echo '<div style="position: relative; top: -11px; left: 70px; background-color: green; color:white; width: '.($Percent*$SizeX).'px; height: 4px; line-height:4px;" /></div>'; 
 							echo '<div style="position: relative; top: -15px; left: '.(70 + ($Percent*$SizeX)).'px; margin-bottom: -4px; background-color: gray; color:white; width: '.($SizeXtot-($Percent*$SizeX)).'px; height: 4px; text-align: center; line-height:4px;" /></div>';
 						} else { $Percent = 10; }
-						//Time is going fast!
 						//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 						$Deb = strtotime($row->created_at);
 						$Dur = (time() - $Deb) / 86400;
-						if (!isset($issue->duration) || $issue->duration === 0) { $row->duration = 30; }
+						$Dur = ($Dur < 0) ? 0 : $Dur;
+						if (!isset($row->duration)) { $row->duration = 30; }
+						if ($row->duration === 0 || is_null($row->duration)) { $row->duration = 30; }
 						$DurRelat = round(($Dur / $row->duration) * 100);
 						$Dur = round($Dur);
 						$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;

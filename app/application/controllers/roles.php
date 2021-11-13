@@ -17,7 +17,7 @@ class Roles_Controller extends Base_Controller {
 	public function get_index()
 	{
 		return $this->layout->with('active', 'dashboard')->nest('content', 'roles.index', array(
-			'roles' => Role::order_by('role', 'ASC')->get()
+			'roles' => Role::order_by('id', 'ASC')->get()
 		));
 	}
 	
