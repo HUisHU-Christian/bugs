@@ -27,18 +27,15 @@ abstract class Driver {
 	 *
 	 * @return void
 	 */
-	public function __construct()
-	{
-		if (Session::started())
-		{
+	public function __construct() {
+		if (Session::started()) {
 			$this->token = Session::get($this->token());
 		}
 
 		// If a token did not exist in the session for the user, we will attempt
 		// to load the value of a "remember me" cookie for the driver, which
 		// serves as a long-lived client side authenticator for the user.
-		if (is_null($this->token))
-		{
+		if (is_null($this->token)) {
 			$this->token = $this->recall();
 		}
 	}
@@ -72,7 +69,6 @@ abstract class Driver {
 	 */
 	public function user() {
 		if ( ! is_null($this->user)) return $this->user;
-
 		return $this->user = $this->retrieve($this->token);
 	}
 
@@ -101,14 +97,10 @@ abstract class Driver {
 	 * @param  bool    $remember
 	 * @return bool
 	 */
-	public function login($token, $remember = false)
-	{
+	public function login($token, $remember = false) {
 		$this->token = $token;
-
 		$this->store($token);
-
 		if ($remember) $this->remember($token);
-
 		return true;
 	}
 
@@ -117,14 +109,10 @@ abstract class Driver {
 	 *
 	 * @return void
 	 */
-	public function logout()
-	{
+	public function logout() {
 		$this->user = null;
-
 		$this->cookie($this->recaller(), null, -2000);
-
 		Session::forget($this->token());
-
 		$this->token = null;
 	}
 
@@ -134,8 +122,7 @@ abstract class Driver {
 	 * @param  string  $token
 	 * @return void
 	 */
-	protected function store($token)
-	{
+	protected function store($token) {
 		Session::put($this->token(), $token);
 	}
 
@@ -145,10 +132,8 @@ abstract class Driver {
 	 * @param  string  $token
 	 * @return void
 	 */
-	protected function remember($token)
-	{
+	protected function remember($token) {
 		$token = Crypter::encrypt($token.'|'.Str::random(40));
-
 		$this->cookie($this->recaller(), $token, Cookie::forever);
 	}
 
@@ -157,15 +142,12 @@ abstract class Driver {
 	 *
 	 * @return string|null
 	 */
-	protected function recall()
-	{
+	protected function recall() {
 		$cookie = Cookie::get($this->recaller());
-
 		// By default, "remember me" cookies are encrypted and contain the user
 		// token as well as a random string. If it exists, we'll decrypt it
 		// and return the first segment, which is the user's ID token.
-		if ( ! is_null($cookie))
-		{
+		if ( ! is_null($cookie)) {
 			return head(explode('|', Crypter::decrypt($cookie)));
 		}
 	}
@@ -178,8 +160,7 @@ abstract class Driver {
 	 * @param  int     $minutes
 	 * @return void
 	 */
-	protected function cookie($name, $value, $minutes)
-	{
+	protected function cookie($name, $value, $minutes) {
 		// When setting the default implementation of an authentication
 		// cookie we'll use the same settings as the session cookie.
 		// This typically makes sense as they both are sensitive.
@@ -205,8 +186,7 @@ abstract class Driver {
 	 *
 	 * @return string
 	 */
-	protected function recaller()
-	{
+	protected function recaller() {
 		return $this->name().'_remember';
 	}
 
@@ -215,8 +195,7 @@ abstract class Driver {
 	 *
 	 * @return string
 	 */
-	protected function name()
-	{
+	protected function name() {
 		return strtolower(str_replace('\\', '_', get_class($this)));
 	}
 

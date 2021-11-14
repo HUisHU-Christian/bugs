@@ -147,7 +147,7 @@ class Input {
 	 */
 	public static function except($keys)
 	{
-		return array_except(static::get(), $keys);
+		return array_exceptFct(static::get(), $keys);
 	}
 
 	/**

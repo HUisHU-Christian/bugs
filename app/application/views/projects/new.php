@@ -5,7 +5,10 @@
 <script type="text/javascript" >
 <?php
 	$liste = '<select name="role[]">';
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il ne faut pas changer cette valeur
 	$r = \DB::table('roles')->where('id', '<=', Auth::user()->role_id)->order_by('id','DESC')->get();
+//	$r = \DB::table('roles')->where('id', '<=', \Project\User::GetRole($project->id))->order_by('id','DESC')->get();
 	foreach ($r as $val) {
 		$liste .= '<option value="'.$val->id.'">'.$val->name.'</option>';
 	}

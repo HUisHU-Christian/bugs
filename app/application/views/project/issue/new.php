@@ -1,5 +1,8 @@
 <?php 
-	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id) || Auth::user()->role_id == 1) {
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Modification du 13 novembre 2021
+//	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id) || Auth::user()->role_id == 1) {
+	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id) || \Project\User::GetRole(Project::current()->id) == 1) {
 		echo '<script>document.location.href="'.URL::to().'";</script>';
 	}
 

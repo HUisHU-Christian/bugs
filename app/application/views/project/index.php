@@ -6,7 +6,10 @@
 	
 ?>
 <h3>
-	<?php if (Auth::user()->role_id != 1) { ?>
+	<?php 
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il n'est pas néssaire de changer le calcul du droit ci-bas
+	if (Auth::user()->role_id != 1) { ?>
    	<a href="<?php echo Project::current()->to('issue/new'); ?>" class="newissue"><?php echo __('tinyissue.new_issue');?>
    <?php } ?> 
    <a href="<?php echo Project::current()->to(); ?>"><?php echo Project::current()->name; ?></a>
