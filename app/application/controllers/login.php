@@ -18,6 +18,8 @@ class Login_Controller extends Controller {
 			Session::forget('return');
 			$sendmail = true;
 			
+			//Notice the owner about every logins
+			////Check owner's preferences about this function
 			$Owner = \User::where('id', '=', 1)->get(array('email','preferences','language'));
 			$Prefs = $Owner[0]->Preferences;
 			$Pref = substr($Prefs, strpos($Prefs, "noticeOnLogIn=")+13, 7);
@@ -27,6 +29,7 @@ class Login_Controller extends Controller {
 			if (Input::get('email') == $Owner[0]->email) { $sendmail = false; }
 			if (Input::get('email') == Config::get('mail.from.email')) { $sendmail = false; }
 			
+			////If owner wants to receive such email, let's do it
 			if ($sendmail) {
 				$Type = 'noticeonlogin';
 				$Langue = $Owner[0]->language;

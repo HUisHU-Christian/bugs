@@ -129,7 +129,10 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 					echo '</div>';
 
 					$_GET["tag_id"] = $_GET["tag_id"] ?? 0;
-					if ($_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Modification du 13 novembre 2021
+//					if ($_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
+					if ($_GET["tag_id"] == 1 && \Project\User::GetRole($row->project_id) != 1) {
 						echo '<br /><br />';
 								//Percentage of work done
 								////Calculations
@@ -171,6 +174,9 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 				}
 				echo '</ul>';
 			 }
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il n'est pas nécessaire de changer le calcul de droit ci-bas
+//			 if (\Project\User::GetRole($row->project_id) != 1) { 
 			 if (Auth::user()->role_id != 1) { 
 				echo '<div id="sortable-msg">'.__('tinyissue.sortable_issue_howto').'</div>';
 			}

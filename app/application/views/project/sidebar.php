@@ -80,7 +80,10 @@ if(count($active_projects)>1) {
 </ul>
 </div>
 
-<?php if (Auth::user()->role_id != 1) { ?>
+<?php 
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il n'est pas néssaire de changer le calcul du droit ci-bas
+if (Auth::user()->role_id != 1) { ?>
 <div id="sidebar_Users_title" class="sidebarTitles"><?php echo __('tinyissue.assigned_users'); ?></div>
 <div id="sidebar_Users" class="sidebarItem">
 <h2>

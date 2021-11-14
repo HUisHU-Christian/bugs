@@ -46,7 +46,10 @@ class Comment extends  \Eloquent {
 		/* Add to user's activity log */
 		\User\Activity::add(2, $project->id, $issue->id, $comment->id);
 
-		if (\Auth::user()->role_id != 1) {
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Modification du 13 novembre 2021
+//		if (\Auth::user()->role_id != 1) {
+		if (\Project\User::GetRole($project->id) != 1) {
 			$vide = true;
 			$Val = 1;
 			$Val = ($input['Pourcentage'] > $config_app['Percent'][2]) ? 9: $Val;
@@ -91,7 +94,11 @@ class Comment extends  \Eloquent {
 		$issue->updated_at = date('Y-m-d H:i:s');
 		$issue->updated_by = \Auth::user()->id;
 		$issue->save();
-		if (\Auth::user()->role_id != 1) {
+
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Modification du 13 novembre 2021
+//		if (\Auth::user()->role_id != 1) {
+		if (\Project\User::GetRole($project->id) != 1) {
 			if ($input['Pourcentage'] == 100) {
 				$tags = $issue->tags;
 				$tag_ids = array();

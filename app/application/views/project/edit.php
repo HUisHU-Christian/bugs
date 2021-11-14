@@ -8,7 +8,6 @@
 <h3>
 	<?php echo __('tinyissue.update'); ?> <em><?php echo Project::current()->name; ?></em>
 	<?php
-	//if (Auth::user()->role_id != 1) {
 	if ($MonRole != 1) {
 		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
    }

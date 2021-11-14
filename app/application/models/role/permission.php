@@ -47,7 +47,4 @@ class Permission extends \Eloquent {
 		}
 		return $permis;
 	}
-//	public static function LstProj_permission($hopeSo) {
-//			$resu  = \DB::table('projects_users')->select(array('id'))->where('user_id','=',\Auth::user()->role_id)->where('project_id','=', \Project::)->get();
-//	}
 }

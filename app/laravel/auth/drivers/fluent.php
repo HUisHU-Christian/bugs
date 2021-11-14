@@ -56,7 +56,7 @@ class Fluent extends Driver {
 			
 			$query->where($username, '=', $arguments['username']);
 
-			foreach(array_except($arguments, array('username', 'password', 'remember')) as $column => $val) {
+			foreach(array_exceptFct($arguments, array('username', 'password', 'remember')) as $column => $val) {
 			    $query->where($column, '=', $val);
 			}
 		})->first();
