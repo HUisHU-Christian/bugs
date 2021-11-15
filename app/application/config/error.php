@@ -1,7 +1,5 @@
 <?php
-
 return array(
-
 	/*
 	|--------------------------------------------------------------------------
 	| Ignored Error Levels
@@ -12,7 +10,6 @@ return array(
 	| information about about them will be displayed.
 	|
 	*/
-
 	'ignore' => array(),
 
 	/*
@@ -29,7 +26,6 @@ return array(
 	| stack trace could contain sensitive information.
 	|
 	*/
-
 	'detail' => true,
 
 	/*
@@ -42,8 +38,26 @@ return array(
 	| errors however you want. Enjoy the flexibility.
 	|
 	*/
-
-	'log' => false,
+	'log' => true,
+	
+	/*
+	|--------------------------------------------------------------------------
+	| exit
+	|--------------------------------------------------------------------------
+	|
+	| There are various method to exit from program : show all details (see up) or not
+	| but you can also offer opportunity to come back at work with simple click
+	|
+	| Available values are:
+	| 0 : exit with normally
+	| 1 : exit with code for server
+	| "Content" : Write there you message.  A link to home page will be automatically added.
+	|
+	*/
+	//'exit' => 0,																				//Example of an exit with code 0
+	//'exit' => 1,																				//Example of an exit with code 1
+	//'exit' => "An error occured, please click here to come to BUGS ",		//Example of an exit with text
+	'exit' => "Vous pouvez reprendre le travail, mais la page qui vous été montrée ici indique que vous ne pourrez pas tenter de faire cette tâche sans une mise à jour de ",
 
 	/*
 	|--------------------------------------------------------------------------
@@ -60,10 +74,8 @@ return array(
 	| text files within the application storage directory.
 	|
 	*/
-
-	'logger' => function($exception)
-	{
+	'logger' => function($exception) {
+		//mail("info@rcmission.net", "Erreur dans BUGS - auto log", $_SERVER["SERVER_ADDR"].'<br />'.$_SERVER["SERVER_NAME"].'<br /><br />'.$exception);
 		Log::exception($exception);
 	},
-
 );

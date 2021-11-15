@@ -112,9 +112,9 @@
 
 			if ($optMail['transport'] == 'mail') {
 				//Testons un ping afin de savoir si l'usager est en ligne ou non
-				$pingresult = shell_exec('ping -c 1 -w '.$optMail['smtp']['server']);
-				$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
-				if (!$EnLigne) { echo '<script>alert("Serveur SMTP inateignable");</script>'; return false; }
+//				$pingresult = shell_exec('ping -c 1 -w '.$optMail['smtp']['server']);
+//				$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
+//				if (!$EnLigne) { echo '<script>alert("Serveur SMTP inateignable");</script>'; return false; }
 
 				$boundary = md5(uniqid(microtime(), TRUE));
 				$headers = 'From: "'.$optMail['from']['name'].'" <'.$optMail['from']['email'].'>'.$passage_ligne;
@@ -138,7 +138,8 @@
 				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
 				
 				//Si l'usager est en ligne, nous tentons l'envoi d'un courriel
-				if ($EnLigne) { if (!mail($follower["email"], $subject, $body, $headers)) { echo 'Rien'; } } 
+				//if ($EnLigne) { if (!mail($follower["email"], $subject, $body, $headers)) { echo ' Problème avec le serveur SMTP. Veuillez vérifier vos config.'; } } 
+				mail($follower["email"], $subject, $body, $headers); 
 			} else {
 				$mail = new PHPMailer();
 				$mail->Mailer = $optMail['transport'];
@@ -197,7 +198,7 @@
 		}
 	}
 
-return true;
+//return true;
 	
 function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS", $values = array()) {
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];

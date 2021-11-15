@@ -86,6 +86,20 @@
 		xhttp.send(formdata); 
 	}
 
+	function AppliquerErr() {
+		alert("Nous sommes rendus ici. \nIl est assez tard, je vais me coucher");
+		$.post(siteurl + 'ajax/administration/errors', {
+			user_id : document.getElementById('input_err_detail').value,
+			user_id : document.getElementById('input_err_log').value,
+			user_id : document.getElementById('input_err_exit').value,
+			user_id : document.getElementById('input_err_exittxt').value
+		}, function(data){
+			var a = 1;
+		});
+	
+		return true;
+	}
+
 	function AppliquerTest(Qui) {
 		var champs = new Array('input_email_from_name','input_email_from_email','input_email_replyto_name','input_email_replyto_email');
 		var compte = 0;
