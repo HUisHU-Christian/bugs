@@ -28,7 +28,7 @@ if(count($active_projects)>1) {
 	$SansAccent = array();
 	foreach($active_projects as $row) {
 		$NbIssues[$row->to()] = $row->count_open_issues();
-		$Proj[$row->to()] = $row->name.' ('.$NbIssue[$row->to()].')';
+		$Proj[$row->to()] = $row->name.' ('.$NbIssues[$row->to()].')';
 	}
 	////Préparation au tri
 	foreach ($Proj as $ind => $val ){
