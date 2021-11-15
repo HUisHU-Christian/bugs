@@ -16,6 +16,7 @@ function AffichonsVieux(url,id) {
 }
 
 function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, MonRole) {
+	var contenu = new Array();
 	var Exactement = siteurl + "app/application/controllers/ajax/ProjectAddMbr.php";
 	Exactement = Exactement + "?Projet=" + project_id;
 	Exactement = Exactement + "&User=" + user;
@@ -28,7 +29,7 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 			if ( this.responseText  != "") {
 				if (cettepage == 'page') {
 					var c = this.responseText;
-					var contenu = c.split("|");
+					contenu = c.split("|");
 					var detail = "";
 					var texte = "";
 					var NouvLigne = document.createElement("tr");
@@ -87,6 +88,20 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 					document.getElementById('input_rechNom').value = "";
 				} else {
 					contenu[2] = this.responseText;
+					contenu[1] = contenu[2].substring(contenu[2].indexOf(">")+1);
+					contenu[0] = contenu[1].substring(0, contenu[1].indexOf("<"));
+					var user = Math.round(Math.random()*999);
+					if (document.getElementById("table_ListUsers")) {
+						var NouvLigne = document.createElement("tr");
+						NouvLigne.id = "project-user_" + user;
+							var NouvCol = document.createElement("td");
+							var ceci = document.createTextNode(contenu[0]);
+							NouvCol.appendChild(ceci);
+							NouvCol.class = "project-user";
+							NouvCol.width = "60%";
+							NouvLigne.appendChild(NouvCol);
+							document.getElementById("table_ListUsers").appendChild(NouvLigne);
+					}
 				}
 				if (document.getElementById('projetProsedNamesList')) { document.getElementById('projetProsedNamesList').innerHTML = ""; }
 				if (document.getElementById('add-user-project')) 		{ document.getElementById('add-user-project').innerHTML = ""; }
