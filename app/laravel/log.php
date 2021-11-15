@@ -19,7 +19,7 @@ class Log {
 	 * @return string
 	 */
 	protected static function exception_line($e) {
-		return "Mes Amis, mes amis".$e->getMessage().' in '.$e->getFile().' on line '.$e->getLine();
+		return $e->getMessage().' in '.$e->getFile().' on line '.$e->getLine();
 	}
 
 	/**
@@ -41,8 +41,7 @@ class Log {
 		// If there is a listener for the log event, we'll delegate the logging
 		// to the event and not write to the log files. This allows for quick
 		// swapping of log implementations for debugging.
-		if (Event::listeners('laravel.log'))
-		{
+		if (Event::listeners('laravel.log')) {
 			Event::fire('laravel.log', array($type, $message));
 		}
 

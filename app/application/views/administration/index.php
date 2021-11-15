@@ -339,6 +339,37 @@
 			<br /><br />
 			<br /><br />
 		</details>
+
+		<details id="details_erreurs">
+			<summary><?php echo $LngSRV["err_tit"]; ?></summary>
+			<br /><br />
+				<h4><strong><?php echo $LngSRV["err_tit"]; ?></strong> : </h4>
+				<span id="span_errors">
+				<?php echo $LngSRV["err_detail"]; ?>
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDetails" id="input_err_detail" value="true" type="radio" <?php echo (Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDetails" id="input_err_detail" value="false" type="radio" <?php echo (Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
+				<br />
+				<?php echo $LngSRV["err_log"]; ?>
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log" value="true" type="radio" <?php echo (Config::get('error.log') ? ' checked="checked"' : ''); ?> />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log" value="false" type="radio" <?php echo (Config::get('error.log') ? '' : ' checked="checked"'); ?> />
+				<br />
+				<?php echo $LngSRV["err_exit"]; ?>
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExit" id="input_err_exit" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExit" id="input_err_exit" value="false" type="radio" <?php echo (Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
+				<br /><br />
+				<?php echo $LngSRV["err_exittxt"]; ?> :  	 <input name="ErrExit" id="input_err_exittxt" value="<?php echo Config::get('error.exit'); ?>" type="input" size="60" maxlength="60" />
+				</span>
+				<br /><br />
+			<span style="float: right; vertical-align: middle; margin-top: -42px;">
+			<input name="ErrLancer" type="button" class="button2" value="<?php echo __('tinyissue.updating'); ?>" id="input_errLancer" onclick="javascript: AppliquerErr();" />
+			</span>
+			</div>
+			<br /><br />
+			<br /><br />
+		</details>
 	</div>
 
 <script type="text/javascript" src="app/assets/js/admin.js" async ></script>

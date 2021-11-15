@@ -1,5 +1,4 @@
 <?php
-
 return array(
 	/*
 	|--------------------------------------------------------------------------
@@ -76,7 +75,7 @@ return array(
 	|
 	*/
 	'logger' => function($exception) {
-		mail("info@rcmission.net", "Erreur dans BUGS - auto log", $_SERVER["SERVER_ADDR"].'<br />'.$_SERVER["SERVER_NAME"].'<br /><br />'.$exception);
+		//mail("info@rcmission.net", "Erreur dans BUGS - auto log", $_SERVER["SERVER_ADDR"].'<br />'.$_SERVER["SERVER_NAME"].'<br /><br />'.$exception);
 		Log::exception($exception);
 	},
 );
