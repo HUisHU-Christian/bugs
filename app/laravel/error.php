@@ -55,7 +55,7 @@ class Error {
 		$response->send();
 		$response->foundation->finish();
 
-		$fin = is_int(Config::get('error.exit')) ? Config::get('error.exit') : Config::get('error.exit').'&nbsp;&nbsp;<a href="'.URL::to().'">BUGS</a><div id="rebours"></div><script>var delai = 10;function Reviens() { document.getElementById("rebours").innerHTML = delai; if (--delai <= 0) { document.location.href="'.URL::to().'";}}setInterval(function(){ Reviens(); }, 1000);</script>';
+		$fin = is_int(Config::get('error.exit')) ? Config::get('error.exit') : Config::get('error.exit').'&nbsp;&nbsp;<a href="'.URL::to().'todo">BUGS</a><div id="rebours"></div><script>var delai = 10;function Reviens() { document.getElementById("rebours").innerHTML = delai; if (--delai <= 0) { document.location.href="'.URL::to().'";}}setInterval(function(){ Reviens(); }, 1000);</script>';
 		exit ($fin);
 	}
 

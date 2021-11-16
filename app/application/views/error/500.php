@@ -80,12 +80,14 @@
 		</style>
 	</head>
 	<body>
+	<img src="app/assets/images/layout/logo_brouille.png" height="100" alt="" />
 		<div id="main">
 			<?php $messages = array('Ouch.', 'Oh no!', 'Whoops!'); ?>
 
 			<h1><?php echo $messages[mt_rand(0, 2)]; ?></h1>
 
 			<h2>Server Error: 500 (Internal Server Error)</h2>
+			<a href="<?php echo URL::to(); ?>"><img src="app/assets/images/layout/logo.jpg" height="200" alt="" /></a>
 
 			<h3>What does this mean?</h3>
 

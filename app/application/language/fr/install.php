@@ -104,6 +104,7 @@ return array(
 	'UserPref_NoticeOnLogIn' => 'Faites-moi connaître chacune des connexions d`usager par courriel',
 	'UserPref_prefer' => 'Mes préférences',
 	'UserPref_projet' => 'Mes projets',
+	'UserPref_projet_0' => 'Afficher un menu déroulant de tous les projets dans le panneau de gauche lorsqu`aucun projet n`est choisi',
 	'UserPref_projet_1' => 'Nombre de projets affichés',
 	'UserPref_projet_2' => 'Lister les projets dans la partie gauche (en plus du menu déroulant)',
 	'UserPref_projet_2a' => 'Oui',

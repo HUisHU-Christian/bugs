@@ -29,7 +29,7 @@ class Ajax_Administration_Controller extends Base_Controller {
 			"; }
 			if (strpos($MesLignes[$rendu], "'log' => ") 	  > 0) { $MesLignes[$rendu] = "   'log' => ".Input::get('log') .", 
 			"; }
-			if (strpos($MesLignes[$rendu], "'exit' => ")   > 0) { $MesLignes[$rendu] = "   'exit' => ".((Input::get('exit') == 'false') ? 1 : "'".Input::get('exittxt')." <a href=\"todo\">BUGS</>.'").", 
+			if (strpos($MesLignes[$rendu], "'exit' => ")   > 0) { $MesLignes[$rendu] = "   'exit' => ".((Input::get('exit') == 'false') ? 1 : "'".Input::get('exittxt').".'").", 
 			"; }
 			$rendu = $rendu + 1;
 		}

@@ -78,7 +78,7 @@
 			</tr>
 		</table>
 
-		<div id="projects_list" class="projectsList_user" style="right: 30%;">
+		<div id="projects_list" class="projectsList_user" style="right: 30%; max-height: 600px; overflow-y: auto;">
 			<?php
 				$coul = array('FFFFFF','CCCCCC');
 				$rang = 1;

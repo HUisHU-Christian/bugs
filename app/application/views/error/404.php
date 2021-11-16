@@ -80,10 +80,12 @@
 		</style>
 	</head>
 	<body>
+	<img src="app/assets/images/layout/logo_brouille.png" height="100" alt="" />
 		<div id="main">
 			<?php $messages = array(__('tinyissue.error404_title_0'),__('tinyissue.error404_title_1'),__('tinyissue.error404_title_2')); ?>
 
 			<h1><?php echo $messages[mt_rand(0, 2)]; ?></h1>
+			<a href="<?php echo URL::to(); ?>"><img src="app/assets/images/layout/logo.jpg" height="200" alt="" /></a>
 
 			<h2><?php echo __('tinyissue.error404_header'); ?></h2>
 
