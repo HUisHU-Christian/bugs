@@ -8217,7 +8217,7 @@ if ( jQuery.support.ajax ) {
 					if ( s.mimeType && xhr.overrideMimeType ) {
 						xhr.overrideMimeType( s.mimeType );
 					}
-
+alert("Voici la valeur : ");
 					// X-Requested-With header
 					// For cross-domain requests, seeing as conditions for a preflight are
 					// akin to a jigsaw puzzle, we simply never set it to be sure.

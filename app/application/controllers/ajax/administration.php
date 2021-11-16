@@ -1,11 +1,12 @@
 <?php
 
-class Ajax_Project_Controller extends Base_Controller {
+class Ajax_Administration_Controller extends Base_Controller {
 
 	public $layout = null;
 
 	public function __construct() {
 		parent::__construct();
+		
 	}
 
 	//Laissée ici à titre d'exemple d'une fonction $_GET
@@ -14,8 +15,27 @@ class Ajax_Project_Controller extends Base_Controller {
 		return json_encode($results);
 	}
 
+	public function get_errors() {
+		return "Je suis ici en ligne 18";
+	}
+
 	public function post_errors() {
-		Administration\Preferences::errors(Input::get('detail'), Input::get('log'), Input::get('exit'));
+		$NomFichier = "application/config/error.php";
+		$RefFichier = fopen($NomFichier, "r");
+		$rendu = 0;
+		while (!feof($RefFichier)) {
+			$MesLignes[$rendu] = fgets($RefFichier);
+			if (strpos($MesLignes[$rendu], "'detail' => ") > 0) { $MesLignes[$rendu] = "   'detail' => ".Input::get('detail').", 
+			"; }
+			if (strpos($MesLignes[$rendu], "'log' => ") 	  > 0) { $MesLignes[$rendu] = "   'log' => ".Input::get('log') .", 
+			"; }
+			if (strpos($MesLignes[$rendu], "'exit' => ")   > 0) { $MesLignes[$rendu] = "   'exit' => ".((Input::get('exit') == 'false') ? 1 : "'".Input::get('exittxt')." <a href=\"todo\">BUGS</>.'").", 
+			"; }
+			$rendu = $rendu + 1;
+		}
+		fclose($RefFichier);
+		file_put_contents($NomFichier, $MesLignes);
+		return Input::get('log').' & '.Input::get('exit');
 	}
 
 	//Laissée ici à titre d'exemple d'une fonction $_POST qui appelle un modèle
