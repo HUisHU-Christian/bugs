@@ -31,7 +31,7 @@ return array(
 	*/
 
    'detail' => true, 
-																					
+																														
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return array(
 	*/
 
    'log' => true, 
-																									
+																																		
 																					
 
 	/*
@@ -67,8 +67,8 @@ return array(
 	|  - set "Show a message ... " to YES
 	|  - write your message in the message box
 	*/
-   'exit' => 'Cliquez sur BUGS pour accéder à <a href="todo">BUGS</>.', 
-																					
+   'exit' => 'Ma phrase mènera à .', 
+																														
 
 	/*
 	|--------------------------------------------------------------------------

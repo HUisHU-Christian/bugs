@@ -104,6 +104,7 @@ return array(
 	'UserPref_NoticeOnLogIn' => 'Notice me (email) every time some user log in.',
 	'UserPref_prefer' => 'My preferences',
 	'UserPref_projet' => 'My projects',
+	'UserPref_projet_0' => 'Show rolling menu with all projects when no specific project is shown',
 	'UserPref_projet_1' => 'How many projects to list on left tab',
 	'UserPref_projet_2' => 'List projects in left tab (in addition to rollup menu',
 	'UserPref_projet_2a' => 'Yes',

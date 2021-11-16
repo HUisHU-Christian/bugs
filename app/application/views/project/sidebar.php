@@ -14,10 +14,6 @@ if(count($active_projects)>1) {
 	</button>
 	<div class="div_menuprojetsgauche">
 <?php
-	//Valeurs par défaut
-	$Preferences['orderSidebar'] = $Preferences['orderSidebar'] ?? "asc";
-	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 999;
-	
 	//Récupération des préférences dans le dossier personnel de l'usager
 	$Pref = \User::pref();
 
@@ -40,7 +36,7 @@ if(count($active_projects)>1) {
 	////Tri des données du menu déroulant
 	asort($SansAccent);
 
-	////Affichage du menu dans l'espace latéral gauche
+	////Affichage des projets en menu déroulant dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
 		$selected = (substr($ind, strrpos($ind, "/")+1) == Project::current()->id) ? 'selected' : '';
 		echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';

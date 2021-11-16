@@ -22,12 +22,13 @@ class User extends Eloquent {
 	public static function pref($Quelle = "All") {
 		//Default values
 		$UserPref = array(
-			'sidebar' => true,
+			'sidebar' => 'true',
 			'orderSidebar' => 'desc',
-			'noticeOnLogIn' => false,
+			'noticeOnLogIn' => 'false',
 			'numSidebar' => 990,
+			'Roulbar' => 'true',
 			'template' => 'default',
-			'boutons' => true
+			'boutons' => 'true'
 		);
 		//User's preferences from 'Preferences' field  ( table 'users' ) 
 		$Pref = Auth::user()->preferences;

@@ -83,7 +83,7 @@
 		</table>
 	</div>
 
-	<div id="projects_list" class="projectsList_user" style="border: none black 2px; padding-right: 100px; width:40%; float:left; ">
+	<div id="projects_list" class="projectsList_user" style="border: none black 2px; padding-right: 100px; width:40%; float:left; max-height: 600px; overflow-y: auto;">
 		<?php
 			$coul = array('FFFFFF','CCCCCC');
 			$rang = 1;
