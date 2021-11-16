@@ -16,7 +16,7 @@ class Ajax_Project_Controller extends Base_Controller {
 		$this->filter('before', 'permission:issue-modify')->only(array(
 			'issue_assign'
 		));
-
+		
 	}
 
 	public function get_inactive_users() {

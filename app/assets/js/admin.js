@@ -87,17 +87,15 @@
 	}
 
 	function AppliquerErr() {
-		alert("Nous sommes rendus ici. \nIl est assez tard, je vais me coucher");
+		//Afin que cette fonction appelle correctement la fonction ajax ci-bas, il fallut modifier le fichier ./app/application/routes.php
 		$.post(siteurl + 'ajax/administration/errors', {
-			user_id : document.getElementById('input_err_detail').value,
-			user_id : document.getElementById('input_err_log').value,
-			user_id : document.getElementById('input_err_exit').value,
-			user_id : document.getElementById('input_err_exittxt').value
+			detail : (document.getElementById('input_err_detail').checked ? 'true': 'false'),
+			log : (document.getElementById('input_err_log').checked ? 'true' : 'false'),
+			exit : (document.getElementById('input_err_exit').checked ? 'true' : 'false'),
+			exittxt : document.getElementById('input_err_exittxt').value
 		}, function(data){
 			var a = 1;
 		});
-	
-		return true;
 	}
 
 	function AppliquerTest(Qui) {

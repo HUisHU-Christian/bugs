@@ -1,6 +1,7 @@
-<?php 
+<?php
 	$prefixe = "";
 	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
+//	require $prefixe."app/application/controllers/ajax/administration.php"; 
 	$config = require $prefixe."config.app.php";
 	$dir = $prefixe.$config['attached']['directory']."/";
 
@@ -346,9 +347,9 @@
 				<h4><strong><?php echo $LngSRV["err_tit"]; ?></strong> : </h4>
 				<span id="span_errors">
 				<?php echo $LngSRV["err_detail"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDetails" id="input_err_detail" value="true" type="radio" <?php echo (Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDet" id="input_err_detail" value="true" type="radio" <?php echo (Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDetails" id="input_err_detail" value="false" type="radio" <?php echo (Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDet" id="input_err_detail" value="false" type="radio" <?php echo (Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
 				<br />
 				<?php echo $LngSRV["err_log"]; ?>
 				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log" value="true" type="radio" <?php echo (Config::get('error.log') ? ' checked="checked"' : ''); ?> />
@@ -356,16 +357,18 @@
 				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log" value="false" type="radio" <?php echo (Config::get('error.log') ? '' : ' checked="checked"'); ?> />
 				<br />
 				<?php echo $LngSRV["err_exit"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExit" id="input_err_exit" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExt" id="input_err_exit" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExit" id="input_err_exit" value="false" type="radio" <?php echo (Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExt" id="input_err_exit" value="false" type="radio" <?php echo (Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
 				<br /><br />
-				<?php echo $LngSRV["err_exittxt"]; ?> :  	 <input name="ErrExit" id="input_err_exittxt" value="<?php echo Config::get('error.exit'); ?>" type="input" size="60" maxlength="60" />
+				<?php echo $LngSRV["err_exittxt"]; ?> :  	 <input name="ErrExittxt" id="input_err_exittxt" value="<?php echo substr(Config::get('error.exit'), 0, strpos(Config::get('error.exit'), "<")-1); ?>" type="input" size="60" maxlength="100"  onkeyup="document.getElementById('span_exemple').innerHTML = this.value + ' <a href=\'todo\'>BUGS</a>';" />
 				</span>
 				<br /><br />
 			<span style="float: right; vertical-align: middle; margin-top: -42px;">
 			<input name="ErrLancer" type="button" class="button2" value="<?php echo __('tinyissue.updating'); ?>" id="input_errLancer" onclick="javascript: AppliquerErr();" />
 			</span>
+			<?php echo $LngSRV['err_result']; ?> : <span id="span_exemple"><?php echo substr(Config::get('error.exit'), 0, strpos(Config::get('error.exit'), "<")-1); ?>&nbsp;<a href="todo" >BUGS</a></span>
+			<br /><br />
 			</div>
 			<br /><br />
 			<br /><br />
