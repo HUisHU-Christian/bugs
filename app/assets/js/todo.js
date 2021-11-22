@@ -36,25 +36,29 @@ function dragLeave(cetID) {
 function dragDrop(cetID) {
 	if (divOVER != divORIG) {
 		var cetDIV = document.getElementById(cetID);
-		Exactement = Exactement + 'app/application/controllers/ajax/todo_ChgIssue.php';
-		var formdata = new FormData();
-		formdata.append("Quoi", 3);
-		formdata.append("divORIG", divORIG);
-		formdata.append("divOVER", divOVER);
-		formdata.append("cetDIV", cetDIV.id);
-		formdata.append("userID", usr);
-
+		$.post(siteurl + 'ajax/todo/DragDropChgIssue', {
+			Quoi 	:	3,
+			divORIG :	divORIG,
+			divOVER :	divOVER,
+			cetDIV 	:	cetDIV.id,
+			userID 	:	usr
+		}, function(data){
+			Verdissons (data);
+		});
 		document.getElementById(divOVER).appendChild(cetDIV);
+		document.getElementById(cetID).style.display = "block";
+	}	
+}
 
-		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				//alert(xhttp.responseText);
-			}
-		}
-		xhttp.open("POST", Exactement, true);
-		xhttp.send(formdata); 
-		//alert(msgFinal);
-	}
-	document.getElementById(cetID).style.display = "block";
+function Verdissons (data) {
+	d = data.split("|");
+	msg = d[0];
+	coul = (d[1]) ? d[1] : 'black';
+	document.getElementById('global-notice').innerHTML = d[0];
+	document.getElementById('global-notice').style.backgroundColor = coul; 
+	document.getElementById('global-notice').style.color = ((coul=='black') ? 'yellow' : 'black');   
+	document.getElementById('global-notice').style.display = 'block';   
+	setTimeout(function(){
+		document.getElementById('global-notice').style.display = 'none';
+	}, 1500);
 }

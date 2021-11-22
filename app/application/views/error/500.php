@@ -82,24 +82,18 @@
 	<body>
 	<img src="app/assets/images/layout/logo_brouille.png" height="100" alt="" />
 		<div id="main">
-			<?php $messages = array('Ouch.', 'Oh no!', 'Whoops!'); ?>
+			<?php $messages = array(__('tinyissue.error404_title_0'),__('tinyissue.error404_title_1'),__('tinyissue.error404_title_2')); ?>
 
 			<h1><?php echo $messages[mt_rand(0, 2)]; ?></h1>
-
-			<h2>Server Error: 500 (Internal Server Error)</h2>
 			<a href="<?php echo URL::to(); ?>"><img src="app/assets/images/layout/logo.jpg" height="200" alt="" /></a>
 
-			<h3>What does this mean?</h3>
+			<h2><?php echo __('tinyissue.error500_header'); ?></h2>
 
-			<p>
-				Something went wrong on our servers while we were processing your request.
-				We're really sorry about this, and will work hard to get this resolved as
-				soon as possible.
-			</p>
+			<h3><?php echo __('tinyissue.error404_means'); ?></h3>
 
-			<p>
-				Perhaps you would like to go to our <?php echo HTML::link('/', 'home page'); ?>?
-			</p>
+			<p><?php echo __('tinyissue.error500_p1'); ?></p>
+			<p><?php echo __('tinyissue.error500_p2'); ?></p>
+			<p><?php echo __('tinyissue.error500_p3').' '.HTML::link('/', __('tinyissue.homepage')); ?>?</p>
 		</div>
 	</body>
 </html>

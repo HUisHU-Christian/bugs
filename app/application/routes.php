@@ -23,10 +23,11 @@ Route::controller(array(
 	'administration.users',
 	'administration',
 	'ajax.administration',
-	'ajax.todo',
+	'ajax.project',
 	'ajax.sortable',
-	'todo',
+	'ajax.todo',
 	'ajax.tags',
+	'todo',
 	'roles',
 	'tags'
 ));
