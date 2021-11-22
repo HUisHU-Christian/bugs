@@ -139,11 +139,12 @@
 				
 				//Si l'usager est en ligne, nous tentons l'envoi d'un courriel
 				////La fonction try est préparée ici, en ce 21 novembre 2021 afin de l'exploiter prochainement
-//				try { 
+				try { 
 					mail($follower["email"], $subject, $body, $headers);
-//				} catch {
-//					return false;
-//				};
+				} catch {
+					echo '<script>alert("Il fut impossible de confier votre courriel au serveur SMTP désigné.");</script>';
+					return false;
+				};
 			} else {
 				$mail = new PHPMailer();
 				$mail->Mailer = $optMail['transport'];
