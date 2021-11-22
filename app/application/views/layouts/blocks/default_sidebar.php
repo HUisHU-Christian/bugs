@@ -83,8 +83,6 @@
 	$ceci = array_keys($_GET);
 	$prefixe = isset($ceci[0]) ? (in_array($ceci[0], array("/administration/users","/projects/reports","/user/settings","/user/issues","/project/5"))) ? "../" : "" : "";
 	include_once path('public').'app/vendor/searchEngine/index.php';
-	echo '<br /><br />'; 
-	echo '<br /><br />'; 
 	include_once "application/views/layouts/blocks/wiki.php";
 ?>
 </div>

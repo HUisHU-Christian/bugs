@@ -1,6 +1,4 @@
 <?php 
-$config_app = require path('public') . 'config.app.php';  
-if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = array("black","Orchid","Cyan","Lime","orange","red"); }
 if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 	echo '<script>document.location.href="'.URL::to().'";</script>';
 }
@@ -63,7 +61,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 
 <div class="pad">
 <?php
-	$NbIssues = $config_app["TodoNbItems"] ?? 25;
+	$NbIssues = Config::get('application.pref.todonbitems');
 	$page = $_GET["page"] ?? 1;
 	if (count($issues) > $NbIssues) {
 		echo '<br />';
@@ -106,7 +104,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 					echo '</div>';
 				} 
 
-				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.$config_app['PriorityColors'][$row->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span></span></div>';
+				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.Config::get('application.pref.prioritycolors')[$row->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span></span></div>';
 				echo '<div class="data">';
 					echo '<a href="'.$row->to().'" style="font-size: 130%; ">'.$row->title.'</a>';
 					echo '<div class="info">';
@@ -149,7 +147,6 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 						
 								//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 								////Calculations
-								$config_app = require path('public') . 'config.app.php';
 								$Deb = strtotime($row->start_at);
 								$Dur = (time() - $Deb) / 86400;
 								$Dur = ($Dur < 0) ? 0 : $Dur;
@@ -157,7 +154,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								if ($row->duration === 0 || is_null($row->duration)) { $row->duration = 30; }
 								$DurRelat = round(($Dur / $row->duration) * 100);
 								$Dur = round($Dur);
-								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
+								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 								if ($DurRelat >= 50 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'yellow'; }
 								if ($DurRelat >= 75 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'red'; }
 								$TxtColor = ($DurColor == 'yellow') ? 'black' : 'white' ;

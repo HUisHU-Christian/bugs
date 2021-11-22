@@ -13,6 +13,8 @@ return array(
 	'administration_update_description' => 'Entretien de « Bugs » : mise à jour du code et de la structure des données.',
 	'admin_backup' => 'Sauvegardes', 
 	'admin_head' => 'Configurations principales',
+	'admin_modif_true' => 'Modification apportée',
+	'admin_modif_false' => 'Échec dans l`enregistrement des modifications',
 	'ago' => '',
 	'aide' => 'Wiki - Aide',
 	'archived_project' => 'Projet archivé',

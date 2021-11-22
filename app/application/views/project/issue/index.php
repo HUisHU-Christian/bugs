@@ -1,5 +1,4 @@
 <?php 
-	$config_app = require path('public') . 'config.app.php';
 	$MonRole = Project\User::GetRole(Project::current()->id);
 	$ChronoCeluiCi = false;
 	$verif = \DB::table('projects_issues_comments AS COM')->whereNotNull('temps_fait_deb')->whereNull('temps_fait_fin')->where('COM.created_by', '=', \Auth::user()->id)->left_join('projects AS PRO', 'COM.project_id', '=', 'PRO.id')->left_join('projects_issues AS TIK', 'COM.issue_id', '=', 'TIK.id')->count();
@@ -20,7 +19,6 @@
 		}
 	}
   
-	if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = array("black","Orchid","Cyan","Lime","orange","red"); }
 	$url =\URL::home();
 	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 		echo '<script>document.location.href="'.URL::to().'";</script>';
@@ -42,7 +40,7 @@
 		echo '<a href="javascript: null(0);" class="newissue">'.__('tinyissue.new_issue').'</a>';
 	}
 	echo '<div style="position: relative; min-height: 70px;">';
-		echo '<div class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; position: absolute; left: 0; top: 0;" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
+		echo '<div class="colstate" style="color: '.Config::get('application.pref.prioritycolors')[$issue->status].'; position: absolute; left: 0; top: 0;" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
 		echo '</div>';
 		echo '<span style="position: absolute; top: 10px; left: 5%; font-size: 150%; font-weight: bold; ">';	
 		echo ''.$issue->title.'';
@@ -97,7 +95,6 @@
 	
 			//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 			////Calculations
-			$config_app = require path('public') . 'config.app.php';
 			$Deb = strtotime($issue->start_at);
 			$Dur = (time() - $Deb) / 86400;
 			$Dur = ($Dur < 0) ? 0 : $Dur;
@@ -105,8 +102,8 @@
 			if ($issue->duration === 0 || is_null($issue->duration)) { $issue->duration = 30; }
 			$DurRelat = round(($Dur / $issue->duration) * 100);
 			$Dur = round($Dur);
-			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > $config_app['Percent'][3]) ? 'white' : 'black') ;
-			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
+			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > Config::get('application.pref.percent')[3]) ? 'white' : 'black') ;
+			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 			if ($DurRelat >= 50 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'yellow'; }
 			if ($DurRelat >= 75 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'red'; }
 			$TxtColor = ($DurColor == 'green') ? 'white' : 'black' ;
@@ -248,7 +245,7 @@
 						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1'),0=>__('tinyissue.priority_desc_0')), $issue->status); 
 						echo '&nbsp;&nbsp;&nbsp;';
 						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
-						echo '<input type="number" name="temps_fait" value="'.((isset($config_app['TempsFait'])) ? $config_app['TempsFait'] : 1).'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
+						echo '<input type="number" name="temps_fait" value="'.Config::get('application.pref.tempsfait').'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
 					} else {
 						if ($MonRole != 1 ) { 
 							echo '<br />'; 

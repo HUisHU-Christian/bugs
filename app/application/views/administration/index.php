@@ -1,13 +1,12 @@
 <?php
 	$prefixe = "";
 	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
-//	require $prefixe."app/application/controllers/ajax/administration.php"; 
 	$config = require $prefixe."config.app.php";
 	$dir = $prefixe.$config['attached']['directory']."/";
 
-	$Lng = require_once($prefixe."app/application/language/en/install.php"); 
+	$Lng = require ($prefixe."app/application/language/en/install.php"); 
 	if ( file_exists($prefixe."app/application/language/".\Auth::user()->language."/install.php") && \Auth::user()->language != 'en') {
-		$LnT = require_once ($prefixe."app/application/language/".\Auth::user()->language."/install.php");
+		$LnT = require ($prefixe."app/application/language/".\Auth::user()->language."/install.php");
 		$LngSRV = array_merge($Lng, $LnT);
 	} else {
 		$LngSRV = $Lng;
@@ -185,7 +184,7 @@
 			<summary><?php echo __('tinyissue.email_head2'); ?></summary>
 			<br />
 			<div>
-			<select name="ChxTxt" id="select_ChxTxt" onchange="ChangeonsText(this.value, <?php echo "'".\Auth::user()->language."','".__('tinyissue.following_email')."'"; ?>);" class="sombre">
+			<select name="ChxTxt" id="select_ChxTxt" onchange="ChangeonsText(this.value, '<?php echo __('tinyissue.following_email'); ?>');" class="sombre">
 			<?php
 				$LesOptions = array(
 					"assigned" 	=> __('tinyissue.following_email_assigned_tit'),
@@ -225,7 +224,7 @@
 			<textarea id="txt_contenu" name="contenu" ><?php echo $con; ?></textarea>
 			<input name="Modifies" type="hidden" id="input_modifies" value="0" />
 			<br />
-			<div style="text-align: center;"><input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: ChangeonsText(document.getElementById('select_ChxTxt').value, '<?php echo \Auth::user()->language; ?>', 'OUI');" class="button2"/></div>
+			<div style="text-align: center;"><input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: ChangeonsText(document.getElementById('select_ChxTxt').value, 'OUI');" class="button2"/></div>
 		</details>
 		<details id="details_emailserver_head">
 			<summary><?php echo $LngSRV['UpdateConfigFile']; ?></summary>
@@ -279,8 +278,7 @@
 			<summary><?php echo $LngSRV['preferences_gen']; ?></summary>
 				<br />
 				<?php 
-					$config_app = require path('public') . 'config.app.php';
-					$Conf = $config_app['PriorityColors'];
+					$Conf = Config::get('application.pref.prioritycolors');
 				 ?>
 				<?php echo $LngSRV["preferences_coula"]; ?> : <input name="coula" id="input_coula" value="<?php echo ($Conf[1] == 'PaleGray') ? '#ACACAC' : $Conf[1]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_coulb"]; ?> : <input name="coulb" id="input_coulb" value="<?php echo ($Conf[2] == 'DarkCyan') ? '#008B8B' : $Conf[2]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
@@ -289,14 +287,14 @@
 				<?php echo $LngSRV["preferences_coule"]; ?> : <input name="coule" id="input_coule" value="<?php echo ($Conf[5] == 'Crimson')	? '#DC143C' : $Conf[5]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_coulo"]; ?> : <input name="coulo" id="input_coulo" value="<?php echo ($Conf[0] == 'black') 	? '#000000' : $Conf[0]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<br />
-				<?php echo $LngSRV["preferences_duree"]; ?> (30) : <input name="duree" id="input_duree" value="<?php echo $config_app['duration']; ?>" size="4" type="number" max="365" min="2" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_duree"]; ?> (30) : <input name="duree" id="input_duree" value="<?php echo Config::get('application.pref.duration'); ?>" size="4" type="number" max="365" min="2" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<br />
-				<?php $Conf = $config_app['Percent']; ?>
+				<?php $Conf = Config::get('application.pref.percent'); ?>
 				<span style="float: right; vertical-align: middle;">				<input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: AppliquerPrefGen();" class="button2"/></span>
 				<?php echo $LngSRV["preferences_pct_prog"]; ?> (10) : <input name="prog" id="input_prog" value="<?php echo $Conf[2]; ?>" type="number" size="3" min="2" max="85" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_pct_test"]; ?> (80) : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
-				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo $config_app['TodoNbItems'] ?? 25; ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
-				<?php echo $LngSRV["preferences_tempsfait"]; ?> (1) : <input name="TempsFait" id="input_TempsFait" value="<?php echo $config_app['TempsFait'] ?? 1; ?>" type="number" size="5" min="0" max="100" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo Config::get('application.pref.todoitems'); ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_tempsfait"]; ?> (1) : <input name="TempsFait" id="input_TempsFait" value="<?php echo Config::get('application.pref.tempsfait'); ?>" type="number" size="5" min="0" max="100" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
 
 		<details id="details_sauvegardes">
@@ -347,19 +345,19 @@
 				<h4><strong><?php echo $LngSRV["err_tit"]; ?></strong> : </h4>
 				<span id="span_errors">
 				<?php echo $LngSRV["err_detail"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDet" id="input_err_detail" value="true" type="radio" <?php echo (Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDet" id="input_err_detail_true" value="true" type="radio" <?php echo (Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDet" id="input_err_detail" value="false" type="radio" <?php echo (Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDet" id="input_err_detail_fals" value="false" type="radio" <?php echo (Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
 				<br />
 				<?php echo $LngSRV["err_log"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log" value="true" type="radio" <?php echo (Config::get('error.log') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log_true" value="true" type="radio" <?php echo (Config::get('error.log') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log" value="false" type="radio" <?php echo (Config::get('error.log') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log_fals" value="false" type="radio" <?php echo (Config::get('error.log') ? '' : ' checked="checked"'); ?> />
 				<br />
 				<?php echo $LngSRV["err_exit"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExt" id="input_err_exit" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExt" id="input_err_exit_true" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExt" id="input_err_exit" value="false" type="radio" <?php echo (Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExt" id="input_err_exit_fals" value="false" type="radio" <?php echo (Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
 				<br /><br />
 				<?php echo $LngSRV["err_exittxt"]; ?> :  	 <input name="ErrExittxt" id="input_err_exittxt" value="<?php echo substr(Config::get('error.exit'), 0, strpos(Config::get('error.exit'), "<")-1); ?>" type="input" size="60" maxlength="100"  onkeyup="document.getElementById('span_exemple').innerHTML = this.value + ' <a href=\'todo\'>BUGS</a>';" />
 				</span>

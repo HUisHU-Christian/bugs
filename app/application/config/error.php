@@ -31,7 +31,7 @@ return array(
 	*/
 
    'detail' => true, 
-																														
+																																																																																																																																																																																																																													
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -44,8 +44,8 @@ return array(
 	|
 	*/
 
-   'log' => true, 
-																																		
+   'log' => true,
+																																																																																																																																																																																																																																	
 																					
 
 	/*
@@ -67,8 +67,8 @@ return array(
 	|  - set "Show a message ... " to YES
 	|  - write your message in the message box
 	*/
-   'exit' => 'Ma phrase mènera à .', 
-																														
+   'exit' => 'Les amis, voici vos erreurs en .',
+																																																																																																																																																																																																																													
 
 	/*
 	|--------------------------------------------------------------------------

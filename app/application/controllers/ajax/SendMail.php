@@ -138,8 +138,12 @@
 				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
 				
 				//Si l'usager est en ligne, nous tentons l'envoi d'un courriel
-				//if ($EnLigne) { if (!mail($follower["email"], $subject, $body, $headers)) { echo ' Problème avec le serveur SMTP. Veuillez vérifier vos config.'; } } 
-				mail($follower["email"], $subject, $body, $headers); 
+				////La fonction try est préparée ici, en ce 21 novembre 2021 afin de l'exploiter prochainement
+//				try { 
+					mail($follower["email"], $subject, $body, $headers);
+//				} catch {
+//					return false;
+//				};
 			} else {
 				$mail = new PHPMailer();
 				$mail->Mailer = $optMail['transport'];

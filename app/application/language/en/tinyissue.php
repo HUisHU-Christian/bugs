@@ -13,6 +13,8 @@ return array(
 	'administration_update_description' => 'Update the « Bugs » system and databases.',
 	'admin_backup' => 'Backup',
 	'admin_head' => 'Main configurations',
+	'admin_modif_true' => 'Updated with success',
+	'admin_modif_false' => 'Failed to update preferences',
 	'ago' => 'ago',
 	'aide' => 'Wiki - Help',
 	'archived_project' => 'Archived Project',

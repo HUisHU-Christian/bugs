@@ -23,13 +23,11 @@ Route::controller(array(
 	'administration.users',
 	'administration',
 	'ajax.administration',
-	'ajax.project',
 	'ajax.todo',
+	'ajax.sortable',
 	'todo',
 	'ajax.tags',
-	'ajax.sortable',
 	'roles',
-	'administration',
 	'tags'
 ));
 
@@ -46,8 +44,7 @@ View::composer('layouts.wrapper', function($view) {
 	Asset::script('jquery-ui', 'app/assets/js/jquery-ui.js');
 	Asset::script('app', 'app/assets/js/app.js', 'jquery-ui');
 
-	if(!isset($view->sidebar))
-	{
+	if(!isset($view->sidebar)) {
 		$view->with('sidebar', View::make('layouts.blocks.default_sidebar'));
 	}
 });
@@ -61,8 +58,7 @@ View::composer('layouts.project', function($view) {
 
 	//Asset::script('project', 	'/app/assets/js/project.js', 'uploadify');
 
-	if(!isset($view->sidebar))
-	{
+	if(!isset($view->sidebar)) {
 		$view->with('sidebar', View::make('project.sidebar'));
 	}
 
@@ -107,8 +103,7 @@ Route::filter('csrf', function() {
 });
 
 Route::filter('auth', function() {
-	if (Auth::guest()) 
-	{
+	if (Auth::guest())  {
 		Session::put('return', URI::current());
 		return Redirect::to('login');
 	}
@@ -125,8 +120,19 @@ Route::filter('project', function() {
 	}
 	Project::load_project(Request::route()->parameters[0]);
 
-	if(!Project::current())
-	{
+	if(!Project::current()) {
+		return Response::error('404');
+	}
+});
+
+Route::filter('administration', function() {
+	// find administration id from issue object
+	if (Request::route()->parameters[0] == 0) {
+		return;
+	}
+	administration::load_administration(Request::route()->parameters[0]);
+
+	if(!administration::current()) {
 		return Response::error('404');
 	}
 });
@@ -134,8 +140,7 @@ Route::filter('project', function() {
 Route::filter('issue', function() {
 	Project\Issue::load_issue(Request::route()->parameters[1]);
 
-	if(!Project\Issue::current())
-	{
+	if(!Project\Issue::current()) {
 		return Response::error('404');
 	}
 

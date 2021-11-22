@@ -2,13 +2,13 @@
 	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 //		echo '<script>document.location.href="'.URL::to().'";</script>';
 	}
-	$NbIssues = $config_app["TodoNbItems"] ?? 25;
+	$NbIssues = Config::get('application.pref.todonbitems');
 	
 ?>
 <h3>
 	<?php 
-//Gestion des droits basée sur le rôle spécifique à un projet
-//Selon l'analyse du 13 novembre 2021, il n'est pas néssaire de changer le calcul du droit ci-bas
+	//Gestion des droits basée sur le rôle spécifique à un projet
+	//Selon l'analyse du 13 novembre 2021, il n'est pas néssaire de changer le calcul du droit ci-bas
 	if (Auth::user()->role_id != 1) { ?>
    	<a href="<?php echo Project::current()->to('issue/new'); ?>" class="newissue"><?php echo __('tinyissue.new_issue');?>
    <?php } ?> 
