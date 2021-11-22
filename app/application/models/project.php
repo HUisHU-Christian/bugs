@@ -304,7 +304,7 @@ class Project extends Eloquent {
 			'success' => true
 		);
 	}
-
+	
 	/**
 	* Update a project
 	*

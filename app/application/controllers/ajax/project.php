@@ -14,6 +14,7 @@ class Ajax_Project_Controller extends Base_Controller {
 			'remove_user',
 		));
 		$this->filter('before', 'permission:issue-modify')->only(array(
+			'changeRoleUser',
 			'issue_assign'
 		));
 		
@@ -46,14 +47,14 @@ class Ajax_Project_Controller extends Base_Controller {
 	public function post_chronometrons() {
 		if (Input::get("etat") == 'on') {
 		$resu=	\DB::query("INSERT INTO projects_issues_comments (created_by, project_id, issue_id, temps_fait_deb, created_at) 
-							VALUES (".Input::get("user_id").", ".Input::get("project_id").", ".Input::get("issue_id").", '".date("H:i:s")."', '".date("Y-m-d H:i:s")."') ");
+							VALUES (".\Auth::user()->id.", ".Input::get("project_id").", ".Input::get("issue_id").", '".date("H:i:s")."', '".date("Y-m-d H:i:s")."') ");
 		} else {
 			$resu = \DB::query("UPDATE projects_issues_comments 
 							SET 	comment = '".addslashes(Input::get("comment"))."', 
 									temps_fait_fin = '".date("H:i:s")."', 
 									temps_fait = (HOUR(TIMEDIFF(created_at, '".date("Y-m-d H:i:s")."')) + 1), 
 									updated_at = '".date("Y-m-d H:i:s")."'
-							WHERE created_by = ".Input::get("user_id")."
+							WHERE created_by = ".\Auth::user()->id."
 							AND project_id = ".Input::get("project_id")."
 							AND issue_id = ".Input::get("issue_id")."
 							AND temps_fait_deb IS NOT NULL
@@ -62,6 +63,31 @@ class Ajax_Project_Controller extends Base_Controller {
 							AND updated_at IS NULL");
 		}
 		return $resu;
+	}
+
+	/**
+	* Suggest a list of candidates to be member of the current project
+	* 
+	* @param user 		 string	--- the string we are looking for out of database 
+	* @param project	 int		--- the current project id
+	* @param CettePage string	--- the page where to send infos
+	* @param MonRole	 int		--- the role_id of the current user
+	*/
+	public function post_proposeProjectUser() {
+		$membres = "<br />";
+		$requUSER  = "SELECT USR.id, USR.firstname, USR.lastname ";
+		$requUSER .= "FROM  users AS USR ";
+		$requUSER .= "WHERE (LOWER(USR.firstname) LIKE '%".strtolower($_POST["user"])."%' ";
+		$requUSER .= "			OR LOWER(USR.lastname) LIKE '%".strtolower($_POST["user"])."%' ";
+		$requUSER .= "			OR LOWER(CONCAT(USR.firstname, ' ', USR.lastname)) LIKE '%".strtolower($_POST["user"])."%') ";
+		$requUSER .= "AND USR.id NOT IN (SELECT user_id FROM projects_users WHERE project_id = ".$_POST["projet"]." )";
+		$requUSER .= "ORDER BY firstname ASC, lastname ASC";
+		
+		foreach (\DB::query($requUSER) AS $QuelUSER) {
+			$membres .= '<a href="javascript:addUserProject('.$_POST["projet"].','.$QuelUSER->id.', \''.	$_POST["cettePage"].'\',\''. __('tinyissue.remove').'\',\''. __('tinyissue.projsuppmbre').'\','.$_POST["monRole"].');" style="margin-left: 10%;">+ '.$QuelUSER->firstname.' '.strtoupper($QuelUSER->lastname).'</a><br />';
+		}
+		$membres.= "</ul>";
+		return $membres;
 	}
 
 	public function post_remove_user() {

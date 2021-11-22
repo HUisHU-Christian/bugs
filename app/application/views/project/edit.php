@@ -58,7 +58,7 @@
 
 <?php if(Auth::user()->permission('project-modify')): ?>
 	<div style="width: 50%;">
-	<input type="text" id="input_rechNom" placeholder="" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'page', '<?php echo __('tinyissue.remove'); ?>', '<?php echo __('tinyissue.projsuppmbre'); ?>', <?php echo $MonRole; ?>); }" style="margin-left: 0; border-color: grey; border-style: solid; border-width: 3px;" />
+	<input type="text" id="input_rechNom" placeholder="" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'page', <?php echo $MonRole; ?>); }" style="margin-left: 0; border-color: grey; border-style: solid; border-width: 3px;" />
 	</div>
 	<div id="projetProsedNamesPage" class="projetProsedNamesPage">
 	</div>

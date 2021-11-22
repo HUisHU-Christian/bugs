@@ -29,7 +29,7 @@ class Project_Issue_Controller extends Base_Controller {
 	}
 
 	/**
-		create new issu 
+		create new issue 
 	**/
 	public function post_new() {
 		$issue = Project\Issue::create_issue(Input::all(), Project::current());

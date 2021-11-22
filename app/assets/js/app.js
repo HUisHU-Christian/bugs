@@ -76,7 +76,7 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 						NouvCol.width = "10%";
 						var NouvInput = document.createElement("a");
 						NouvInput.href = "javascript:void(0);";
-						NouvInput.addEventListener("click", function () { remove_project_user(contenu[0], project_id, projsuppmbre, 'page'); } );
+						NouvInput.addEventListener("click", function () { remove_project_user(contenu[0], project_id, projsuppmbre); } );
 						NouvInput.class = "delete";
 						texte = document.createTextNode(tradSupp);
 						NouvInput.appendChild(texte)
@@ -134,11 +134,10 @@ function Chronometrons(etat, nouvText, user_id, issue_id, project_id) {
 		nouvEtat = 'on';
 	}
 		$.post(siteurl + 'ajax/project/chronometrons', {
-		etat : etat,
-		comment : contenu,
-		user_id : user_id,
-		issue_id : issue_id,
-		project_id : project_id
+			etat : etat,
+			comment : contenu,
+			issue_id : issue_id,
+			project_id : project_id
 	}, function(data){
 		var a = data;
 	});
@@ -164,29 +163,22 @@ function Issue_ChgListMbre(NumProj) {
 	xhttp.send(); 
 }
 
-function propose_project_user(user, project_id, cettepage, tradSupp, projsuppmbre, MonRole) {
-	var Exactement = siteurl + "app/application/controllers/ajax/ProjectAddMbrListe.php";
-	Exactement = Exactement + "?Projet=" + project_id;
-	Exactement = Exactement + "&User=" + user;
-	Exactement = Exactement + "&CettePage=" + cettepage;
-	Exactement = Exactement + "&tradSupp=" + tradSupp;
-	Exactement = Exactement + "&projsuppmbre=" + projsuppmbre;
-	Exactement = Exactement + "&MonRole=" + MonRole;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-			if (cettepage == 'sidebar') {
-				document.getElementById('projetProsedNamesList').innerHTML = this.responseText;
-			} else if (cettepage == 'page') {
-				document.getElementById('projetProsedNamesPage').innerHTML = this.responseText;
-			}
-	    }
-	};
-	xhttp.open("GET", Exactement, true);
-	xhttp.send(); 
+function propose_project_user(user, project_id, cettepage, MonRole) {
+	$.post(siteurl + 'ajax/project/proposeProjectUser', {
+		user		: user,
+		projet 	: project_id,
+		cettePage : cettepage,
+		monRole 	: 	MonRole
+	}, function(data){
+		if (cettepage == 'sidebar') {
+			document.getElementById('projetProsedNamesList').innerHTML = data;
+		} else if (cettepage == 'page') {
+			document.getElementById('projetProsedNamesPage').innerHTML = data;
+		}
+	});
 }
 
-function remove_project_user(user_id, project_id, projsuppmbre, cettepage) {
+function remove_project_user(user_id, project_id, projsuppmbre) {
 	if(!confirm(projsuppmbre)){ return false; }
 //	saving_toggle();
 
@@ -211,7 +203,7 @@ function remove_project_user(user_id, project_id, projsuppmbre, cettepage) {
 //		saving_toggle();
 	});
 
-	return true;
+//	return true;
 }
 
 function saving_toggle(){

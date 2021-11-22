@@ -102,23 +102,24 @@ if (Auth::user()->role_id != 1) { ?>
 </ul>
 
 <?php if(Auth::user()->permission('project-modify')): ?>
-	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar', '<?php echo __('tinyissue.remove'); ?>', '<?php echo __('tinyissue.projsuppmbre'); ?>', <?php echo $MonRole; ?>); }" />
+	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar', <?php echo $MonRole; ?>); }" />
 	<div id="projetProsedNamesList">
 	</div>
 <?php endif; ?>
 </div>
-<?php } ?>
-
-<div id="sidebar_Website_title" class="sidebarTitles"><?php echo __('tinyissue.website_title'); ?></div>
-<div id="sidebar_Website" class="sidebarItem">
-<?php
+<?php } 
 	$project_WebLnks = \DB::table('projects_links')->where('id_project', '=', Project::current()->id)->order_by('category','ASC')->get();
 	$WebLnk = array();
 	foreach($project_WebLnks as $WebLnks) {
 		if (trim($WebLnks->desactivated) == '') { $WebLnk[$WebLnks->category] = $WebLnks->link; }
 	}
+?>
+
+<div id="sidebar_Website_title" class="sidebarTitles"><?php echo (count($WebLnk) > 0 ) ? __('tinyissue.website_title') : ''; ?></div>
+<?php
 if (count($WebLnk) > 0 ) {
 ?>
+<div id="sidebar_Website" class="sidebarItem">
 <h2>
 	<?php 
 		//echo __('tinyissue.website_title');
@@ -131,12 +132,13 @@ if (count($WebLnk) > 0 ) {
 		echo '<li><a href="'.$link.'" class="links" target="_blank">'.__('tinyissue.website_'.$categ).'</a></li>';
 	}
 	echo '</ul>';
+	echo '</div>';
+	echo '<br /><br />'; 
+	echo '<br /><br />'; 
 }
-echo '<br /><br />'; 
-echo '<br /><br />'; 
 include_once "application/views/layouts/blocks/wiki.php";
 ?>
-</div>
+
 
 
 <script type="text/javascript" >

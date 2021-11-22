@@ -73,8 +73,7 @@ class User extends \Eloquent {
 	 * @param  int   $project_id
 	 * @return void
 	 */
-	public static function remove_assign($user_id, $project_id)
-	{
+	public static function remove_assign($user_id, $project_id) {
 		static::where('user_id', '=', $user_id)
 			->where('project_id', '=', $project_id)
 			->delete();
@@ -229,8 +228,7 @@ class User extends \Eloquent {
 	 * @param  \User  $user
 	 * @return array
 	 */
-	public static function inactive_projects($all = false, $user = null)
-	{
+	public static function inactive_projects($all = false, $user = null) {
 		if(is_null($user)) {
 			$user = \Auth::user();
 		}
