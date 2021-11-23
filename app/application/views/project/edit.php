@@ -142,12 +142,8 @@
 </div>
 <script type="text/javascript" >
 function Following(etat, Project, Qui) {
-	var xhttp = new XMLHttpRequest();
 	etat = (etat) ? 0 : 1;
-	var NextPage = '../../app/application/controllers/ajax/Following.php?Quoi=2&Qui=' + Qui + '&Project=' + Project + '&Etat=' + etat;
-	xhttp.onreadystatechange = function() {
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	Follows(2, Qui, Project, 0, etat);
+ 
 }
 </script>

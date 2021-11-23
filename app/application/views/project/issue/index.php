@@ -375,16 +375,7 @@ function Following(Quoi, etat) {
 		document.getElementById('input_following_comments').checked = true;
 		document.getElementById('img_following').src = "<?php echo \URL::home();?>app/assets/images/layout/icon-comments_1.png";
 	}
-	var xhttp = new XMLHttpRequest();
-	var NextPage = path + 'Following.php?Quoi=1&Qui=<?php echo \Auth::user()->id; ?>&Quel=<?php echo Project\Issue::current()->id; ?>&Project=<?php echo Project::current()->id; ?>&Etat=' + ((etat) ? 0 : 1);
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttp.responseText != '' ) {
-			}
-		}
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	Follows(1, <?php echo \Auth::user()->id; ?>, <?php echo Project::current()->id; ?>, <?php echo Project\Issue::current()->id; ?>, ((etat) ? 0 : 1));
 }
 
 function IMGupload(input) {

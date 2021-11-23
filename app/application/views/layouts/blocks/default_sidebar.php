@@ -93,20 +93,12 @@
 	});
 	
 	function Following(etat, Project, Qui) {
-		var xhttp = new XMLHttpRequest();
 		etat = document.getElementById('img_follow_' + Project).style.minHeight.substr(0,1);
-		var NextPage = '<?php echo \URL::home(); ?>app/application/controllers/ajax/Following.php?Quoi=2&Qui=' + Qui + '&Project=' + Project + '&Etat=' + etat;
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				if (xhttp.responseText != '' ) {
-				//alert(xhttp.responseText);
-				etat = Math.abs(etat-1);
-				document.getElementById('img_follow_' + Project).src = "<?php echo \URL::home(); ?>app/assets/images/layout/icon-comments_" + etat + ".png";
-				document.getElementById('img_follow_' + Project).style.minHeight = etat+"px";
-				}
-			}
-		};
-		xhttp.open("GET", NextPage, true);
-		xhttp.send(); 
+		var data = Follows(2, Qui, Project, 0, etat);
+		if (data != '') {
+			etat = Math.abs(etat-1);
+			document.getElementById('img_follow_' + Project).src = "<?php echo \URL::home(); ?>app/assets/images/layout/icon-comments_" + etat + ".png";
+			document.getElementById('img_follow_' + Project).style.minHeight = etat+"px";
+		}
 	}
 </script>

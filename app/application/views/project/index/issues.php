@@ -208,19 +208,12 @@ function CalculonsDates(Quoi) {
 function Following(Quel, Project, Qui) {
 	<?php if (@$_GET["tag_id"] != 2) { ?> 
 	var etat = (document.getElementById('a_following_' + Quel).style.minHeight.substr(0,1) == '0') ? 0 : 1;
-	var xhttp = new XMLHttpRequest();
-	var NextPage = '../../app/application/controllers/ajax/Following.php?Quoi=1&Qui=' + Qui + '&Quel=' + Quel + '&Project=' + Project + '&Etat=' + etat;
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttp.responseText != '' ) {
-				etat = Math.abs(etat-1);
-				document.getElementById('a_following_' + Quel).className = "commentstate_" + etat;
-				document.getElementById('a_following_' + Quel).style.minHeight = etat+"px";
-			}
-		}
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	var data = Follows(1, Qui, Project, Quel, etat);
+	if (data != '') {
+		etat = Math.abs(etat-1);
+		document.getElementById('a_following_' + Quel).className = "commentstate_" + etat;
+		document.getElementById('a_following_' + Quel).style.minHeight = etat+"px";
+	}
 	<?php } ?>
 }
 function pad(n, width, z) {

@@ -141,7 +141,7 @@
 				////La fonction try est préparée ici, en ce 21 novembre 2021 afin de l'exploiter prochainement
 				try { 
 					mail($follower["email"], $subject, $body, $headers);
-				} catch {
+				} catch (\Exception $e) {
 					echo '<script>alert("Il fut impossible de confier votre courriel au serveur SMTP désigné.");</script>';
 					return false;
 				};
