@@ -2,7 +2,7 @@
 	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 //		echo '<script>document.location.href="'.URL::to().'";</script>';
 	}
-	$NbIssues = Config::get('application.pref.todonbitems');
+	$NbIssues = \Config::get('application.pref.todonbitems');
 	
 ?>
 <h3>

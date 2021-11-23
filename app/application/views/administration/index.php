@@ -77,10 +77,10 @@
 					</div>
 				</th>
 				<td>
-					<b><?php echo Config::get('tinyissue.version').Config::get('tinyissue.release'); ?></b><br />
-					<?php echo Config::get('tinyissue.version'); ?><br />
-					<?php echo Config::get('tinyissue.release'); ?><br />
-					<?php echo $release_date = Config::get('tinyissue.release_date'); ?><br />
+					<b><?php echo \Config::get('tinyissue.version').\Config::get('tinyissue.release'); ?></b><br />
+					<?php echo \Config::get('tinyissue.version'); ?><br />
+					<?php echo \Config::get('tinyissue.release'); ?><br />
+					<?php echo $release_date = \Config::get('tinyissue.release_date'); ?><br />
 				</td>
 			</tr>
 		</table>
@@ -93,7 +93,7 @@
 			echo '<h4><b>'.$LngSRV["version_check"].'</b> : ';
 			echo '<br /><br />';
 			echo $LngSRV["version_actuelle"];
-			echo ' : '.$verActu.'<br />'.$LngSRV["version_release_numb"].' : '.Config::get('tinyissue.release');
+			echo ' : '.$verActu.'<br />'.$LngSRV["version_release_numb"].' : '.\Config::get('tinyissue.release');
 			echo '<br /><br />';
 			if ($verActu == $verNum) {
 				echo '<a name="Apprécions">'.$LngSRV["version_good"].'!</a>';
@@ -128,7 +128,7 @@
 </div>
 	<br />
 	<div class="pad" style="border-top-style: solid; border-bottom-style: solid; border-color: grey; border-width: 2px;">
-		<?php $Conf = Config::get('application.mail'); ?>
+		<?php $Conf = \Config::get('application.mail'); ?>
 		<details id="details_email_head">
 			<summary><?php echo __('tinyissue.email_head'); ?></summary>
 			<br />
@@ -278,7 +278,7 @@
 			<summary><?php echo $LngSRV['preferences_gen']; ?></summary>
 				<br />
 				<?php 
-					$Conf = Config::get('application.pref.prioritycolors');
+					$Conf = \Config::get('application.pref.prioritycolors');
 				 ?>
 				<?php echo $LngSRV["preferences_coula"]; ?> : <input name="coula" id="input_coula" value="<?php echo ($Conf[1] == 'PaleGray') ? '#ACACAC' : $Conf[1]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_coulb"]; ?> : <input name="coulb" id="input_coulb" value="<?php echo ($Conf[2] == 'DarkCyan') ? '#008B8B' : $Conf[2]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
@@ -287,14 +287,14 @@
 				<?php echo $LngSRV["preferences_coule"]; ?> : <input name="coule" id="input_coule" value="<?php echo ($Conf[5] == 'Crimson')	? '#DC143C' : $Conf[5]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_coulo"]; ?> : <input name="coulo" id="input_coulo" value="<?php echo ($Conf[0] == 'black') 	? '#000000' : $Conf[0]; ?>" type="color" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<br />
-				<?php echo $LngSRV["preferences_duree"]; ?> (30) : <input name="duree" id="input_duree" value="<?php echo Config::get('application.pref.duration'); ?>" size="4" type="number" max="365" min="2" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_duree"]; ?> (30) : <input name="duree" id="input_duree" value="<?php echo \Config::get('application.pref.duration'); ?>" size="4" type="number" max="365" min="2" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<br />
-				<?php $Conf = Config::get('application.pref.percent'); ?>
+				<?php $Conf = \Config::get('application.pref.percent'); ?>
 				<span style="float: right; vertical-align: middle;">				<input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: AppliquerPrefGen();" class="button2"/></span>
 				<?php echo $LngSRV["preferences_pct_prog"]; ?> (10) : <input name="prog" id="input_prog" value="<?php echo $Conf[2]; ?>" type="number" size="3" min="2" max="85" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_pct_test"]; ?> (80) : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
-				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo Config::get('application.pref.todoitems'); ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
-				<?php echo $LngSRV["preferences_tempsfait"]; ?> (1) : <input name="TempsFait" id="input_TempsFait" value="<?php echo Config::get('application.pref.tempsfait'); ?>" type="number" size="5" min="0" max="100" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo \Config::get('application.pref.todoitems'); ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_tempsfait"]; ?> (1) : <input name="TempsFait" id="input_TempsFait" value="<?php echo \Config::get('application.pref.tempsfait'); ?>" type="number" size="5" min="0" max="100" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
 
 		<details id="details_sauvegardes">
@@ -345,27 +345,27 @@
 				<h4><strong><?php echo $LngSRV["err_tit"]; ?></strong> : </h4>
 				<span id="span_errors">
 				<?php echo $LngSRV["err_detail"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDet" id="input_err_detail_true" value="true" type="radio" <?php echo (Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDet" id="input_err_detail_true" value="true" type="radio" <?php echo (\Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDet" id="input_err_detail_fals" value="false" type="radio" <?php echo (Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDet" id="input_err_detail_fals" value="false" type="radio" <?php echo (\Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
 				<br />
 				<?php echo $LngSRV["err_log"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log_true" value="true" type="radio" <?php echo (Config::get('error.log') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log_true" value="true" type="radio" <?php echo (\Config::get('error.log') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log_fals" value="false" type="radio" <?php echo (Config::get('error.log') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log_fals" value="false" type="radio" <?php echo (\Config::get('error.log') ? '' : ' checked="checked"'); ?> />
 				<br />
 				<?php echo $LngSRV["err_exit"]; ?>
-				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExt" id="input_err_exit_true" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExt" id="input_err_exit_true" value="true" type="radio" <?php echo (\Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExt" id="input_err_exit_fals" value="false" type="radio" <?php echo (Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExt" id="input_err_exit_fals" value="false" type="radio" <?php echo (\Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
 				<br /><br />
-				<?php echo $LngSRV["err_exittxt"]; ?> :  	 <input name="ErrExittxt" id="input_err_exittxt" value="<?php echo substr(Config::get('error.exit'), 0, strpos(Config::get('error.exit'), "<")-1); ?>" type="input" size="60" maxlength="100"  onkeyup="document.getElementById('span_exemple').innerHTML = this.value + ' <a href=\'todo\'>BUGS</a>';" />
+				<?php echo $LngSRV["err_exittxt"]; ?> :  	 <input name="ErrExittxt" id="input_err_exittxt" value="<?php echo substr(\Config::get('error.exit'), 0, strpos(\Config::get('error.exit'), "<")-1); ?>" type="input" size="60" maxlength="100"  onkeyup="document.getElementById('span_exemple').innerHTML = this.value + ' <a href=\'todo\'>BUGS</a>';" />
 				</span>
 				<br /><br />
 			<span style="float: right; vertical-align: middle; margin-top: -42px;">
 			<input name="ErrLancer" type="button" class="button2" value="<?php echo __('tinyissue.updating'); ?>" id="input_errLancer" onclick="javascript: AppliquerErr();" />
 			</span>
-			<?php echo $LngSRV['err_result']; ?> : <span id="span_exemple"><?php echo substr(Config::get('error.exit'), 0, strpos(Config::get('error.exit'), "<")-1); ?>&nbsp;<a href="todo" >BUGS</a></span>
+			<?php echo $LngSRV['err_result']; ?> : <span id="span_exemple"><?php echo substr(\Config::get('error.exit'), 0, strpos(\Config::get('error.exit'), "<")-1); ?>&nbsp;<a href="todo" >BUGS</a></span>
 			<br /><br />
 			</div>
 			<br /><br />
@@ -376,7 +376,7 @@
 <script type="text/javascript" src="app/assets/js/admin.js" async ></script>
 <script type="text/javascript" >
 <?php
-	$wysiwyg = Config::get('application.editor');
+	$wysiwyg = \Config::get('application.editor');
 	if (trim(@$wysiwyg['directory']) != '') {
 		if (file_exists($wysiwyg['directory']."/Bugs_code/showeditor.js")) {
 			include_once $wysiwyg['directory']."/Bugs_code/showeditor.js";

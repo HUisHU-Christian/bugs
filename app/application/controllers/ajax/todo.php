@@ -41,7 +41,7 @@ class Ajax_Todo_Controller extends Base_Controller {
 			$sortie .= '	<div class="todo-list-item-inner">';
 			$sortie .= '		<span><span class="colstate" style="color: '.$this->config_app["PriorityColors"][$lane->status].';" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span>#'. $lane->id.'</span>';
 			$sortie .= '			<a href="project/' . $lane->project_id . '/issue/' . $lane->id.'">'.$lane->title.'</a>&nbsp;<span>( '.$lane->weight.'%)</span>';
-			$sortie .= '			<a class="todo-button del" title="Supprimer" data-issue-id="'.$lane->id.'" href="#">[X]</a>';
+			//$sortie .= '			<a class="todo-button del" title="Supprimer" data-issue-id="'.$lane->id.'" href="javascript: alert(\'Fonction à venir\');"">[X]</a>';
 			$sortie .= '		<div>'.$lane->name.'</div>';
 			$sortie .= '	</div>';
 			$sortie .= '</div>

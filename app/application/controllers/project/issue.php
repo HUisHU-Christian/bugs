@@ -425,7 +425,7 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return string
 	 */
 	public function post_upload() {
-		$pref = Config::get('application.attached');
+		$pref = \Config::get('application.attached');
 		$url =\URL::home();
 		$Qui = \Auth::user()->id;
 		$msg = 0;

@@ -50,8 +50,8 @@ class Comment extends  \Eloquent {
 		if (\Project\User::GetRole($project->id) != 1) {
 			$vide = true;
 			$Val = 1;
-			$Val = ($input['Pourcentage'] > Config::get('application.pref.percent')[2]) ? 9: $Val;
-			$Val = ($input['Pourcentage'] > Config::get('application.pref.percent')[3]) ? 8: $Val;
+			$Val = ($input['Pourcentage'] > \Config::get('application.pref.percent')[2]) ? 9: $Val;
+			$Val = ($input['Pourcentage'] > \Config::get('application.pref.percent')[3]) ? 8: $Val;
 			$Val = ($input['Pourcentage'] >= 100) ? 2 : $Val;
 			if(!empty($issue->tags)) {
 				foreach($issue->tags()->order_by('tag', 'ASC')->get() as $tag) {
@@ -64,7 +64,7 @@ class Comment extends  \Eloquent {
 			\DB::table('projects_issues_attachments')->where('upload_token', '=', $input['token'])->where('uploaded_by', '=', \Auth::user()->id)->update(array('issue_id' => $issue->id, 'comment_id' => $comment->id));
 	
 			/* Update the Todo state for this issue  */
-			\DB::table('users_todos')->where('issue_id', '=', $issue->id)->update(array('status' => (($input['Pourcentage'] > Config::get('application.pref.percent')[3]) ? 3: 2), 'weight' => $input['Pourcentage'], 'updated_at'=>date("Y-m-d H:i:s")));
+			\DB::table('users_todos')->where('issue_id', '=', $issue->id)->update(array('status' => (($input['Pourcentage'] > \Config::get('application.pref.percent')[3]) ? 3: 2), 'weight' => $input['Pourcentage'], 'updated_at'=>date("Y-m-d H:i:s")));
 	
 			/* Update the status of this issue according to its percentage done;  */
 			\DB::table('projects_issues')->where('id', '=', $issue->id)->update(array('closed_by' => (($input['Pourcentage'] == 100 ) ? \Auth::user()->id : NULL), 'status' => (($input['Pourcentage'] == 100 )? 0 : $input['status'])));

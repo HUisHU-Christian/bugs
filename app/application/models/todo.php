@@ -159,7 +159,7 @@ class Todo extends Eloquent {
 				\DB::table('projects_issues')->where('id', '=', $issue_id)->update(array('closed_by' =>$user,'closed_at' => date("Y-m-d H:i:s")));
 				\DB::table('users_activity')->insert(array('id' => NULL, 'user_id' => $user, 'parent_id' => $project->id, 'item_id' => $issue, 'action_id' => 3, 'data' => 'Closed through the Kanban Drag & Drop','created_at' => date("Y-m-d H:i:s"),'updated_at' => date("Y-m-d H:i:s")));
 			} else {
-				$Moyenne = (Config::get('application.pref.percent')[$new_status] + Config::get('application.pref.percent')[$new_status + 1]) / 2;
+				$Moyenne = (\Config::get('application.pref.percent')[$new_status] + \Config::get('application.pref.percent')[$new_status + 1]) / 2;
 				$todo->status = $status;
 				$todo->weight = $Moyenne;
 				$todo->updated_at = date("Y-m-d H:i:s");
