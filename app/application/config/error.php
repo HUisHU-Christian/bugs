@@ -30,8 +30,8 @@ return array(
 	|
 	*/
 
-   'detail' => true, 
-																																																																																																																																																																																																																													
+   'detail' => false, 
+																																																																																																																																																																																																																																	
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return array(
 	*/
 
    'log' => true,
-																																																																																																																																																																																																																																	
+																																																																																																																																																																																																																																					
 																					
 
 	/*
@@ -68,7 +68,7 @@ return array(
 	|  - write your message in the message box
 	*/
    'exit' => 'Les amis, voici vos erreurs en .',
-																																																																																																																																																																																																																													
+																																																																																																																																																																																																																																	
 
 	/*
 	|--------------------------------------------------------------------------
