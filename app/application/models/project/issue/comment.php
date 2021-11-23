@@ -140,17 +140,7 @@ class Comment extends  \Eloquent {
 	public static function delete_comment($comment) {
 		$comment = static::find($comment);
 		$issue = \Project\Issue::find($comment->issue_id);
-		$deleted_id = \DB::table('users_activity')->insert_get_id(array(
-						'id'=>NULL,
-						'user_id'=>\Auth::user()->id,
-						'parent_id'=>$issue->project_id,
-						'item_id'=>$comment->issue_id,
-						'action_id'=>NULL,
-						'type_id'=>11,
-						'data'=>$comment->comment,
-						'created_at'=>date("Y-m-d H:i:s"),
-						'updated_at'=>date("Y-m-d H:i:s")
-					));
+		\User\Activity::add(11, $issue->project_id, $comment->issue_id, null, $comment->comment);
 		\DB::table('projects_issues_comments')->where('id', '=', $comment->id)->delete();
 
 		if(!$comment) { return false; }
