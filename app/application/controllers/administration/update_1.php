@@ -1,6 +1,6 @@
 <?php
 		//Enregistrement des mises à jour antérieurement complétées
-		$prevSQL = versionsSQL (array());
+		$prevSQL = \Administration::versionsSQL (array());
 		file_put_contents('../install/historique.txt', implode(";", $prevSQL));
 		
 		//Consignes à l'utilisateur

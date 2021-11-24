@@ -16,14 +16,14 @@ $colorStatus = array(
 	4 => array(255,225,50),
 	5 => array(255,70,70)
 	);
-	foreach (Config::get('application.pref.prioritycolors') as $ind => $val ) {
-		if (Config::get('application.pref.prioritycolors')[$ind] == 'transparent') {
+	foreach (\Config::get('application.pref.prioritycolors') as $ind => $val ) {
+		if (\Config::get('application.pref.prioritycolors')[$ind] == 'transparent') {
 			$colorStatus[$ind] = array(255,255,255);
-		} else if (strlen(Config::get('application.pref.prioritycolors')[$ind]) == 6 && hexdec(Config::get('application.pref.prioritycolors')[$ind])) {
-			$colorStatus[$ind][0] = hexdec(substr(0, 2, Config::get('application.pref.prioritycolors')[$ind]));
-			$colorStatus[$ind][1] = hexdec(substr(2, 2, Config::get('application.pref.prioritycolors')[$ind]));
-			$colorStatus[$ind][2] = hexdec(substr(4, 2, Config::get('application.pref.prioritycolors')[$ind]));
-			if (hexdec(Config::get('application.pref.prioritycolors')[$ind]) < 10066329) { $colorFont[$ind] = 255; }
+		} else if (strlen(\Config::get('application.pref.prioritycolors')[$ind]) == 6 && hexdec(\Config::get('application.pref.prioritycolors')[$ind])) {
+			$colorStatus[$ind][0] = hexdec(substr(0, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			$colorStatus[$ind][1] = hexdec(substr(2, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			$colorStatus[$ind][2] = hexdec(substr(4, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			if (hexdec(\Config::get('application.pref.prioritycolors')[$ind]) < 10066329) { $colorFont[$ind] = 255; }
 		}
 	}
 $rendu = "";

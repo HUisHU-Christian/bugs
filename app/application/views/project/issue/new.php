@@ -70,7 +70,7 @@ if (file_exists($chemin)) {
 			<tr>
 				<th><?php echo __('tinyissue.duration'); ?></th>
 				<td>
-					<input type="number" name="duration" style="width: 60px;" value="<?php echo Config::get('application.pref.duration'); ?>" min="1" max="400" />&nbsp;<?php echo __('tinyissue.days'); ?>
+					<input type="number" name="duration" style="width: 60px;" value="<?php echo \Config::get('application.pref.duration'); ?>" min="1" max="400" />&nbsp;<?php echo __('tinyissue.days'); ?>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<?php echo __('tinyissue.issue_start_at'); ?> : <input name="start_at" id="input_start_at" type="date" value="<?php echo date("Y-m-d"); ?>" />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -222,7 +222,7 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 }
 
 <?php
-	$wysiwyg = Config::get('application.editor');
+	$wysiwyg = \Config::get('application.editor');
 	if (trim(@$wysiwyg['directory']) != '') {
 		if (file_exists($wysiwyg['directory']."/Bugs_code/showeditor.js")) {
 			include_once $wysiwyg['directory']."/Bugs_code/showeditor.js"; 

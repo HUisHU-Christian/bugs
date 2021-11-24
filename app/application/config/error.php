@@ -31,7 +31,7 @@ return array(
 	*/
 
    'detail' => true, 
-																																																																																																																																																																																																																													
+																																																																																																																																																																																																																																																	
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return array(
 	*/
 
    'log' => true,
-																																																																																																																																																																																																																																	
+																																																																																																																																																																																																																																																					
 																					
 
 	/*
@@ -67,8 +67,8 @@ return array(
 	|  - set "Show a message ... " to YES
 	|  - write your message in the message box
 	*/
-   'exit' => 'Les amis, voici vos erreurs en .',
-																																																																																																																																																																																																																													
+   'exit' => 'Cliquez ci-contre pour retourner à la page d`accueil de.',
+																																																																																																																																																																																																																																																	
 
 	/*
 	|--------------------------------------------------------------------------

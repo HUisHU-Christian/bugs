@@ -2,8 +2,6 @@
 if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 	echo '<script>document.location.href="'.URL::to().'";</script>';
 }
-$config_app = Config::get('application.pref');
-$NbIssues = $config_app["todoitems"];
 ?>
 <div class="blue-box">
 	<div class="inside-pad filterANDsort">
@@ -64,14 +62,14 @@ $NbIssues = $config_app["todoitems"];
 <div class="pad">
 <?php
 	$page = $_GET["page"] ?? 1;
-	if (count($issues) > $NbIssues) {
+	if (count($issues) > \Config::get('application.pref.todoitems')) {
 		echo '<br />';
 		$compte = 0;
 		$rendu = 0;
 		echo '<ul class="tabs">';
 		while ($rendu<=count($issues)) {
 			echo '<li'.((++$compte == $page) ? ' class="active"' : '').'><a href="issues?tag_id='.$_GET["tag_id"].'&page='.$compte.'">'.$compte.'</a></li>';
-			$rendu = $rendu + $NbIssues;
+			$rendu = $rendu + \Config::get('application.pref.todoitems');
 		}
 		echo '</ul>';
 	}
@@ -88,9 +86,8 @@ $NbIssues = $config_app["todoitems"];
 			echo '<ul class="issues" id="sortable">';
 			foreach($issues as $row) {
 				$rendu = $rendu + 1;
-				if ($rendu <= (($page-1)*$NbIssues)) { continue; }
-				if ($rendu > ($page*$NbIssues)) { break; }
-//				echo $rendu.'<br />';
+				if ($rendu <= (($page-1)*\Config::get('application.pref.todoitems'))) { continue; }
+				if ($rendu > ($page*\Config::get('application.pref.todoitems'))) { break; }
 				$follower = \DB::table('following')->where('project','=',0)->where('issue_id','=',$row->id)->where('user_id','=',\Auth::user()->id)->count();
 				$follower = ($follower > 0) ? 1 : 0;
 				
@@ -105,7 +102,15 @@ $NbIssues = $config_app["todoitems"];
 					echo '</div>';
 				} 
 
-				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.$config_app["prioritycolors"][$row->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span></span></div>';
+				echo '<div style="width: 72px; float: left; text-align:center; ">
+						<a href="" class="id">#'.$row->id.'</a>
+						<br /><br />
+						<br /><br />
+						<span class="colstate" style="color: '.\Config::get('application.pref.prioritycolors')[$row->status].'; " 
+							onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" 
+							onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;
+						</span>
+					</div>';
 				echo '<div class="data">';
 					echo '<a href="'.$row->to().'" style="font-size: 130%; ">'.$row->title.'</a>';
 					echo '<div class="info">';
@@ -155,7 +160,7 @@ $NbIssues = $config_app["todoitems"];
 								if ($row->duration === 0 || is_null($row->duration)) { $row->duration = 30; }
 								$DurRelat = round(($Dur / $row->duration) * 100);
 								$Dur = round($Dur);
-								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app["percent"][3]) ? 'red' : 'yellow') ;
+								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 								if ($DurRelat >= 50 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'yellow'; }
 								if ($DurRelat >= 75 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'red'; }
 								$TxtColor = ($DurColor == 'yellow') ? 'black' : 'white' ;
@@ -208,19 +213,12 @@ function CalculonsDates(Quoi) {
 function Following(Quel, Project, Qui) {
 	<?php if (@$_GET["tag_id"] != 2) { ?> 
 	var etat = (document.getElementById('a_following_' + Quel).style.minHeight.substr(0,1) == '0') ? 0 : 1;
-	var xhttp = new XMLHttpRequest();
-	var NextPage = '../../app/application/controllers/ajax/Following.php?Quoi=1&Qui=' + Qui + '&Quel=' + Quel + '&Project=' + Project + '&Etat=' + etat;
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttp.responseText != '' ) {
-				etat = Math.abs(etat-1);
-				document.getElementById('a_following_' + Quel).className = "commentstate_" + etat;
-				document.getElementById('a_following_' + Quel).style.minHeight = etat+"px";
-			}
-		}
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	var data = Follows(1, Qui, Project, Quel, etat);
+	if (data != '') {
+		etat = Math.abs(etat-1);
+		document.getElementById('a_following_' + Quel).className = "commentstate_" + etat;
+		document.getElementById('a_following_' + Quel).style.minHeight = etat+"px";
+	}
 	<?php } ?>
 }
 function pad(n, width, z) {

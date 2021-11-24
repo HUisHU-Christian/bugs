@@ -150,12 +150,19 @@
 			document.getElementById('div_divBackupTXT').innerHTML = d[0];
 		});
 	}
+	
+	function DatabaseAjour(fichier) {
+		$.post(siteurl + 'administration/AjourDataBase', {
+			fichier : fichier
+		}, function(data){
+			document.getElementById('span_ajour_' + $nom).innerHTML = "";
+		});
+	}
 
 	function ChangeonsText(Quel, Question) {
 		var texte = CachonsEditor(9);
 		var Enreg = (Question == 'OUI') ? true : false;
 		if (texte != TexteInital && Enreg == false) { Enreg = confirm(Question); }
-//alert("Voici les valeurs évaluées: \nEnreg : " + Enreg + "\nAffiche = " + Affiche + "\nSuiv (Quel) = " + Quel);
 		$.post(siteurl + 'ajax/administration/emails', {
 			Enreg : 	 Enreg,
 			Prec : 	 texte,

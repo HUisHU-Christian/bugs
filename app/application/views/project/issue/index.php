@@ -40,7 +40,7 @@
 		echo '<a href="javascript: null(0);" class="newissue">'.__('tinyissue.new_issue').'</a>';
 	}
 	echo '<div style="position: relative; min-height: 70px;">';
-		echo '<div class="colstate" style="color: '.Config::get('application.pref.prioritycolors')[$issue->status].'; position: absolute; left: 0; top: 0;" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
+		echo '<div class="colstate" style="color: '.\Config::get('application.pref.prioritycolors')[$issue->status].'; position: absolute; left: 0; top: 0;" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
 		echo '</div>';
 		echo '<span style="position: absolute; top: 10px; left: 5%; font-size: 150%; font-weight: bold; ">';	
 		echo ''.$issue->title.'';
@@ -102,8 +102,8 @@
 			if ($issue->duration === 0 || is_null($issue->duration)) { $issue->duration = 30; }
 			$DurRelat = round(($Dur / $issue->duration) * 100);
 			$Dur = round($Dur);
-			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > Config::get('application.pref.percent')[3]) ? 'white' : 'black') ;
-			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
+			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'white' : 'black') ;
+			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 			if ($DurRelat >= 50 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'yellow'; }
 			if ($DurRelat >= 75 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'red'; }
 			$TxtColor = ($DurColor == 'green') ? 'white' : 'black' ;
@@ -136,7 +136,7 @@
 			<div class="insides">
 				<div class="topbar">
 					<strong><?php echo $issue->user->firstname . ' ' . $issue->user->lastname; ?> </strong>
-					<?php echo __('tinyissue.opened_this_issue'); ?>  <?php echo date(Config::get('application.my_bugs_app.date_format'), strtotime($issue->created_at)); ?>
+					<?php echo __('tinyissue.opened_this_issue'); ?>  <?php echo date(\Config::get('application.my_bugs_app.date_format'), strtotime($issue->created_at)); ?>
 				</div>
 
 				<div class="issue">
@@ -146,10 +146,10 @@
 				<ul class="attachments">
 					<?php foreach($issue->attachments()->get() as $attachment) { ?>
 					<li>
-						<?php if(in_array($attachment->fileextension, Config::get('application.image_extensions'))): ?>
-							<a href="<?php echo \URL::home() . Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><img src="<?php echo \URL::home() . Config::get('application.attachment_path') . $project->id . '/' . $attachment->upload_token . '/' . $attachment->filename; ?>" style="max-width: 100px;"  alt="<?php echo $attachment->filename; ?>" /></a>
+						<?php if(in_array($attachment->fileextension, \Config::get('application.image_extensions'))): ?>
+							<a href="<?php echo \URL::home() . \Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><img src="<?php echo \URL::home() . Config::get('application.attachment_path') . $project->id . '/' . $attachment->upload_token . '/' . $attachment->filename; ?>" style="max-width: 100px;"  alt="<?php echo $attachment->filename; ?>" /></a>
 						<?php else: ?>
-							<a href="<?php echo \URL::home() . Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><?php echo \URL::home().$attachment->filename; ?></a>
+							<a href="<?php echo \URL::home() . \Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><?php echo \URL::home().$attachment->filename; ?></a>
 						<?php endif; ?>
 					</li>
 					<?php } ?>
@@ -245,7 +245,7 @@
 						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1'),0=>__('tinyissue.priority_desc_0')), $issue->status); 
 						echo '&nbsp;&nbsp;&nbsp;';
 						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
-						echo '<input type="number" name="temps_fait" value="'.Config::get('application.pref.tempsfait').'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
+						echo '<input type="number" name="temps_fait" value="'.\Config::get('application.pref.tempsfait').'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
 					} else {
 						if ($MonRole != 1 ) { 
 							echo '<br />'; 
@@ -375,16 +375,7 @@ function Following(Quoi, etat) {
 		document.getElementById('input_following_comments').checked = true;
 		document.getElementById('img_following').src = "<?php echo \URL::home();?>app/assets/images/layout/icon-comments_1.png";
 	}
-	var xhttp = new XMLHttpRequest();
-	var NextPage = path + 'Following.php?Quoi=1&Qui=<?php echo \Auth::user()->id; ?>&Quel=<?php echo Project\Issue::current()->id; ?>&Project=<?php echo Project::current()->id; ?>&Etat=' + ((etat) ? 0 : 1);
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttp.responseText != '' ) {
-			}
-		}
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	Follows(1, <?php echo \Auth::user()->id; ?>, <?php echo Project::current()->id; ?>, <?php echo Project\Issue::current()->id; ?>, ((etat) ? 0 : 1));
 }
 
 function IMGupload(input) {
@@ -534,7 +525,7 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 }
 <?php
 	$rendu = 0;
-	$wysiwyg = Config::get('application.editor');
+	$wysiwyg = \Config::get('application.editor');
 	if (trim(@$wysiwyg['directory']) != '') {
 		if (file_exists($wysiwyg['directory']."/Bugs_code/showeditor.js")) {
 			include $wysiwyg['directory']."/Bugs_code/showeditor.js"; 

@@ -25,7 +25,7 @@
 						echo '</div>';
 					} 
 					?>
-					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo Config::get('application.pref.prioritycolors')[$row->status]; ?>;"  onmouseover="document.getElementById('taglev').style.display = 'block';" onmouseout="document.getElementById('taglev').style.display = 'none';">&#9899;</span></div>
+					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo \Config::get('application.pref.prioritycolors')[$row->status]; ?>;"  onmouseover="document.getElementById('taglev').style.display = 'block';" onmouseout="document.getElementById('taglev').style.display = 'none';">&#9899;</span></div>
 					<div class="data">
 						<a href="<?php echo $row->to(); ?>"><?php echo $row->title; ?></a>
 						<div class="info">
@@ -64,7 +64,7 @@
 						if ($row->duration === 0 || is_null($row->duration)) { $row->duration = 30; }
 						$DurRelat = round(($Dur / $row->duration) * 100);
 						$Dur = round($Dur);
-						$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
+						$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 						if ($DurRelat >= 50 && $Percent <= 50 ) { $DurColor = 'yellow'; } 
 						if ($DurRelat >= 75 && $Percent <= 50 ) { $DurColor = 'red'; } 
 						echo '<div style="position: relative; top: -10px; left: 70px; background-color: '.$DurColor.'; color:white; width: '.(($DurRelat >= 100) ? $SizeXtot : ($DurRelat*$SizeX)).'px; height: 4px; text-align: left; line-height:4px;" /></div>'; 

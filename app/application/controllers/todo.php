@@ -21,7 +21,7 @@ class Todo_Controller extends Base_Controller {
 
 		//Les billets ouverts
 		for ($index=1; $index<4; $index++) {
-			$todos = Todo::load_user_todos(">", Config::get('application.pref.percent')[$index],Config::get('application.pref.percent')[$index+1]);
+			$todos = Todo::load_user_todos(">", \Config::get('application.pref.percent')[$index],Config::get('application.pref.percent')[$index+1]);
 			foreach ($todos as $todo) {
 				$lanes[$index][] = $todo;
 			}

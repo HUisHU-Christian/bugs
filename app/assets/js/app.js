@@ -17,18 +17,15 @@ function AffichonsVieux(url,id) {
 
 function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, MonRole) {
 	var contenu = new Array();
-	var Exactement = siteurl + "app/application/controllers/ajax/ProjectAddMbr.php";
-	Exactement = Exactement + "?Projet=" + project_id;
-	Exactement = Exactement + "&User=" + user;
-	Exactement = Exactement + "&CettePage=" + cettepage;
-	Exactement = Exactement + "&tradSupp=" + tradSupp;
-	Exactement = Exactement + "&MonRole=" + MonRole;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if ( this.responseText  != "") {
+	$.post(siteurl + 'ajax/project/addUserProject', {
+		Projet 	: project_id,
+		User 		: user,
+		CettePage : cettepage,
+		MonRole 	: MonRole
+	}, function(data){
+			if ( data  != "") {
 				if (cettepage == 'page') {
-					var c = this.responseText;
+					var c = data;
 					contenu = c.split("|");
 					var detail = "";
 					var texte = "";
@@ -87,7 +84,7 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 					document.getElementById('projetProsedNamesPage').innerHTML = "";
 					document.getElementById('input_rechNom').value = "";
 				} else {
-					contenu[2] = this.responseText;
+					contenu[2] = data;
 					contenu[1] = contenu[2].substring(contenu[2].indexOf(">")+1);
 					contenu[0] = contenu[1].substring(0, contenu[1].indexOf("<"));
 					var user = Math.round(Math.random()*999);
@@ -107,10 +104,7 @@ function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, Mon
 				if (document.getElementById('add-user-project')) 		{ document.getElementById('add-user-project').innerHTML = ""; }
 				if (document.getElementById('sidebar-users')) 			{ document.getElementById('sidebar-users').innerHTML = document.getElementById('sidebar-users').innerHTML + '<li id="project-user' + user + '">' + contenu[2] + '</li>'; }
 			}
-		}
-	};
-	xhttp.open("GET", Exactement, true);
-	xhttp.send(); 
+	});
 }
 
 function ChgRoleUser(role_id, project_id, user_id) {
@@ -121,8 +115,6 @@ function ChgRoleUser(role_id, project_id, user_id) {
 	}, function(data){
 		var a = 1;
 	});
-
-	return true;
 }
 
 function Chronometrons(etat, nouvText, user_id, issue_id, project_id) {
@@ -146,21 +138,26 @@ function Chronometrons(etat, nouvText, user_id, issue_id, project_id) {
 	document.getElementById('input_chrono').classList.remove("chrono_" + etat);
 	document.getElementById('input_chrono').classList.add("chrono_" + nouvEtat);
 	chronoOnOff = nouvEtat;
+}
 
-	return true;
+function Follows(Quoi, Qui, ProjectID, IssueID, Etat) {
+	$.post(siteurl + 'ajax/project/following', {
+		quoi	: Quoi,
+		qui	: Qui,
+		projet : ProjectID,
+		issue : IssueID,
+		etat 	: 	Etat
+	}, function(data){
+		return data;
+	});
 }
 
 function Issue_ChgListMbre(NumProj) {
-	var Exactement = siteurl + "app/application/controllers/ajax/ListMbr.php"
-	Exactement = Exactement + "?Projet=" + NumProj;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-			document.getElementById('project_newSelectResp').innerHTML = this.responseText;
-	    }
-	};
-	xhttp.open("GET", Exactement, true);
-	xhttp.send(); 
+	$.post(siteurl + 'ajax/project/issueChgListMbre', {
+		projet 	: NumProj
+	}, function(data){
+		document.getElementById('project_newSelectResp').innerHTML = data;
+	});
 }
 
 function propose_project_user(user, project_id, cettepage, MonRole) {

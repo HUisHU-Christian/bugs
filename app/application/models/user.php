@@ -274,7 +274,7 @@ class User extends Eloquent {
 		if($info['password']) {
 			$update['password'] = Hash::make($info['password']);
 		}
-		User::find($id)->fill($update)->save();
+		\User::find($id)->fill($update)->save();
 		
 		//Modification des rôles de cet usager dans les différents projets
 		foreach ($info["roles"] as $proj => $role ) {

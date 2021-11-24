@@ -41,7 +41,7 @@ class Ajax_Todo_Controller extends Base_Controller {
 			$sortie .= '	<div class="todo-list-item-inner">';
 			$sortie .= '		<span><span class="colstate" style="color: '.$this->config_app["PriorityColors"][$lane->status].';" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span>#'. $lane->id.'</span>';
 			$sortie .= '			<a href="project/' . $lane->project_id . '/issue/' . $lane->id.'">'.$lane->title.'</a>&nbsp;<span>( '.$lane->weight.'%)</span>';
-			$sortie .= '			<a class="todo-button del" title="Supprimer" data-issue-id="'.$lane->id.'" href="#">[X]</a>';
+			//$sortie .= '			<a class="todo-button del" title="Supprimer" data-issue-id="'.$lane->id.'" href="javascript: alert(\'Fonction à venir\');"">[X]</a>';
 			$sortie .= '		<div>'.$lane->name.'</div>';
 			$sortie .= '	</div>';
 			$sortie .= '</div>
@@ -82,14 +82,14 @@ class Ajax_Todo_Controller extends Base_Controller {
 					if ($new_status >= 0 && $new_status <= 3) {
 						// Close issue if todo is moved to closed lane. 
 						if ($new_status == 0) {
-							\DB::query ("INSERT INTO users_activity (id,user_id,parent_id,item_id,type_id,created_at,updated_at) VALUES (NULL, ".\Auth::user()->id.", ".$lane->project_id.", ".$issue_id.", 3, NOW(), NOW() ) on duplicate key UPDATE updated_at = NOW()");
+							\User\Activity::add(3, $lane->project_id, $issue_id);
 							\DB::query ("UPDATE users_todos SET status = 0, updated_at = NOW() WHERE issue_id = ".$issue_id);
 							\DB::query ("UPDATE projects_issues SET status = 0, closed_by = ".\Auth::user()->id.", closed_at = NOW() WHERE id = ".$issue_id."");
 							\DB::query ("UPDATE projects_issues_tags SET tag_id = 2, updated_at = NOW() WHERE id = ".$issue_id." AND tag_id = 1");
 							$retour = 8;
 						} else {
 							$Moyenne = ($this->config_app['Percent'][$new_status] + $this->config_app['Percent'][$new_status + 1]) / 2;
-							\DB::query ("INSERT INTO users_activity (id,user_id,parent_id,item_id,type_id, created_at,updated_at) VALUES (NULL, ".\Auth::user()->id.", ".$lane->project_id.", ".$issue_id.", 4, NOW(), NOW() ) on duplicate key UPDATE updated_at = NOW()");
+							\User\Activity::add(4, $lane->project_id, $issue_id);
 							\DB::query ("UPDATE users_todos SET status = ".(($lane->status == 0) ? 4 : $lane->status ).", weight = ".$Moyenne.", updated_at = NOW() WHERE issue_id = ".$issue_id);
 							\DB::query ("UPDATE projects_issues SET closed_by = NULL, closed_at = NULL, status = ".(($lane->status == 0) ? 4 : $lane->status ).", weight = ".$Moyenne.", updated_at = NOW() WHERE id = ".$issue_id);
 							\DB::query ("UPDATE projects_issues_tags SET tag_id = 1, updated_at = NOW() WHERE id = ".$issue_id." AND tag_id = 2");

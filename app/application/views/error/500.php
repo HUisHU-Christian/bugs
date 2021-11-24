@@ -6,86 +6,27 @@
 		<title>Error 500 - Internal Server Error</title>
 
 		<style>
-			@import url(//fonts.googleapis.com/css?family=Ubuntu);
-
 			body {
-				background: #eee;
-				color: #6d6d6d;
-				font: normal normal normal 14px/1.253 Ubuntu, sans-serif;
-				margin: 0 0 25px 0;
-				min-width: 800px;
-				padding: 0;
+				background: #121212;
+				color: #c3c4c5;
+				font: 14pt;
 			}
-
-			#main {
-				background-clip: padding-box;
-				background-color: #fff;
-				border:1px solid #ccc;
-				border-radius: 5px;
-				box-shadow: 0 0 10px #cdcdcd;
-				margin: 25px auto 0;
-				padding: 30px;
-				width: 700px;
-				position: relative;
+			a {
+				color: yellow;
 			}
-
-			#main h1 {
-				font-family: 'Ubuntu';
-				font-size: 38px;
-				letter-spacing: 2px;
-				margin: 0 0 10px 0;
-				padding: 0;
-			}
-
-			#main h2 {
-				color: #999;
-				font-size: 18px;
-				letter-spacing: 3px;
-				margin: 0 0 25px 0;
-				padding: 0 0 0 0;
-			}
-
-			#main h3 {
-				color: #999;
-				margin-top: 24px;
-				padding: 0 0 0 0;
-			}
-
-			#main h3 {
-				font-size: 18px;
-			}
-
-			#main p {
-				line-height: 25px;
-				margin: 10px 0;
-			}
-
-			#main pre {
-				background-color: #333;
-				border-left: 1px solid #d8d8d8;
-				border-top: 1px solid #d8d8d8;
-				border-radius: 5px;
-				color: #eee;
-				padding: 10px;
-			}
-
-			#main ul {
-				margin: 10px 0;
-				padding: 0 30px;
-			}
-
-			#main li {
-				margin: 5px 0;
+			a:hover {
+				color: white;
 			}
 		</style>
 	</head>
 	<body>
-	<img src="app/assets/images/layout/logo_brouille.png" height="100" alt="" />
+	<a href="<?php echo URL::to(); ?>"><img src="app/assets/images/layout/logo_degrade.png" height="100" alt="" /></a>
 		<div id="main">
-			<?php $messages = array(__('tinyissue.error404_title_0'),__('tinyissue.error404_title_1'),__('tinyissue.error404_title_2')); ?>
+			<?php 
+				$messages = array(__('tinyissue.error404_title_0'),__('tinyissue.error404_title_1'),__('tinyissue.error404_title_2')); 
+			?>
 
 			<h1><?php echo $messages[mt_rand(0, 2)]; ?></h1>
-			<a href="<?php echo URL::to(); ?>"><img src="app/assets/images/layout/logo.jpg" height="200" alt="" /></a>
 
 			<h2><?php echo __('tinyissue.error500_header'); ?></h2>
 
