@@ -12,6 +12,8 @@ Route::any('project/(:num)/issue/(:num)', 'project.issue@index');
 Route::any('project/(:num)/issue/(:num)/(:any)', 'project.issue@(:3)');
 Route::any('tag/new', 'tags@new');
 Route::any('tag/(:num)/edit', 'tags@edit');
+//Route::any('activity/new', 'acitvity@new');
+//Route::any('activity/(:num)/edit', 'activity@edit');
 
 Route::controller(array(
 	'home',
@@ -21,6 +23,7 @@ Route::controller(array(
 	'user',
 	'administration.update',
 	'administration.users',
+	'administration.activity',
 	'administration',
 	'ajax.administration',
 	'ajax.project',

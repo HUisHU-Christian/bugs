@@ -220,6 +220,26 @@ class Activity extends Eloquent {
 		}
 		$mail->AddAddress ($follower["email"]);
 		$result = $mail->Send() ? "Successfully sent!" : "Mailer Error: " . $mail->ErrorInfo;
+	}
+	
+	public static function update_activity($info) {
+		//Enregistrement de la modification en bdd
+		$requ = "UPDATE activity SET ";
+		$lien = "";
+		foreach ($info["desc"] as $ind => $val) {
+			if (in_array($ind, array('id'))) { continue; }
+			$requ .= $lien.strtoupper(substr($ind, 1, strpos($ind, "'", 2)-1 )). " = '".$val."'";
+			$lien = ", ";
+		}
+		$requ .= " WHERE id = ".$info["id"];
+
+		try {
+			\DB::query($requ);
+		} catch (\Exception $e) {
+			return array('success' => false, 'requ' => $requ);
+		}
+		return array('success' => true, 'requ' => $requ);
+
 	}	
 	
 	private static function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS", $values = array()) {
