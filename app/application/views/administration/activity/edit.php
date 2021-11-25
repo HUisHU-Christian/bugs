@@ -21,7 +21,7 @@
 				echo '<tr><td style="vertical-align: middle; text-align: right; padding-right: 20px;">';
 				echo ((\Auth::user()->language == $lng) ? '<b>' : '').strtoupper($lng).((\Auth::user()->language == $lng) ? '</b>' : '');
 				echo '</td><td>';
-				echo '<input name="desc[\''.$lng.'\']" value="'.$desc.'" style="background-color:'.((\Auth::user()->language == $lng) ? 'transparent' : '#CCCCCC').'; height: 40px; border-radius: 5px;" size="100" />';
+				echo '<input name="desc['.$lng.']" value="'.$desc.'" style="background-color:'.((\Auth::user()->language == $lng) ? 'transparent' : '#CCCCCC').'; height: 40px; border-radius: 5px;" size="100" />';
 				echo '</td></tr>';
 			}
 			?>
@@ -36,10 +36,7 @@
 				</td>
 			</tr>
 		</table>
-
 		<?php echo Form::token(); ?>
-		
-
 	</form>
 
 </div>
