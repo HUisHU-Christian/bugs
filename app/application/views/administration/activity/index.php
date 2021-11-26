@@ -1,7 +1,6 @@
 <h3>
 	<?php 
-		echo 'Bienvenue dans la gestion des activités';
-		//echo __('tinyissue.activitys') 
+		echo __('tinyissue.activities') 
 	?>
 </h3>
 
@@ -16,8 +15,8 @@
 		$lang[] = $val;
 	}
 	echo '<table width="100%" id="table_activitys_toutes">';
-		echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;">'.__('tinyissue.activity').'</th>';
-		foreach ($lang as $l) { echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;">'.strtoupper($l).'</th>'; }
+		echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;" onclick="javascript: document.location.href=\''. URL::to('administration/activity').'?orderby=id&sens='.((!isset($_GET["sens"])) ? 'ASC' : (($_GET["sens"] == 'ASC' && $_GET["orderby"] == 'id') ? 'DESC': 'ASC')).'\';">'.__('tinyissue.activity').'</th>';
+		foreach ($lang as $l) { echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;" onclick="javascript: document.location.href=\''. URL::to('administration/activity').'?orderby='.$l.'&sens='.((!isset($_GET["sens"])) ? 'ASC' : (($_GET["sens"] == 'ASC' && $_GET["orderby"] == $l) ? 'DESC': 'ASC')).'\';">'.strtoupper($l).'</th>'; }
 		foreach($activities as $activity) {
 			echo '<tr>';
 			echo '<td style="padding-bottom: 15px;">';

@@ -9,8 +9,10 @@ class Administration_Activity_Controller extends Base_Controller {
 	}
 
 	public function get_index() {
+		$orderBY = (isset($_GET["orderby"])) ? $_GET["orderby"] : \Auth::user()->language;
+		$sens = (isset($_GET["sens"])) ? $_GET["sens"] : "ASC"; 
 		return $this->layout->with('active', 'dashboard')->nest('content', 'administration.activity.index', array(
-			'activities' => \Activity::order_by(\Auth::user()->language, 'ASC')->get()
+			'activities' => \Activity::order_by($orderBY, $sens)->get()
 		));
 	}
 

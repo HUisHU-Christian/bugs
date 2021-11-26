@@ -1,6 +1,6 @@
 <h3>
 	<?php 
-		echo  __('tinyissue_activity_edit').' « '.Input::old('activity', $activity->activity).' »'; 
+		echo  __('tinyissue.activity_edit').' « '.Input::old('activity', $activity->activity).' »'; 
 	?>
 </h3>
 
