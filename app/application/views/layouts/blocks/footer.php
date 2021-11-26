@@ -8,14 +8,13 @@
 	<div id="taglev" class="taglev" onclick="this.style.display = 'none';">
 	<?php
 		$statut = $issue->status ?? 99;
-		$config_app = require path('public') . 'config.app.php';
 		for ($x=5; $x>0; $x--) {
-			echo '<span id="span_statut_'.$x.'"><span  class="Affcolstate" style="color: '.$config_app['PriorityColors'][$x].'; font-size: 200%;">&#9899;</span>'.(($statut == $x) ? '<b>' : '').__('tinyissue.priority_desc_'.$x).(($statut == $x) ? '</b>' : '');
+			echo '<span id="span_statut_'.$x.'"><span  class="Affcolstate" style="color: '.\Config::get('application.pref.prioritycolors')[$x].'; font-size: 200%;">&#9899;</span>'.(($statut == $x) ? '<b>' : '').__('tinyissue.priority_desc_'.$x).(($statut == $x) ? '</b>' : '');
 			echo '</span><br />
 			';
 		}
 		$x = 0; 
-		echo '<span id="span_statut_'.$x.'"><span class="Affcolstate" style="color: '.$config_app['PriorityColors'][$x].'; font-size: 200%;">&#9899;</span>'.(($statut == $x) ? '<b>' : '').__('tinyissue.priority_desc_'.$x).(($statut == $x) ? '</b>' : '');
+		echo '<span id="span_statut_'.$x.'"><span class="Affcolstate" style="color: '.\Config::get('application.pref.prioritycolors')[$x].'; font-size: 200%;">&#9899;</span>'.(($statut == $x) ? '<b>' : '').__('tinyissue.priority_desc_'.$x).(($statut == $x) ? '</b>' : '');
 		echo '</span>';
 	?>
 	

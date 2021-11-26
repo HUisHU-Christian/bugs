@@ -48,6 +48,14 @@ class User extends \Eloquent {
 		}
 	}
 	
+	public static function GetRole($project_id, $default = 4) {
+		$MonRole =  \DB::table('projects_users')->where('user_id', '=', \Auth::user()->id)
+				->where('project_id', '=', $project_id)
+				->get(array('role_id'));
+				
+		return ($MonRole[0]->role_id == 0) ? $default : $MonRole[0]->role_id;
+	}
+	
 	public static function MbrProj($user_id, $project_id) {
 		$resu = false;
 		if (is_null($user_id)) { $user_id = \Auth::user(); }
@@ -65,11 +73,11 @@ class User extends \Eloquent {
 	 * @param  int   $project_id
 	 * @return void
 	 */
-	public static function remove_assign($user_id, $project_id)
-	{
+	public static function remove_assign($user_id, $project_id) {
 		static::where('user_id', '=', $user_id)
 			->where('project_id', '=', $project_id)
 			->delete();
+		\DB::table("following")->where('user_id', '=', $user_id)->where('project_id', '=', $project_id)->delete();
 	}
 
 	/**
@@ -83,6 +91,62 @@ class User extends \Eloquent {
 		return (bool) static::where('user_id', '=', $user_id)
 				->where('project_id', '=', $project_id)
 				->first(array('id'));
+	}
+
+	/**
+	 * Changes the role of an user for a project
+	 *
+	 * @param  int   $user_id
+	 * @param  int   $role_id
+	 * @param  int   $project_id
+	 * @return bool
+	 */
+	public static function change_role($user_id, $role_id, $project_id) {
+		$resu = \DB::table('projects_users')->where('user_id', '=', $user_id)
+				->where('project_id', '=', $project_id)
+				->update(array('role_id' => $role_id, 'updated_at' => date("Y-m-d H:i:s")));
+
+		return (bool) $resu;
+	}
+
+	/**
+	 * Checks the role an user for a project
+	 *
+	 * @param  int   $user_id
+	 * @param  int   $project_id
+	 * @return bool
+	 */
+	public static function check_role($user_id, $project_id, $zero = 4) {
+		$roles = array($zero);
+		$val = \DB::table('projects_users')->where('user_id', '=', $user_id)
+				->where('project_id', '=', $project_id)
+				->get(array('role_id'));
+		if (!isset($val[0]->role_id)) { return array(0); }
+		$role = ($val[0]->role_id == 0) ? $zero : $val[0]->role_id;
+		for ($x=1; $x<5; $x++) {
+			if ($role >= $x) { $roles[] = $x; }
+		}
+		return $roles;
+	}
+
+	/**
+	 * List of available roles for a person, list ready in select roll-up form
+	 *
+	 * @param  int   $user_id
+	 * @param  int   $project_id
+	 * @return bool
+	 */
+	public static function list_roles($user_id, $project_id, $userRole) {
+		$role = User::check_role($user_id, $project_id, 0);
+		$sonRole = (is_array($userRole)) ? max($userRole) : $userRole;
+		$liste = '<select name="roles['.$project_id.']">';
+		$liste .= '<option value="0">'.__('tinyissue.null').'</option>';
+		$roles = \Role::where('id','<=',max($role))->get(array('id', 'name'));
+		foreach($roles as $ind => $val) {
+			$liste .= '<option value="'.$val->id.'" '.(($val->id == $sonRole) ? 'selected="selected"' : '').'>'.$val->name.'</option>';
+		}
+		$liste .= '</select>';
+		return $liste;
 	}
 
 	/**
@@ -165,8 +229,7 @@ class User extends \Eloquent {
 	 * @param  \User  $user
 	 * @return array
 	 */
-	public static function inactive_projects($all = false, $user = null)
-	{
+	public static function inactive_projects($all = false, $user = null) {
 		if(is_null($user)) {
 			$user = \Auth::user();
 		}

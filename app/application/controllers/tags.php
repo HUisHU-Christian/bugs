@@ -15,7 +15,7 @@ class Tags_Controller extends Base_Controller {
 	 */
 	public function get_index() {
 		return $this->layout->with('active', 'dashboard')->nest('content', 'tags.index', array(
-			'tags' => Tag::order_by('tag', 'ASC')->get()
+			'tags' => \Tag::order_by(\Auth::user()->language, 'ASC')->get()
 		));
 	}
 	

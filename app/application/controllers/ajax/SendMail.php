@@ -111,6 +111,11 @@
 			$message = str_replace("'", "`", $message);
 
 			if ($optMail['transport'] == 'mail') {
+				//Testons un ping afin de savoir si l'usager est en ligne ou non
+//				$pingresult = shell_exec('ping -c 1 -w '.$optMail['smtp']['server']);
+//				$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
+//				if (!$EnLigne) { echo '<script>alert("Serveur SMTP inateignable");</script>'; return false; }
+
 				$boundary = md5(uniqid(microtime(), TRUE));
 				$headers = 'From: "'.$optMail['from']['name'].'" <'.$optMail['from']['email'].'>'.$passage_ligne;
 				$headers .= 'Reply-To: "'.$optMail['replyTo']['name'].'" <'.$optMail['replyTo']['email'].'>'.$passage_ligne;
@@ -131,7 +136,15 @@
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
 				$body .= $passage_ligne.'';
 				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
-				mail($follower["email"], $subject, $body, $headers);
+				
+				//Si l'usager est en ligne, nous tentons l'envoi d'un courriel
+				////La fonction try est préparée ici, en ce 21 novembre 2021 afin de l'exploiter prochainement
+				try { 
+					mail($follower["email"], $subject, $body, $headers);
+				} catch (\Exception $e) {
+					echo '<script>alert("Il fut impossible de confier votre courriel au serveur SMTP désigné.");</script>';
+					return false;
+				};
 			} else {
 				$mail = new PHPMailer();
 				$mail->Mailer = $optMail['transport'];
@@ -189,9 +202,10 @@
 			}
 		}
 	}
+
+//return true;
 	
 function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS", $values = array()) {
-	echo '<script>alert("BOnjour ");';
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 	$lfin = $tit ? ' »' : '</a>';
 	//$liss = $tit ? ' « ' : '<a href="'.(str_replace("issue/new", "issue/".$IssueID."/", $link)).'">';

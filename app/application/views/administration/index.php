@@ -57,6 +57,10 @@
 				<td><b><?php echo $tags; ?></b></td>
 			</tr>
 			<tr>
+				<th><a href="administration/activity"><?php echo __('tinyissue.activity'); ?>s</a></th>
+				<td><b><?php echo $acitivities; ?></b></td>
+			</tr>
+			<tr>
 				<th><a href="user/issues"><?php echo __('tinyissue.issues'); ?></a>
 					<div class="adminListe">
 						<?php echo __('tinyissue.open_issues'); ?><br />
@@ -122,6 +126,16 @@
 				echo Form::token();
 				echo '</form>';
 			}
+			echo '<br /><br />';
+			echo '<hr style="border: dotted;" /><br />';
+			echo '<h4><b>'.$LngSRV["Database_Update_check"].'</b></h4> ';
+			$diff = \Administration::VerifDataBase();
+			if (count($diff) == 0) { 
+				echo '<h4 style="color: green; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_ok"].'</h4>';
+			} else { 
+				echo '<h4 style="color: red; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>';
+				foreach ($diff as $nom) { echo '<span id="span_ajour_'.$nom.'">- <a href="javascript: DatabaseAjour(\''.$nom.'\');">'.$nom.'</a><br /></span>'; }
+			} 
 		?>
 	</div>
 	</details>
@@ -211,8 +225,8 @@
 			<?php
 				$con = __('tinyissue.tinyissue.following_email_comment');
 				$tit = __('tinyissue.tinyissue.following_email_comment_tit');
-				if (file_exists($dir."attached.html")) { $con = file_get_contents($dir."/comment.html"); }
-				if (file_exists($dir."attached_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
+				if (file_exists($dir."comment.html")) { $con = file_get_contents($dir."/comment.html"); }
+				if (file_exists($dir."comment_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
 			?>
 			<?php echo __('tinyissue.title'); ?> : <input name="TitreMsg" id="input_TitreMsg" value="<?php echo $tit; ?>" size="40" />
 			&nbsp;&nbsp;&nbsp;&nbsp;
@@ -295,6 +309,7 @@
 				<?php echo $LngSRV["preferences_pct_prog"]; ?> (10) : <input name="prog" id="input_prog" value="<?php echo $Conf[2]; ?>" type="number" size="3" min="2" max="85" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_pct_test"]; ?> (80) : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo $config_app['TodoNbItems'] ?? 25; ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_tempsfait"]; ?> (1) : <input name="TempsFait" id="input_TempsFait" value="<?php echo $config_app['TempsFait'] ?? 1; ?>" type="number" size="5" min="0" max="100" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
 
 		<details id="details_sauvegardes">

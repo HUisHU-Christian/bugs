@@ -21,7 +21,7 @@ return array(
 	 'method' : how to store the attached files
 	   | Possible values are limited to : 'd', 'i'
 	   | 'd' like 'directories' : all together in a single directory
-	   | 'i' like 'issue' : each issue has its own sub-directory   ... if you chose this option, the 'I' value of 'format' will be skipped
+	   | 'i' like 'issue' 		: each issue has its own sub-directory   ... if you chose this option, the 'I' value of 'format' will be skipped
 	   | Default value : 'i'
 	 */
 	'attached' => array(
@@ -153,6 +153,8 @@ return array(
 		*   - {first} for his first name
 		*   - {last} for his last name
 		*   - {full} for his full name  ( first name and last name )
+		* These contents may be edited in the administration page, tab « Global settings for email »
+		* When edited by administration page, the values bellow will be empty and the new content saved into uploads/intro.html and uploads/bye.html files
 		*/
 		'intro' => 'Hello {first},',
 		'bye' => 'Bye.',
@@ -209,6 +211,12 @@ return array(
 	/** Todo : Number of items per column		
 	*/ 
 	'TodoNbItems' => 25,
+
+	/** TempsFait
+	*	Default duration of work (in hours) to be charged to your client
+	*  Default value is 1
+	*/
+	'TempsFait' => 1,
 
 );
 ?>

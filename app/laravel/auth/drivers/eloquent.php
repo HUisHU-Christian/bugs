@@ -33,10 +33,8 @@ class Eloquent extends Driver {
 	public function attempt($arguments = array()) {
 		$user = $this->model()->where(function($query) use($arguments) {
 			$username = Config::get('auth.username');
-			
 			$query->where($username, '=', $arguments['username']);
-
-			foreach(array_except($arguments, array('username', 'password', 'remember')) as $column => $val) {
+			foreach(array_exceptFct($arguments, array('username', 'password', 'remember')) as $column => $val) {
 			    $query->where($column, '=', $val);
 			}
 		})->first();
@@ -44,9 +42,7 @@ class Eloquent extends Driver {
 		// If the credentials match what is in the database we will just
 		// log the user into the application and remember them if asked.
 		$password = $arguments['password'];
-
 		$password_field = Config::get('auth.password', 'password');
-
 		if ( ! is_null($user) and Hash::check($password, $user->{$password_field})) {
 			return $this->login($user->get_key(), array_get($arguments, 'remember'));
 		}

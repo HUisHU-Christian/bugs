@@ -34,12 +34,12 @@ class Administration_Users_Controller extends Base_Controller {
 
 	public function get_edit($user_id) {
 		return $this->layout->with('active', 'dashboard')->nest('content', 'administration.users.edit', array(
-			'user' => User::find($user_id)
+			'user' => \User::find($user_id)
 		));
 	}
 
 	public function post_edit($user_id) {
-		$update = User::update_user(Input::all(),$user_id);
+		$update = \User::update_user(Input::all(),$user_id);
 
 		if(!$update['success']) {
 			return Redirect::to('administration/users/edit/' . $user_id)
