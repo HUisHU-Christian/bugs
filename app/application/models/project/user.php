@@ -77,6 +77,7 @@ class User extends \Eloquent {
 		static::where('user_id', '=', $user_id)
 			->where('project_id', '=', $project_id)
 			->delete();
+		\DB::table("following")->where('user_id', '=', $user_id)->where('project_id', '=', $project_id)->delete();
 	}
 
 	/**
