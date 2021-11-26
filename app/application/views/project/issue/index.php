@@ -86,7 +86,7 @@
 		////Here we show the progress bar
 		if ($MonRole != 1) {
 			if (is_object($EtatTodo)) {
-				echo '<div class="Percent">';
+				echo '<div class="Percent" id="div_ProgressBarPercent">';
 				echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($EtatTodo->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.$EtatTodo->weight.'%</div>';
 				echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$EtatTodo->weight.'%; width: '.(100-$EtatTodo->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.(100-$EtatTodo->weight).'%</div>';
 				echo '</div>';
@@ -109,9 +109,9 @@
 			$TxtColor = ($DurColor == 'green') ? 'white' : 'black' ;
 			////Here we show to progress bar
 			echo __('tinyissue.countdown').' ('.__('tinyissue.day').'s) : ';
-			echo '<div class="Percent">';
+			echo '<div class="Percent" id="div_ProgressBarDays">';
 			echo '<div style="color: '.$DurColoF.'; background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$issue->duration : $Dur).'</div>';
-			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.(($issue->start_at > date("Y-m-d")) ? '<b>'.substr($issue->start_at, 0, 10).'</b> + ' : '').''.$issue->duration.'</div>'; }
+			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.((substr($issue->start_at,0,10) > date("Y-m-d")) ? '<b>'.substr($issue->start_at, 0, 10).'</b> + ' : '').''.$issue->duration.'</div>'; }
 			echo '</div>';
 	
 	

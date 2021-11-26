@@ -145,9 +145,9 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								$Etat = Todo::load_todo($row->id);
 								////Here we show the progress bar
 								if (is_object($Etat)) {
-									echo '<div class="Percent2">';
-									echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.$Etat->weight.'%</div>';
-									echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$Etat->weight.'%; width: '.(100-$Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.(100-$Etat->weight).'%</div>';
+									echo '<div class="Percent2" id="div_ProgressBarPercent">';
+									echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>';
+									echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$Etat->weight.'%; width: '.(100-$Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>';
 									echo '</div>';
 								}
 						
@@ -165,9 +165,9 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								if ($DurRelat >= 75 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'red'; }
 								$TxtColor = ($DurColor == 'yellow') ? 'black' : 'white' ;
 								////Here we show to progress bar
-								echo '<div class="Percent2">';
-								echo '<div style="background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$row->duration : $Dur).'</div>';
-								if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.$row->duration.'</div>'; }
+								echo '<div class="Percent2" id="div_ProgressBarDays">';
+								echo '<div style="background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>';
+								if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>'; }
 								echo '</div>';
 					}
 					echo '<br clear="all" />';
