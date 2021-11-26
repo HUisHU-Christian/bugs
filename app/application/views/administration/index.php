@@ -57,6 +57,10 @@
 				<td><b><?php echo $tags; ?></b></td>
 			</tr>
 			<tr>
+				<th><a href="administration/activity"><?php echo __('tinyissue.activity'); ?>s</a></th>
+				<td><b><?php echo $acitivities; ?></b></td>
+			</tr>
+			<tr>
 				<th><a href="user/issues"><?php echo __('tinyissue.issues'); ?></a>
 					<div class="adminListe">
 						<?php echo __('tinyissue.open_issues'); ?><br />
@@ -122,6 +126,16 @@
 				echo Form::token();
 				echo '</form>';
 			}
+			echo '<br /><br />';
+			echo '<hr style="border: dotted;" /><br />';
+			echo '<h4><b>'.$LngSRV["Database_Update_check"].'</b></h4> ';
+			$diff = \Administration::VerifDataBase();
+			if (count($diff) == 0) { 
+				echo '<h4 style="color: green; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_ok"].'</h4>';
+			} else { 
+				echo '<h4 style="color: red; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>';
+				foreach ($diff as $nom) { echo '<span id="span_ajour_'.$nom.'">- <a href="javascript: DatabaseAjour(\''.$nom.'\');">'.$nom.'</a><br /></span>'; }
+			} 
 		?>
 	</div>
 	</details>

@@ -203,6 +203,11 @@ class Project_Controller extends Base_Controller {
 			->with_errors($update['errors'])
 			->with('notice-error', __('tinyissue.we_have_some_errors'));
 	}
+
+	public function post_changeRoleUser() {
+		return "Nous sommes ici à la ligne 211 - POST de controllers/project.php";
+	}	
+	
 	public function Courriel ($Type, $SkipUser, $ProjectID, $IssueID, $User, $contenu, $src) {
 		$User = Auth::user()->id;
 		include_once "application/controllers/ajax/SendMail.php";

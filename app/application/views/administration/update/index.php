@@ -5,15 +5,6 @@
 <div class="pad">
 
 <?php
-function versionsSQL ($comparable) {
-	$lesVersions = array();
-	$prevUpdates = scandir("../install");
-	foreach ($prevUpdates as $ind => $nom) {
-		if (substr($nom, 0, 8) == 'update_v' && !in_array($nom, $comparable) ) { $lesVersions[] = $nom; }
-	}
-	return $lesVersions;
-}
-
 //Sécurisation de l'accès
 $_SERVER ["HTTP_REFERER"] = $_SERVER ["HTTP_REFERER"] ?? 'Patates pilées';
 $venant = substr($_SERVER ["HTTP_REFERER"], strpos($_SERVER ["HTTP_REFERER"], '//')+2);
@@ -41,7 +32,7 @@ if (($venant == $valableAdmin  || $venant == $valableUpadte) && isset($_POST["Et
 	
 	if ($Etape == 1) {
 		//Enregistrement des mises à jour antérieurement complétées
-		$prevSQL = versionsSQL (array());
+		$prevSQL = \Administration::versionsSQL (array());
 		file_put_contents('../install/historique.txt', implode(";", $prevSQL));
 		include_once "application/controllers/administration/update_1.php";
 	} else if ($Etape == 2) {

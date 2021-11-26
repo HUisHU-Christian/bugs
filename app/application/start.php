@@ -9,6 +9,7 @@
 | trace, we can turn off the display_errors ini directive. However, you
 | may want to enable this option if you ever run into a dreaded white
 | screen of death, as it can provide some clues.
+| More detailed config about errors managing are available in app/config/error.php
 |
 */
 
@@ -33,7 +34,13 @@ Laravel\Event::listen(Laravel\Config::loader, function($bundle, $file) use ($con
 				'mail' => $config_app['mail'],
 				'my_bugs_app'=>$config_app['my_bugs_app'],
 				'timezone' => $config_app['timezone'],
-				'url' => isset($config_app['url']) ? $config_app['url'] : ''
+				'url' => isset($config_app['url']) ? $config_app['url'] : '',
+				'pref' => array('percent' => $config_app['Percent'] ?? array (100,0,10,80,100),
+									 'duration' => $config_app['duration'] ?? 30,
+									 'prioritycolors' => $config_app['PriorityColors'] ?? array("black","Orchid","Cyan","Lime","orange","red"),
+									 'todoitems' => $config_app['TodoNbItems'] ?? 25,
+									 'tempsfait' => $config_app['TempsFait'] ?? 0
+				),
 			);
 			$load =  $config + $load;
 			break;
