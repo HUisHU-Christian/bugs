@@ -14,10 +14,8 @@ class Fluent extends Driver {
 	 * @param  int  $id
 	 * @return mixed|null
 	 */
-	public function retrieve($id)
-	{
-		if (filter_var($id, FILTER_VALIDATE_INT) !== false)
-		{
+	public function retrieve($id) {
+		if (filter_var($id, FILTER_VALIDATE_INT) !== false) {
 			return DB::table(Config::get('auth.table'))->find($id);
 		}
 	}
@@ -28,8 +26,7 @@ class Fluent extends Driver {
 	 * @param  array $arguments
 	 * @return void
 	 */
-	public function attempt($arguments = array())
-	{
+	public function attempt($arguments = array()) {
 		$user = $this->get_user($arguments);
 
 		// If the credentials match what is in the database we will just
@@ -38,8 +35,7 @@ class Fluent extends Driver {
 
 		$password_field = Config::get('auth.password', 'password');
 
-		if ( ! is_null($user) and Hash::check($password, $user->{$password_field}))
-		{
+		if ( ! is_null($user) and Hash::check($password, $user->{$password_field})) {
 			return $this->login($user->id, array_get($arguments, 'remember'));
 		}
 
@@ -52,18 +48,15 @@ class Fluent extends Driver {
 	 * @param  array  $arguments
 	 * @return mixed
 	 */
-	protected function get_user($arguments)
-	{
+	protected function get_user($arguments) {
 		$table = Config::get('auth.table');
 
-		return DB::table($table)->where(function($query) use($arguments)
-		{
+		return DB::table($table)->where(function($query) use($arguments) {
 			$username = Config::get('auth.username');
 			
 			$query->where($username, '=', $arguments['username']);
 
-			foreach(array_except($arguments, array('username', 'password', 'remember')) as $column => $val)
-			{
+			foreach(array_exceptFct($arguments, array('username', 'password', 'remember')) as $column => $val) {
 			    $query->where($column, '=', $val);
 			}
 		})->first();

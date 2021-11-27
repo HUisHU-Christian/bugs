@@ -29,7 +29,7 @@ class Project_Issue_Controller extends Base_Controller {
 	}
 
 	/**
-		create new issu 
+		create new issue 
 	**/
 	public function post_new() {
 		$issue = Project\Issue::create_issue(Input::all(), Project::current());
@@ -85,7 +85,8 @@ class Project_Issue_Controller extends Base_Controller {
 		//Email to followers
 		$this->Courriel ("Issue", true, Project::current()->id, Project\Issue::current()->id, \Auth::user()->id, array('comment'), array('tinyissue'));
 
-		$message = __('tinyissue.your_comment_added').(((Input::get('status') == 0 || Input::get('Fermons') == 0) && \Auth::user()->role_id != 1) ? ' --- '.__('tinyissue.issue_has_been_closed') : '');
+		//$message = __('tinyissue.your_comment_added').(((Input::get('status') == 0 || Input::get('Fermons') == 0) && \Auth::user()->role_id != 1) ? ' --- '.__('tinyissue.issue_has_been_closed') : '');
+		$message = __('tinyissue.your_comment_added').(((Input::get('status') == 0 || Input::get('Fermons') == 0) && \Project\User::GetRole(Project::current()->id) != 1) ? ' --- '.__('tinyissue.issue_has_been_closed') : '');
 		$retour = '/project/'.Project::current()->id.'/issues?tag_id=1';   
 		return Redirect::to($retour)->with('notice', $message);
 	}
@@ -185,18 +186,7 @@ class Project_Issue_Controller extends Base_Controller {
 		$Avant->comment = str_replace("<ul>", "<br />", $Avant->comment );
 		$Avant->comment = str_replace("</ul>", "<br />", $Avant->comment );
 
-		$edited_id = \DB::table('users_activity')->insert_get_id(array(
-						'id'=>NULL,
-						'user_id'=>\Auth::user()->id,
-						'parent_id'=>$Avant->project_id,
-						'item_id'=>$Avant->issue_id,
-						'action_id'=>Input::get('id'),
-						'type_id'=>12,
-						'data'=>$Avant->comment,
-						'created_at'=>$Avant->created_at,
-						'updated_at'=>date("Y-m-d H:i:s")
-					));
-
+		\User\Activity::add(12, $Avant->project_id, $Avant->issue_id, Input::get('id'), $Avant->comment, $Avant->created_at, NULL);
 		\DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->update(array('comment' => Input::get('body'), 'updated_at' => date("Y-m-d H:i:s")));
 
 		return Redirect::to(Project\Issue::current()->to())
@@ -424,7 +414,7 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return string
 	 */
 	public function post_upload() {
-		$pref = Config::get('application.attached');
+		$pref = \Config::get('application.attached');
 		$url =\URL::home();
 		$Qui = \Auth::user()->id;
 		$msg = 0;

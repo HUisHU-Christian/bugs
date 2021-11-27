@@ -315,11 +315,11 @@ class Issue extends \Eloquent {
 			'status' => $input['status'],
 			'start_at' => $input['start_at']
 		);
-		\DB::query("INSERT INTO users_activity VALUES (NULL, ".\Auth::user()->id.", NULL, ".$this->id.", NULL, 10, NULL, NOW(), NOW()) ");
+		\User\Activity::add(10, NULL, $this->id);
 
 		/* Add to activity log for assignment if changed */
 		if($input['assigned_to'] != $this->assigned_to) {
-			\DB::query("INSERT INTO users_activity VALUES (NULL, ".\Auth::user()->id.", NULL, ".$this->id.", ".$input['assigned_to'].", 5, NULL, NOW(), NOW()) ");
+			\User\Activity::add(5, NULL, $this->id, $input['assigned_to']);
 			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
 		}
 		$this->fill($fill);

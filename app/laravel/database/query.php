@@ -114,8 +114,7 @@ class Query {
 	 * @param  string      $table
 	 * @return void
 	 */
-	public function __construct(Connection $connection, Query\Grammars\Grammar $grammar, $table)
-	{
+	public function __construct(Connection $connection, Query\Grammars\Grammar $grammar, $table) {
 		$this->from = $table;
 		$this->grammar = $grammar;
 		$this->connection = $connection;
@@ -126,8 +125,7 @@ class Query {
 	 *
 	 * @return Query
 	 */
-	public function distinct()
-	{
+	public function distinct() {
 		$this->distinct = true;
 		return $this;
 	}
@@ -138,8 +136,7 @@ class Query {
 	 * @param  array  $columns
 	 * @return Query
 	 */
-	public function select($columns = array('*'))
-	{
+	public function select($columns = array('*')) {
 		$this->selects = (array) $columns;
 		return $this;
 	}
@@ -154,8 +151,7 @@ class Query {
 	 * @param  string  $type
 	 * @return Query
 	 */
-	public function join($table, $column1, $operator = null, $column2 = null, $type = 'INNER')
-	{
+	public function join($table, $column1, $operator = null, $column2 = null, $type = 'INNER') {
 		if ($column1 instanceof Closure) {
 			// If the "column" is really an instance of a Closure, the developer is
 			// trying to create a join with a complex "ON" clause. So, we will add
@@ -268,8 +264,7 @@ class Query {
 	 * @param  mixed   $value
 	 * @return Query
 	 */
-	public function or_where($column, $operator = null, $value = null)
-	{
+	public function or_where($column, $operator = null, $value = null) {
 		return $this->where($column, $operator, $value, 'OR');
 	}
 
@@ -279,8 +274,7 @@ class Query {
 	 * @param  mixed  $value
 	 * @return Query
 	 */
-	public function or_where_id($value)
-	{
+	public function or_where_id($value) {
 		return $this->or_where('id', '=', $value);		
 	}
 
@@ -293,8 +287,7 @@ class Query {
 	 * @param  bool    $not
 	 * @return Query
 	 */
-	public function where_in($column, $values, $connector = 'AND', $not = false)
-	{
+	public function where_in($column, $values, $connector = 'AND', $not = false) {
 		$type = ($not) ? 'where_not_in' : 'where_in';
 
 		$this->wheres[] = compact('type', 'column', 'values', 'connector');
@@ -311,8 +304,7 @@ class Query {
 	 * @param  array   $values
 	 * @return Query
 	 */
-	public function or_where_in($column, $values)
-	{
+	public function or_where_in($column, $values) {
 		return $this->where_in($column, $values, 'OR');
 	}
 
@@ -324,8 +316,7 @@ class Query {
 	 * @param  string  $connector
 	 * @return Query
 	 */
-	public function where_not_in($column, $values, $connector = 'AND')
-	{
+	public function where_not_in($column, $values, $connector = 'AND') {
 		return $this->where_in($column, $values, $connector, true);
 	}
 
@@ -336,8 +327,7 @@ class Query {
 	 * @param  array   $values
 	 * @return Query
 	 */
-	public function or_where_not_in($column, $values)
-	{
+	public function or_where_not_in($column, $values) {
 		return $this->where_not_in($column, $values, 'OR');
 	}
 	
@@ -351,8 +341,7 @@ class Query {
 	 * @param  boolean $not       
 	 * @return Query
 	 */
-	public function where_between($column, $min, $max, $connector = 'AND', $not = false)
-	{
+	public function where_between($column, $min, $max, $connector = 'AND', $not = false) {
 		$type = ($not) ? 'where_not_between' : 'where_between';
 
 		$this->wheres[] = compact('type', 'column', 'min', 'max', 'connector');
@@ -371,8 +360,7 @@ class Query {
 	 * @param  mixed  $max       
 	 * @return Query
 	 */
-	public function or_where_between($column, $min, $max)
-	{
+	public function or_where_between($column, $min, $max) {
 		return $this->where_between($column, $min, $max, 'OR');
 	}
 
@@ -384,8 +372,7 @@ class Query {
 	 * @param  mixed  $max       
 	 * @return Query
 	 */
-	public function where_not_between($column, $min, $max, $connector = 'AND')
-	{
+	public function where_not_between($column, $min, $max, $connector = 'AND') {
 		return $this->where_between($column, $min, $max, $connector, true);
 	}
 
@@ -434,8 +421,7 @@ class Query {
 	 * @param  string  $connector
 	 * @return Query
 	 */
-	public function where_not_null($column, $connector = 'AND')
-	{
+	public function where_not_null($column, $connector = 'AND') {
 		return $this->where_null($column, $connector, true);
 	}
 
@@ -445,8 +431,7 @@ class Query {
 	 * @param  string  $column
 	 * @return Query
 	 */
-	public function or_where_not_null($column)
-	{
+	public function or_where_not_null($column) {
 		return $this->where_not_null($column, 'OR');
 	}
 
@@ -457,8 +442,7 @@ class Query {
 	 * @param  string   $connector
 	 * @return Query
 	 */
-	public function where_nested($callback, $connector = 'AND')
-	{
+	public function where_nested($callback, $connector = 'AND') {
 		$type = 'where_nested';
 
 		// To handle a nested where statement, we will actually instantiate a new
@@ -471,8 +455,7 @@ class Query {
 		// Once the callback has been run on the query, we will store the nested
 		// query instance on the where clause array so that it's passed to the
 		// query's query grammar instance when building.
-		if ($query->wheres !== null)
-		{
+		if ($query->wheres !== null) {
 			$this->wheres[] = compact('type', 'query', 'connector');
 		}
 
@@ -488,8 +471,7 @@ class Query {
 	 * @param  array   $parameters
 	 * @return Query
 	 */
-	private function dynamic_where($method, $parameters)
-	{
+	private function dynamic_where($method, $parameters) {
 		$finder = substr($method, 6);
 
 		$flags = PREG_SPLIT_DELIM_CAPTURE;
@@ -507,22 +489,18 @@ class Query {
 
 		$index = 0;
 
-		foreach ($segments as $segment)
-		{
+		foreach ($segments as $segment) {
 			// If the segment is not a boolean connector, we can assume it it is
 			// a column name, and we'll add it to the query as a new constraint
 			// of the query's where clause and keep iterating the segments.
-			if ($segment != '_and_' and $segment != '_or_')
-			{
+			if ($segment != '_and_' and $segment != '_or_') {
 				$this->where($segment, '=', $parameters[$index], $connector);
 
 				$index++;
-			}
+			} else {
 			// Otherwise, we will store the connector so we know how the next
 			// where clause we find in the query should be connected to the
 			// previous one and will add it when we find the next one.
-			else
-			{
 				$connector = trim(strtoupper($segment), '_');
 			}
 		}
@@ -536,8 +514,7 @@ class Query {
 	 * @param  string  $column
 	 * @return Query
 	 */
-	public function group_by($column)
-	{
+	public function group_by($column) {
 		$this->groupings[] = $column;
 		return $this;
 	}
@@ -549,8 +526,7 @@ class Query {
 	 * @param  string  $operator
 	 * @param  mixed   $value
 	 */
-	public function having($column, $operator, $value)
-	{
+	public function having($column, $operator, $value) {
 		$this->havings[] = compact('column', 'operator', 'value');
 
 		$this->bindings[] = $value;
@@ -565,8 +541,7 @@ class Query {
 	 * @param  string  $direction
 	 * @return Query
 	 */
-	public function order_by($column, $direction = 'asc')
-	{
+	public function order_by($column, $direction = 'asc') {
 		$this->orderings[] = compact('column', 'direction');
 		return $this;
 	}
@@ -577,8 +552,7 @@ class Query {
 	 * @param  int  $value
 	 * @return Query
 	 */
-	public function skip($value)
-	{
+	public function skip($value) {
 		$this->offset = $value;
 		return $this;
 	}
@@ -589,8 +563,7 @@ class Query {
 	 * @param  int  $value
 	 * @return Query
 	 */
-	public function take($value)
-	{
+	public function take($value) {
 		$this->limit = $value;
 		return $this;
 	}
@@ -602,8 +575,7 @@ class Query {
 	 * @param  int    $per_page
 	 * @return Query
 	 */
-	public function for_page($page, $per_page)
-	{
+	public function for_page($page, $per_page) {
 		return $this->skip(($page - 1) * $per_page)->take($per_page);
 	}
 
@@ -614,8 +586,7 @@ class Query {
 	 * @param  array   $columns
 	 * @return object
 	 */
-	public function find($id, $columns = array('*'))
-	{
+	public function find($id, $columns = array('*')) {
 		return $this->where('id', '=', $id)->first($columns);
 	}
 
@@ -625,8 +596,7 @@ class Query {
 	 * @param  string  $column
 	 * @return mixed
 	 */
-	public function only($column)
-	{
+	public function only($column) {
 		$sql = $this->grammar->select($this->select(array($column)));
 
 		return $this->connection->only($sql, $this->bindings);
@@ -638,8 +608,7 @@ class Query {
 	 * @param  array  $columns
 	 * @return mixed
 	 */
-	public function first($columns = array('*'))
-	{
+	public function first($columns = array('*')) {
 		$columns = (array) $columns;
 
 		// Since we only need the first result, we'll go ahead and set the
@@ -657,8 +626,7 @@ class Query {
 	 * @param  string  $key
 	 * @return array
 	 */
-	public function lists($column, $key = null)
-	{
+	public function lists($column, $key = null) {
 		$columns = (is_null($key)) ? array($column) : array($column, $key);
 
 		$results = $this->get($columns);
@@ -667,8 +635,7 @@ class Query {
 		// Of course, this array will simply have numeric keys. After we
 		// have this array we will determine if we need to key the array
 		// by another column from the result set.
-		$values = array_map(function($row) use ($column)
-		{
+		$values = array_map(function($row) use ($column) {
 			return $row->$column;
 
 		}, $results);
@@ -677,10 +644,8 @@ class Query {
 		// set the keys on the array of values using the array_combine
 		// function provided by PHP, which should give us the proper
 		// array form to return from the method.
-		if ( ! is_null($key) && count($results))
-		{
-			return array_combine(array_map(function($row) use ($key)
-			{
+		if ( ! is_null($key) && count($results)) {
+			return array_combine(array_map(function($row) use ($key) {
 				return $row->$key;
 
 			}, $results), $values);
@@ -695,8 +660,7 @@ class Query {
 	 * @param  array  $columns
 	 * @return array
 	 */
-	public function get($columns = array('*'))
-	{
+	public function get($columns = array('*')) {
 		if (is_null($this->selects)) $this->select($columns);
 
 		$sql = $this->grammar->select($this);
@@ -706,10 +670,8 @@ class Query {
 		// If the query has an offset and we are using the SQL Server grammar,
 		// we need to spin through the results and remove the "rownum" from
 		// each of the objects since there is no "offset".
-		if ($this->offset > 0 and $this->grammar instanceof SQLServer)
-		{
-			array_walk($results, function($result)
-			{
+		if ($this->offset > 0 and $this->grammar instanceof SQLServer) {
+			array_walk($results, function($result) {
 				unset($result->rownum);
 			});
 		}
@@ -729,8 +691,7 @@ class Query {
 	 * @param  array   $columns
 	 * @return mixed
 	 */
-	public function aggregate($aggregator, $columns)
-	{
+	public function aggregate($aggregator, $columns) {
 		// We'll set the aggregate value so the grammar does not try to compile
 		// a SELECT clause on the query. If an aggregator is present, it's own
 		// grammar function will be used to build the SQL syntax.
@@ -755,8 +716,7 @@ class Query {
 	 * @param  array      $columns
 	 * @return Paginator
 	 */
-	public function paginate($per_page = 20, $columns = array('*'))
-	{
+	public function paginate($per_page = 20, $columns = array('*')) {
 		// Because some database engines may throw errors if we leave orderings
 		// on the query when retrieving the total number of records, we'll drop
 		// all of the ordreings and put them back on the query.
@@ -782,8 +742,7 @@ class Query {
 	 * @param  array  $values
 	 * @return bool
 	 */
-	public function insert($values)
-	{
+	public function insert($values) {
 		// Force every insert to be treated like a batch insert to make creating
 		// the binding array simpler since we can just spin through the inserted
 		// rows as if there/ was more than one every time.
@@ -794,8 +753,7 @@ class Query {
 		// We need to merge the the insert values into the array of the query
 		// bindings so that they will be bound to the PDO statement when it
 		// is executed by the database connection.
-		foreach ($values as $value)
-		{
+		foreach ($values as $value) {
 			$bindings = array_merge($bindings, array_values($value));
 		}
 
@@ -811,18 +769,15 @@ class Query {
 	 * @param  string  $column
 	 * @return int
 	 */
-	public function insert_get_id($values, $column = 'id')
-	{
+	public function insert_get_id($values, $column = 'id') {
 		$sql = $this->grammar->insert_get_id($this, $values, $column);
 
 		$result = $this->connection->query($sql, array_values($values));
 
-		if ($this->grammar instanceof Postgres)
-		{
+		if ($this->grammar instanceof Postgres) {
 			return (int) $result[0]->$column;
 		}
-		else
-		{
+		else {
 			return (int) $this->connection->pdo->lastInsertId();
 		}
 	}
@@ -834,8 +789,7 @@ class Query {
 	 * @param  int     $amount
 	 * @return int
 	 */
-	public function increment($column, $amount = 1)
-	{
+	public function increment($column, $amount = 1) {
 		return $this->adjust($column, $amount, ' + ');
 	}
 
@@ -846,8 +800,7 @@ class Query {
 	 * @param  int     $amount
 	 * @return int
 	 */
-	public function decrement($column, $amount = 1)
-	{
+	public function decrement($column, $amount = 1) {
 		return $this->adjust($column, $amount, ' - ');
 	}
 
@@ -859,8 +812,7 @@ class Query {
 	 * @param  string  $operator
 	 * @return int
 	 */
-	protected function adjust($column, $amount, $operator)
-	{
+	protected function adjust($column, $amount, $operator) {
 		$wrapped = $this->grammar->wrap($column);
 
 		// To make the adjustment to the column, we'll wrap the expression in an
@@ -877,8 +829,7 @@ class Query {
 	 * @param  array  $values
 	 * @return int
 	 */
-	public function update($values)
-	{
+	public function update($values) {
 		// For update statements, we need to merge the bindings such that the update
 		// values occur before the where bindings in the array since the sets will
 		// precede any of the where clauses in the SQL syntax that is generated.
@@ -897,13 +848,11 @@ class Query {
 	 * @param  int   $id
 	 * @return int
 	 */
-	public function delete($id = null)
-	{
+	public function delete($id = null) {
 		// If an ID is given to the method, we'll set the where clause to
 		// match on the value of the ID. This allows the developer to
 		// quickly delete a row by its primary key value.
-		if ( ! is_null($id))
-		{
+		if ( ! is_null($id)) {
 			$this->where('id', '=', $id);
 		}
 
@@ -917,18 +866,15 @@ class Query {
 	 *
 	 * This method handles calls to aggregates as well as dynamic where clauses.
 	 */
-	public function __call($method, $parameters)
-	{
-		if (strpos($method, 'where_') === 0)
-		{
+	public function __call($method, $parameters) {
+		if (strpos($method, 'where_') === 0) {
 			return $this->dynamic_where($method, $parameters, $this);
 		}
 
 		// All of the aggregate methods are handled by a single method, so we'll
 		// catch them all here and then pass them off to the agregate method
 		// instead of creating methods for each one of them.
-		if (in_array($method, array('count', 'min', 'max', 'avg', 'sum')))
-		{
+		if (in_array($method, array('count', 'min', 'max', 'avg', 'sum'))) {
 			if (count($parameters) == 0) $parameters[0] = '*';
 
 			return $this->aggregate(strtoupper($method), (array) $parameters[0]);

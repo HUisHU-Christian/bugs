@@ -1,7 +1,3 @@
-<?php 
-$config_app = require path('public') . 'config.app.php';  
-if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = array("black","Orchid","Cyan","Lime","orange","red"); }
-?>
 <h3>
 	<?php echo __('tinyissue.your_issues'); ?>
 	<span><?php echo __('tinyissue.your_issues_description'); ?></span>
@@ -29,7 +25,7 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 						echo '</div>';
 					} 
 					?>
-					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo $config_app['PriorityColors'][$row->status]; ?>;"  onmouseover="document.getElementById('taglev').style.display = 'block';" onmouseout="document.getElementById('taglev').style.display = 'none';">&#9899;</span></div>
+					<div style="width: 72px; float: left; text-align:center; "><a href="<?php echo $row->to(); ?>" class="id">#<?php echo $row->id; ?></a><br /><span class="colstate" style="color: <?php echo \Config::get('application.pref.prioritycolors')[$row->status]; ?>;"  onmouseover="document.getElementById('taglev').style.display = 'block';" onmouseout="document.getElementById('taglev').style.display = 'none';">&#9899;</span></div>
 					<div class="data">
 						<a href="<?php echo $row->to(); ?>"><?php echo $row->title; ?></a>
 						<div class="info">
@@ -49,8 +45,8 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 						</div>
 					</div>
 					<?php
-						$config_app = require path('public') . 'config.app.php';
 						echo '<br /><br />'; 
+						//Here we show the progress bar
 						//Percentage of work done
 						$SizeXtot = 500;
 						$SizeX = $SizeXtot / 100;
@@ -60,14 +56,15 @@ if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = arra
 							echo '<div style="position: relative; top: -11px; left: 70px; background-color: green; color:white; width: '.($Percent*$SizeX).'px; height: 4px; line-height:4px;" /></div>'; 
 							echo '<div style="position: relative; top: -15px; left: '.(70 + ($Percent*$SizeX)).'px; margin-bottom: -4px; background-color: gray; color:white; width: '.($SizeXtot-($Percent*$SizeX)).'px; height: 4px; text-align: center; line-height:4px;" /></div>';
 						} else { $Percent = 10; }
-						//Time is going fast!
 						//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 						$Deb = strtotime($row->created_at);
 						$Dur = (time() - $Deb) / 86400;
-						if (!isset($issue->duration) || $issue->duration === 0) { $row->duration = 30; }
+						$Dur = ($Dur < 0) ? 0 : $Dur;
+						if (!isset($row->duration)) { $row->duration = 30; }
+						if ($row->duration === 0 || is_null($row->duration)) { $row->duration = 30; }
 						$DurRelat = round(($Dur / $row->duration) * 100);
 						$Dur = round($Dur);
-						$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
+						$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 						if ($DurRelat >= 50 && $Percent <= 50 ) { $DurColor = 'yellow'; } 
 						if ($DurRelat >= 75 && $Percent <= 50 ) { $DurColor = 'red'; } 
 						echo '<div style="position: relative; top: -10px; left: 70px; background-color: '.$DurColor.'; color:white; width: '.(($DurRelat >= 100) ? $SizeXtot : ($DurRelat*$SizeX)).'px; height: 4px; text-align: left; line-height:4px;" /></div>'; 

@@ -30,8 +30,9 @@ return array(
 	|
 	*/
 
-	'detail' => true,
-
+   'detail' => true, 
+																																																																																																																																																																																																																																																									
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Error Logging
@@ -43,7 +44,31 @@ return array(
 	|
 	*/
 
-	'log' => false,
+   'log' => true,
+																																																																																																																																																																																																																																																													
+																					
+
+	/*
+	|--------------------------------------------------------------------------
+	| Exit message
+	|--------------------------------------------------------------------------
+	|
+	| You may give to users the opportunity to come back to BUGS by writing a sentence
+	| or to only abort the process as it was at the beginning of BUGS
+	|
+	| Enable values are
+	| 0 ( int ) : to abort process and kill all PHP processes
+	| 1 ( int ) : to abort process nicely
+	| text : to show text on screen with a like to the todo page.
+	| 
+	| You should not modify this page yourself, 
+	| it's better to use the BUGS Administration page
+	|  - section Error managing
+	|  - set "Show a message ... " to YES
+	|  - write your message in the message box
+	*/
+   'exit' => 'Cliquez ci-contre pour retourner à la page d`accueil de.',
+																																																																																																																																																																																																																																																									
 
 	/*
 	|--------------------------------------------------------------------------
@@ -61,9 +86,10 @@ return array(
 	|
 	*/
 
-	'logger' => function($exception)
-	{
+	'logger' => function($exception) {
 		Log::exception($exception);
 	},
-
+	
+   'delay' => 22,
+				
 );
