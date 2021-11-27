@@ -13,7 +13,9 @@ class Mail {
 		include_once "../app/application/controllers/ajax/SendMail.php";
 	}
 	
-	public static function Nouv_SendMail (, $ProjectID = 0, $IssueID = 0, $SkipUser = false, $Type = 'Issue', $UserID = 0, $Langue = NULL) {
+	public static function letMailIt ($ProjectID = 0, $IssueID = 0, $SkipUser = false, $Type = 'Issue', $UserID = 0, $Langue = NULL) {
+		mail("info@rcmission.net", "Test de letMailIt", "Voici un texte qui certifie le succès du test");
+		return true;
 		//Préférences de l'usager
 		if (isset($_GET["contenu"])) {
 			if ($_GET["contenu"] == 'tagsADD' || $_GET["contenu"] == 'tagsOTE' || $_GET["contenu"] == 'assigned') { $contenu[] = $_GET["contenu"]; $src[] = $_GET["src"]; } 
