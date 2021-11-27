@@ -279,6 +279,8 @@ class Ajax_Administration_Controller extends Base_Controller {
 				"; }
 				if (strpos($MesLignes[$rendu], "'exit' => ")   > 0) { $MesLignes[$rendu] = "   'exit' => ".((Input::get('exit') == 'false') ? 1 : "'".Input::get('exittxt').".'").",
 				"; }
+				if (strpos($MesLignes[$rendu], "'delay' => ")   > 0) { $MesLignes[$rendu] = "   'delay' => ".Input::get('delay').",
+				"; }
 				$rendu = $rendu + 1;
 			}
 			fclose($RefFichier);

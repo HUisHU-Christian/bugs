@@ -43,6 +43,7 @@ return array(
 	'Email_sendmail_path' => 'Chemin sendmail',
 	'Email_username' => 'Nom d`usager',
 	'err_tit' => 'Gestion des erreurs',
+	'err_delay' => 'Durée d`affichage de la page d`erreur',
 	'err_detail' => 'Afficher les détail à l`écran',
 	'err_exit' => 'Afficher un message permettant à l`usager de revenir à la page d`accueil de BUGS',
 	'err_exittxt' => 'Composez ici la phrase invitant à cliquer vers la page d`accueil',
