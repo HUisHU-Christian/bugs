@@ -74,6 +74,8 @@ Then, push your modifications through a new branch. NEVER push on master.
     - March 2021: Comment and close at once - new button added (rev 3).
     - Arpil 2021: User can follow project / ticket and receive email when something appends ( rev 4x ).
     - May 2021: Admin may change some options and edit texts sent when activity occurs in issues or projects  ( rev 5 ).
+    - Oct 2021: Admin may manage many more options, even the way BUGS shows error on screen or by email; ready for PHP 8 (rev 6)
+    - Nov 2021: Project member may ask BUGS to count his worktime spent on specific ticket ( punch in, punch out ) so your company may charge accordingly the client (rev 7)
 - v.1.7 : July 2019 
 	- reports are now totally integrated to BUGS which produces pdf files
 - v.1.6 : February 2019 

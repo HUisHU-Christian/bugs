@@ -14,8 +14,10 @@ class Tags_Controller extends Base_Controller {
 	 * @return View
 	 */
 	public function get_index() {
+		$orderBY = (isset($_GET["orderby"])) ? $_GET["orderby"] : \Auth::user()->language;
+		$sens = (isset($_GET["sens"])) ? $_GET["sens"] : "ASC"; 
 		return $this->layout->with('active', 'dashboard')->nest('content', 'tags.index', array(
-			'tags' => \Tag::order_by(\Auth::user()->language, 'ASC')->get()
+			'tags' => \Tag::order_by($orderBY, $sens)->get()
 		));
 	}
 	

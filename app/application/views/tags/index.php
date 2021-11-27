@@ -13,8 +13,8 @@
 		$lang[] = $val;
 	}
 	echo '<table width="100%" id="table_tags_toutes">';
-		echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;">'.__('tinyissue.tag').'</th>';
-		foreach ($lang as $l) { echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;">'.strtoupper($l).'</th>'; }
+		echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;" onclick="javascript: document.location.href=\''. URL::to('tags').'?orderby=id&sens='.((!isset($_GET["sens"])) ? 'ASC' : (($_GET["sens"] == 'ASC' && $_GET["orderby"] == 'id') ? 'DESC': 'ASC')).'\';">'.__('tinyissue.tag').'</th>';
+		foreach ($lang as $l) { echo '<th style="font-weight: bold; font-size: 120%; padding-bottom: 15px;" onclick="javascript: document.location.href=\''. URL::to('tags').'?orderby='.$l.'&sens='.((!isset($_GET["sens"])) ? 'ASC' : (($_GET["sens"] == 'ASC' && $_GET["orderby"] == $l) ? 'DESC': 'ASC')).'\';">'.strtoupper($l).'</th>'; }
 		foreach($tags as $tag) {
 			echo '<tr>';
 			echo '<td style="padding-bottom: 15px;">';
