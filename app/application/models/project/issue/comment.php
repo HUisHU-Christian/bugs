@@ -1,5 +1,6 @@
 <?php namespace Project\Issue;
 
+
 class Comment extends  \Eloquent {
 
 	public static $table = 'projects_issues_comments';
@@ -119,14 +120,16 @@ class Comment extends  \Eloquent {
 		}
 
 		/*Notifications by email to those who concern */
-		$Type = 'Issue'; 
-		$SkipUser = true;
-		$ProjectID = $project->id;
-		$IssueID = $issue->id;
-		$User =  \Auth::user()->id;
-		$contenu = array('comment');
+//		$ProjectID = $project->id;
+//		$IssueID = $issue->id;
+//		$SkipUser = true;
+//		$Type = 'Issue'; 
+//		$User =  \Auth::user()->id;
+//		$contenu = array('comment');
 		$src = array('tinyissue');
-		include_once "application/controllers/ajax/SendMail.php";
+//		include_once "application/controllers/ajax/SendMail.php";
+		\Mail::letMailIt($project->id, $issue->id, true, 'Issue', \Auth::user()->id, \Auth::user()->language );
+
 
 		return $comment;
 	}

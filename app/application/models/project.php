@@ -1,6 +1,6 @@
 <?php
 
-require "application/libraries/mail.php";
+require_once "application/libraries/mail.php";
 
 class Project extends Eloquent {
 
@@ -316,7 +316,6 @@ class Project extends Eloquent {
 	* @return array
 	*/
 	public static function update_project($input, $project) {
-		Mail::letMailIt();
 		$rules = array(
 			'name' => 'required|max:250'
 		);

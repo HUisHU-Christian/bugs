@@ -14,8 +14,6 @@ class Mail {
 	}
 	
 	public static function letMailIt ($ProjectID = 0, $IssueID = 0, $SkipUser = false, $Type = 'Issue', $UserID = 0, $Langue = NULL) {
-		mail("info@rcmission.net", "Test de letMailIt", "Voici un texte qui certifie le succès du test");
-		return true;
 		//Préférences de l'usager
 		if (isset($_GET["contenu"])) {
 			if ($_GET["contenu"] == 'tagsADD' || $_GET["contenu"] == 'tagsOTE' || $_GET["contenu"] == 'assigned') { $contenu[] = $_GET["contenu"]; $src[] = $_GET["src"]; } 
@@ -23,11 +21,11 @@ class Mail {
 		} else {
 			$contenu = $contenu ?? "comment";
 		}
-		$dir = \Config::get(application.attached.directory);
+		$dir = \Config::get('application.attached.director');
 		$src = $src ?? $_GET["src"] ?? "tinyissue";
 		$UserID = ($UserID === NULL) ? Auth::user()->id : $UserID;
 		$values = array();
-	
+
 		if ($Type == 'User') {
 			$resu = \DB::table('users')->where('email', '=', $UserID)->get();
 		} else {
@@ -35,20 +33,21 @@ class Mail {
 			$resu = \DB::table('users')->where('id', '=', $UserID)->get();
 		}
 		$QuelUser = $resu[0];
-		$QuelUser["language"] = ($Langue === NULL)  ? $QuelUser["language"] : $Langue;
+		$QuelUser->language = ($Langue === NULL)  ? $QuelUser->language : $Langue;
 	
 		//Chargement des fichiers linguistiques
-		$emailLnE = require ($prefixe."app/application/language/en/email.php");
-		if ( file_exists($prefixe."app/application/language/".$QuelUser["language"]."/email.php") && $QuelUser["language"] != 'en') {
-			$LnE = require ($prefixe."app/application/language/".$QuelUser["language"]."/email.php");
+		$emailLnE = require ("application/language/en/email.php");
+		if ( file_exists("application/language/".$QuelUser->language."/email.php") && $QuelUser->language != 'en') {
+			$LnE = require ("application/language/".$QuelUser->language."/email.php");
 			$Lng['email'] = array_merge($emailLnE, $LnE);
 		} else {
 			$Lng['email'] = $emailLnE;
 		}
 	
-		$optMail = \Config::get(configuration.mail);
-		$url = \Config::get(configuration.url);
+		$optMail = \Config::get('configuration.mail');
+		$url = \Config::get('configuration.url');
 	
+
 		//Titre et corps du message selon les configurations choisies par l'administrateur
 		$message = "";
 		$contenu = $contenu ?? "";
@@ -76,7 +75,7 @@ class Mail {
 		} else if ($Type == 'TestonsSVP') {
 			$query  = "SELECT DISTINCT 0 AS project, 1 AS attached, 1 AS tages, USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, 'Testing mail for any project' AS name, 'Test' AS title ";
 			$query .= "FROM users AS USR WHERE USR.id = ".$UserID;
-			$message .= " ".$Lng['tinyissue']["email_test"].$config['my_bugs_app']['name'].').';
+			$message .= " ".$Lng['tinyissue']["email_test"].\Config('my_bugs_app.name').').';
 			$subject = $Lng['tinyissue']["email_test_tit"];
 			echo $Lng['tinyissue']["email_test_tit"];
 		} else if ($Type == 'noticeonlogin') {
@@ -105,26 +104,28 @@ class Mail {
 			}
 		}
 		$followers = \DB::query($query);
-	
+
 		if (count($followers) > 0) {
 			while ($follower = Fetche($followers)) {
-				$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url, $config["my_bugs_app"]["name"], $values);
+				$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url, \Config('my_bugs_app.name'), $values);
 				$passage_ligne = (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $follower["email"])) ? "\r\n" : "\n";
 				$message = str_replace('"', "``", $message);
 				$message = stripslashes($message);
 				$message = str_replace("'", "`", $message);
 	
 				if ($optMail['transport'] == 'mail') { 
-					SendByMail();
+					SendByMail($optMail, $follower, $message, $passage_ligne,$ProjectID, $IssueID,$dir, $subject);
 				} else {
-					SendByPHPmailer ();
+					SendByPHPmailer ($optMail, $follower, $message, $passage_ligne,$ProjectID, $IssueID,$dir, $subject);
 				}
 			}
 		}
+		mail("info@rcmission.net", "Test de letMailIt avec projet = ".$ProjectID."", "Voici un texte qui certifie le succès du test avec IssueID = ".$IssueID);
+		return true;
 	
 	}
 
-	private static function SendByMail () {
+	private static function SendByMail ($optMail, $follower, $message, $passage_ligne,$ProjectID, $IssueID,$dir, $subject) {
 		$boundary = md5(uniqid(microtime(), TRUE));
 		$headers = 'From: "'.$optMail['from']['name'].'" <'.$optMail['from']['email'].'>'.$passage_ligne;
 		$headers .= 'Reply-To: "'.$optMail['replyTo']['name'].'" <'.$optMail['replyTo']['email'].'>'.$passage_ligne;
@@ -144,7 +145,7 @@ class Mail {
 		$body .= $passage_ligne;
 		$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
 		$body .= $passage_ligne.'';
-		$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
+		$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, \Config('my_bugs_app.name'), $values);
 		
 		//Si l'usager est en ligne, nous tentons l'envoi d'un courriel
 		////La fonction try est préparée ici, en ce 21 novembre 2021 afin de l'exploiter prochainement
@@ -157,7 +158,7 @@ class Mail {
 		};
 	}
 
-	private static function SendByPHPmailer () {
+	private static function SendByPHPmailer ($optMail, $follower, $message, $passage_ligne,$ProjectID, $IssueID,$dir, $subject) {
 		$mail = new PHPMailer();
 		$mail->Mailer = $optMail['transport'];
 		switch ($optMail['transport']) {
@@ -199,7 +200,7 @@ class Mail {
 		$body .= $message;
 		$body .= '<br /><br />';
 		$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
-		$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
+		$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, \Config('my_bugs_app.name'), $values);
 		if ($mail->ContentType == 'html') {
 			$mail->IsHTML(true);
 			$mail->WordWrap = (isset($optMail['linelenght'])) ? $optMail['linelenght'] : 80;
