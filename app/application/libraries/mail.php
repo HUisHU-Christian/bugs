@@ -224,7 +224,7 @@ class Mail {
 		$body = wildcards ($body, $follower, false, $courriel, $values);
 		if ($mail->ContentType == 'html') {
 			$mail->IsHTML(true);
-			$mail->WordWrap = (isset(\Config::get('configuration.mail.linelenght'))) ? \Config::get('configuration.mail.linelenght') : 80;
+			$mail->WordWrap = (\Config::get('configuration.mail.linelenght') !== NULL) ? \Config::get('configuration.mail.linelenght') : 80;
 			$mail->Body = $body;
 			$mail->AltBody = strip_tags($body);
 		} else {
