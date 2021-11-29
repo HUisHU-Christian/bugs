@@ -118,19 +118,6 @@ class Comment extends  \Eloquent {
 				$issue->save();
 			}
 		}
-
-		/*Notifications by email to those who concern */
-//		$ProjectID = $project->id;
-//		$IssueID = $issue->id;
-//		$SkipUser = true;
-//		$Type = 'Issue'; 
-//		$User =  \Auth::user()->id;
-//		$contenu = array('comment');
-		$src = array('tinyissue');
-//		include_once "application/controllers/ajax/SendMail.php";
-		\Mail::letMailIt($project->id, $issue->id, true, 'Issue', \Auth::user()->id, \Auth::user()->language );
-
-
 		return $comment;
 	}
 

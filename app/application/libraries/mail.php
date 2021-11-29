@@ -1,16 +1,17 @@
 <?php
 class Mail {
 	
-	public function __construct() {
-		$courriel = array (
-			$langue => 'FR',
-			$message => 'Vous recevez ce message de la part de BUGS. Ceci est le message par défaut', 
-			$projectID => 0, 
-			$issueID => 0,
-			$userID => 0
-		);
+	private array $detail;
+	private array $bye;
+	private array $intro;
+	private array $message;
+	private array $subject;
+	private array $values;
 
-	}	
+	
+	public function __construct() {
+	}
+
 	/**
 	 * Send the requested message
 	 *
@@ -24,24 +25,14 @@ class Mail {
 //		include_once "../app/application/controllers/ajax/SendMail.php";
 	}
 	
-	public static function letMailIt ($ProjectID = 0, $IssueID = 0, $SkipUser = false, $Type = 'Issue', $UserID = 0, $Langue = NULL) {
+	public static function letMailIt ($details, $UserID = 0, $Langue = NULL) {
+		global $bye, $detail, $intro, $message, $subject, $values;
+		$detail = $details;
 		$bons = $mals = 0;
-		$courriel["issueID"] = $IssueID;
-		$courriel["langue"] = $Langue;
-		$courriel["projectID"] = $ProjectID;
-		$courriel["userID"] = $UserID;
-		//Préférences de l'usager
-		if (isset($_GET["contenu"])) {
-			if ($_GET["contenu"] == 'tagsADD' || $_GET["contenu"] == 'tagsOTE' || $_GET["contenu"] == 'assigned') { $contenu[] = $_GET["contenu"]; $src[] = $_GET["src"]; } 
-			$contenu = $contenu ?? $_GET["contenu"] ?? "comment";
-		} else {
-			$contenu = $contenu ?? "comment";
-		}
-		$src = $src ?? $_GET["src"] ?? "tinyissue";
-		$UserID = ($UserID === NULL) ? Auth::user()->id : $UserID;
+		$UserID = ($UserID === NULL) ? (( $detail['user'] !== NULL ) ? $detail['user'] : \Auth::user()->id) : $UserID;
 		$values = array();
 
-		if ($Type == 'User') {
+		if ($detail['Type'] == 'User') {
 			$resu = \DB::table('users')->where('email', '=', $UserID)->get();
 		} else {
 			$UserID = $UserID ?? (is_array($User) ? $User[0] : $User);
@@ -49,90 +40,101 @@ class Mail {
 		}
 		$QuelUser = $resu[0];
 		$QuelUser->language = ($Langue === NULL)  ? $QuelUser->language : $Langue;
-	
 		//Chargement des fichiers linguistiques
-		$emailLnE = require ("application/language/en/email.php");
-		if ( file_exists("application/language/".$QuelUser->language."/email.php") && $QuelUser->language != 'en') {
-			$LnE = require ("application/language/".$QuelUser->language."/email.php");
-			$Lng['email'] = array_merge($emailLnE, $LnE);
-		} else {
-			$Lng['email'] = $emailLnE;
+		$Lng['tinyissue'] = require ("application/language/en/tinyissue.php");
+		$Lng['email'] = require ("application/language/en/email.php");
+		if ( file_exists("application/language/".$QuelUser->language."/tinyissue.php") && $QuelUser->language != 'en') {
+			$LnA = require ("application/language/".$QuelUser->language."/tinyissue.php");
+			$Lng['tinyissue'] = array_merge($Lng['tinyissue'], $LnA);
 		}
-	
+		if ( file_exists("application/language/".$QuelUser->language."/email.php") && $QuelUser->language != 'en') {
+			$LnA = require ("application/language/".$QuelUser->language."/email.php");
+			$Lng['email'] = array_merge($Lng['email'],$LnA);
+		}
 
 		//Titre et corps du message selon les configurations choisies par l'administrateur
 		$message = "";
-		$contenu = $contenu ?? "";
-		if (is_array($contenu)) {
-			$subject = (file_exists(\Config::get('application.attached.director').$contenu[0].'_tit.html')) ? file_get_contents(\Config::get('application.attached.director').$contenu[0].'_tit.html') : $Lng[$src[0]]['following_email_'.strtolower($contenu[0]).'_tit'];
-			foreach ($contenu as $ind => $val) {
-				if ($src[$ind] == 'value') {
-					$vals = explode(":", $val);
-					$values[$vals[0]] = $vals[1];
-				} else {
-					$message .= (file_exists(\Config::get('application.attached.director').$val.'.html')) ? file_get_contents(\Config::get('application.attached.director').$val.'.html') : $Lng[$src[$ind]]['following_email_'.strtolower($val)];
-				}
+		$subject = (file_exists('../uploads/'.$detail["contenu"][0].'_tit.html')) 
+					? file_get_contents('../uploads/'.$detail["contenu"][0].'_tit.html')
+					: $Lng[$detail['src'][0]]['following_email_'.strtolower($detail["contenu"][0]).'_tit'];
+		$byeCnt = file_exists('../'.\Config::get('application.attached.directory')."bye.html") 
+					? file_get_contents('../'.\Config::get('application.attached.directory')."bye.html") 
+					: \Config::get('application.mail.bye');
+		$introCnt = file_exists('../'.\Config::get('application.attached.directory')."intro.html") 
+					? file_get_contents('../'.\Config::get('application.attached.directory')."intro.html") 
+					: \Config::get('application.mail.intro'); 
+
+		foreach ($detail["contenu"] as $ind => $val) {
+			if ($detail['src'][$ind] == 'value') {
+				$vals = explode(":", $val);
+				$values[$vals[0]] = $vals[1];
+			} else {
+				$message .= (file_exists('../uploads/'.$val.'.html')) 
+							? file_get_contents('../uploads/'.$val.'.html') 
+							: $Lng[$detail['src'][$ind]]['following_email_'.strtolower($val)];
 			}
-		} else {
-			$message = ($contenu != 'comment') ? $contenu : "";
 		}
-		
-		$subject = $subject ?? 'BUGS';
-	
+
 		//Select email addresses
-		if ($Type == 'User') {
-			$query  = "SELECT DISTINCT 0 AS project, 1 AS attached, 1 AS tages, USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, 'Welcome on BUGS' AS name, 'Welcome' AS title ";
+		if ($detail['Type'] == 'User') {
+			$query  = "SELECT DISTINCT 0 AS project, 1 AS attached, 1 AS tages, ";
+			$query .= "USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
+			$query .= "'Welcome on BUGS' AS name, 'Welcome' AS title ";
 			$query .= "FROM users AS USR WHERE ";
 			$query .= (is_numeric($UserID)) ? "USR.id = ".$UserID : "USR.email = '".$UserID."' "; 
-		} else if ($Type == 'TestonsSVP') {
-			$query  = "SELECT DISTINCT 0 AS project, 1 AS attached, 1 AS tages, USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, 'Testing mail for any project' AS name, 'Test' AS title ";
+		} else if ($detail['Type'] == 'TestonsSVP') {
+			$query  = "SELECT DISTINCT 0 AS project, 1 AS attached, 1 AS tages, ";
+			$query .= "USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
+			$query .= "'Testing mail for any project' AS name, 'Test' AS title ";
 			$query .= "FROM users AS USR WHERE USR.id = ".$UserID;
-			$message .= " ".$Lng['tinyissue']["email_test"].\Config('my_bugs_app.name').').';
+			$message .= " ".$Lng['tinyissue']["email_test"].\Config::get('application.my_bugs_app.name').').';
 			$subject = $Lng['tinyissue']["email_test_tit"];
 			echo $Lng['tinyissue']["email_test_tit"];
-		} else if ($Type == 'noticeonlogin') {
-			$query  = "SELECT DISTINCT 0 AS project, 0 AS attached, 0 AS tages, USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', ";
-			$query .= "USR.lastname) AS user, USR.language, ";
+		} else if ($detail['Type'] == 'noticeonlogin') {
+			$query  = "SELECT DISTINCT 0 AS project, 0 AS attached, 0 AS tages, ";
+			$query .= "USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
 			$query .= "'Robot of BUGS system' AS name, 'A user just connected to BUGS' AS title ";
 			$query .= "FROM users AS USR WHERE USR.role_id = 4 ORDER BY USR.id ASC LIMIT 0, 1";
 		} else {
-			$IssueID = $IssueID ?? 0;
+			$detail['IssueID'] = $detail['IssueID'] ?? 0;
 			$query  = "SELECT DISTINCT FAL.project, FAL.attached, FAL.tags, ";
 			$query .= "		USR.email, USR.firstname AS first, ";
 			$query .= "		USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
 			$query .= "		PRO.name, ";
-			$query .= "	(SELECT title FROM projects_issues WHERE id = ".$IssueID.") AS title ";
+			$query .= "	(SELECT title FROM projects_issues WHERE id = ".$detail['IssueID'].") AS title ";
 			$query .= "FROM following AS FAL ";
 			$query .= "LEFT JOIN users AS USR ON USR.id = FAL.user_id "; 
 			$query .= "LEFT JOIN projects AS PRO ON PRO.id = FAL.project_id ";
 			$query .= "LEFT JOIN projects_issues AS TIK ON TIK.id = FAL.issue_id ";
-			$query .= "WHERE FAL.project_id = ".$ProjectID." ";
-			if ($Type == 'Issue') {
-				$query .= "AND issue_id = ".$IssueID." ";
-				$query .= ($SkipUser) ? "AND FAL.user_id NOT IN (".$UserID.") " : "";
+			$query .= "WHERE FAL.project_id = ".$detail['ProjectID']." ";
+			if ($detail['Type'] == 'Issue') {
+				$query .= "AND issue_id = ".$detail['IssueID']." ";
+				$query .= ($detail['SkipUser']) ? "AND FAL.user_id NOT IN (".$UserID.") " : "";
 				//$query .= "AND FAL.project = 0 ";
-			} else if ($Type == 'Project') {
+			} else if ($detail['Type'] == 'Project') {
 				$query .= "AND FAL.project = 1 ";
 			}
 			$query .= " AND email IS NOT NULL AND email != '' ";
 		}		
 		$followers = \DB::query($query);
-		
-
-		$courriel["follower"] = $followers;
 
 		if (count($followers) > 0) {
 			foreach ($followers as $follower) {
-				$subject = Mail::wildcards($subject, $follower, true, $values, $courriel);
+				$subject = Mail::wildcards($subject, $follower, true);
 				$passage_ligne = (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $follower->email)) ? "\r\n" : "\n";
+
+				$intro = Mail::wildcards ('<p>'.$introCnt.'</p>', $follower, false);
+				$bye = Mail::wildcards ('<p>'.$byeCnt.'</p>', $follower, false);
+		
 				$message = str_replace('"', "``", $message);
 				$message = stripslashes($message);
 				$message = str_replace("'", "`", $message);
+				$contenu = Mail::wildcards ($message, $follower, false);
 
-				if (\Config::get('application.mail.transport') == 'mail') { 
-					$result = Mail::SendByMail($follower, $subject, $message, $values, $passage_ligne, $courriel);
+				if (\Config::get('application.mail.transport') == 'mail') {
+					$result = Mail::SendByMail($follower, $passage_ligne);
 				} else {
-					$result = Mail::SendByPHPmailer ($follower, $subject, $message, $values, $passage_ligne, $courriel);
+					$result = Mail::SendByPHPmailer($follower, $passage_ligne);
 				}
 				if ($result == "Email successfully sent!") { $bons = $bons + 1; } else { $mals = $mals + 1; }
 			}
@@ -146,27 +148,35 @@ class Mail {
 		}	
 	}
 
-	private static function SendByMail ($follower, $subject, $message, $values, $passage_ligne, $courriel) {
+	private static function SendByMail ($follower, $passage_ligne) {
+		global $bye, $detail, $intro, $message, $subject, $values;
 		$boundary = md5(uniqid(microtime(), TRUE));
-		$headers = 'From: "'.\Config::get('configuration.mail.from.name').'" <'.\Config::get('configuration.mail.from.email').'>'.$passage_ligne;
-		$headers .= 'Reply-To: "'.\Config::get('configuration.mail.replyTo.name').'" <'.\Config::get('configuration.mail.replyTo.email').'>'.$passage_ligne;
+		$headers = 'From: "'.\Config::get('application.mail.from.name').'" <'.\Config::get('application.mail.from.email').'>'.$passage_ligne;
+		$headers .= 'Reply-To: "'.\Config::get('application.mail.replyTo.name').'" <'.\Config::get('application.mail.replyTo.email').'>'.$passage_ligne;
 		$headers .= 'Mime-Version: 1.0'.$passage_ligne;
-		$headers .= 'Content-Type: multipart/mixed; charset="'.\Config::get('configuration.mail.encoding').'"; boundary="'.$boundary.'"';
+		$headers .= 'Content-Type: multipart/mixed; charset="'.\Config::get('application.mail.encoding').'"; boundary="'.$boundary.'"';
 		$headers .= $passage_ligne;
-
-		$body = strip_tags( nl2br(str_replace("</p>", "<br /><br />", $message)));
+		
+		$body  = $passage_ligne;
+		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $intro)));
+		$body .= $passage_ligne;
+		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $message)));
+		$body .= $passage_ligne;
+		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $bye)));
+		$body .= $passage_ligne;
+		$body .= $passage_ligne;
+		$body .= $message;
 		$body .= $passage_ligne;
 		$body .= $passage_ligne;
 		$body .= '--'.$boundary.''.$passage_ligne;
-		$body .= 'Content-Type: text/html; charset="'.\Config::get('configuration.mail.encoding').'"'.$passage_ligne;
+		$body .= 'Content-Type: text/html; charset="'.\Config::get('application.mail.encoding').'"'.$passage_ligne;
 		$body .= $passage_ligne;
-		$body .= '<p>'.((file_exists(\Config::get('application.attached.director')."intro.html")) ? file_get_contents(\Config::get('application.attached.director')."intro.html") : \Config::get('configuration.mail.intro')).'</p>';
+		$body .= $intro;
 		$body .= $passage_ligne;
 		$body .= '<p>'.$message.'</p>';
 		$body .= $passage_ligne;
-		$body .= '<p>'.((file_exists(\Config::get('application.attached.director')."bye.html")) ? file_get_contents(\Config::get('application.attached.director')."bye.html") : \Config::get('configuration.mail.bye')).'</p>'; 
+		$body .= $bye;
 		$body .= $passage_ligne.'';
-		$body = Mail::wildcards ($body, $follower, false, $courriel, $values);
 		
 		//Si l'usager est en ligne, nous tentons l'envoi d'un courriel
 		////La fonction try est préparée ici, en ce 21 novembre 2021 afin de l'exploiter prochainement
@@ -179,10 +189,11 @@ class Mail {
 		return "Email successfully sent!";
 	}
 
-	private static function SendByPHPmailer ($follower, $subject, $message, $values, $passage_ligne, $courriel) {
+	private static function SendByPHPmailer ($follower, $passage_ligne) {
+		global $bye, $detail, $intro, $message, $subject, $values;
 		$mail = new PHPMailer();
-		$mail->Mailer = \Config::get('configuration.mail.transport');
-		switch (\Config::get('configuration.mail.transport')) {
+		$mail->Mailer = \Config::get('application.mail.transport');
+		switch (\Config::get('application.mail.transport')) {
 				//Please submit your code
 				//On March 14th, 2017 I had no time to go further on these different types ( case 'PHP', 'sendmail', 'gmail', 'POP3' ) 
 			case 'PHP':
@@ -200,31 +211,29 @@ class Mail {
 			default:																		//smtp is the second default value after "mail" which has its own code up
 				require_once '/application/libraries/PHPmailer/class.smtp.php';
 				$mail->SMTPDebug = 1;												// 0 = no output, 1 = errors and messages, 2 = messages only.
-				if (\Config::get('configuration.mail.smtp.encryption') == '') {
-				} else {
+				if (\Config::get('application.mail.smtp.encryption') != '') {
 					$mail->SMTPAuth = true;											// enable SMTP authentication
-					$mail->SMTPSecure = \Config::get('configuration.mail.smtp.encryption');	// sets the prefix to the server
-					$mail->Host = \Config::get('configuration.mail.smtp.server');
-					$mail->Port = \Config::get('configuration.mail.smtp.port');
-					$mail->Username = \Config::get('configuration.mail.smtp.username');
-					$mail->Password = \Config::get('configuration.mail.smtp.password');
+					$mail->SMTPSecure = \Config::get('application.mail.smtp.encryption');	// sets the prefix to the server
+					$mail->Host = \Config::get('application.mail.smtp.server');
+					$mail->Port = \Config::get('application.mail.smtp.port');
+					$mail->Username = \Config::get('application.mail.smtp.username');
+					$mail->Password = \Config::get('application.mail.smtp.password');
 				}
 				break;
 		}
 
-		$mail->CharSet = \Config::get('configuration.mail.encoding') ?? 'UTF-8';
-		$mail->SetFrom (\Config::get('configuration.mail.from.email'), \Config::get('configuration.mail.from.name'));
+		$mail->CharSet = \Config::get('application.mail.encoding') ?? 'UTF-8';
+		$mail->SetFrom (\Config::get('application.mail.from.email'), \Config::get('application.mail.from.name'));
 		$mail->Subject = $subject;
-		$mail->ContentType = \Config::get('configuration.mail.plainHTML') ?? 'text/plain';
-		$body .= '<p>'.((file_exists(\Config::get('application.attached.director')."intro.html")) ? file_get_contents(\Config::get('application.attached.director')."intro.html") : \Config::get('configuration.mail.intro')).'</p>'; 
+		$mail->ContentType = \Config::get('application.mail.plainHTML') ?? 'text/plain';
+		$body .= $intro; 
 		$body .= '<br /><br />';
 		$body .= $message;
 		$body .= '<br /><br />';
-		$body .= '<p>'.((file_exists(\Config::get('application.attached.director')."bye.html")) ? file_get_contents(\Config::get('application.attached.director')."bye.html") : \Config::get('configuration.mail.bye')).'</p>'; 
-		$body = wildcards ($body, $follower, false, $courriel, $values);
+		$body .= $bye; 
 		if ($mail->ContentType == 'html') {
 			$mail->IsHTML(true);
-			$mail->WordWrap = (\Config::get('configuration.mail.linelenght') !== NULL) ? \Config::get('configuration.mail.linelenght') : 80;
+			$mail->WordWrap = (\Config::get('application.mail.linelenght') !== NULL) ? \Config::get('application.mail.linelenght') : 80;
 			$mail->Body = $body;
 			$mail->AltBody = strip_tags($body);
 		} else {
@@ -241,12 +250,13 @@ class Mail {
 		return "Email successfully sent!";
 	}
 
-	private static function wildcards ($body, $follower, $tit, $courriel, $values = array()) {
-		$link = (\Config::get('configuration.url') != '') ? \Config::get('configuration.url') : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+	private static function wildcards ($body, $follower, $tit) {
+		global $bye, $detail, $intro, $message, $subject, $values;
+		$link = (\Config::get('application.url') != '') ? \Config::get('application.url') : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 		$lfin = $tit ? ' »' : '</a>';
-		$liss = $tit ? ' « ' : '<a href="'.$link."project/".$courriel["projectID"]."/issue/".$courriel["issueID"]."/".'">';
-		$lpro = $tit ? ' « ' : '<a href="'.$link."project/".$courriel["projectID"]."/issues?tag_id=1".'">';
-		$body = str_replace('BUGS', \Config::get('configuration.my_bugs_app.name').' (BUGS)', $body);
+		$liss = $tit ? ' « ' : '<a href="'.$link."project/".$detail["ProjectID"]."/issue/".$detail["IssueID"]."/".'">';
+		$lpro = $tit ? ' « ' : '<a href="'.$link."project/".$detail["ProjectID"]."/issues?tag_id=1".'">';
+		$body = str_replace('BUGS', \Config::get('application.my_bugs_app.name').' (BUGS)', $body);
 		$body = str_replace('{frst}', ucwords($follower->first), $body);
 		$body = str_replace('{firt}', ucwords($follower->first), $body);
 		$body = str_replace('{firs}', ucwords($follower->first), $body);
