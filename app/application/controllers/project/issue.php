@@ -76,6 +76,15 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return Redirect
 	 */
 	public function post_index() {
+
+		if(!Input::get('comment')) {
+			return Redirect::to(Project\Issue::current()->to() . '#new-comment')
+				->with('notice-error', __('tinyissue.you_put_no_comment'));
+		}
+		$comment = \Project\Issue\Comment::create_comment(Input::all(), Project::current(), Project\Issue::current());
+
+//		//Email to followers
+//		$this->Courriel ("Issue", true, Project::current()->id, Project\Issue::current()->id, \Auth::user()->id, array('comment'), array('tinyissue'));
 		/*Notifications by email to those who concern */
 		\Mail::letMailIt(array(
 			'ProjectID' => Project::current()->id, 
@@ -90,15 +99,6 @@ class Project_Issue_Controller extends Base_Controller {
 			\Auth::user()->language
 		);
 
-
-		if(!Input::get('comment')) {
-			return Redirect::to(Project\Issue::current()->to() . '#new-comment')
-				->with('notice-error', __('tinyissue.you_put_no_comment'));
-		}
-		$comment = \Project\Issue\Comment::create_comment(Input::all(), Project::current(), Project\Issue::current());
-
-//		//Email to followers
-//		$this->Courriel ("Issue", true, Project::current()->id, Project\Issue::current()->id, \Auth::user()->id, array('comment'), array('tinyissue'));
 
 		$message = __('tinyissue.your_comment_added').(((Input::get('status') == 0 || Input::get('Fermons') == 0) && \Project\User::GetRole(Project::current()->id) != 1) ? ' --- '.__('tinyissue.issue_has_been_closed') : '');
 		$retour = '/project/'.Project::current()->id.'/issues?tag_id=1';   
