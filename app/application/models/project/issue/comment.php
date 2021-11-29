@@ -1,5 +1,6 @@
 <?php namespace Project\Issue;
 
+
 class Comment extends  \Eloquent {
 
 	public static $table = 'projects_issues_comments';
@@ -117,17 +118,6 @@ class Comment extends  \Eloquent {
 				$issue->save();
 			}
 		}
-
-		/*Notifications by email to those who concern */
-		$Type = 'Issue'; 
-		$SkipUser = true;
-		$ProjectID = $project->id;
-		$IssueID = $issue->id;
-		$User =  \Auth::user()->id;
-		$contenu = array('comment');
-		$src = array('tinyissue');
-		include_once "application/controllers/ajax/SendMail.php";
-
 		return $comment;
 	}
 
