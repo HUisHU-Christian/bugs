@@ -45,7 +45,20 @@ class Project_Issue_Controller extends Base_Controller {
 		$followers =\DB::query("INSERT INTO following VALUES (NULL, ".Auth::user()->id.", ".Project::current()->id.", ".$issue['issue']->id.", 0, 1, 1)");
 
 		//Email to followers
-		$this->Courriel ('Project', true, Project::current()->id, $issue['issue']->id, \Auth::user()->id, array('project'), array('tinyissue'));
+//		$this->Courriel ('Project', true, Project::current()->id, $issue['issue']->id, \Auth::user()->id, array('project'), array('tinyissue'));
+		/*Notifications by email to those who concern */
+		\Mail::letMailIt(array(
+			'ProjectID' => Project::current()->id, 
+			'IssueID' => $issue['issue']->id, 
+			'SkipUser' => true,
+			'Type' => 'Project', 
+			'user' => \Auth::user()->id,
+			'contenu' => array('project'),
+			'src' => array('tinyissue')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
 
 		return Redirect::to($issue['issue']->to())
 			->with('notice', __('tinyissue.issue_has_been_created'));
@@ -134,7 +147,20 @@ class Project_Issue_Controller extends Base_Controller {
 			if (\User\Activity::add(8, intval(Input::get('projetOld')), Input::get('ticketNum'), $NumNew, "From ".Input::get('projetOld')." to ".$NumNew )) { $msg = $msg + 1; } else { $msg = $TheFile["error"]; }
 
 			//Email to followers
-			$this->Courriel ('Issue', true, $NumNew, Project\Issue::current()->id, Auth::user()->id, array('issueproject', 'static:'.$ancProj), array('tinyissue', 'value'));
+			//$this->Courriel ('Issue', true, $NumNew, Project\Issue::current()->id, Auth::user()->id, array('issueproject', 'static:'.$ancProj), array('tinyissue', 'value'));
+			\Mail::letMailIt(array(
+				'ProjectID' => $NumNew, 
+				'IssueID' => Project\Issue::current()->id, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('issueproject', 'static:'.$ancProj),
+				'src' => array('tinyissue', 'value')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
+
 
 			return Redirect::to("project/".$NumNew."/issues?tag_id=1");
 
@@ -156,7 +182,20 @@ class Project_Issue_Controller extends Base_Controller {
 			));
 
 			//Email to followers
-			$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned'), array('tinyissue'));
+			//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned'), array('tinyissue'));
+			\Mail::letMailIt(array(
+				'ProjectID' => Project::current()->id, 
+				'IssueID' => Project\Issue::current()->id, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('assigned'),
+				'src' => array('tinyissue')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
+
 		}
 	}
 
@@ -174,7 +213,19 @@ class Project_Issue_Controller extends Base_Controller {
 		}
 
 		//Email to followers
-		$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('issue', 'static:'.$avant), array('tinyissue', 'value'));
+		//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('issue', 'static:'.$avant), array('tinyissue', 'value'));
+		\Mail::letMailIt(array(
+			'ProjectID' => Project::current()->id, 
+			'IssueID' => Project\Issue::current()->id, 
+			'SkipUser' => true,
+			'Type' => 'Issue', 
+			'user' => \Auth::user()->id,
+			'contenu' => array('issue', 'static:'.$avant),
+			'src' => array('tinyissue', 'value')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
 
 		return Redirect::to(Project\Issue::current()->to())
 			->with('notice', __('tinyissue.issue_has_been_updated'));
@@ -511,7 +562,19 @@ class Project_Issue_Controller extends Base_Controller {
 			$msg .= '</div></div></div>';
 
 			//Sixth step: Notice the followers
-			$this->Courriel ('Issue', true, Project::current()->id, $Issue, Auth::user()->id, array('attached'), array('tinyissue'));
+			//$this->Courriel ('Issue', true, Project::current()->id, $Issue, Auth::user()->id, array('attached'), array('tinyissue'));
+			\Mail::letMailIt(array(
+				'ProjectID' => Project::current()->id, 
+				'IssueID' => $Issue, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('attached'),
+				'src' => array('tinyissue')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
 
 		}
 		return $msg;
