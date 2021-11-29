@@ -152,11 +152,10 @@ class Mail {
 		global $bye, $detail, $intro, $message, $subject, $values;
 		$boundary = md5(uniqid(microtime(), TRUE));
 		$headers = 'From: "'.\Config::get('application.mail.from.name').'" <'.\Config::get('application.mail.from.email').'>'.$passage_ligne;
-		$headers .= 'Reply-To: "'.\Config::get('application.mail.replyTo.name').'" <'.\Config::get('application.mail.replyTo.email').'>'.$passage_ligne;
+		$headers .= 'Reply-To: "'.\Config::get('application.mail')['replyTo']['name'].'" <'.\Config::get('application.mail')['replyTo']['email'].'>'.$passage_ligne;
 		$headers .= 'Mime-Version: 1.0'.$passage_ligne;
 		$headers .= 'Content-Type: multipart/mixed; charset="'.\Config::get('application.mail.encoding').'"; boundary="'.$boundary.'"';
 		$headers .= $passage_ligne;
-		
 		$body  = $passage_ligne;
 		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $intro)));
 		$body .= $passage_ligne;

@@ -41,8 +41,11 @@ class Project_Issue_Controller extends Base_Controller {
 				->with('notice-error', __('tinyissue.we_have_some_errors'));
 		}
 
-		//Automatically enrole assignee AND creator into following this issue
-		$followers =\DB::query("INSERT INTO following VALUES (NULL, ".Auth::user()->id.", ".Project::current()->id.", ".$issue['issue']->id.", 0, 1, 1)");
+		//Automatically enrole project's followers into following this issue and the assignee
+		\DB::query("INSERT INTO following ( id, user_id, project_id, issue_id, project, attached, tags )  
+						SELECT NULL as id, user_id, ".Project::current()->id." as project_id,  ".$issue['issue']->id." as issue_id, 0 as project, 1 as attached, 1 as tags 
+						FROM following WHERE project_id = ".Project::current()->id." AND project = 1 AND (user_id IN (SELECT user_id FROM projects_users WHERE project_id = ".Project::current()->id.") OR user_id = ".Auth::user()->id.") ");
+
 
 		//Email to followers
 //		$this->Courriel ('Project', true, Project::current()->id, $issue['issue']->id, \Auth::user()->id, array('project'), array('tinyissue'));
