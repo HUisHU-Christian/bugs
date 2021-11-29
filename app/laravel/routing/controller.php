@@ -52,13 +52,11 @@ abstract class Controller {
 	 *
 	 * @return void
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		// If the controller has specified a layout to be used when rendering
 		// views, we will instantiate the layout instance and set it to the
 		// layout property, replacing the string layout name.
-		if ( ! is_null($this->layout))
-		{
+		if ( ! is_null($this->layout)) {
 			$this->layout = $this->layout();
 		}
 	}
@@ -70,10 +68,8 @@ abstract class Controller {
 	 * @param  string  $directory
 	 * @return array
 	 */
-	public static function detect($bundle = DEFAULT_BUNDLE, $directory = null)
-	{
-		if (is_null($directory))
-		{
+	public static function detect($bundle = DEFAULT_BUNDLE, $directory = null) {
+		if (is_null($directory)) {
 			$directory = Bundle::path($bundle).'controllers';
 		}
 
@@ -86,8 +82,7 @@ abstract class Controller {
 
 		$items = new fIterator($directory, fIterator::SKIP_DOTS);
 
-		foreach ($items as $item)
-		{
+		foreach ($items as $item) {
 			// If the item is a directory, we will recurse back into the function
 			// to detect all of the nested controllers and we will keep adding
 			// them into the array of controllers for the bundle.
@@ -129,8 +124,7 @@ abstract class Controller {
 	 * @param  array     $parameters
 	 * @return Response
 	 */
-	public static function call($destination, $parameters = array())
-	{
+	public static function call($destination, $parameters = array()) {
 		static::references($destination, $parameters);
 
 		list($bundle, $destination) = Bundle::parse($destination);
@@ -147,8 +141,7 @@ abstract class Controller {
 		// For convenience we will set the current controller and action on the
 		// Request's route instance so they can be easily accessed from the
 		// application. This is sometimes useful for dynamic situations.
-		if ( ! is_null($route = Request::route()))
-		{
+		if ( ! is_null($route = Request::route())) {
 			$route->controller = $name;
 
 			$route->controller_action = $method;
@@ -157,8 +150,7 @@ abstract class Controller {
 		// If the controller could not be resolved, we're out of options and
 		// will return the 404 error response. If we found the controller,
 		// we can execute the requested method on the instance.
-		if (is_null($controller))
-		{
+		if (is_null($controller)) {
 			return Event::first('404');
 		}
 
@@ -172,13 +164,11 @@ abstract class Controller {
 	 * @param  array   $parameters
 	 * @return array
 	 */
-	protected static function references(&$destination, &$parameters)
-	{
+	protected static function references(&$destination, &$parameters) {
 		// Controller delegates may use back-references to the action parameters,
 		// which allows the developer to setup more flexible routes to various
 		// controllers with much less code than would be usual.
-		foreach ($parameters as $key => $value)
-		{
+		foreach ($parameters as $key => $value) {
 			if ( ! is_string($value)) continue;
 
 			$search = '(:'.($key + 1).')';
@@ -198,8 +188,7 @@ abstract class Controller {
 	 * @param  string      $controller
 	 * @return Controller
 	 */
-	public static function resolve($bundle, $controller)
-	{
+	public static function resolve($bundle, $controller) {
 		if ( ! static::load($bundle, $controller)) return;
 
 		$identifier = Bundle::identifier($bundle, $controller);
@@ -209,8 +198,7 @@ abstract class Controller {
 		// via the container allows more flexible applications.
 		$resolver = 'controller: '.$identifier;
 
-		if (IoC::registered($resolver))
-		{
+		if (IoC::registered($resolver)) {
 			return IoC::resolve($resolver);
 		}
 
@@ -219,12 +207,10 @@ abstract class Controller {
 		// If we couldn't resolve the controller out of the IoC container we'll
 		// format the controller name into its proper class name and load it
 		// by convention out of the bundle's controller directory.
-		if (Event::listeners(static::factory))
-		{
+		if (Event::listeners(static::factory)) {
 			return Event::first(static::factory, $controller);
 		}
-		else
-		{
+		else {
 			return new $controller;
 		}
 	}
@@ -236,12 +222,10 @@ abstract class Controller {
 	 * @param  string  $controller
 	 * @return bool
 	 */
-	protected static function load($bundle, $controller)
-	{
+	protected static function load($bundle, $controller) {
 		$controller = strtolower(str_replace('.', '/', $controller));
 
-		if (file_exists($path = Bundle::path($bundle).'controllers/'.$controller.EXT))
-		{
+		if (file_exists($path = Bundle::path($bundle).'controllers/'.$controller.EXT)) {
 			require_once $path;
 
 			return true;
@@ -257,8 +241,7 @@ abstract class Controller {
 	 * @param  string  $controller
 	 * @return string
 	 */
-	protected static function format($bundle, $controller)
-	{
+	protected static function format($bundle, $controller) {
 		return Bundle::class_prefix($bundle).Str::classify($controller).'_Controller';
 	}
 
@@ -269,8 +252,7 @@ abstract class Controller {
 	 * @param  array     $parameters
 	 * @return Response
 	 */
-	public function execute($method, $parameters = array())
-	{
+	public function execute($method, $parameters = array()) {
 		$filters = $this->filters('before', $method);
 
 		// Again, as was the case with route closures, if the controller "before"
@@ -278,8 +260,7 @@ abstract class Controller {
 		// request and the controller method will not be used.
 		$response = Filter::run($filters, array(), true);
 
-		if (is_null($response))
-		{
+		if (is_null($response)) {
 			$this->before();
 
 			$response = $this->response($method, $parameters);
@@ -308,17 +289,14 @@ abstract class Controller {
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
-	public function response($method, $parameters = array())
-	{
+	public function response($method, $parameters = array()) {
 		// The developer may mark the controller as being "RESTful" which
 		// indicates that the controller actions are prefixed with the
 		// HTTP verb they respond to rather than the word "action".
-		if ($this->restful)
-		{
+		if ($this->restful) {
 			$action = strtolower(Request::method()).'_'.$method;
 		}
-		else
-		{
+		else {
 			$action = "action_{$method}";
 		}
 
@@ -327,8 +305,7 @@ abstract class Controller {
 		// If the controller has specified a layout view the response
 		// returned by the controller method will be bound to that
 		// view and the layout will be considered the response.
-		if (is_null($response) and ! is_null($this->layout))
-		{
+		if (is_null($response) and ! is_null($this->layout)) {
 			$response = $this->layout;
 		}
 
@@ -351,8 +328,7 @@ abstract class Controller {
 	 * @param  mixed              $parameters
 	 * @return Filter_Collection
 	 */
-	protected function filter($event, $filters, $parameters = null)
-	{
+	protected function filter($event, $filters, $parameters = null) {
 		$this->filters[$event][] = new Filter_Collection($filters, $parameters);
 
 		return $this->filters[$event][count($this->filters[$event]) - 1];
@@ -365,14 +341,12 @@ abstract class Controller {
 	 * @param  string  $method
 	 * @return array
 	 */
-	protected function filters($event, $method)
-	{
+	protected function filters($event, $method) {
 		if ( ! isset($this->filters[$event])) return array();
 
 		$filters = array();
 
-		foreach ($this->filters[$event] as $collection)
-		{
+		foreach ($this->filters[$event] as $collection) {
 			if ($collection->applies($method))
 			{
 				$filters[] = $collection;
@@ -387,10 +361,8 @@ abstract class Controller {
 	 *
 	 * @return View
 	 */
-	public function layout()
-	{
-		if (starts_with($this->layout, 'name: '))
-		{
+	public function layout() {
+		if (starts_with($this->layout, 'name: ')) {
 			return View::of(substr($this->layout, 6));
 		}
 
@@ -415,8 +387,7 @@ abstract class Controller {
 	/**
 	 * Magic Method to handle calls to undefined controller functions.
 	 */
-	public function __call($method, $parameters)
-	{
+	public function __call($method, $parameters) {
 		return Response::error('404');
 	}
 
@@ -431,10 +402,8 @@ abstract class Controller {
 	 *		$mailer = IoC::resolve('mailer');
 	 * </code>
 	 */
-	public function __get($key)
-	{
-		if (IoC::registered($key))
-		{
+	public function __get($key) {
+		if (IoC::registered($key)) {
 			return IoC::resolve($key);
 		}
 	}

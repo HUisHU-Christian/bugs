@@ -1,5 +1,6 @@
 <?php namespace Project\Issue;
 
+
 class Comment extends  \Eloquent {
 
 	public static $table = 'projects_issues_comments';
@@ -28,8 +29,6 @@ class Comment extends  \Eloquent {
 	 */
 	public static function create_comment($input, $project, $issue) {
 		if (trim($input['comment']) == '') { return true; }
-		$config_app = require path('public') . 'config.app.php';
-		if (!isset($config_app['Percent'])) { $config_app['Percent'] = array (100,0,10,80,100); }
 		require "tag.php";
 		$fill = array(
 			'created_by' => \Auth::user()->id,
@@ -46,11 +45,14 @@ class Comment extends  \Eloquent {
 		/* Add to user's activity log */
 		\User\Activity::add(2, $project->id, $issue->id, $comment->id);
 
-		if (\Auth::user()->role_id != 1) {
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Modification du 13 novembre 2021
+//		if (\Auth::user()->role_id != 1) {
+		if (\Project\User::GetRole($project->id) != 1) {
 			$vide = true;
 			$Val = 1;
-			$Val = ($input['Pourcentage'] > $config_app['Percent'][2]) ? 9: $Val;
-			$Val = ($input['Pourcentage'] > $config_app['Percent'][3]) ? 8: $Val;
+			$Val = ($input['Pourcentage'] > \Config::get('application.pref.percent')[2]) ? 9: $Val;
+			$Val = ($input['Pourcentage'] > \Config::get('application.pref.percent')[3]) ? 8: $Val;
 			$Val = ($input['Pourcentage'] >= 100) ? 2 : $Val;
 			if(!empty($issue->tags)) {
 				foreach($issue->tags()->order_by('tag', 'ASC')->get() as $tag) {
@@ -63,7 +65,7 @@ class Comment extends  \Eloquent {
 			\DB::table('projects_issues_attachments')->where('upload_token', '=', $input['token'])->where('uploaded_by', '=', \Auth::user()->id)->update(array('issue_id' => $issue->id, 'comment_id' => $comment->id));
 	
 			/* Update the Todo state for this issue  */
-			\DB::table('users_todos')->where('issue_id', '=', $issue->id)->update(array('status' => (($input['Pourcentage'] > $config_app['Percent'][3]) ? 3: 2), 'weight' => $input['Pourcentage'], 'updated_at'=>date("Y-m-d H:i:s")));
+			\DB::table('users_todos')->where('issue_id', '=', $issue->id)->update(array('status' => (($input['Pourcentage'] > \Config::get('application.pref.percent')[3]) ? 3: 2), 'weight' => $input['Pourcentage'], 'updated_at'=>date("Y-m-d H:i:s")));
 	
 			/* Update the status of this issue according to its percentage done;  */
 			\DB::table('projects_issues')->where('id', '=', $issue->id)->update(array('closed_by' => (($input['Pourcentage'] == 100 ) ? \Auth::user()->id : NULL), 'status' => (($input['Pourcentage'] == 100 )? 0 : $input['status'])));
@@ -91,7 +93,11 @@ class Comment extends  \Eloquent {
 		$issue->updated_at = date('Y-m-d H:i:s');
 		$issue->updated_by = \Auth::user()->id;
 		$issue->save();
-		if (\Auth::user()->role_id != 1) {
+
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Modification du 13 novembre 2021
+//		if (\Auth::user()->role_id != 1) {
+		if (\Project\User::GetRole($project->id) != 1) {
 			if ($input['Pourcentage'] == 100) {
 				$tags = $issue->tags;
 				$tag_ids = array();
@@ -112,17 +118,6 @@ class Comment extends  \Eloquent {
 				$issue->save();
 			}
 		}
-
-		/*Notifications by email to those who concern */
-		$Type = 'Issue'; 
-		$SkipUser = true;
-		$ProjectID = $project->id;
-		$IssueID = $issue->id;
-		$User =  \Auth::user()->id;
-		$contenu = array('comment');
-		$src = array('tinyissue');
-		include_once "application/controllers/ajax/SendMail.php";
-
 		return $comment;
 	}
 
@@ -135,17 +130,7 @@ class Comment extends  \Eloquent {
 	public static function delete_comment($comment) {
 		$comment = static::find($comment);
 		$issue = \Project\Issue::find($comment->issue_id);
-		$deleted_id = \DB::table('users_activity')->insert_get_id(array(
-						'id'=>NULL,
-						'user_id'=>\Auth::user()->id,
-						'parent_id'=>$issue->project_id,
-						'item_id'=>$comment->issue_id,
-						'action_id'=>NULL,
-						'type_id'=>11,
-						'data'=>$comment->comment,
-						'created_at'=>date("Y-m-d H:i:s"),
-						'updated_at'=>date("Y-m-d H:i:s")
-					));
+		\User\Activity::add(11, $issue->project_id, $comment->issue_id, null, $comment->comment);
 		\DB::table('projects_issues_comments')->where('id', '=', $comment->id)->delete();
 
 		if(!$comment) { return false; }

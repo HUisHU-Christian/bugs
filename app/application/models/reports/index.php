@@ -6,7 +6,6 @@ if ( file_exists("application/language/".Auth::user()->language."/reports.php"))
 	$rappLng = array_merge($rappLng, $rappMaLng);
 }
 $colonnes = array();
-$config_app = require_once path('public') . 'config.app.php';
 $compte = 0;
 $colorFont = array(0,0,0,0,0,0);
 $colorStatus = array(
@@ -17,18 +16,16 @@ $colorStatus = array(
 	4 => array(255,225,50),
 	5 => array(255,70,70)
 	);
-if (isset($config_app["PriorityColors"])) {
-	foreach ($config_app["PriorityColors"] as $ind => $val ) {
-		if ($config_app["PriorityColors"][$ind] == 'transparent') {
+	foreach (\Config::get('application.pref.prioritycolors') as $ind => $val ) {
+		if (\Config::get('application.pref.prioritycolors')[$ind] == 'transparent') {
 			$colorStatus[$ind] = array(255,255,255);
-		} else if (strlen($config_app["PriorityColors"][$ind]) == 6 && hexdec($config_app["PriorityColors"][$ind])) {
-			$colorStatus[$ind][0] = hexdec(substr(0, 2, $config_app["PriorityColors"][$ind]));
-			$colorStatus[$ind][1] = hexdec(substr(2, 2, $config_app["PriorityColors"][$ind]));
-			$colorStatus[$ind][2] = hexdec(substr(4, 2, $config_app["PriorityColors"][$ind]));
-			if (hexdec($config_app["PriorityColors"][$ind]) < 10066329) { $colorFont[$ind] = 255; }
+		} else if (strlen(\Config::get('application.pref.prioritycolors')[$ind]) == 6 && hexdec(\Config::get('application.pref.prioritycolors')[$ind])) {
+			$colorStatus[$ind][0] = hexdec(substr(0, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			$colorStatus[$ind][1] = hexdec(substr(2, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			$colorStatus[$ind][2] = hexdec(substr(4, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			if (hexdec(\Config::get('application.pref.prioritycolors')[$ind]) < 10066329) { $colorFont[$ind] = 255; }
 		}
 	}
-}
 $rendu = "";
 $SautPage = false;
 $untel = "";

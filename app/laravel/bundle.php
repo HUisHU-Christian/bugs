@@ -40,15 +40,13 @@ class Bundle {
 	 * @param  array   $config
 	 * @return void
 	 */
-	public static function register($bundle, $config = array())
-	{
+	public static function register($bundle, $config = array()) {
 		$defaults = array('handles' => null, 'auto' => false);
 
 		// If the given configuration is actually a string, we will assume it is a
 		// location and set the bundle name to match it. This is common for most
 		// bundles that simply live in the root bundle directory.
-		if (is_string($config))
-		{
+		if (is_string($config)) {
 			$bundle = $config;
 
 			$config = array('location' => $bundle);
@@ -57,8 +55,7 @@ class Bundle {
 		// If no location is set, we will set the location to match the name of
 		// the bundle. This is for bundles that are installed on the root of
 		// the bundle directory so a location was not set.
-		if ( ! isset($config['location']))
-		{
+		if ( ! isset($config['location'])) {
 			$config['location'] = $bundle;
 		}
 
@@ -67,8 +64,7 @@ class Bundle {
 		// It is possible for the developer to specify auto-loader mappings
 		// directly on the bundle registration. This provides a convenient
 		// way to register mappings without a bootstrap.
-		if (isset($config['autoloads']))
-		{
+		if (isset($config['autoloads'])) {
 			static::autoloads($bundle, $config);
 		}
 	}
@@ -81,24 +77,19 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return void
 	 */
-	public static function start($bundle)
-	{
+	public static function start($bundle) {
 		if (static::started($bundle)) return;
 
-		if ( ! static::exists($bundle))
-		{
+		if ( ! static::exists($bundle)) {
 			throw new \Exception("Bundle [$bundle] has not been installed.");
 		}
 
 		// Each bundle may have a start script which is responsible for preparing
 		// the bundle for use by the application. The start script may register
 		// any classes the bundle uses with the auto-loader class, etc.
-		if ( ! is_null($starter = static::option($bundle, 'starter')))
-		{
+		if ( ! is_null($starter = static::option($bundle, 'starter'))) {
 			$starter();
-		}
-		elseif (file_exists($path = static::path($bundle).'start'.EXT))
-		{
+		} elseif (file_exists($path = static::path($bundle).'start'.EXT)) {
 			require $path;
 		}
 
@@ -118,8 +109,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return void
 	 */
-	public static function routes($bundle)
-	{
+	public static function routes($bundle) {
 		if (static::routed($bundle)) return;
 
 		$path = static::path($bundle).'routes'.EXT;
@@ -129,8 +119,7 @@ class Bundle {
 		// routes are added, keeping the routes flexible.
 		Router::$bundle = static::option($bundle, 'handles');
 
-		if ( ! static::routed($bundle) and file_exists($path))
-		{
+		if ( ! static::routed($bundle) and file_exists($path)) {
 			static::$routed[] = $bundle;
 
 			require $path;
@@ -144,17 +133,14 @@ class Bundle {
 	 * @param  array   $config
 	 * @return void
 	 */
-	protected static function autoloads($bundle, $config)
-	{
+	protected static function autoloads($bundle, $config) {
 		$path = rtrim(Bundle::path($bundle), DS);
 
-		foreach ($config['autoloads'] as $type => $mappings)
-		{
+		foreach ($config['autoloads'] as $type => $mappings) {
 			// When registering each type of mapping we'll replace the (:bundle)
 			// place-holder with the path to the bundle's root directory, so
 			// the developer may dryly register the mappings.
-			$mappings = array_map(function($mapping) use ($path)
-			{
+			$mappings = array_map(function($mapping) use ($path) {
 				return str_replace('(:bundle)', $path, $mapping);
 
 			}, $mappings);
@@ -172,8 +158,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return void
 	 */
-	public static function disable($bundle)
-	{
+	public static function disable($bundle) {
 		unset(static::$bundles[$bundle]);
 	}
 
@@ -185,14 +170,11 @@ class Bundle {
 	 * @param  string  $uri
 	 * @return string
 	 */
-	public static function handles($uri)
-	{
+	public static function handles($uri) {
 		$uri = rtrim($uri, '/').'/';
 
-		foreach (static::$bundles as $key => $value)
-		{
-			if (isset($value['handles']) and starts_with($uri, $value['handles'].'/') or $value['handles'] == '/')
-			{
+		foreach (static::$bundles as $key => $value) {
+			if (isset($value['handles']) and starts_with($uri, $value['handles'].'/') or $value['handles'] == '/') {
 				return $key;
 			}
 		}
@@ -206,8 +188,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return bool
 	 */
-	public static function exists($bundle)
-	{
+	public static function exists($bundle) {
 		return $bundle == DEFAULT_BUNDLE or in_array(strtolower($bundle), static::names());
 	}
 
@@ -217,8 +198,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return void
 	 */
-	public static function started($bundle)
-	{
+	public static function started($bundle) {
 		return in_array(strtolower($bundle), static::$started);
 	}
 
@@ -228,8 +208,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return void
 	 */
-	public static function routed($bundle)
-	{
+	public static function routed($bundle) {
 		return in_array(strtolower($bundle), static::$routed);
 	}
 
@@ -239,8 +218,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return string
 	 */
-	public static function prefix($bundle)
-	{
+	public static function prefix($bundle) {
 		return ($bundle !== DEFAULT_BUNDLE) ? "{$bundle}::" : '';
 	}
 
@@ -250,8 +228,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return string
 	 */
-	public static function class_prefix($bundle)
-	{
+	public static function class_prefix($bundle) {
 		return ($bundle !== DEFAULT_BUNDLE) ? Str::classify($bundle).'_' : '';
 	}
 
@@ -269,23 +246,18 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return string
 	 */
-	public static function path($bundle)
-	{
-		if (is_null($bundle) or $bundle === DEFAULT_BUNDLE)
-		{
+	public static function path($bundle) {
+		if (is_null($bundle) or $bundle === DEFAULT_BUNDLE) {
 			return path('app');
 		}
-		elseif ($location = array_get(static::$bundles, $bundle.'.location'))
-		{
+		elseif ($location = array_get(static::$bundles, $bundle.'.location')) {
 			// If the bundle location starts with "path: ", we will assume that a raw
 			// path has been specified and will simply return it. Otherwise, we'll
 			// prepend the bundle directory path onto the location and return.
-			if (starts_with($location, 'path: '))
-			{
+			if (starts_with($location, 'path: ')) {
 				return str_finish(substr($location, 6), DS);
 			}
-			else
-			{
+			else {
 				return str_finish(path('bundle').$location, DS);
 			}
 		}
@@ -297,8 +269,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return string
 	 */
-	public static function assets($bundle)
-	{
+	public static function assets($bundle) {
 		if (is_null($bundle)) return static::assets(DEFAULT_BUNDLE);
 
 		return ($bundle != DEFAULT_BUNDLE) ? "/bundles/{$bundle}/" : '/';
@@ -315,8 +286,7 @@ class Bundle {
 	 * @param  string  $identifier
 	 * @return string
 	 */
-	public static function name($identifier)
-	{
+	public static function name($identifier) {
 		list($bundle, $element) = static::parse($identifier);
 
 		return $bundle;
@@ -333,8 +303,7 @@ class Bundle {
 	 * @param  string  $identifier
 	 * @return string
 	 */
-	public static function element($identifier)
-	{
+	public static function element($identifier) {
 		list($bundle, $element) = static::parse($identifier);
 
 		return $element;
@@ -355,8 +324,7 @@ class Bundle {
 	 * @param  string  $element
 	 * @return string
 	 */
-	public static function identifier($bundle, $element)
-	{
+	public static function identifier($bundle, $element) {
 		return (is_null($bundle) or $bundle == DEFAULT_BUNDLE) ? $element : $bundle.'::'.$element;
 	}
 
@@ -366,8 +334,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return string
 	 */
-	public static function resolve($bundle)
-	{
+	public static function resolve($bundle) {
 		return (static::exists($bundle)) ? $bundle : DEFAULT_BUNDLE;
 	}
 
@@ -385,25 +352,21 @@ class Bundle {
 	 * @param  string  $identifier
 	 * @return array
 	 */
-	public static function parse($identifier)
-	{
+	public static function parse($identifier) {
 		// The parsed elements are cached so we don't have to reparse them on each
 		// subsequent request for the parsed element. So if we've already parsed
 		// the given element, we'll just return the cached copy as the value.
-		if (isset(static::$elements[$identifier]))
-		{
+		if (isset(static::$elements[$identifier])) {
 			return static::$elements[$identifier];
 		}
 
-		if (strpos($identifier, '::') !== false)
-		{
+		if (strpos($identifier, '::') !== false) {
 			$element = explode('::', strtolower($identifier));
 		}
 		// If no bundle is in the identifier, we will insert the default bundle
 		// since classes like Config and Lang organize their items by bundle.
 		// The application folder essentially behaves as a default bundle.
-		else
-		{
+		else {
 			$element = array(DEFAULT_BUNDLE, strtolower($identifier));
 		}
 
@@ -416,8 +379,7 @@ class Bundle {
 	 * @param  string  $bundle
 	 * @return object
 	 */
-	public static function get($bundle)
-	{
+	public static function get($bundle) {
 		return array_get(static::$bundles, $bundle);
 	}
 
@@ -429,12 +391,10 @@ class Bundle {
 	 * @param  mixed   $default
 	 * @return mixed
 	 */
-	public static function option($bundle, $option, $default = null)
-	{
+	public static function option($bundle, $option, $default = null) {
 		$bundle = static::get($bundle);
 
-		if (is_null($bundle))
-		{
+		if (is_null($bundle)) {
 			return value($default);
 		}
 
@@ -446,8 +406,7 @@ class Bundle {
 	 *
 	 * @return array
 	 */
-	public static function all()
-	{
+	public static function all() {
 		return static::$bundles;
 	}
 
@@ -456,8 +415,7 @@ class Bundle {
 	 *
 	 * @return array
 	 */
-	public static function names()
-	{
+	public static function names() {
 		return array_keys(static::$bundles);
 	}
 
@@ -467,8 +425,7 @@ class Bundle {
 	 * @param  string  $path
 	 * @return string
 	 */
-	public static function expand($path)
-	{
+	public static function expand($path) {
 		list($bundle, $element) = static::parse($path);
 		return static::path($bundle).$element;
 	}

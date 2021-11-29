@@ -38,7 +38,12 @@
 			</tr>
 			<tr>
 				<th></th>
-				<td><input type="submit" value="<?php echo __('tinyissue.update_tag'); ?>" class="button primary" /></td>
+				<td>
+					<input type="submit" value="<?php echo __('tinyissue.update_tag'); ?>" class="button primary" />
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="button" value="<?php echo __('tinyissue.cancel'); ?>" class="button primary" onclick="document.location.href='<?php echo \Config::get('application.url'); ?>tags';" />
+				</td>
 			</tr>
 		</table>
 

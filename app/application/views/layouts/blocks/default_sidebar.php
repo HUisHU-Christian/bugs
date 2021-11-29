@@ -12,11 +12,6 @@
 <span><?php echo __('tinyissue.active_projects_description');?></span>
 <div id="sidebar_MenuDefault" class="sidebarItem">
 <br />
-<div class="menuprojetsgauche">
-	<button class="button_menuprojetsgauche">
-	<?php echo __('tinyissue.select_a_project'); ?>
-	</button>
-	<div class="div_menuprojetsgauche">
 <?php
 	//Récupération des préférences dans le dossier personnel de l'usager
 	$Preferences = \Auth::user()->pref();
@@ -30,6 +25,7 @@
 	foreach($active_projects as $row) {
 		$NbIssues[$row->to()] = $row->count_open_issues();
 		$Proj[$row->to()] = $row->name.' ('.$row->count_open_issues().'/'.$row->count_closed_issues().')';
+		$idProj[$row->to()] = $row->id;
 	}
 	////Préparation au tri
 	foreach ($Proj as $ind => $val ){
@@ -41,40 +37,34 @@
 	////Tri des données du menu déroulant
 	if ($Preferences['orderSidebar'] == 'desc') { asort($SansAccent); } else { arsort($SansAccent); }
 
-	////Affichage du menu déroulant dans l'espace latéral gauche
-	foreach($SansAccent as $ind => $val) {
-		$selected = '';
-		echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';
-	 }
+	////Affichage du menu déroulant (liste des projets)
+	if ($Preferences['Roulbar'] == 'true') {
+		echo '<div class="menuprojetsgauche">';
+		echo '<button class="button_menuprojetsgauche">';
+		echo __('tinyissue.select_a_project');
+		echo '</button>';
+		echo '<div class="div_menuprojetsgauche">';
+		////Affichage des projets en menu déroulant dans l'espace latéral gauche
+		foreach($SansAccent as $ind => $val) {
+			$selected = '';
+			echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';
+		 }
+		echo '</div>';
+		echo '</div>';
+		echo '<br /><br />';
+	}
 ?>
-	</div>
-</div>
-<br /><br />
 <div style="max-height: 600px; overflow-y: auto;">
 <?php
 	//Les préférences de l'usager ont été récupérées plus haut
 	if ($Preferences['numSidebar'] != 0) {
-		echo '<ul>';
-		$NbIssues = array();
-		$Proj = array();
-		$SansAccent = array();
-		foreach(Project\User::active_projects() as $row) {
-			$NbIssues[$row->to()] = $row->count_open_issues();
-			$Proj[$row->to()] = $row->name.'&nbsp;<span class="info-open-issues" title="'.$row->count_open_issues().' '.__('tinyissue.open_issues').' & '.$row->count_closed_issues().' '.__('tinyissue.reports_inactissues').'">(<b>'.$row->count_open_issues().'</b>/'.$row->count_closed_issues().')</span>';
-			$idProj[$row->to()] = $row->id;
-		}
-		foreach ($Proj as $ind => $val ){
-			$SansAccent[$ind] = htmlentities($val, ENT_NOQUOTES, 'utf-8');
-			$SansAccent[$ind] = preg_replace('#&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring);#', '\1', $SansAccent[$ind]);
-			$SansAccent[$ind] = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $SansAccent[$ind]);
-			$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
-		}
 		
 		////Tri des données affichées dans le panneau de gauche
 		if ($Preferences['orderSidebar'] == 'asc') { asort($SansAccent); } else { arsort($SansAccent); }
 
-		//Affichage dans le panneau de gauche
+		////Affichage des projets dans le panneau de gauche
 		$rendu = 0;
+		echo '<ul>';
 		foreach($SansAccent as $ind => $val) {
 			$id = $idProj[$ind];
 			$follower = \DB::table('following')->where('project','=',1)->where('project_id','=',$id)->where('user_id','=',\Auth::user()->id)->count();
@@ -93,8 +83,6 @@
 	$ceci = array_keys($_GET);
 	$prefixe = isset($ceci[0]) ? (in_array($ceci[0], array("/administration/users","/projects/reports","/user/settings","/user/issues","/project/5"))) ? "../" : "" : "";
 	include_once path('public').'app/vendor/searchEngine/index.php';
-	echo '<br /><br />'; 
-	echo '<br /><br />'; 
 	include_once "application/views/layouts/blocks/wiki.php";
 ?>
 </div>
@@ -105,20 +93,12 @@
 	});
 	
 	function Following(etat, Project, Qui) {
-		var xhttp = new XMLHttpRequest();
 		etat = document.getElementById('img_follow_' + Project).style.minHeight.substr(0,1);
-		var NextPage = '<?php echo \URL::home(); ?>app/application/controllers/ajax/Following.php?Quoi=2&Qui=' + Qui + '&Project=' + Project + '&Etat=' + etat;
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				if (xhttp.responseText != '' ) {
-				//alert(xhttp.responseText);
-				etat = Math.abs(etat-1);
-				document.getElementById('img_follow_' + Project).src = "<?php echo \URL::home(); ?>app/assets/images/layout/icon-comments_" + etat + ".png";
-				document.getElementById('img_follow_' + Project).style.minHeight = etat+"px";
-				}
-			}
-		};
-		xhttp.open("GET", NextPage, true);
-		xhttp.send(); 
+		var data = Follows(2, Qui, Project, 0, etat);
+		if (data != '') {
+			etat = Math.abs(etat-1);
+			document.getElementById('img_follow_' + Project).src = "<?php echo \URL::home(); ?>app/assets/images/layout/icon-comments_" + etat + ".png";
+			document.getElementById('img_follow_' + Project).style.minHeight = etat+"px";
+		}
 	}
 </script>

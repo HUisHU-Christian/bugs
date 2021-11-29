@@ -12,15 +12,12 @@ class Base_Controller extends Controller {
 	 */
 	public $restful = true;
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
 
-		if(Request::uri() !== 'ajax/project/issue_upload_attachment')
-		{
+		if(Request::uri() !== 'ajax/project/issue_upload_attachment') {
 			$this->filter('before', 'auth');
 		}
-
 	}
 
 	/**
@@ -30,10 +27,7 @@ class Base_Controller extends Controller {
 	 * @param  array     $parameters
 	 * @return Response
 	 */
-	public function __call($method, $parameters)
-	{
+	public function __call($method, $parameters) {
 		return Response::error('404');
 	}
-
-
 }
