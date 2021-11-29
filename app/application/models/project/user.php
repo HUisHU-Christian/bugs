@@ -74,9 +74,7 @@ class User extends \Eloquent {
 	 * @return void
 	 */
 	public static function remove_assign($user_id, $project_id) {
-		static::where('user_id', '=', $user_id)
-			->where('project_id', '=', $project_id)
-			->delete();
+		static::where('user_id', '=', $user_id)->where('project_id', '=', $project_id)->delete();
 		\DB::table("following")->where('user_id', '=', $user_id)->where('project_id', '=', $project_id)->delete();
 	}
 

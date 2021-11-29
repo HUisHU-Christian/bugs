@@ -43,6 +43,7 @@ return array(
 	'Email_sendmail_path' => 'Sendmail Path',
 	'Email_username' => 'Username',
 	'err_tit' => 'Errors management',
+	'err_delay' => 'How long (seconds) will be chown the error page',
 	'err_detail' => 'Show details on screen',
 	'err_exit' => 'Show message and link on screen to come back to BUGS` home page',
 	'err_exittxt' => 'Compose here your message',

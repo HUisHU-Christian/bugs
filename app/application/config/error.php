@@ -31,7 +31,7 @@ return array(
 	*/
 
    'detail' => true, 
-																																																																																																																																																																																																																																																	
+																																																																																																																																																																																																																																																													
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return array(
 	*/
 
    'log' => true,
-																																																																																																																																																																																																																																																					
+																																																																																																																																																																																																																																																																	
 																					
 
 	/*
@@ -68,7 +68,7 @@ return array(
 	|  - write your message in the message box
 	*/
    'exit' => 'Cliquez ci-contre pour retourner à la page d`accueil de.',
-																																																																																																																																																																																																																																																	
+																																																																																																																																																																																																																																																													
 
 	/*
 	|--------------------------------------------------------------------------
@@ -90,5 +90,6 @@ return array(
 		Log::exception($exception);
 	},
 	
-
+   'delay' => 99,
+								
 );

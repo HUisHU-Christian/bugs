@@ -70,7 +70,8 @@
 			detail : (document.getElementById('input_err_detail_true').checked ? 'true': 'false'),
 			log : (document.getElementById('input_err_log_true').checked ? 'true' : 'false'),
 			exit : (document.getElementById('input_err_exit_true').checked ? 'true' : 'false'),
-			exittxt : document.getElementById('input_err_exittxt').value
+			exittxt : document.getElementById('input_err_exittxt').value,
+			delay : document.getElementById('input_err_delay').value
 		}, function(data){
 			Verdissons(Array('input_err_exittxt'),data);
 		});
@@ -110,9 +111,6 @@
 		}, function(data){
 			Verdissons(Array('input_err_exittxt'),data);
 		});
-
-
-
 	}
 	
 	function BackupBDD() {
