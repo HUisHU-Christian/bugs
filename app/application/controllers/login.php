@@ -31,11 +31,23 @@ class Login_Controller extends Controller {
 			
 			////If owner wants to receive such email, let's do it
 			if ($sendmail) {
-				$Type = 'noticeonlogin';
-				$Langue = $Owner[0]->language;
-				$contenu = array('noticeonlogin', 'email:'.Input::get('email'), 'lang:'.$Owner[0]->language); 
-				$src = array('email','value','value');
-				include_once "application/controllers/ajax/SendMail.php";
+//				$Type = 'noticeonlogin';
+//				$Langue = $Owner[0]->language;
+//				$contenu = array('noticeonlogin', 'email:'.Input::get('email'), 'lang:'.$Owner[0]->language); 
+//				$src = array('email','value','value');
+//				include_once "application/controllers/ajax/SendMail.php";
+				\Mail::letMailIt(array(
+					'ProjectID' => 0, 
+					'IssueID' => 0, 
+					'SkipUser' => false,
+					'Type' => 'noticeonlogin', 
+					'user' => \Auth::user()->id,
+					'contenu' => array('noticeonlogin', 'email:'.Input::get('email'), 'lang:'.$Owner[0]->language),
+					'src' => array('email','value','value')
+					),
+					\Auth::user()->id, 
+					$Owner[0]->language
+				);
 			}
 			
 			return Redirect::to(Input::get('return', '/'));
