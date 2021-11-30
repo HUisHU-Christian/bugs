@@ -13,7 +13,7 @@
 		<table class="form" style="width: 100%;">
 			<tr>
 				<th style="width: 10%"><?php echo __('tinyissue.title'); ?></th>
-				<td>
+				<td colspan="2">
 					<input type="text" name="title" style="width: 98%;" value="<?php echo Input::old('title', $issue->title); ?>" />
 
 					<?php echo $errors->first('title', '<span class="error">:message</span>'); ?>
@@ -21,7 +21,7 @@
 			</tr>
 			<tr>
 				<th><?php echo __('tinyissue.issue'); ?></th>
-				<td>
+				<td colspan="2">
 					<textarea name="body" style="width: 98%; height: 150px;"><?php echo Input::old('body', $issue->body); ?></textarea>
 					<?php echo $errors->first('body', '<span class="error">:message</span>'); ?>
 				</td>
@@ -30,7 +30,7 @@
 			<tr>
 				<th><?php echo __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span>
 				</th>
-				<td>
+				<td colspan="2">
 					<?php echo Form::text('tags', Input::old('tags', $issue_tags), array('id' => 'tags')); ?>
 					<?php echo $errors->first('tags', '<span class="error">:message</span>'); ?>
 					<script type="text/javascript">
@@ -47,7 +47,7 @@
 			</tr>
 			<tr>
 				<th><?php echo __('tinyissue.duration'); ?></th>
-				<td>
+				<td colspan="2">
 					<input type="number" name="duration" style="width: 60px;" value="<?php echo Input::old('duration', $issue->duration); ?>" min="1" max="400" />&nbsp;<?php echo __('tinyissue.days'); ?>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<?php echo __('tinyissue.issue_start_at'); ?> : <input name="start_at" id="input_start_at" type="date" value="<?php echo substr($issue->start_at,0 ,10); ?>" />
@@ -55,26 +55,43 @@
 					<?php echo __('tinyissue.issue_hours_plan'); ?> : <b><?php echo $issue->temps_plan; ?></b>
 				</td>
 			</tr>
-			<?php if(Auth::user()->permission('issue-modify')): ?>
+			<?php if(\Auth::user()->permission('issue-modify')): ?>
 			<tr>
 				<th><?php echo __('tinyissue.priority'); ?></th>
-				<td>
+				<td width="50%">
 					<?php 
-						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1')), $issue->status, array('id'=>'select_status', 'onmouseover'=>'document.getElementById(\'taglev\').style.display = \'block\';', 'onmouseout'=>'document.getElementById(\'taglev\').style.display = \'none\';')); 
+						echo \Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1')), $issue->status, array('id'=>'select_status', 'onmouseover'=>'document.getElementById(\'taglev\').style.display = \'block\';', 'onmouseout'=>'document.getElementById(\'taglev\').style.display = \'none\';')); 
 					?>
+				</td>
+				<td rowspan="2" width="50%" style="text-align: left; max-height: 200px;"> 
+				<?php
+				if(\Auth::user()->permission('project-create')) {
+					echo '<b>'.__('tinyissue.followers').'</b><br />';
+					$suiveux = \DB::query("SELECT USR.id, USR.firstname, USR.lastname, 
+												IF((SELECT COUNT(user_id) FROM following AS FOL WHERE issue_id = ".$issue->id." AND FOL.user_id = USR.id) > 0 , 'oui' , 'non') AS deja 
+												FROM users AS USR 
+												WHERE id IN (SELECT user_id FROM following WHERE project_id = ".Project::current()->id." AND project = 1)"
+									);
+
+					foreach ($suiveux as $suiv) {
+						echo '<input name="Suiveux['.$suiv->id.']" id="input_suiveux_'.$suiv->id.'" type="checkbox" '.(($suiv->deja == 'oui') ? ' checked="checked" ' : '' ).' onclick="Follows(1, '.$suiv->id.', '.Project::current()->id.', '.$issue->id.', ((this.checked) ? 0 : 1));" />';
+						echo $suiv->firstname.' '.strtoupper($suiv->lastname).' -> '.$suiv->deja.'<br />';
+					}
+				} 
+				?>
 				</td>
 			</tr>
 
 			<tr>
 				<th><?php echo __('tinyissue.assigned_to'); ?>&nbsp;&nbsp;</th>
-				<td>
-					<?php echo Form::select('assigned_to', array(0 => '') + Project\User::dropdown($project->users()->get()), Input::old('asigned_to', $issue->assigned_to)); ?>
+				<td width="50%">
+					<?php echo \Form::select('assigned_to', array(0 => '') + \Project\User::dropdown($project->users()->get()), Input::old('asigned_to', $issue->assigned_to)); ?>
 				</td>
 			</tr>
 			<?php endif; ?>
 			<tr>
 				<th></th>
-				<td><input type="submit" value="<?php echo __('tinyissue.update_issue'); ?>" class="button primary" /></td>
+				<td colspan="2"><input type="submit" value="<?php echo __('tinyissue.update_issue'); ?>" class="button primary" /></td>
 			</tr>
 		</table>
 

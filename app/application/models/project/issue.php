@@ -218,37 +218,6 @@ class Issue extends \Eloquent {
 		return \URL::to('project/' . $this->project_id . '/issue/' . $this->id . (($url) ? '/'. $url : ''));
 	}
 
-	/**
-	* Reassign the issue to a new user
-	*	
-	* @param  int  $user_id
-	* @return void
-	*/
-	public function reassign($user_id) {
-		$old_assignee = $this->assigned_to;
-
-		$this->assigned_to = $user_id;
-		$this->save();
-
-		//Notify all followers about the new status
-		$text .= __('tinyissue.following_email_assigned');
-//		$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
-		\Mail::letMailIt(array(
-			'ProjectID' => \Project::current()->id, 
-			'IssueID' => $this->id, 
-			'SkipUser' => true,
-			'Type' => 'Issue', 
-			'user' => \Auth::user()->id,
-			'contenu' => array('assigned'),
-			'src' => array('tinyissue')
-			),
-			\Auth::user()->id, 
-			\Auth::user()->language
-		);
-
-		add($type_id, $parent_id, $item_id = null, $action_id = null, $data = null);
-		\User\Activity::add(5, $this->project_id, $this->id, $user_id, null);
-	}
 
 	/**
 	* Change the status of an issue
