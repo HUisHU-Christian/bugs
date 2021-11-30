@@ -340,14 +340,26 @@ class User extends Eloquent {
 
 
 		//Émission d'un courriel à l'adresse du nouveau membre
-		$contenu = array('useradded','static:'.$MotPasse);
-		$src = array('email', 'value');
-		$Type = 'User';
-		$SkipUser = false;
-		$ProjectID = 0;
-		$IssueID = 0;
-		$User = $info['email'];
-		include "application/controllers/ajax/SendMail.php";
+//		$contenu = array('useradded','static:'.$MotPasse);
+//		$src = array('email', 'value');
+//		$Type = 'User';
+//		$SkipUser = false;
+//		$ProjectID = 0;
+//		$IssueID = 0;
+//		$User = $info['email'];
+//		include "application/controllers/ajax/SendMail.php";
+		\Mail::letMailIt(array(
+			'ProjectID' => 0, 
+			'IssueID' => 0, 
+			'SkipUser' => false,
+			'Type' => 'User', 
+			'user' => $info['email'],
+			'contenu' => array('useradded','static:'.$MotPasse),
+			'src' => array('email', 'value')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
 
 		return array(
 			'success' => true,

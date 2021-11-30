@@ -179,6 +179,35 @@ class Ajax_Project_Controller extends Base_Controller {
 		return $membres;
 	}
 
+	/**
+	* Reassign the issue to a new user
+	*	
+	* @param  int  $user_id
+	* @return void
+	*/
+	public function post_reassign() {
+		\DB::query("UPDATE projects_issues SET assigned_to = ".Input::get('Suiv')." WHERE id = ".Input::get('Issue')."");
+
+		//Notify all followers about the new status
+		$text = __('tinyissue.following_email_assigned');
+		\Mail::letMailIt(array(
+			'ProjectID' => Input::get('Project'), 
+			'IssueID' => Input::get('Issue'), 
+			'SkipUser' => true,
+			'Type' => 'Issue', 
+			'user' => \Auth::user()->id,
+			'contenu' => array('assigned'),
+			'src' => array('tinyissue')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
+
+		\User\Activity::add(5, Input::get('Project'), Input::get('Issue'), Input::get('Suiv'), null);
+		return Redirect::to('project/'.Input::get('Project').'/issue/'.Input::get('Issue'))
+			->with('notice', __('tinyissue.we_have_some_errors'));
+	}
+
 	public function post_remove_user() {
 		Project\User::remove_assign(Input::get('user_id'), Input::get('project_id'));
 	}

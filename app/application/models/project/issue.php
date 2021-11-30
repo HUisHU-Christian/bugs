@@ -218,25 +218,6 @@ class Issue extends \Eloquent {
 		return \URL::to('project/' . $this->project_id . '/issue/' . $this->id . (($url) ? '/'. $url : ''));
 	}
 
-	/**
-	* Reassign the issue to a new user
-	*	
-	* @param  int  $user_id
-	* @return void
-	*/
-	public function reassign($user_id) {
-		$old_assignee = $this->assigned_to;
-
-		$this->assigned_to = $user_id;
-		$this->save();
-
-		//Notify all followers about the new status
-		$text .= __('tinyissue.following_email_assigned');
-		$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
-
-		add($type_id, $parent_id, $item_id = null, $action_id = null, $data = null);
-		\User\Activity::add(5, $this->project_id, $this->id, $user_id, null);
-	}
 
 	/**
 	* Change the status of an issue
@@ -264,7 +245,20 @@ class Issue extends \Eloquent {
 			/* Add to activity log */
 			\User\Activity::add(3, $this->project_id, $this->id);
 			//$text = __('tinyissue.following_email_status_bis').__('email.closed').'.<br /><br />'.$text;
-			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('closed','status','status_bis'), array('tinyissue','tinyissue','tinyissue'));
+//			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('closed','status','status_bis'), array('tinyissue','tinyissue','tinyissue'));
+			\Mail::letMailIt(array(
+				'ProjectID' => \Project::current()->id, 
+				'IssueID' => $this->id, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('closed','status','status_bis'),
+				'src' => array('tinyissue','tinyissue','tinyissue')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
+
 		} else {
 			$this->closed_by = NULL;
 			$this->closed_at = NULL;
@@ -278,7 +272,20 @@ class Issue extends \Eloquent {
 			/* Add to activity Log */
 			\User\Activity::add(4, $this->project_id, $this->id);
 			//Notify all followers about the new status
-			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('reopened','status','status_bis'), array('tinyissue','tinyissue','tinyissue'));
+//			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('reopened','status','status_bis'), array('tinyissue','tinyissue','tinyissue'));
+			\Mail::letMailIt(array(
+				'ProjectID' => \Project::current()->id, 
+				'IssueID' => $this->id, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('reopened','status','status_bis'),
+				'src' => array('tinyissue','tinyissue','tinyissue')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
+			
 		}
 		$this->tags()->sync($tag_ids);
 		$this->status = $status;
@@ -320,7 +327,19 @@ class Issue extends \Eloquent {
 		/* Add to activity log for assignment if changed */
 		if($input['assigned_to'] != $this->assigned_to) {
 			\User\Activity::add(5, NULL, $this->id, $input['assigned_to']);
-			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
+//			$this->Courriel ('Issue', true, \Project::current()->id, $this->id, \Auth::user()->id, array('assigned'), array('tinyissue'));
+			\Mail::letMailIt(array(
+				'ProjectID' => \Project::current()->id, 
+				'IssueID' => $this->id, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('assigned'),
+				'src' => array('tinyissue')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
 		}
 		$this->fill($fill);
 		$this->save();

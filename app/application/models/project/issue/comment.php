@@ -35,7 +35,7 @@ class Comment extends  \Eloquent {
 			'project_id' => $project->id,
 			'issue_id' => $issue->id,
 			'comment' => $input['comment'],
-			'temps_fait' => $input['temps_fait']
+			'temps_fait' => (isset($input['temps_fait'])) ? $input['temps_fait'] : 0
 		);
 
 		$comment = new static;
