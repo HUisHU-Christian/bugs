@@ -91,6 +91,7 @@ return array(
 	'error500_p1' => 'Les erreurs 500 sont provoquées par des fautes de frappe ou de synthaxe dans la programmation.',
 	'error500_p2' => 'Il faut référer à l`équipe de programmation pour corriger cela.',
 	'error500_p3' => 'En attendant la mise à jour du code, vous pourrez travailler avec les autres pages.  Veuillez cliquez sur le lien ci-contre : ',
+	'followers'  => 'Suivent ce billet',
 	'following'  => 'Suivre',
 	'following_email'  => 'Le présent texte a été changé, le texte choisi sera affiché.\n\nCliquez OK pour enregistrer les modifications au présent texte ou ANNULER pour perdre ces modifications.',
 	'following_email_attached' => 'Un fichier a été joint au billet « {issue} » ',

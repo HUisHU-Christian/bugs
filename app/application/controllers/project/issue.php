@@ -41,8 +41,11 @@ class Project_Issue_Controller extends Base_Controller {
 				->with('notice-error', __('tinyissue.we_have_some_errors'));
 		}
 
-		//Automatically enrole assignee AND creator into following this issue
-		$followers =\DB::query("INSERT INTO following VALUES (NULL, ".Auth::user()->id.", ".Project::current()->id.", ".$issue['issue']->id.", 0, 1, 1)");
+		//Automatically enrole project's followers into following this issue and the assignee
+		\DB::query("INSERT INTO following ( id, user_id, project_id, issue_id, project, attached, tags )  
+						SELECT NULL as id, user_id, ".Project::current()->id." as project_id,  ".$issue['issue']->id." as issue_id, 0 as project, 1 as attached, 1 as tags 
+						FROM following WHERE project_id = ".Project::current()->id." AND project = 1 AND (user_id IN (SELECT user_id FROM projects_users WHERE project_id = ".Project::current()->id.") OR user_id = ".Auth::user()->id.") ");
+
 
 		//Email to followers
 //		$this->Courriel ('Project', true, Project::current()->id, $issue['issue']->id, \Auth::user()->id, array('project'), array('tinyissue'));
@@ -372,9 +375,18 @@ class Project_Issue_Controller extends Base_Controller {
 				$text .= "<br />";
 				$text .= __('tinyissue.assigned_to').' '.$WhoName.'.';
 				$text .= "<br /><br />";
-				//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, $text, __('tinyissue.following_email_assigned_tit'));
-				//2 sept 2021 : ceci bloque les fonctions javascript
-				//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned', 'reassigned_by', 'reassigned_to', $WhoName), array('tinyissue', 'email', 'tinyissue', 'variable'));
+				\Mail::letMailIt(array(
+					'ProjectID' => Project::current()->id, 
+					'IssueID' => Project\Issue::current()->id, 
+					'SkipUser' => true,
+					'Type' => 'Issue', 
+					'user' => \Auth::user()->id,
+					'contenu' => array('assigned', 'reassigned_by', 'reassigned_to', $WhoName),
+					'src' => array('tinyissue', 'email', 'tinyissue', 'variable')
+					),
+					\Auth::user()->id, 
+					\Auth::user()->language
+				);
 			}
 
 			//Show on screen what did just happened
@@ -391,82 +403,6 @@ class Project_Issue_Controller extends Base_Controller {
 				$result = $content;
 		}
 		return $result;
-	}
-
-	/**
-	 * Change issue's tags
-	 *
-	 * @request ajax
-	 * @return string
-	 */
-	public function get_retag() {
-			$content = "";
-			$Issue = Project\Issue::current()->id;
-			$Msg = "";
-			$Show = false;
-
-			$Modif = (Input::get('Modif') !== NULL) ? Input::get('Modif') :  false;
-			$Quel = (Input::get('Quel')  !== NULL ) ? Input::get('Quel') : "xyzxyz";
-			$TagNum = Tag::where('tag', '=', $Quel )->first(array('id','tag','bgcolor','ftcolor'));
-			if (!isset($TagNum) || @$TagNum == '' ) { $Modif = false; $Quel = "xyzxyz"; }
-
-
-			/**
-			 * Edit an issue
-			 * Adding a tag
-			 */
-			if ($Modif == 'AddOneTag' ) {
-				$IssueTagNum = \DB::table('projects_issues_tags')->where('issue_id', '=', $Issue)->where('tag_id', '=', $TagNum->attributes['id'], 'AND' )->first(array('id'));
-				$now = date("Y-m-d H:i:s");
-				if ($IssueTagNum == NULL) {
-					\DB::table('projects_issues_tags')->insert(array('id'=>NULL,'issue_id'=>$Issue,'tag_id'=>$TagNum->attributes['id'],'created_at'=>$now,'updated_at'=>$now) );
-				} else {
-					\DB::table('projects_issues_tags')->where('issue_id', '=', $Issue)->where('tag_id', '=', $TagNum->attributes['id'], 'AND' )->update(array('updated_at'=>$now) );
-				}
-				$Action = NULL;
-				$Msg = __('tinyissue.tag_added');
-				$Show = true;
-				$added_tags = '"added_tags":['.$TagNum->attributes['id'].'],';
-				$removed_tags = '"removed_tags":[],';
-			}
-
-			/**
-			 * Edit an issue
-			 * Taking a tag off
-			 */
-			if ($Modif == 'eraseTag') {
-				$IssueTagNum =\DB::table('projects_issues_tags')->where('issue_id','=',$Issue)->where('tag_id','=',$TagNum->id,'AND')->first('id');
-				\DB::table('projects_issues_tags')->delete($IssueTagNum->id);
-				$Action = $Issue;
-				$Modif = true;
-				$Msg = '<span style="color:#F00;">'.__('tinyissue.tag_removed').'</span>';
-				$Show = true;
-				$added_tags = '"added_tags":[],';
-				$removed_tags = '"removed_tags":['.$TagNum->attributes['id'].'],';
-			}
-
-
-			/**
-			 * Update database
-			 */
-			if ($Show) { \User\Activity::add(6, Project::current()->id, $Issue, NULL, '{'.$added_tags.$removed_tags.'"tag_data":{"'.$TagNum->attributes['id'].'":{"id":'.$TagNum->attributes['id'].',"tag":"'.$TagNum->attributes['tag'].'","bgcolor":"'.$TagNum->attributes['bgcolor'].'","ftcolor":"'.$TagNum->attributes['ftcolor'].'"}},"tags_test":"Baboom en poudre"}' ); }
-
-			/**
-			 * Show on screen what just happened
-			 */
-			if (isset($TagNum) && $Quel != "xyzxyz") {
-				$content .= '<div class="insides"><div class="topbar"><div class="data">';
-				$content .= '<label style="color: '.$TagNum->attributes['ftcolor'].'; background-color: '.$TagNum->attributes['bgcolor'].'; padding: 5px 10px; border-radius: 8px;">';
-				$content .= $TagNum->attributes['tag'].'</label>';
-				$content .= ' : <b>'.$Msg.'</b> ';
-				$content .= __('tinyissue.by') . ' ';
-				$content .= \Auth::user()->firstname . ' ' . \Auth::user()->lastname;
-				$content .= '</div></div></div>';
-				$t = time();
-				$result = $content;
-			}
-
-		return $content;
 	}
 
 	/**

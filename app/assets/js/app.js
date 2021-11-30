@@ -15,6 +15,40 @@ function AffichonsVieux(url,id) {
 	window.open(url,'BUGS: review deleted comment','width=400,height=300,left=300,top=200,toolbar=no,channelmode=no,location=no,location=no,resizable=yes,status=no,titlebar=no',false);
 }
 
+function AddTag (Quel,d) {
+//	alert("Ajout de cette étiquette");
+	var IDcomment = 'comment' + new Date().getTime();
+	$.get(siteurl + 'ajax/tags/retag', {
+		ProjectID : ProjectID,
+		IssueID : IssueID,
+		Modif : 'AddOneTag',
+		Quel : Quel
+	}, function(data){
+		var adLi = document.createElement("LI");
+		adLi.className = 'comment';
+		adLi.id = IDcomment;
+		document.getElementById('ul_IssueDiscussion').appendChild(adLi);
+		document.getElementById(IDcomment).innerHTML = data;
+	});
+}
+
+function OteTag(Quel) {
+	alert("Suppression de cette étiquette à cette adresse : " + siteurl);
+	var IDcomment = 'comment' + new Date().getTime();
+	$.get(siteurl + 'ajax/tags/retag', {
+		ProjectID : ProjectID,
+		IssueID : IssueID,
+		Modif : 'eraseTag',
+		Quel : Quel
+	}, function(data){
+		var adLi = document.createElement("LI");
+		adLi.className = 'comment';
+		adLi.id = IDcomment;
+		document.getElementById('ul_IssueDiscussion').appendChild(adLi);
+		document.getElementById(IDcomment).innerHTML = data;
+	});
+}
+
 function addUserProject(project_id, user, cettepage, tradSupp, projsuppmbre, MonRole) {
 	var contenu = new Array();
 	$.post(siteurl + 'ajax/project/addUserProject', {
@@ -161,6 +195,9 @@ function Issue_ChgListMbre(NumProj) {
 }
 
 function propose_project_user(user, project_id, cettepage, MonRole) {
+	var n = new Date();
+	var Modif = "false";
+	if (n-d > 3000 ) { Modif = "AddOneTag"; }
 	$.post(siteurl + 'ajax/project/proposeProjectUser', {
 		user		: user,
 		projet 	: project_id,
@@ -174,6 +211,40 @@ function propose_project_user(user, project_id, cettepage, MonRole) {
 		}
 	});
 }
+
+function Reassignment (Project, Prev, Suiv, Issue) {
+	$.post(siteurl + 'ajax/project/reassign', {
+		Modif		: 'reassign',
+		Project 	: Project,
+		Prev 		: Prev,
+		Suiv 		: Suiv,
+		Issue 	: 	Issue
+	}, function(data){
+		var adLi = document.createElement("LI");
+		adLi.className = 'comment';
+		adLi.id = IDcomment;
+		document.getElementById('ul_IssueDiscussion').appendChild(adLi);
+		document.getElementById(IDcomment).innerHTML = data;
+		
+		var MyDropDown = document.getElementById('dropdown_ul');
+		var items = MyDropDown.getElementsByTagName("li");
+		for (var i = 1; i < items.length; ++i) {
+			var monID = items[i].getAttribute('id');
+			var num = monID.substring(12);
+			var contenu = items[i].innerHTML;
+			var nomDeb = contenu.indexOf('>',0);
+			var nomFin = contenu.indexOf('<', nomDeb);
+			var nom = contenu.substring(nomDeb+1,nomFin);
+			var contenu = '<a class="user0" href="javascript: Reassignment(' + Project + ', ' + Prev + ', ' + num + ',' + Issue + ');">' + nom + '</a>';
+			if (num == Suiv) {
+				contenu = '<span style="color: #FFF; margin-left: 10px; font-weight: bold;">' + nom + '</span>';
+				document.getElementById('span_currentlyAssigned_name').innerHTML = nom;
+			}
+			items[i].innerHTML = contenu;
+		}
+	});
+}
+
 
 function remove_project_user(user_id, project_id, projsuppmbre) {
 	if(!confirm(projsuppmbre)){ return false; }

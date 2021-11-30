@@ -276,7 +276,10 @@
 							});
 						});
 						//Viendra ici
-						<?php echo $Retagage; ?>
+						<?php 
+							//Ligne (ci-bas) mise en remarque le 29 nov 2021 sans compromettre le bon fonctionnement.
+							//echo $Retagage; 
+						?>
 						</script>
 					</div>
 			</p>
@@ -331,40 +334,8 @@ var path = '<?php echo $url; ?>app/application/controllers/ajax/';
 var d = new Date();
 var t = d.getTime();
 var AllTags = "";
-
-
-function AddTag (Quel,d) {
-	if (d == true ) { return true; }
-	var Modif = "AddOneTag";
-	var IDcomment = 'comment' + new Date().getTime();
-	var xhttpTAG = new XMLHttpRequest();
-	var NextPage = '<?php echo $url.substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'project')); ?>/retag?Modif=' + Modif + '&Quel=' + Quel;
-	xhttpTAG.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		if (xhttpTAG.responseText != '' ) {
-				var adLi = document.createElement("LI");
-				adLi.className = 'comment';
-				adLi.id = IDcomment;
-				document.getElementById('ul_IssueDiscussion').appendChild(adLi);
-				document.getElementById(IDcomment).innerHTML = xhttpTAG.responseText;
-			}
-		}
-	};
-	xhttpTAG.open("GET", NextPage, true);
-	xhttpTAG.send(); 
-
-	var xhttpMAIL = new XMLHttpRequest();
-	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsADD&src=tinyissue";
-	xhttpMAIL.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttpMAIL.responseText != '' ) {
-				alert("Courriels envoyés avec retour = \n" + this.responseText);
-			}
-		}
-	};
-	xhttpMAIL.open("GET", NextPage, true);
-	xhttpMAIL.send(); 
-}
+var ProjectID = <?php echo Project::current()->id; ?>; 
+var IssueID = <?php echo Project\Issue::current()->id; ?>;
 
 function Following(Quoi, etat) {
 	if (Quoi == 'comments' ) {
@@ -440,89 +411,6 @@ function IMGupload_progressHandler(event){
 	document.getElementById("progressBar").value = percent;
 }
 
-function OteTag(Quel) {
-	Modif = "eraseTag";
-	var IDcomment = 'comment' + new Date().getTime();
-	var xhttpTAG = new XMLHttpRequest();
-	var NextPage = '<?php echo $_SERVER['REQUEST_URI']; ?>/retag?Modif=' + Modif + '&Quel=' + Quel;
-	xhttpTAG.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		if (xhttpTAG.responseText != '' ) {
-				var adLi = document.createElement("LI");
-				adLi.className = 'comment';
-				adLi.id = IDcomment;
-				document.getElementById('ul_IssueDiscussion').appendChild(adLi);
-				document.getElementById(IDcomment).innerHTML = xhttpTAG.responseText;
-			}
-		}
-	};
-	xhttpTAG.open("GET", NextPage, true);
-	xhttpTAG.send(); 
-
-	var xhttpMAIL = new XMLHttpRequest();
-	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsOTE&src=tinyissue";
-	xhttpMAIL.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttpMAIL.responseText != '' ) {
-				alert("Courriels envoyés avec retour = \n" + this.responseText);
-			}
-		}
-	};
-	xhttpMAIL.open("GET", NextPage, true);
-	xhttpMAIL.send(); 
-}
-
-function Reassignment (Project, Prev, Suiv, Issue) {
-	Modif = "reassign";
-	var n = new Date();
-	var Modif = "false";
-	if (n-d > 3000 ) { Modif = "AddOneTag"; }
-	var IDcomment = 'comment' + n.getTime();
-	var xhttpASGMT = new XMLHttpRequest();
-	var NextPage = '<?php echo $_SERVER['REQUEST_URI']; ?>/reassign?Modif=' + Modif + '&Project=' + Project + '&Prev=' + Prev + '&Suiv=' + Suiv + '&Issue=' + Issue;
-	xhttpASGMT.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		if (xhttpASGMT.responseText != '' ) {
-				var adLi = document.createElement("LI");
-				adLi.className = 'comment';
-				adLi.id = IDcomment;
-				document.getElementById('ul_IssueDiscussion').appendChild(adLi);
-				document.getElementById(IDcomment).innerHTML = xhttpASGMT.responseText;
-				
-				var MyDropDown = document.getElementById('dropdown_ul');
-				var items = MyDropDown.getElementsByTagName("li");
-				for (var i = 1; i < items.length; ++i) {
-					var monID = items[i].getAttribute('id');
-					var num = monID.substring(12);
-					var contenu = items[i].innerHTML;
-					var nomDeb = contenu.indexOf('>',0);
-					var nomFin = contenu.indexOf('<', nomDeb);
-					var nom = contenu.substring(nomDeb+1,nomFin);
-					var contenu = '<a class="user0" href="javascript: Reassignment(' + Project + ', ' + Prev + ', ' + num + ',' + Issue + ');">' + nom + '</a>';
-					if (num == Suiv) {
-						contenu = '<span style="color: #FFF; margin-left: 10px; font-weight: bold;">' + nom + '</span>';
-						document.getElementById('span_currentlyAssigned_name').innerHTML = nom;
-					}
-					items[i].innerHTML = contenu;
-				}
-			}
-		}
-	};
-	xhttpASGMT.open("GET", NextPage, true);
-	xhttpASGMT.send(); 
-
-	var xhttpMAIL = new XMLHttpRequest();
-	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=assigned&src=tinyissue";
-	xhttpMAIL.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttpMAIL.responseText != '' ) {
-				alert("Courriels envoyés avec retour = \n" + this.responseText);
-			}
-		}
-	};
-	xhttpMAIL.open("GET", NextPage, true);
-	xhttpMAIL.send(); 
-}
 <?php
 	$rendu = 0;
 	$wysiwyg = \Config::get('application.editor');
