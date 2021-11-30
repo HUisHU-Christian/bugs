@@ -41,6 +41,6 @@ class Activity extends Eloquent {
 		}
 		return array('success' => true, 'requ' => $requ);
 
-	}	
+	}
 	
 }

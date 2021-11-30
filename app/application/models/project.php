@@ -1,9 +1,12 @@
 <?php
 
+require_once "application/libraries/mail.php";
+
 class Project extends Eloquent {
 
 	public static $table = 'projects';
 	public static $timestamps = true;
+	
 
 	/**********************************************************
 	 * Methods to use with loaded Project
@@ -339,6 +342,7 @@ class Project extends Eloquent {
 			'success' => true
 		);
 	}
+
 	public static function update_weblnks($input, $project) {
 		/* Update all the links attached to the project, setting the « desactivated » date as NOW */
 		\DB::table('projects_links')->where('id_project', '=', $project->id)->update(array('desactivated' => date("Y-m-d")));

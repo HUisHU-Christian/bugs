@@ -111,9 +111,6 @@
 		}, function(data){
 			Verdissons(Array('input_err_exittxt'),data);
 		});
-
-
-
 	}
 	
 	function BackupBDD() {

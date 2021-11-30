@@ -198,7 +198,7 @@
 			<summary><?php echo __('tinyissue.email_head2'); ?></summary>
 			<br />
 			<div>
-			<select name="ChxTxt" id="select_ChxTxt" onchange="ChangeonsText(this.value, <?php echo "'".\Auth::user()->language."','".__('tinyissue.following_email')."'"; ?>);" class="sombre">
+			<select name="ChxTxt" id="select_ChxTxt" onchange="ChangeonsText(this.value, <?php echo "'".__('tinyissue.following_email')."','".\Auth::user()->language."'"; ?>);" class="sombre">
 			<?php
 				$LesOptions = array(
 					"assigned" 	=> __('tinyissue.following_email_assigned_tit'),
@@ -238,7 +238,7 @@
 			<textarea id="txt_contenu" name="contenu" ><?php echo $con; ?></textarea>
 			<input name="Modifies" type="hidden" id="input_modifies" value="0" />
 			<br />
-			<div style="text-align: center;"><input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: ChangeonsText(document.getElementById('select_ChxTxt').value, '<?php echo \Auth::user()->language; ?>', 'OUI');" class="button2"/></div>
+			<div style="text-align: center;"><input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: ChangeonsText(document.getElementById('select_ChxTxt').value, 'OUI', '<?php echo \Auth::user()->language; ?>');" class="button2"/></div>
 		</details>
 		<details id="details_emailserver_head">
 			<summary><?php echo $LngSRV['UpdateConfigFile']; ?></summary>
