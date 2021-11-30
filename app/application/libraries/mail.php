@@ -209,20 +209,21 @@ class Mail {
 				break;
 			default:																		//smtp is the second default value after "mail" which has its own code up
 				require_once '/application/libraries/PHPmailer/class.smtp.php';
-				$mail->SMTPDebug = 1;												// 0 = no output, 1 = errors and messages, 2 = messages only.
-				if (\Config::get('application.mail.smtp.encryption') != '') {
-					$mail->SMTPAuth = true;											// enable SMTP authentication
-					$mail->SMTPSecure = \Config::get('application.mail.smtp.encryption');	// sets the prefix to the server
-					$mail->Host = \Config::get('application.mail.smtp.server');
-					$mail->Port = \Config::get('application.mail.smtp.port');
-					$mail->Username = \Config::get('application.mail.smtp.username');
-					$mail->Password = \Config::get('application.mail.smtp.password');
-				}
+				$mail->SMTPDebug = 1;																		// 0 = no output, 1 = errors and messages, 2 = messages only.
 				break;
 		}
 
+		if (\Config::get('application.mail.smtp.encryption') != '') {
+			$mail->SMTPAuth = true;																	// enable SMTP authentication
+			$mail->SMTPSecure = \Config::get('application.mail.smtp.encryption');	// sets the prefix to the server
+			$mail->Host = \Config::get('application.mail.smtp.server');
+			$mail->Port = \Config::get('application.mail.smtp.port');
+			$mail->Username = \Config::get('application.mail.smtp.username');
+			$mail->Password = \Config::get('application.mail.smtp.password');
+		}
 		$mail->CharSet = \Config::get('application.mail.encoding') ?? 'UTF-8';
-		$mail->SetFrom (\Config::get('application.mail.from.email'), \Config::get('application.mail.from.name'));
+		$mail->SetFrom = \Config::get('application.mail.from.email');
+		$mail->FromName = \Config::get('application.mail.from.name');
 		$mail->Subject = $subject;
 		$mail->ContentType = \Config::get('application.mail.plainHTML') ?? 'text/plain';
 		$body .= $intro; 

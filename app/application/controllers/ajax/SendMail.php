@@ -1,3 +1,7 @@
+
+<script>
+alert("Vous voyez ce message parce que SendMail.php a été appelé.\n\nPrenez note de ce que vous faisiez, car ce fichier devrait être supprimé.");
+</script>
 <?php
 	include_once "db.php";
 
