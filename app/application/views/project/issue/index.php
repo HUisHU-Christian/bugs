@@ -232,7 +232,7 @@
 				<textarea name="comment" id="textarea_comment_0" style="width: 98%; height: 90px;"></textarea>
 				<!-- New options in the form : percentage of work done after this ticket  -->
 				<br />
-				<span style="text-align: left;">
+				<span style="text-align: left; position: relative; display: inline-block;">
 				<?php 
 					if (!isset($EtatTodo)) { $EtatTodo = 1; }
 					$percent = ((is_object($EtatTodo)) ? (($EtatTodo->weight == 100) ? 91 : $EtatTodo->weight+1) : 2 );
@@ -243,9 +243,6 @@
 						echo '<b>'.__('tinyissue.priority').'</b> : ';
 						echo '&nbsp;&nbsp;&nbsp;';
 						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1'),0=>__('tinyissue.priority_desc_0')), $issue->status); 
-						echo '&nbsp;&nbsp;&nbsp;';
-						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
-						echo '<input type="number" name="temps_fait" value="'.\Config::get('application.pref.tempsfait').'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
 					} else {
 						if ($MonRole != 1 ) { 
 							echo '<br />'; 
@@ -256,10 +253,18 @@
 						}
 					}	
 					echo '<br />'; 
-				?>					
+				?>
+				</span>
+				<span style="text-align: left; position: relative; display: inline-block; margin-left: 15%;">
+				<?php
+					if ($MonRole > 1) {
+						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
+						echo '<input type="number" name="temps_fait" value="'.\Config::get('application.pref.tempsfait').'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
+					}
+				?>
 				</span>
 				<div style="text-align: right; width: 98%; margin-top: -25px;"><br /><br /></div>
-			<?php  if ($MonRole != 1) { ?>
+			<?php  if ($MonRole > 1) { ?>
 					<!-- Tags modification  -->
 					<span style="float:left; font-weight: bold; margin: 7px;"><?php echo  __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span></span>
 					<div style="width: 73%; float: left">
