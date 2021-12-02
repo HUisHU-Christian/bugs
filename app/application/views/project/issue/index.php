@@ -342,6 +342,7 @@ var AllTags = "";
 var ProjectID = <?php echo Project::current()->id; ?>; 
 var IssueID = <?php echo Project\Issue::current()->id; ?>;
 
+
 function Following(Quoi, etat) {
 	if (Quoi == 'comments' ) {
 		document.getElementById('input_following_attached').checked = etat; 

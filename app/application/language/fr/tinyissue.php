@@ -264,7 +264,7 @@ return array(
 	'role' => 'Rôle',
 	'roles_modify' => 'Appliquer les modifications',
 	'save' => 'Enregistrer',
-	'saving' => 'Sauvegarde',
+	'saving' => 'Sauvegarde en cours',
 	'search' => 'Recherche',
 	'second' =>  'seconde',
 	'select_a_project' =>  'Mes projets',
