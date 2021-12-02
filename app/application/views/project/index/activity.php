@@ -7,7 +7,7 @@
 		</p>
 		<?php else: ?>
 		<ul class="activity">
-			<?php foreach($project->activity(10) as $activity): ?>
+			<?php foreach($project->activity(\Config::get('application.pref.todoitems')) as $activity): ?>
 			<?php echo $activity; ?>
 			<?php endforeach; ?>
 		</ul>

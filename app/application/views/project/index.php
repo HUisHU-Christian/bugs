@@ -38,7 +38,7 @@
 			
 		</li>
 		<li <?php echo $active == 'assigned' ? 'class="active"' : ''; ?>>
-			<a href="<?php echo Project::current()->to('issues'); ?>?tag_id=1&amp;assigned_to=<?php echo Auth::user()->id; ?>">
+			<a href="<?php echo Project::current()->to('issues'); ?>?tag_id=5&amp;assigned_to=<?php echo Auth::user()->id; ?>">
 			<?php echo $assigned_count.' '.($assigned_count < 2 ? __('tinyissue.issue_assigned_to_you') : __('tinyissue.issues_assigned_to_you')); ?>
 			</a>
 		</li>
