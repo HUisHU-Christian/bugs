@@ -7,7 +7,9 @@ $(function(){
 });
 
 var chronoOnOff = "";
+var delaiSauvegarde = false;
 var saving = false;
+var Nouv = false;
 
 function AffichonsVieux(url,id) {
 	url = url.substr(0, url.indexOf('project'));
@@ -16,7 +18,8 @@ function AffichonsVieux(url,id) {
 }
 
 function AddTag (Quel,d) {
-//	alert("Ajout de cette étiquette");
+	if (!Nouv ) { return true; }
+	saving_toggle(true);
 	var IDcomment = 'comment' + new Date().getTime();
 	$.get(siteurl + 'ajax/tags/retag', {
 		ProjectID : ProjectID,
@@ -29,23 +32,7 @@ function AddTag (Quel,d) {
 		adLi.id = IDcomment;
 		document.getElementById('ul_IssueDiscussion').appendChild(adLi);
 		document.getElementById(IDcomment).innerHTML = data;
-	});
-}
-
-function OteTag(Quel) {
-	alert("Suppression de cette étiquette à cette adresse : " + siteurl);
-	var IDcomment = 'comment' + new Date().getTime();
-	$.get(siteurl + 'ajax/tags/retag', {
-		ProjectID : ProjectID,
-		IssueID : IssueID,
-		Modif : 'eraseTag',
-		Quel : Quel
-	}, function(data){
-		var adLi = document.createElement("LI");
-		adLi.className = 'comment';
-		adLi.id = IDcomment;
-		document.getElementById('ul_IssueDiscussion').appendChild(adLi);
-		document.getElementById(IDcomment).innerHTML = data;
+		saving_toggle(false);
 	});
 }
 
@@ -174,6 +161,10 @@ function Chronometrons(etat, nouvText, user_id, issue_id, project_id) {
 	chronoOnOff = nouvEtat;
 }
 
+function delaiAffichage() {
+	document.getElementById('global-saving').style.color = (document.getElementById('global-saving').style.color == 'yellow') ? '#660099' : 'yellow'; 
+}
+
 function Follows(Quoi, Qui, ProjectID, IssueID, Etat) {
 	$.post(siteurl + 'ajax/project/following', {
 		quoi	: Quoi,
@@ -191,6 +182,24 @@ function Issue_ChgListMbre(NumProj) {
 		projet 	: NumProj
 	}, function(data){
 		document.getElementById('project_newSelectResp').innerHTML = data;
+	});
+}
+
+function OteTag(Quel) {
+	saving_toggle(true);
+	var IDcomment = 'comment' + new Date().getTime();
+	$.get(siteurl + 'ajax/tags/retag', {
+		ProjectID : ProjectID,
+		IssueID : IssueID,
+		Modif : 'eraseTag',
+		Quel : Quel
+	}, function(data){
+		var adLi = document.createElement("LI");
+		adLi.className = 'comment';
+		adLi.id = IDcomment;
+		document.getElementById('ul_IssueDiscussion').appendChild(adLi);
+		document.getElementById(IDcomment).innerHTML = data;
+		saving_toggle(false);
 	});
 }
 
@@ -213,6 +222,12 @@ function propose_project_user(user, project_id, cettepage, MonRole) {
 }
 
 function Reassignment (Project, Prev, Suiv, Issue) {
+	if (saving) { return true; }
+	saving_toggle(true);
+	var n = new Date();
+	var Modif = "false";
+	if (n-d > 3000 ) { Modif = "AddOneTag"; }
+	var IDcomment = 'comment' + n.getTime();
 	$.post(siteurl + 'ajax/project/reassign', {
 		Modif		: 'reassign',
 		Project 	: Project,
@@ -225,7 +240,6 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 		adLi.id = IDcomment;
 		document.getElementById('ul_IssueDiscussion').appendChild(adLi);
 		document.getElementById(IDcomment).innerHTML = data;
-		
 		var MyDropDown = document.getElementById('dropdown_ul');
 		var items = MyDropDown.getElementsByTagName("li");
 		for (var i = 1; i < items.length; ++i) {
@@ -242,13 +256,15 @@ function Reassignment (Project, Prev, Suiv, Issue) {
 			}
 			items[i].innerHTML = contenu;
 		}
+		saving_toggle(false);
 	});
 }
 
 
 function remove_project_user(user_id, project_id, projsuppmbre) {
 	if(!confirm(projsuppmbre)){ return false; }
-//	saving_toggle();
+	if (saving) { return true; }
+	saving_toggle(true);
 
 	$.post(siteurl + 'ajax/project/remove_user', {
 		user_id : user_id,
@@ -267,20 +283,24 @@ function remove_project_user(user_id, project_id, projsuppmbre) {
 			poubelle = document.getElementById('project-user' + user_id);
 			document.getElementById("sidebar-users").removeChild(poubelle);
 		}
-//		$('#project-user' + user_id).fadeOut();
-//		saving_toggle();
+		saving_toggle(false);
 	});
-
-//	return true;
 }
 
-function saving_toggle(){
+function saving_toggle(nouvEtat){
+	saving = nouvEtat;
 	if(saving){
-		$('.global-saving').hide();
-		saving = false;
+		document.getElementById('global-saving').style.display = "block";
+		document.getElementById('global-saving').style.color = "yellow";
+		delai = setInterval(function (){delaiAffichage()}, 500);
 	}else{
-		$('.global-saving').show();
-		saving = true;
+		document.getElementById('global-saving').style.display = "none";
+		clearInterval(delai);
 	}
+	return true;
 }
 
+setTimeout(function(){ 
+	Nouv = true; 
+	}, 3000
+);
