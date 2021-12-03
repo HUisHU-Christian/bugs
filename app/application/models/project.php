@@ -89,7 +89,7 @@ class Project extends Eloquent {
 		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
 				->where('assigned_to', '=', $user_id)
-				->where('start_at', '<=', date("Y-m-d"))
+//				->where('start_at', '<=', date("Y-m-d"))
 				->where_null('closed_at', 'and', false)
 				->count();
 	}
