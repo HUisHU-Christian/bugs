@@ -132,9 +132,9 @@ class Mail {
 				$contenu = Mail::wildcards ($message, $follower, false);
 
 				if (\Config::get('application.mail.transport') == 'mail') {
-					$result = Mail::SendByMail($follower, $passage_ligne);
+					$result = Mail::SendByMail($contenu, $follower, $passage_ligne);
 				} else {
-					$result = Mail::SendByPHPmailer($follower, $passage_ligne);
+					$result = Mail::SendByPHPmailer($contenu, $follower, $passage_ligne);
 				}
 				if ($result == "Email successfully sent!") { $bons = $bons + 1; } else { $mals = $mals + 1; }
 			}
@@ -148,8 +148,8 @@ class Mail {
 		}	
 	}
 
-	private static function SendByMail ($follower, $passage_ligne) {
-		global $bye, $detail, $intro, $message, $subject, $values;
+	private static function SendByMail ($contenu, $follower, $passage_ligne) {
+		global $bye, $detail, $intro, $subject, $values;
 		$boundary = md5(uniqid(microtime(), TRUE));
 		$headers = 'From: "'.\Config::get('application.mail.from.name').'" <'.\Config::get('application.mail.from.email').'>'.$passage_ligne;
 		$headers .= 'Reply-To: "'.\Config::get('application.mail')['replyTo']['name'].'" <'.\Config::get('application.mail')['replyTo']['email'].'>'.$passage_ligne;
@@ -159,12 +159,12 @@ class Mail {
 		$body  = $passage_ligne;
 		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $intro)));
 		$body .= $passage_ligne;
-		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $message)));
+		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $contenu)));
 		$body .= $passage_ligne;
 		$body .= strip_tags( nl2br(str_replace("</p>", "<br /><br />", $bye)));
 		$body .= $passage_ligne;
 		$body .= $passage_ligne;
-		$body .= $message;
+		$body .= $contenu;
 		$body .= $passage_ligne;
 		$body .= $passage_ligne;
 		$body .= '--'.$boundary.''.$passage_ligne;
@@ -172,7 +172,7 @@ class Mail {
 		$body .= $passage_ligne;
 		$body .= $intro;
 		$body .= $passage_ligne;
-		$body .= '<p>'.$message.'</p>';
+		$body .= '<p>'.$contenu.'</p>';
 		$body .= $passage_ligne;
 		$body .= $bye;
 		$body .= $passage_ligne.'';
@@ -189,7 +189,7 @@ class Mail {
 	}
 
 	private static function SendByPHPmailer ($follower, $passage_ligne) {
-		global $bye, $detail, $intro, $message, $subject, $values;
+		global $bye, $detail, $intro, $subject, $values;
 		$mail = new PHPMailer();
 		$mail->Mailer = \Config::get('application.mail.transport');
 		switch (\Config::get('application.mail.transport')) {
@@ -228,7 +228,7 @@ class Mail {
 		$mail->ContentType = \Config::get('application.mail.plainHTML') ?? 'text/plain';
 		$body .= $intro; 
 		$body .= '<br /><br />';
-		$body .= $message;
+		$body .= $contenu;
 		$body .= '<br /><br />';
 		$body .= $bye; 
 		if ($mail->ContentType == 'html') {

@@ -21,7 +21,7 @@ class Project_Controller extends Base_Controller {
 		return $this->layout->nest('content', 'project.index', array(
 			'page' => View::make('project/index/activity', array(
 				'project' => Project::current(),
-				'activity' => Project::current()->activity(10)
+				'activity' => Project::current()->activity(\Config::get('application.pref.todoitems'))
 			)),
 			'active' => 'activity',
 			'open_count' => Project::current()->count_open_issues(),
