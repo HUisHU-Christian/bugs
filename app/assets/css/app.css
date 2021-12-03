@@ -155,7 +155,7 @@ footer{
 }
 
 /* Notices */
-.global-notice, .taglev {
+.global-notice, .taglev, .global-saving {
 	align-items: center;
 	background: #222727;
 	border-radius: 15px;
@@ -199,10 +199,9 @@ footer{
 	background: #de2e2e!important;
 }
 .global-saving{
-	position: fixed;
-	top: 0; left: 0;
-	width: 100%;
-	display: none;
+	top: 60%;
+	background-color: #004;
+	color: yellow; 
 }
 .global-saving span{
 	background: url('../images/icons/global-saving.gif') no-repeat 10px 10px #222727;
