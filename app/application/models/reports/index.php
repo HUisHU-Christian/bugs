@@ -99,6 +99,7 @@ if ($_POST["RapType"] != 'users_customized') {
 		$Untel = \DB::table('users')->where('id', '=', $_POST["FilterUser"])->get();
 		$untel = strtoupper($Untel[0]->lastname).', '.$Untel[0]->firstname; 
 	}
+	if (isset($Groupage)) { $query .= " GROUP BY ".$Groupage." "; }
 	$query .= "ORDER BY ".$OrdreTRI;
 	$results = \DB::query($query);
 	
