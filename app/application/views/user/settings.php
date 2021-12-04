@@ -101,7 +101,7 @@
 		<br />
 		<h4><?php echo $LngSRV["UserPref_modele"]; ?></h4>
 		<br />
-		<select name="template"><option value="default">Default</option></select>
+		<select name="template"><option value="Default">Default</option></select>
 		<br /><br />
 		<br /><br />
 
