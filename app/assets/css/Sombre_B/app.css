@@ -35,7 +35,7 @@ body {
 
 /* Styles */
 a{
-	color: #93C239;
+	color: #3993C2;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -105,7 +105,7 @@ h3 .edit-issue:hover {
 h4{
 	font-size: 18px;
 	font-weight: normal;
-	color: #92C262;
+	color: #6292C2;
 	margin-bottom: 10px;
 }
 h4 span{
@@ -254,12 +254,12 @@ input.button1 {
 	font: bold 13px Helvetica, "Lucida Grande", Arial, sans-serif;
 	color: #fff;
 	padding: 10px 13px;
-	border: 1px solid #0A0;
+	border: 1px solid #00A;
 	border-radius: 6px;
-	background: #060;
+	background: #006;
 }
 input[type=submit]{
-	background: #090;
+	background: #009;
 }
 .action:hover,
 .action:focus,
@@ -275,7 +275,7 @@ input.button1:hover {
 	color: #000;
 }
 input.button1{
-	background: #0C6;
+	background: #06C;
 	color: #000000;
 }
 
@@ -327,7 +327,7 @@ summary, select.sombre {
 	font-weight: bold;
 	padding: 10px;
 	background-color: #373e4e; 
-	color: #78c81c;
+	color: #386cF8;
 	border-radius: 10px;
 }
 
@@ -363,14 +363,14 @@ select.sombre {
 }
 .tabs > li > a:hover {
   text-decoration: none;
-  background-color: #030;
+  background-color: #003;
   color: #FFF;
-  border-color: #0e0 #0E0 #0d0;
+  border-color: #00e #00E #00D;
 }
 .tabs .active > a, .tabs .active > a:hover {
   color: #D2D2D2;
   background-color: #222;
-  border: 1px solid #9d6;
+  border: 1px solid #69d;
   border-bottom-color: transparent;
   cursor: default;
 }
@@ -396,7 +396,7 @@ select.sombre {
 
 tr th a {
 	font-size: 120%;
-	color: #0C6;
+	color: #06C;
 }
 tr th a:hover {
 	color: #5AE;
@@ -780,7 +780,7 @@ div.stat_form {
 #sidebar h2{
 	font-size: 18px;
 	color: #ACACAC;
-	background: url('images/h2-bg_verte.png') no-repeat bottom left;
+	background: url('images/h2-bg_bleue.png') no-repeat bottom left;
 	padding: 18px 18px 24px;
 }
 #sidebar h2 a{
@@ -821,7 +821,7 @@ div.stat_form {
 }
 #sidebar ul li{
 	padding: 8px 18px;
-	border-bottom: 1px solid #060;
+	border-bottom: 1px solid #006;
 }
 
 #sidebar ul li .delete, .assign-users li .delete, #uploaded-attachments .delete, .issue-discussion li .topbar .delete-comment a {
@@ -838,7 +838,7 @@ div.stat_form {
 	background: url('images/icon-li-arrow_noire.png') right center no-repeat;
 }
 #sidebar ul li a:hover{
-	background: url('images/icon-li-arrow_verte.png') right center no-repeat;
+	background: url('images/icon-li-arrow_bleue.png') right center no-repeat;
 }
 #sidebar ul li a.links{
 	background: url('images/icon-website.png') right center no-repeat;
@@ -846,7 +846,7 @@ div.stat_form {
 #sidebar ul li a,#sidebar ul li a.links{
 	min-height: 17px;
 	display: block;
-	color: #690;
+	color: #069;
 	text-decoration: none;
 	padding-top: 5px;
 	font-size: 13px;
@@ -945,8 +945,8 @@ td.project-user, th.project-user {
 }
 .blue-box{
 	background: #323334;
-	border: 1px solid #249f5f;
-	border-bottom: 2px solid #249f5f;
+	border: 1px solid #245f9f;
+	border-bottom: 2px solid #245f9f;
 	border-radius: 5px;
 	margin-bottom: 25px;
 	padding-bottom: 5px;
@@ -981,7 +981,7 @@ td.project-user, th.project-user {
 
 .blue-box h4{
 	font-size: 16px;
-	color: #42Ce86;
+	color: #4286CE;
 	padding: 16px;
 	min-height: 90px;
 }
@@ -1041,7 +1041,7 @@ td.project-user, th.project-user {
 }
 .blue-box .issues{
 	background: #111;
-	border-top: 1px solid #6C3;
+	border-top: 1px solid #36C;
 	border-radius: 3px;
 	padding: 0 8px 17px;
 }
@@ -1405,7 +1405,7 @@ ul.isssues li {
 #sortable-msg {
 	color: #107AA7;
 	font-weight: bold;
-  margin-top: 10px;
+	margin-top: 10px;
 }
 #sortable-msg.error {
 	color: #F21D20;
@@ -1473,7 +1473,7 @@ ul.isssues li {
   width: 100%;
   display: table;
   margin-bottom: 15px;
-  border: 1px solid #9BD969;
+  border: 1px solid #6B69D9;
   border-radius: 5px;
 }
 
@@ -1888,9 +1888,7 @@ input.inputRech:focus {
 	}
 	.summarysidebar {
 		background-color: transparent;
-		/* background-color: red; */
-		color: transparent;
-		/* color: #000000; */
+		color: #781cc8;
 		height: 0;
 		list-style-type: none;
 		padding-left: 8%;
