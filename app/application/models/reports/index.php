@@ -44,8 +44,9 @@ function EnTete ($pdf, $colonnes, $untel, $rappLng) {
 	$pdf->SetFont("Times", "B", 15);
 	$pdf->Text(86, 28,utf8_decode($rappLng[$_POST["RapType"]][0]));
 	$pdf->SetFont("Times", "", 10);
-	if (trim(@$_POST["DteInit"]) != '' ) { $pdf->Text(86, 32, " Date >= ".$_POST["DteInit"]); }
-	if (trim(@$_POST["DteEnds"]) != '' ) { $pdf->Text(86, 35, " Date <= ".$_POST["DteEnds"]); }
+	$_POST["DteInit"] = $_POST["DteInit"] ?? '';
+	$_POST["DteEnds"] = $_POST["DteEnds"] ?? date("Y-m-d");
+	$pdf->Text(86, 32, $_POST["DteInit"]. ' -> '.$_POST["DteEnds"]);
 	if (trim(@$_POST["FilterUser"]) > 0 ) {$pdf->Text(86, 38, " ... ".$untel); }
 
 	$pdf->SetXY(10, 40);
