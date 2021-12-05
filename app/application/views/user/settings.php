@@ -103,7 +103,7 @@
 		<br />
 		<select name="template">
 		<?php
-			$pasCeuxCi = array(".","..","jquery.tagit.css","spectrum.css","tagit.ui-zendesk.css");
+			$pasCeuxCi = array(".","..","jquery.tagit.css","spectrum.css","tagit.ui-zendesk.css", "login.css");
 			$canevas = scandir("assets/css");
 			foreach ($canevas as $caneva) {
 				if (in_array($caneva, $pasCeuxCi)) { continue; }
