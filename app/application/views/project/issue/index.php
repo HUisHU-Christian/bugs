@@ -54,7 +54,7 @@
 
 <div class="pad">
 
-	<div style="background-color: #ededed; width: 20%; float: right; ">
+	<div class="Suivre">
 		<?php if (isset($follower)) { ?>
 		<div style="width:25%; float:left;">
 			<span style="font-weight: bold; font-size: 125%;"><?php echo __('tinyissue.following'); ?></span>
