@@ -243,7 +243,7 @@ textarea, input[type=text], input[type=password]{
 	border-radius: 5px;
 	padding: 7px;
 	font: normal 13px Helvetica, "Lucida Grande", Arial, sans-serif;
- 	color: #D2D2D2;
+ 	color: #000;
  	background-color: #DEDFDC;
 	box-shadow: 0 -1px 1px #b6b6b6;
 }
@@ -277,6 +277,12 @@ input.button1:hover {
 input.button1{
 	background: #0C6;
 	color: #000000;
+}
+
+input[type=number],
+input[type=text],
+input[type=input] {
+	color: #000;
 }
 
 p{
