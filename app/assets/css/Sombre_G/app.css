@@ -66,8 +66,9 @@ h3 span a{
 	font-weight: normal;
 	color: #BC5D26;
 }
+h3 .newproject,
 h3 .addnewuser,
-h3 .newissue{
+h3 .newissue {
 	padding:3px 14px;
 	display: block;
 	float: right;
@@ -80,6 +81,7 @@ h3 .newissue{
 	border-radius: 6px;
 	border:1px solid #52A84B;
 }
+h3 .newproject:before,
 h3 .addnewuser:before,
 h3 .newissue:before{
 	content:"+ ";
@@ -88,6 +90,7 @@ h3 .newissue:before{
 	vertical-align: sub;
 }
 .green-button:hover,
+h3 .newproject a:hover,
 h3 .addnewuser:hover,
 h3 .newissue:hover{
 	background:#000000;
@@ -780,7 +783,7 @@ div.stat_form {
 #sidebar h2{
 	font-size: 18px;
 	color: #ACACAC;
-	background: url('images/h2-bg_verte.png') no-repeat bottom left;
+	background: url('images/h2-bg.png') no-repeat bottom left;
 	padding: 18px 18px 24px;
 }
 #sidebar h2 a{
@@ -838,7 +841,7 @@ div.stat_form {
 	background: url('images/icon-li-arrow_noire.png') right center no-repeat;
 }
 #sidebar ul li a:hover{
-	background: url('images/icon-li-arrow_verte.png') right center no-repeat;
+	background: url('images/icon-li-arrow.png') right center no-repeat;
 }
 #sidebar ul li a.links{
 	background: url('images/icon-website.png') right center no-repeat;
@@ -1249,7 +1252,7 @@ td.project-user, th.project-user {
 	width: 100%; 
 }
 #users-list > ul{
-	background: #dddddd;
+	background: transparent;
 	padding: 3px 3px 1px;
 	border-radius: 5px;
 	margin-bottom: 25px;
@@ -1257,11 +1260,11 @@ td.project-user, th.project-user {
 #users-list > ul > li{
 	margin-bottom: 3px;
 	padding: 14px 10px;
-	background: #fff;
+	background: #8dbb62;
 	border-radius: 5px;
 }
 #users-list a{
-	color: #969696;
+	color: black;
 	font-weight: normal;
 }
 #users-list ul ul{
