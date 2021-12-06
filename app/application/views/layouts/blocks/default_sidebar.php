@@ -1,11 +1,11 @@
 <?php if(Auth::user()->permission('project-create')): ?>
-<div id="sidebar_MenuDefault_renouveau" style="position: relative; width: 100%; padding-bottom: 10px; padding-top: 8px;">
-<div id="sidebar_MenuDefault_nouveau" class="sidebarTitles" style="position: relative;"><?php echo __('tinyissue.create_project'); ?></div>
-	<h2 style="position: absolute; top: 5px; text-align: right; width: 100%;">
-	<a href="<?php echo URL::to('projects/new'); ?>" class="add" title="New Project" style="margin-top: -18px;"><?php __('tinyissue.new'); ?></a>
-	</h2>
-	</div>
+<div id="sidebar_MenuDefault_renouveau" style="position: relative; width: 100%; margin-top: -20px;">
+	<br />
+	<h3  style="width: 100%;">
+	<a href="<?php echo URL::to('projects/new'); ?>" class="newproject" style="font-size: 12px;" title="New Project"><?php echo __('tinyissue.create_project'); ?></a>
 	<br /><br />
+	</h3>
+</div>
 <?php endif; ?>
 
 <div id="sidebar_MenuDefault_title" class="sidebarTitles"><?php echo __('tinyissue.active_projects'); ?></div>
