@@ -35,7 +35,7 @@ body {
 
 /* Styles */
 a{
-	color: #93C239;
+	color: #F26339;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -105,7 +105,7 @@ h3 .edit-issue:hover {
 h4{
 	font-size: 18px;
 	font-weight: normal;
-	color: #92C262;
+	color: #C29232;
 	margin-bottom: 10px;
 }
 h4 span{
@@ -254,12 +254,12 @@ input.button1 {
 	font: bold 13px Helvetica, "Lucida Grande", Arial, sans-serif;
 	color: #fff;
 	padding: 10px 13px;
-	border: 1px solid #0A0;
+	border: 1px solid #A00;
 	border-radius: 6px;
-	background: #060;
+	background: #600;
 }
 input[type=submit]{
-	background: #090;
+	background: #600;
 }
 .action:hover,
 .action:focus,
@@ -270,12 +270,12 @@ input.button2:focus,
 input.button1:focus,
 input.button1:hover {
 	cursor: pointer;
-	background: #0A0;
-	border: 1px solid #262626;
+	background: #F33;
+	border: 3px solid #962626;
 	color: #000;
 }
 input.button1{
-	background: #0C6;
+	background: #C60;
 	color: #000000;
 }
 
@@ -326,8 +326,8 @@ summary, select.sombre {
 	font-size: 125%;
 	font-weight: bold;
 	padding: 10px;
-	background-color: #373e4e; 
-	color: #78c81c;
+	background-color: #333; 
+	color: #D8781c;
 	border-radius: 10px;
 }
 
@@ -363,14 +363,14 @@ select.sombre {
 }
 .tabs > li > a:hover {
   text-decoration: none;
-  background-color: #030;
+  background-color: #300;
   color: #FFF;
-  border-color: #0e0 #0E0 #0d0;
+  border-color: #E00 #E00 #D00;
 }
 .tabs .active > a, .tabs .active > a:hover {
   color: #D2D2D2;
   background-color: #222;
-  border: 1px solid #9d6;
+  border: 1px solid #D86;
   border-bottom-color: transparent;
   cursor: default;
 }
@@ -396,10 +396,10 @@ select.sombre {
 
 tr th a {
 	font-size: 120%;
-	color: #0C6;
+	color: #C60;
 }
 tr th a:hover {
-	color: #5AE;
+	color: #EA5;
 }
 
 /* Pourcentage du travail accompli */
@@ -821,7 +821,7 @@ div.stat_form {
 }
 #sidebar ul li{
 	padding: 8px 18px;
-	border-bottom: 1px solid #060;
+	border-bottom: 1px solid #600;
 }
 
 #sidebar ul li .delete, .assign-users li .delete, #uploaded-attachments .delete, .issue-discussion li .topbar .delete-comment a {
@@ -846,7 +846,7 @@ div.stat_form {
 #sidebar ul li a,#sidebar ul li a.links{
 	min-height: 17px;
 	display: block;
-	color: #690;
+	color: #C30;
 	text-decoration: none;
 	padding-top: 5px;
 	font-size: 13px;
@@ -944,9 +944,9 @@ td.project-user, th.project-user {
 	background-color: #222222;
 }
 .blue-box{
-	background: #323334;
-	border: 1px solid #249f5f;
-	border-bottom: 2px solid #249f5f;
+	background: #333432;
+	border: 1px solid #9f5f24;
+	border-bottom: 2px solid #9f5f24;
 	border-radius: 5px;
 	margin-bottom: 25px;
 	padding-bottom: 5px;
@@ -981,7 +981,7 @@ td.project-user, th.project-user {
 
 .blue-box h4{
 	font-size: 16px;
-	color: #42Ce86;
+	color: #Ce8642;
 	padding: 16px;
 	min-height: 90px;
 }
@@ -1041,7 +1041,7 @@ td.project-user, th.project-user {
 }
 .blue-box .issues{
 	background: #111;
-	border-top: 1px solid #6C3;
+	border-top: 1px solid #C63;
 	border-radius: 3px;
 	padding: 0 8px 17px;
 }
@@ -1255,9 +1255,10 @@ td.project-user, th.project-user {
 	margin-bottom: 25px;
 }
 #users-list > ul > li{
+	color: black;
 	margin-bottom: 3px;
 	padding: 14px 10px;
-	background: #8dbb62;
+	background: #c28d20;
 	border-radius: 5px;
 }
 #users-list a{
@@ -1403,7 +1404,7 @@ ul.isssues li {
 	margin-top: 10px;
 }
 #sortable-msg {
-	color: #10A77A;
+	color: #A77A10;
 	font-weight: bold;
   margin-top: 10px;
 }
@@ -1473,7 +1474,7 @@ ul.isssues li {
   width: 100%;
   display: table;
   margin-bottom: 15px;
-  border: 1px solid #9BD969;
+  border: 1px solid #D99B69;
   border-radius: 5px;
 }
 
