@@ -66,8 +66,9 @@ h3 span a{
 	font-weight: normal;
 	color: #BC5D26;
 }
+h3 .newproject,
 h3 .addnewuser,
-h3 .newissue{
+h3 .newissue {
 	padding:3px 14px;
 	display: block;
 	float: right;
@@ -80,6 +81,7 @@ h3 .newissue{
 	border-radius: 6px;
 	border:1px solid #52A84B;
 }
+h3 .newproject:before,
 h3 .addnewuser:before,
 h3 .newissue:before{
 	content:"+ ";
@@ -88,6 +90,7 @@ h3 .newissue:before{
 	vertical-align: sub;
 }
 .green-button:hover,
+h3 .newproject a:hover,
 h3 .addnewuser:hover,
 h3 .newissue:hover{
 	background:#000000;
