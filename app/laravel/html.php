@@ -16,8 +16,7 @@ class HTML {
 	 * @param  Closure  $macro
 	 * @return void
 	 */
-	public static function macro($name, $macro)
-	{
+	public static function macro($name, $macro) {
 		static::$macros[$name] = $macro;
 	}
 
@@ -29,8 +28,7 @@ class HTML {
 	 * @param  string  $value
 	 * @return string
 	 */
-	public static function entities($value)
-	{
+	public static function entities($value) {
 		return htmlentities($value, ENT_QUOTES, Config::get('application.encoding'), false);
 	}
 
@@ -40,8 +38,7 @@ class HTML {
 	 * @param  string  $value
 	 * @return string
 	 */
-	public static function decode($value)
-	{
+	public static function decode($value) {
 		return html_entity_decode($value, ENT_QUOTES, Config::get('application.encoding'));
 	}
 
@@ -53,8 +50,7 @@ class HTML {
 	 * @param  string  $value
 	 * @return string
 	 */
-	public static function specialchars($value)
-	{
+	public static function specialchars($value) {
 		return htmlspecialchars($value, ENT_QUOTES, Config::get('application.encoding'), false);
 	}
 
@@ -130,8 +126,7 @@ class HTML {
 	 * @param  bool    $https
 	 * @return string
 	 */
-	public static function link($url, $title = null, $attributes = array(), $https = null)
-	{
+	public static function link($url, $title = null, $attributes = array(), $https = null) {
 		$url = URL::to($url, $https);
 
 		if (is_null($title)) $title = $url;
@@ -147,8 +142,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function link_to_secure($url, $title = null, $attributes = array())
-	{
+	public static function link_to_secure($url, $title = null, $attributes = array()) {
 		return static::link($url, $title, $attributes, true);
 	}
 
@@ -163,8 +157,7 @@ class HTML {
 	 * @param  bool    $https
 	 * @return string
 	 */
-	public static function link_to_asset($url, $title = null, $attributes = array(), $https = null)
-	{
+	public static function link_to_asset($url, $title = null, $attributes = array(), $https = null) {
 		$url = URL::to_asset($url, $https);
 		
 		if (is_null($title)) $title = $url;
@@ -180,8 +173,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function link_to_secure_asset($url, $title = null, $attributes = array())
-	{
+	public static function link_to_secure_asset($url, $title = null, $attributes = array()) {
 		return static::link_to_asset($url, $title, $attributes, true);
 	}
 
@@ -204,8 +196,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function link_to_route($name, $title = null, $parameters = array(), $attributes = array())
-	{
+	public static function link_to_route($name, $title = null, $parameters = array(), $attributes = array()) {
 		return static::link(URL::to_route($name, $parameters), $title, $attributes);
 	}
 
@@ -228,8 +219,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function link_to_action($action, $title = null, $parameters = array(), $attributes = array())
-	{
+	public static function link_to_action($action, $title = null, $parameters = array(), $attributes = array()) {
 		return static::link(URL::to_action($action, $parameters), $title, $attributes);
 	}
 
@@ -243,8 +233,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function mailto($email, $title = null, $attributes = array())
-	{
+	public static function mailto($email, $title = null, $attributes = array()) {
 		$email = static::email($email);
 
 		if (is_null($title)) $title = $email;
@@ -260,8 +249,7 @@ class HTML {
 	 * @param  string  $email
 	 * @return string
 	 */
-	public static function email($email)
-	{
+	public static function email($email) {
 		return str_replace('@', '&#64;', static::obfuscate($email));
 	}
 
@@ -273,8 +261,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function image($url, $alt = '', $attributes = array())
-	{
+	public static function image($url, $alt = '', $attributes = array()) {
 		$attributes['alt'] = $alt;
 
 		return '<img src="'.URL::to_asset($url).'"'.static::attributes($attributes).'>';
@@ -287,8 +274,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function ol($list, $attributes = array())
-	{
+	public static function ol($list, $attributes = array()) {
 		return static::listing('ol', $list, $attributes);
 	}
 
@@ -299,8 +285,7 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function ul($list, $attributes = array())
-	{
+	public static function ul($list, $attributes = array()) {
 		return static::listing('ul', $list, $attributes);
 	}
 
@@ -312,30 +297,22 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	private static function listing($type, $list, $attributes = array())
-	{
+	private static function listing($type, $list, $attributes = array()) {
 		$html = '';
 
 		if (count($list) == 0) return $html;
 
-		foreach ($list as $key => $value)
-		{
+		foreach ($list as $key => $value) {
 			// If the value is an array, we will recurse the function so that we can
 			// produce a nested list within the list being built. Of course, nested
 			// lists may exist within nested lists, etc.
-			if (is_array($value))
-			{
-				if (is_int($key))
-				{
+			if (is_array($value)) {
+				if (is_int($key)) {
 					$html .= static::listing($type, $value);
-				}
-				else
-				{
+				} else {
 					$html .= '<li>'.$key.static::listing($type, $value).'</li>';
 				}
-			}
-			else
-			{
+			} else {
 				$html .= '<li>'.static::entities($value).'</li>';
 			}
 		}
@@ -350,14 +327,12 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function dl($list, $attributes = array())
-	{
+	public static function dl($list, $attributes = array()) {
 		$html = '';
 
 		if (count($list) == 0) return $html;
 		
-		foreach ($list as $term => $description)
-		{
+		foreach ($list as $term => $description) {
 			$html .= '<dt>'.static::entities($term).'</dt>';
 			$html .= '<dd>'.static::entities($description).'</dd>';
 		}
@@ -371,19 +346,16 @@ class HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public static function attributes($attributes)
-	{
+	public static function attributes($attributes) {
 		$html = array();
 
-		foreach ((array) $attributes as $key => $value)
-		{
+		foreach ((array) $attributes as $key => $value) {
 			// For numeric keys, we will assume that the key and the value are the
 			// same, as this will convert HTML attributes such as "required" that
 			// may be specified as required="required", etc.
 			if (is_numeric($key)) $key = $value;
 
-			if ( ! is_null($value))
-			{
+			if ( ! is_null($value)) {
 				$html[] = $key.'="'.static::entities($value).'"';
 			}
 		}
@@ -397,17 +369,14 @@ class HTML {
 	 * @param  string  $value
 	 * @return string
 	 */
-	protected static function obfuscate($value)
-	{
+	protected static function obfuscate($value) {
 		$safe = '';
 
-		foreach (str_split($value) as $letter)
-		{
+		foreach (str_split($value) as $letter) {
 			// To properly obfuscate the value, we will randomly convert each
 			// letter to its entity or hexadecimal representation, keeping a
 			// bot from sniffing the randomly obfuscated letters.
-			switch (rand(1, 3))
-			{
+			switch (rand(1, 3)) {
 				case 1:
 					$safe .= '&#'.ord($letter).';';
 					break;
@@ -431,10 +400,8 @@ class HTML {
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
-	public static function __callStatic($method, $parameters)
-	{
-	    if (isset(static::$macros[$method]))
-	    {
+	public static function __callStatic($method, $parameters) {
+	    if (isset(static::$macros[$method])) {
 	        return call_user_func_array(static::$macros[$method], $parameters);
 	    }
 

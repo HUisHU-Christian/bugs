@@ -54,7 +54,7 @@
 
 <div class="pad">
 
-	<div style="background-color: #ededed; width: 20%; float: right; ">
+	<div class="Suivre">
 		<?php if (isset($follower)) { ?>
 		<div style="width:25%; float:left;">
 			<span style="font-weight: bold; font-size: 125%;"><?php echo __('tinyissue.following'); ?></span>
@@ -341,6 +341,7 @@ var t = d.getTime();
 var AllTags = "";
 var ProjectID = <?php echo Project::current()->id; ?>; 
 var IssueID = <?php echo Project\Issue::current()->id; ?>;
+
 
 function Following(Quoi, etat) {
 	if (Quoi == 'comments' ) {

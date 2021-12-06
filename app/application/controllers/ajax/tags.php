@@ -45,8 +45,8 @@ class Ajax_Tags_Controller extends Base_Controller {
 			 * Taking a tag off
 			 */
 			if ($Modif == 'eraseTag') {
-				$IssueTagNum =\DB::table('projects_issues_tags')->where('issue_id','=',Input::get('IssueID'))->where('tag_id','=',$TagNum->id,'AND')->first('id');
-				\DB::table('projects_issues_tags')->delete($IssueTagNum->id);
+				//$IssueTagNum =\DB::table('projects_issues_tags')->where('issue_id','=',Input::get('IssueID'))->where('tag_id','=',$TagNum->id,'AND')->first('id');
+				\DB::table('projects_issues_tags')->where('issue_id','=',Input::get('IssueID'))->where('tag_id','=',$TagNum->id,'AND')->delete();
 				$Action = Input::get('IssueID');
 				$Modif = true;
 				$Msg = '<span style="color:#F00;">'.__('tinyissue.tag_removed').'</span>';
@@ -59,7 +59,7 @@ class Ajax_Tags_Controller extends Base_Controller {
 			/**
 			 * Update database
 			 */
-			if ($Show) { \User\Activity::add(6, Input::get('ProjectID'), Input::get('IssueID'), NULL, '{'.$added_tags.$removed_tags.'"tag_data":{"'.$TagNum->attributes['id'].'":{"id":'.$TagNum->attributes['id'].',"tag":"'.$TagNum->attributes['tag'].'","bgcolor":"'.$TagNum->attributes['bgcolor'].'","ftcolor":"'.$TagNum->attributes['ftcolor'].'"}},"tags_test":"Baboom en poudre"}' ); }
+			if ($Show && $Modif !== NULL) { \User\Activity::add(6, Input::get('ProjectID'), Input::get('IssueID'), NULL, '{'.$added_tags.$removed_tags.'"tag_data":{"'.$TagNum->attributes['id'].'":{"id":'.$TagNum->attributes['id'].',"tag":"'.$TagNum->attributes['tag'].'","bgcolor":"'.$TagNum->attributes['bgcolor'].'","ftcolor":"'.$TagNum->attributes['ftcolor'].'"}},"tags_test":"Baboom en poudre"}' ); }
 
 			/**
 			 * Show on screen what just happened
@@ -77,18 +77,20 @@ class Ajax_Tags_Controller extends Base_Controller {
 			}
 			
 			//Email followers about these changes (add/remove tag)
-			\Mail::letMailIt(array(
-				'ProjectID' => Input::get('ProjectID'), 
-				'IssueID' => Input::get('IssueID'), 
-				'SkipUser' => true,
-				'Type' => 'Issue', 
-				'user' => \Auth::user()->id,
-				'contenu' => $contenu,
-				'src' => array('tinyissue')
-				),
-				\Auth::user()->id, 
-				\Auth::user()->language
-			);
+			if ($Modif !== '') {
+				\Mail::letMailIt(array(
+					'ProjectID' => Input::get('ProjectID'), 
+					'IssueID' => Input::get('IssueID'), 
+					'SkipUser' => true,
+					'Type' => 'Issue', 
+					'user' => \Auth::user()->id,
+					'contenu' => $contenu,
+					'src' => array('tinyissue')
+					),
+					\Auth::user()->id, 
+					\Auth::user()->language
+				);
+			}
 
 		return $content;
 	}

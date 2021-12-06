@@ -125,7 +125,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 						echo '</strong> ';
 						echo Time::age(strtotime($row->updated_at));
 					} 
-					if ($row->start_at > date("Y-m-d")) { echo ' '.__('tinyissue.issue_start_at').' '.substr($row->start_at, 0, 10); }
+					if (substr($row->start_at, 0, 10) > date("Y-m-d")) { echo ' <span style="color: black; background-color: yellow;">'.__('tinyissue.issue_start_at').' '.substr($row->start_at, 0, 10).'</span>'; }
 					if($row->assigned_to != 0) {
 						echo ' - '.__('tinyissue.assigned_to'); 
 						echo '&nbsp;&nbsp;<strong>'.((isset($row->assigned->firstname)) ? $row->assigned->firstname : '') . ' ' . ((isset($row->assigned->lastname)) ? $row->assigned->lastname : '').'</strong>';

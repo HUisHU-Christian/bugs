@@ -69,9 +69,13 @@
 			<img src="../app/assets/images/reports/Stat_users.png" align="left" />
 			<b><?php echo __('tinyissue.reports_allusers');?></b><br />
 			<?php echo __('tinyissue.reports_allusersdesc');?>
-			
 		</div>	
-		<div class="stat_data stat_custom_data" onclick="document.getElementById('input_Couleur').value='dab435'; document.getElementById('div_reportcustom').style.display = 'block'; document.getElementById('div_reporttous').style.display = 'none';" style="margin-top: 150px;">
+		<div class="stat_data stat_users_data" onclick="document.getElementById('input_Couleur').value='efd583'; document.getElementById('input_RapType').value='users_activities'; document.getElementById('form_reports').submit();">
+			<img src="../app/assets/images/reports/Stat_users.png" align="left" />
+			<b><?php echo __('tinyissue.reports_activities');?></b><br />
+			<?php echo __('tinyissue.reports_activitiesdesc');?>
+		</div>	
+		<div class="stat_data stat_custom_data" onclick="document.getElementById('input_Couleur').value='dab435'; document.getElementById('div_reportcustom').style.display = 'block'; document.getElementById('div_reporttous').style.display = 'none';" >
 			<img src="../app/assets/images/reports/Stat_custom.png" align="left" />
 			<b><?php echo __('tinyissue.reports_custom');?></b><br />
 			<?php echo __('tinyissue.reports_customdesc');?>

@@ -204,8 +204,9 @@ class Ajax_Project_Controller extends Base_Controller {
 		);
 
 		\User\Activity::add(5, Input::get('Project'), Input::get('Issue'), Input::get('Suiv'), null);
-		return Redirect::to('project/'.Input::get('Project').'/issue/'.Input::get('Issue'))
-			->with('notice', __('tinyissue.we_have_some_errors'));
+		return '<li class="comment"><div class="insides"><div class="topbar"><label class="label warning">'.__('tinyissue.issue').' '.strtolower(__('tinyissue.label_reassigned')).'</label></div></div></li>';
+//		return Redirect::to('project/'.Input::get('Project').'/issue/'.Input::get('Issue'))
+//			->with('notice', __('tinyissue.we_have_some_errors'));
 	}
 
 	public function post_remove_user() {
