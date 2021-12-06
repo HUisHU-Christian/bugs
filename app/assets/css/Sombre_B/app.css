@@ -270,9 +270,9 @@ input.button2:focus,
 input.button1:focus,
 input.button1:hover {
 	cursor: pointer;
-	background: #0A0;
-	border: 1px solid #262626;
-	color: #000;
+	background: #006;
+	border: 2px solid #202046;
+	color: #FF0;
 }
 input.button1{
 	background: #06C;
@@ -780,7 +780,7 @@ div.stat_form {
 #sidebar h2{
 	font-size: 18px;
 	color: #ACACAC;
-	background: url('images/h2-bg_bleue.png') no-repeat bottom left;
+	background: url('images/h2-bg.png') no-repeat bottom left;
 	padding: 18px 18px 24px;
 }
 #sidebar h2 a{
@@ -838,7 +838,7 @@ div.stat_form {
 	background: url('images/icon-li-arrow_noire.png') right center no-repeat;
 }
 #sidebar ul li a:hover{
-	background: url('images/icon-li-arrow_bleue.png') right center no-repeat;
+	background: url('images/icon-li-arrow.png') right center no-repeat;
 }
 #sidebar ul li a.links{
 	background: url('images/icon-website.png') right center no-repeat;
@@ -1249,7 +1249,7 @@ td.project-user, th.project-user {
 	width: 100%; 
 }
 #users-list > ul{
-	background: #dddddd;
+	background: transparent;
 	padding: 3px 3px 1px;
 	border-radius: 5px;
 	margin-bottom: 25px;
@@ -1257,11 +1257,11 @@ td.project-user, th.project-user {
 #users-list > ul > li{
 	margin-bottom: 3px;
 	padding: 14px 10px;
-	background: #fff;
+	background: #377fc2;
 	border-radius: 5px;
 }
 #users-list a{
-	color: #969696;
+	color: black;
 	font-weight: normal;
 }
 #users-list ul ul{
