@@ -17,7 +17,8 @@ class Ajax_Tags_Controller extends Base_Controller {
 
 			$Modif = (Input::get('Modif') !== NULL) ? Input::get('Modif') :  false;
 			$Quel = (Input::get('Quel')  !== NULL ) ? Input::get('Quel') : "xyzxyz";
-			$TagNum = Tag::where('tag', '=', $Quel )->first(array('id','tag','bgcolor','ftcolor'));
+			//$TagNum = Tag::where('tag', '=', $Quel )->first(array('id','tag','bgcolor','ftcolor'));
+			$TagNum = Tag::where('tag', '=', $Quel )->first();
 			if (!isset($TagNum) || @$TagNum == '' ) { $Modif = false; $Quel = "xyzxyz"; }
 
 
@@ -65,9 +66,11 @@ class Ajax_Tags_Controller extends Base_Controller {
 			 * Show on screen what just happened
 			 */
 			if (isset($TagNum) && $Quel != "xyzxyz") {
+				$Lng = strtoupper(\Auth::user()->language);
 				$content .= '<div class="insides"><div class="topbar"><div class="data">';
+//				$content .= '<label style="color: '.$TagNum->attributes['ftcolor'].'; background-color: '.$TagNum->attributes['bgcolor'].'; padding: 5px 10px; border-radius: 8px;">';
 				$content .= '<label style="color: '.$TagNum->attributes['ftcolor'].'; background-color: '.$TagNum->attributes['bgcolor'].'; padding: 5px 10px; border-radius: 8px;">';
-				$content .= $TagNum->attributes['tag'].'</label>';
+				$content .= (($TagNum->attributes[$Lng] != '') ? $TagNum->attributes[$Lng] : $TagNum->attributes['tag']).'</label>';
 				$content .= ' : <b>'.$Msg.'</b> ';
 				$content .= __('tinyissue.by') . ' ';
 				$content .= \Auth::user()->firstname . ' ' . \Auth::user()->lastname;

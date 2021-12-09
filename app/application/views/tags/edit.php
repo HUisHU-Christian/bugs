@@ -20,12 +20,14 @@
 				<td>
 					<input type="text" id="ftcolor" name="ftcolor" style="width: 98%;" value="<?php echo Input::old('ftcolor', $tag->ftcolor); ?>" />
 
-					<?php echo $errors->first('ftcolor', '<span class="error">:message</span>'); ?>
+					<?php echo $errors->first('ftcolor', '<span class="error">:message</span>');
+						$Lng = strtoupper(\Auth::user()->language); 
+					?>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<span id="span_exemple" style="border-radius: 7pt; font-weight:bold; padding: 9px; background-color: <?php echo $tag->bgcolor; ?>; color: <?php echo $tag->ftcolor; ?>;"><?php echo $tag->tag; ?><br /></span>
+					<span id="span_exemple" style="border-radius: 7pt; font-weight:bold; padding: 9px; background-color: <?php echo $tag->bgcolor; ?>; color: <?php echo $tag->ftcolor; ?>;"><?php echo (($tag->$Lng != '') ? $tag->$Lng : $tag->tag); ?><br /></span>
 				</td>
 			</tr>
 			<tr>
