@@ -35,7 +35,7 @@ body {
 
 /* Styles */
 a{
-	color: #F26339;
+	color: #cc300f;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -108,7 +108,7 @@ h3 .edit-issue:hover {
 h4{
 	font-size: 18px;
 	font-weight: normal;
-	color: #C29232;
+	color: #c62d18;
 	margin-bottom: 10px;
 }
 h4 span{
@@ -273,12 +273,12 @@ input.button2:focus,
 input.button1:focus,
 input.button1:hover {
 	cursor: pointer;
-	background: #F33;
-	border: 3px solid #962626;
-	color: #000;
+	background: black;
+	border: 1px solid #F00;
+	color: #F00;
 }
 input.button1{
-	background: #C60;
+	background: #c97e3b;
 	color: #000000;
 }
 
@@ -330,7 +330,7 @@ summary, select.sombre {
 	font-weight: bold;
 	padding: 10px;
 	background-color: #333; 
-	color: #D8781c;
+	color: #c62d18;
 	border-radius: 10px;
 }
 
@@ -402,7 +402,7 @@ tr th a {
 	color: #C60;
 }
 tr th a:hover {
-	color: #EA5;
+	color: #c62d18;
 }
 
 /* Pourcentage du travail accompli */
@@ -768,7 +768,7 @@ div.stat_form {
 }
 .div_menuprojetsgauche a:hover{
 	background-color: #FFFFFF;
-	color: #43b9f0;
+	color: #cc3302;
 }
 .menuprojetsgauche:hover .div_menuprojetsgauche{
 	display: block;
@@ -1261,7 +1261,7 @@ td.project-user, th.project-user {
 	color: black;
 	margin-bottom: 3px;
 	padding: 14px 10px;
-	background: #c28d20;
+	background: #c97e3b;
 	border-radius: 5px;
 }
 #users-list a{
