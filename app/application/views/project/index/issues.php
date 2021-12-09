@@ -1,6 +1,4 @@
 <?php 
-$config_app = require path('public') . 'config.app.php';  
-if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = array("black","Orchid","Cyan","Lime","orange","red"); }
 if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 	echo '<script>document.location.href="'.URL::to().'";</script>';
 }
@@ -58,15 +56,38 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 		</div>
 	</div>
 </div>
+</div>
+</div>
 
+<div class="pad">
+<?php
+	$page = $_GET["page"] ?? 1;
+	if (count($issues) > \Config::get('application.pref.todoitems')) {
+		echo '<br />';
+		$compte = 0;
+		$rendu = 0;
+		echo '<ul class="tabs">';
+		while ($rendu<=count($issues)) {
+			echo '<li'.((++$compte == $page) ? ' class="active"' : '').'><a href="issues?tag_id='.$_GET["tag_id"].'&page='.$compte.'">'.$compte.'</a></li>';
+			$rendu = $rendu + \Config::get('application.pref.todoitems');
+		}
+		echo '</ul>';
+	}
+?>
+
+<div class="inside-tabs">
 <div class="blue-box">
-	<div class="inside-pad">
+	<div class="inside-pad" id="lane-details-0">
 		<?php 
-			if(!$issues) {
+		if(!$issues) {
 				echo '<p>'.__('tinyissue.no_issues').'</p>';
 		} else {
+			$rendu = 0;
 			echo '<ul class="issues" id="sortable">';
 			foreach($issues as $row) {
+				$rendu = $rendu + 1;
+				if ($rendu <= (($page-1)*\Config::get('application.pref.todoitems'))) { continue; }
+				if ($rendu > ($page*\Config::get('application.pref.todoitems'))) { break; }
 				$follower = \DB::table('following')->where('project','=',0)->where('issue_id','=',$row->id)->where('user_id','=',\Auth::user()->id)->count();
 				$follower = ($follower > 0) ? 1 : 0;
 				
@@ -74,32 +95,49 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 				echo '<a href="javascript: Following('.$row->id.', '.$row->project_id.', '.\Auth::user()->id.');" class="commentstate_'.$follower.'" id="a_following_'.$row->id.'"  style="min-height: '.$follower.'; "  title="'.$row->comment_count().' '.__('tinyissue.following_stand').' / '.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" >'.$row->comment_count().'</a>';
 
 				if(!empty($row->tags)) {
+					$Lng = strtoupper(\Auth::user()->language);
 					echo '<div class="tags">';
 					foreach($row->tags()->order_by('tag', 'ASC')->get() as $tag) {
-						echo '<label class="label" style="'.($tag->bgcolor ? ' background-color: ' . $tag->bgcolor . ';' : '').($tag->ftcolor ? ' color: ' . $tag->ftcolor . ';' : '').'">' . $tag->tag . '</label>';
+						echo '<label class="label" style="'.($tag->bgcolor ? ' background-color: ' . $tag->bgcolor . ';' : '').($tag->ftcolor ? ' color: ' . $tag->ftcolor . ';' : '').'">' . (($tag->$Lng != '') ? $tag->$Lng : $tag->tag) . '</label>';
 					}
 					echo '</div>';
 				} 
 
-				echo '<div style="width: 72px; float: left; text-align:center; "><a href="" class="id">#'.$row->id.'</a><br /><br /><br /><br /><span class="colstate" style="color: '.$config_app['PriorityColors'][$row->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;</span></span></div>';
+				echo '<div style="width: 72px; float: left; text-align:center; ">
+						<a href="" class="id">#'.$row->id.'</a>
+						<br /><br />
+						<br /><br />
+						<span class="colstate" style="color: '.\Config::get('application.pref.prioritycolors')[$row->status].'; " 
+							onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" 
+							onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;
+						</span>
+					</div>';
 				echo '<div class="data">';
-					echo '<a href="'.$row->to().'">'.$row->title.'</a>';
+					echo '<a href="'.$row->to().'" style="font-size: 150%; ">'.$row->title.'</a>';
 					echo '<div class="info">';
 					echo __('tinyissue.created_by'); 
 					echo '&nbsp;&nbsp;<strong>'.$row->user->firstname . ' ' . $row->user->lastname.'</strong>';
 					if(is_null($row->updated_by)) { echo Time::age(strtotime($row->created_at)); }
 					if(!is_null($row->updated_by)) {  
 						echo ' - '.__('tinyissue.updated_by');
-						echo '&nbsp;&nbsp;<strong>'.$row->updated->firstname . ' ' . $row->updated->lastname.'</strong>';
+						echo '&nbsp;&nbsp;<strong>';
+						echo (isset($row->updated->firstname)) ? $row->updated->firstname : '';
+						echo (isset($row->updated->lastname)) ? $row->updated->lastname : '';
+						echo '</strong> ';
 						echo Time::age(strtotime($row->updated_at));
 					} 
+					if (substr($row->start_at, 0, 10) > date("Y-m-d")) { echo ' <span style="color: black; background-color: yellow;">'.__('tinyissue.issue_start_at').' '.substr($row->start_at, 0, 10).'</span>'; }
 					if($row->assigned_to != 0) {
 						echo ' - '.__('tinyissue.assigned_to'); 
-						echo '&nbsp;&nbsp;<strong>'.$row->assigned->firstname . ' ' . $row->assigned->lastname.'</strong>';
+						echo '&nbsp;&nbsp;<strong>'.((isset($row->assigned->firstname)) ? $row->assigned->firstname : '') . ' ' . ((isset($row->assigned->lastname)) ? $row->assigned->lastname : '').'</strong>';
 					} 
 					echo '</div>';
 
-					if (@$_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
+					$_GET["tag_id"] = $_GET["tag_id"] ?? 0;
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Modification du 13 novembre 2021
+//					if ($_GET["tag_id"] == 1 && Auth::user()->role_id != 1) {
+					if ($_GET["tag_id"] == 1 && \Project\User::GetRole($row->project_id) != 1) {
 						echo '<br /><br />';
 								//Percentage of work done
 								////Calculations
@@ -108,29 +146,29 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 								$Etat = Todo::load_todo($row->id);
 								////Here we show the progress bar
 								if (is_object($Etat)) {
-									echo '<div class="Percent2">';
-									echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.$Etat->weight.'%</div>';
-									echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$Etat->weight.'%; width: '.(100-$Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.(100-$Etat->weight).'%</div>';
+									echo '<div class="Percent2" id="div_ProgressBarPercent">';
+									echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>';
+									echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$Etat->weight.'%; width: '.(100-$Etat->weight).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>';
 									echo '</div>';
 								}
 						
-								//Time's going fast!
 								//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 								////Calculations
-								$config_app = require path('public') . 'config.app.php';
-								$Deb = strtotime($row->created_at);
+								$Deb = strtotime($row->start_at);
 								$Dur = (time() - $Deb) / 86400;
-								if (@$row->duration === 0 || @is_null($row->duration)) { $row->duration = 30; }
+								$Dur = ($Dur < 0) ? 0 : $Dur;
+								if (!isset($row->duration)) { $row->duration = 30; }
+								if ($row->duration === 0 || is_null($row->duration)) { $row->duration = 30; }
 								$DurRelat = round(($Dur / $row->duration) * 100);
 								$Dur = round($Dur);
-								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
+								$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 								if ($DurRelat >= 50 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'yellow'; }
 								if ($DurRelat >= 75 && (!isset($Etat->weight) || $Etat->weight <= 50) ) { $DurColor = 'red'; }
 								$TxtColor = ($DurColor == 'yellow') ? 'black' : 'white' ;
 								////Here we show to progress bar
-								echo '<div class="Percent2">';
-								echo '<div style="background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$row->duration : $Dur).'</div>';
-								if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.$row->duration.'</div>'; }
+								echo '<div class="Percent2" id="div_ProgressBarDays">';
+								echo '<div style="background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>';
+								if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />&nbsp;</div>'; }
 								echo '</div>';
 					}
 					echo '<br clear="all" />';
@@ -140,6 +178,9 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 				}
 				echo '</ul>';
 			 }
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il n'est pas nécessaire de changer le calcul de droit ci-bas
+//			 if (\Project\User::GetRole($row->project_id) != 1) { 
 			 if (Auth::user()->role_id != 1) { 
 				echo '<div id="sortable-msg">'.__('tinyissue.sortable_issue_howto').'</div>';
 			}
@@ -173,19 +214,12 @@ function CalculonsDates(Quoi) {
 function Following(Quel, Project, Qui) {
 	<?php if (@$_GET["tag_id"] != 2) { ?> 
 	var etat = (document.getElementById('a_following_' + Quel).style.minHeight.substr(0,1) == '0') ? 0 : 1;
-	var xhttp = new XMLHttpRequest();
-	var NextPage = '../../app/application/controllers/ajax/Following.php?Quoi=1&Qui=' + Qui + '&Quel=' + Quel + '&Project=' + Project + '&Etat=' + etat;
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttp.responseText != '' ) {
-				etat = Math.abs(etat-1);
-				document.getElementById('a_following_' + Quel).className = "commentstate_" + etat;
-				document.getElementById('a_following_' + Quel).style.minHeight = etat+"px";
-			}
-		}
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	var data = Follows(1, Qui, Project, Quel, etat);
+	if (data != '') {
+		etat = Math.abs(etat-1);
+		document.getElementById('a_following_' + Quel).className = "commentstate_" + etat;
+		document.getElementById('a_following_' + Quel).style.minHeight = etat+"px";
+	}
 	<?php } ?>
 }
 function pad(n, width, z) {

@@ -1,13 +1,24 @@
 <?php
 $active_projects = Project\User::active_projects();
+$MonRole = Project\User::GetRole(Project::current()->id);
+
 if(count($active_projects)>1) {
 ?>
-<div id="sidebar_Projects_title" class="sidebarTitles"><?php echo __('tinyissue.select_a_project'); ?></div>
+
 <div id="sidebar_Projects" class="sidebarItem">
-<form class="projects_selector">
-<fieldset class="sidebar_Projects_label"><label for="projects_select"><?php echo __('tinyissue.select_a_project');?></label>
-<select name="projects_select" id="projects_select"  onchange="if (this.value) window.location.href=this.value">
+
+<br />
+<div class="menuprojetsgauche">
+	<button class="button_menuprojetsgauche">
+	<?php echo __('tinyissue.select_a_project'); ?>
+	</button>
+	<div class="div_menuprojetsgauche">
 <?php
+	//Récupération des préférences dans le dossier personnel de l'usager
+	$Pref = \User::pref();
+
+	//Liste des projets dans un menu déroulant
+	////Collecte des informations
 	$NbIssues = array();
 	$Proj = array();
 	$SansAccent = array();
@@ -15,23 +26,28 @@ if(count($active_projects)>1) {
 		$NbIssues[$row->to()] = $row->count_open_issues();
 		$Proj[$row->to()] = $row->name.' ('.$NbIssues[$row->to()].')';
 	}
+	////Préparation au tri
 	foreach ($Proj as $ind => $val ){
 		$SansAccent[$ind] = htmlentities($val, ENT_NOQUOTES, 'utf-8');
 		$SansAccent[$ind] = preg_replace('#&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring);#', '\1', $SansAccent[$ind]);
 		$SansAccent[$ind] = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $SansAccent[$ind]);
 		$SansAccent[$ind] = preg_replace('#&[^;]+;#', '', $SansAccent[$ind]);
 	}
+	////Tri des données du menu déroulant
 	asort($SansAccent);
 
+	////Affichage des projets en menu déroulant dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
 		$selected = (substr($ind, strrpos($ind, "/")+1) == Project::current()->id) ? 'selected' : '';
-		echo '<option value="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" '.$selected.'>'.$Proj[$ind].'</option>';
+		echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';
 	 }
 ?>
-</select>
-</fieldset>
-</form>
+	</div>
+</div>
+<br /><br />
+
 <?php
+	//Recherche terminologique dans les projets et billets
 	$ceci = array_keys($_GET);
 	$prefixe = (substr($ceci[0], 0, 9) == '/project/' && strpos($ceci[0],'issue') == 0) ? '../' : '../../../';
 	$prefixe = (substr($ceci[0], -6) == 'issues') ? '../../' : $prefixe;
@@ -60,7 +76,10 @@ if(count($active_projects)>1) {
 </ul>
 </div>
 
-<?php if (Auth::user()->role_id != 1) { ?>
+<?php 
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il n'est pas néssaire de changer le calcul du droit ci-bas
+if (Auth::user()->role_id != 1) { ?>
 <div id="sidebar_Users_title" class="sidebarTitles"><?php echo __('tinyissue.assigned_users'); ?></div>
 <div id="sidebar_Users" class="sidebarItem">
 <h2>
@@ -83,23 +102,24 @@ if(count($active_projects)>1) {
 </ul>
 
 <?php if(Auth::user()->permission('project-modify')): ?>
-	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar'); }" />
+	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar', <?php echo $MonRole; ?>); }" />
 	<div id="projetProsedNamesList">
 	</div>
 <?php endif; ?>
 </div>
-<?php } ?>
-
-<div id="sidebar_Website_title" class="sidebarTitles"><?php echo __('tinyissue.website_title'); ?></div>
-<div id="sidebar_Website" class="sidebarItem">
-<?php
+<?php } 
 	$project_WebLnks = \DB::table('projects_links')->where('id_project', '=', Project::current()->id)->order_by('category','ASC')->get();
 	$WebLnk = array();
 	foreach($project_WebLnks as $WebLnks) {
 		if (trim($WebLnks->desactivated) == '') { $WebLnk[$WebLnks->category] = $WebLnks->link; }
 	}
+?>
+
+<div id="sidebar_Website_title" class="sidebarTitles"><?php echo (count($WebLnk) > 0 ) ? __('tinyissue.website_title') : ''; ?></div>
+<?php
 if (count($WebLnk) > 0 ) {
 ?>
+<div id="sidebar_Website" class="sidebarItem">
 <h2>
 	<?php 
 		//echo __('tinyissue.website_title');
@@ -112,9 +132,13 @@ if (count($WebLnk) > 0 ) {
 		echo '<li><a href="'.$link.'" class="links" target="_blank">'.__('tinyissue.website_'.$categ).'</a></li>';
 	}
 	echo '</ul>';
+	echo '</div>';
+	echo '<br /><br />'; 
+	echo '<br /><br />'; 
 }
+include_once "application/views/layouts/blocks/wiki.php";
 ?>
-</div>
+
 
 
 <script type="text/javascript" >
@@ -130,4 +154,14 @@ if (count($WebLnk) > 0 ) {
 	$('#sidebar_Projects_title').click(function() {
 	    $('#sidebar_Projects').toggle('slow');
 	});
+	
+function AfficheNomProjet(Quel) {
+	document.getElementById('global-notice').style.display = "block";
+	document.getElementById('global-notice').innerHTML = "Voici le projet : " + Quel;
+}
+function CacheNomProjet(Quel) {
+	document.getElementById('global-notice').style.display = "none";
+	document.getElementById('global-notice').innerHTML = "Voici le projet : " + Quel;
+}
+
 </script>

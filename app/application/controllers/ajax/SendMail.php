@@ -1,3 +1,7 @@
+
+<script>
+alert("Vous voyez ce message parce que SendMail.php a été appelé.\n\nPrenez note de ce que vous faisiez, car ce fichier devrait être supprimé.");
+</script>
 <?php
 	include_once "db.php";
 
@@ -16,6 +20,7 @@
 	$SkipUser = $SkipUser ?? $_GET["SkipUser"] ?? false;
 	$Type = $Type ?? $_GET["Type"] ?? 'Issue';
 	$UserID = $User ?? $_GET["User"] ?? $_GET["UserID"] ?? Auth::user()->id ?? 1;
+	$values = array();
 
 	if ($Type == 'User') {
 		$resu = Requis("SELECT * FROM users WHERE email = '".$UserID."'");
@@ -24,6 +29,7 @@
 		$resu = Requis("SELECT * FROM users WHERE id = ".$UserID);
 	}
 	$QuelUser = Fetche($resu);
+	$QuelUser["language"] = $Langue ?? $QuelUser["language"];
 
 	//Chargement des fichiers linguistiques
 	$emailLng = require ($prefixe."app/application/language/en/tinyissue.php");
@@ -43,17 +49,21 @@
 
 	//Titre et corps du message selon les configurations choisies par l'administrateur
 	$message = "";
-	if (is_array(@$contenu)) {
+	$contenu = $contenu ?? "";
+	if (is_array($contenu)) {
 		$subject = (file_exists($dir.$contenu[0].'_tit.html')) ? file_get_contents($dir.$contenu[0].'_tit.html') : $Lng[$src[0]]['following_email_'.strtolower($contenu[0]).'_tit'];
 		foreach ($contenu as $ind => $val) {
 			if ($src[$ind] == 'value') {
-				$message .= '<i>'.$val.'</i>';
+				$vals = explode(":", $val);
+				$values[$vals[0]] = $vals[1];
+//				$message .= '<i>'.$val.'</i>';
+//				if (strpos($val, '@') > 0) { $values["email"] = $val; } else { $values["static"] = $val; }
 			} else {
 				$message .= (file_exists($dir.$val.'.html')) ? file_get_contents($dir.$val.'.html') : $Lng[$src[$ind]]['following_email_'.strtolower($val)];
 			}
 		}
 	} else {
-		$message = (@$contenu != 'comment') ? @$contenu : "";
+		$message = ($contenu != 'comment') ? $contenu : "";
 	}
 	
 	$subject = $subject ?? 'BUGS';
@@ -69,12 +79,18 @@
 		$message .= " ".$Lng['tinyissue']["email_test"].$config['my_bugs_app']['name'].').';
 		$subject = $Lng['tinyissue']["email_test_tit"];
 		echo $Lng['tinyissue']["email_test_tit"];
+	} else if ($Type == 'noticeonlogin') {
+		$query  = "SELECT DISTINCT 0 AS project, 0 AS attached, 0 AS tages, USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', ";
+		$query .= "USR.lastname) AS user, USR.language, ";
+		$query .= "'Robot of BUGS system' AS name, 'A user just connected to BUGS' AS title ";
+		$query .= "FROM users AS USR WHERE USR.role_id = 4 ORDER BY USR.id ASC LIMIT 0, 1";
 	} else {
+		$IssueID = $IssueID ?? 0;
 		$query  = "SELECT DISTINCT FAL.project, FAL.attached, FAL.tags, ";
 		$query .= "		USR.email, USR.firstname AS first, ";
 		$query .= "		USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
 		$query .= "		PRO.name, ";
-		$query .= "	(SELECT title FROM projects_issues WHERE id = ".@$IssueID.") AS title ";
+		$query .= "	(SELECT title FROM projects_issues WHERE id = ".$IssueID.") AS title ";
 		$query .= "FROM following AS FAL ";
 		$query .= "LEFT JOIN users AS USR ON USR.id = FAL.user_id "; 
 		$query .= "LEFT JOIN projects AS PRO ON PRO.id = FAL.project_id ";
@@ -92,13 +108,18 @@
 
 	if (Nombre($followers) > 0) {
 		while ($follower = Fetche($followers)) {
-			$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url);
+			$subject = wildcards($subject, $follower,$ProjectID, $IssueID, true, $url, $config["my_bugs_app"]["name"], $values);
 			$passage_ligne = (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $follower["email"])) ? "\r\n" : "\n";
 			$message = str_replace('"', "``", $message);
 			$message = stripslashes($message);
 			$message = str_replace("'", "`", $message);
 
 			if ($optMail['transport'] == 'mail') {
+				//Testons un ping afin de savoir si l'usager est en ligne ou non
+//				$pingresult = shell_exec('ping -c 1 -w '.$optMail['smtp']['server']);
+//				$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
+//				if (!$EnLigne) { echo '<script>alert("Serveur SMTP inateignable");</script>'; return false; }
+
 				$boundary = md5(uniqid(microtime(), TRUE));
 				$headers = 'From: "'.$optMail['from']['name'].'" <'.$optMail['from']['email'].'>'.$passage_ligne;
 				$headers .= 'Reply-To: "'.$optMail['replyTo']['name'].'" <'.$optMail['replyTo']['email'].'>'.$passage_ligne;
@@ -118,8 +139,16 @@
 				$body .= $passage_ligne;
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
 				$body .= $passage_ligne.'';
-				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url);
-				mail($follower["email"], $subject, $body, $headers);
+				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
+				
+				//Si l'usager est en ligne, nous tentons l'envoi d'un courriel
+				////La fonction try est préparée ici, en ce 21 novembre 2021 afin de l'exploiter prochainement
+				try { 
+					mail($follower["email"], $subject, $body, $headers);
+				} catch (\Exception $e) {
+					echo '<script>alert("Il fut impossible de confier votre courriel au serveur SMTP désigné.");</script>';
+					return false;
+				};
 			} else {
 				$mail = new PHPMailer();
 				$mail->Mailer = $optMail['transport'];
@@ -162,7 +191,7 @@
 				$body .= $message;
 				$body .= '<br /><br />';
 				$body .= '<p>'.((file_exists($dir."bye.html")) ? file_get_contents($dir."bye.html") : $optMail['bye']).'</p>'; 
-				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $rl);
+				$body = wildcards ($body, $follower,$ProjectID, $IssueID, false, $url, $config["my_bugs_app"]["name"], $values);
 				if ($mail->ContentType == 'html') {
 					$mail->IsHTML(true);
 					$mail->WordWrap = (isset($optMail['linelenght'])) ? $optMail['linelenght'] : 80;
@@ -177,15 +206,17 @@
 			}
 		}
 	}
+
+//return true;
 	
-	
-function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL) {
+function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = NULL, $appName = "BUGS", $values = array()) {
 	$link = ($url != '') ? $url : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http")."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 	$lfin = $tit ? ' »' : '</a>';
 	//$liss = $tit ? ' « ' : '<a href="'.(str_replace("issue/new", "issue/".$IssueID."/", $link)).'">';
 	//$lpro = $tit ? ' « ' : '<a href="'.substr($link, 0, strpos($link, "issue"))."issues?tag_id=1".'">';
 	$liss = $tit ? ' « ' : '<a href="'.$link."project/".$ProjectID."/issue/".$IssueID."/".'">';
 	$lpro = $tit ? ' « ' : '<a href="'.$link."project/".$ProjectID."/issues?tag_id=1".'">';
+	$body = str_replace('BUGS', $appName.' (BUGS)', $body);
 	$body = str_replace('{frst}', ucwords($follower["first"]), $body);
 	$body = str_replace('{firt}', ucwords($follower["first"]), $body);
 	$body = str_replace('{firs}', ucwords($follower["first"]), $body);
@@ -211,7 +242,8 @@ function wildcards ($body, $follower,$ProjectID, $IssueID, $tit = false, $url = 
 	$body = str_replace('{isue}', 	$liss.$follower["title"].$lfin, $body);
 	$body = str_replace('{issue}', 	$liss.$follower["title"].$lfin, $body);
 	$body = str_replace('{issues}',	$liss.$follower["title"].$lfin, $body);
+	if (isset($values["email"])) 	{ $body = str_replace('{email}',	 $values["email"], $body); } 
+	if (isset($values["static"])) { $body = str_replace('{static}', $values["static"], $body);}
 	return $body;
 }
-
 ?>

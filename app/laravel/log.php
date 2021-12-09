@@ -8,8 +8,7 @@ class Log {
 	 * @param  Exception  $e
 	 * @return void
 	 */
-	public static function exception($e)
-	{
+	public static function exception($e) {
 		static::write('error', static::exception_line($e));
 	}
 
@@ -19,8 +18,7 @@ class Log {
 	 * @param  Exception  $e
 	 * @return string
 	 */
-	protected static function exception_line($e)
-	{
+	protected static function exception_line($e) {
 		return $e->getMessage().' in '.$e->getFile().' on line '.$e->getLine();
 	}
 
@@ -39,13 +37,11 @@ class Log {
 	 * @param  string  $message
 	 * @return void
 	 */
-	public static function write($type, $message)
-	{
+	public static function write($type, $message) {
 		// If there is a listener for the log event, we'll delegate the logging
 		// to the event and not write to the log files. This allows for quick
 		// swapping of log implementations for debugging.
-		if (Event::listeners('laravel.log'))
-		{
+		if (Event::listeners('laravel.log')) {
 			Event::fire('laravel.log', array($type, $message));
 		}
 
@@ -61,8 +57,7 @@ class Log {
 	 * @param  string  $message
 	 * @return string
 	 */
-	protected static function format($type, $message)
-	{
+	protected static function format($type, $message) {
 		return date('Y-m-d H:i:s').' '.Str::upper($type)." - {$message}".PHP_EOL;
 	}
 
@@ -77,8 +72,7 @@ class Log {
 	 *		Log::warning('This is a warning!');
 	 * </code>
 	 */
-	public static function __callStatic($method, $parameters)
-	{
+	public static function __callStatic($method, $parameters) {
 		static::write($method, $parameters[0]);
 	}
 

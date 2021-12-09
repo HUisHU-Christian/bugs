@@ -28,7 +28,9 @@ class Project_Issue_Controller extends Base_Controller {
 		));
 	}
 
-
+	/**
+		create new issue 
+	**/
 	public function post_new() {
 		$issue = Project\Issue::create_issue(Input::all(), Project::current());
 
@@ -39,11 +41,27 @@ class Project_Issue_Controller extends Base_Controller {
 				->with('notice-error', __('tinyissue.we_have_some_errors'));
 		}
 
-		//Automatically enrole assignee AND creator into following this issue
-		$followers =\DB::query("INSERT INTO following VALUES (NULL, ".Auth::user()->id.", ".Project::current()->id.", ".$issue['issue']->id.", 0, 1, 1)");
+		//Automatically enrole project's followers into following this issue and the assignee
+		\DB::query("INSERT INTO following ( id, user_id, project_id, issue_id, project, attached, tags )  
+						SELECT NULL as id, user_id, ".Project::current()->id." as project_id,  ".$issue['issue']->id." as issue_id, 0 as project, 1 as attached, 1 as tags 
+						FROM following WHERE project_id = ".Project::current()->id." AND project = 1 AND (user_id IN (SELECT user_id FROM projects_users WHERE project_id = ".Project::current()->id.") OR user_id = ".Auth::user()->id.") ");
+
 
 		//Email to followers
-		$this->Courriel ('Project', true, Project::current()->id, $issue['issue']->id, \Auth::user()->id, array('project'), array('tinyissue'));
+//		$this->Courriel ('Project', true, Project::current()->id, $issue['issue']->id, \Auth::user()->id, array('project'), array('tinyissue'));
+		/*Notifications by email to those who concern */
+		\Mail::letMailIt(array(
+			'ProjectID' => Project::current()->id, 
+			'IssueID' => $issue['issue']->id, 
+			'SkipUser' => true,
+			'Type' => 'Project', 
+			'user' => \Auth::user()->id,
+			'contenu' => array('project'),
+			'src' => array('tinyissue')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
 
 		return Redirect::to($issue['issue']->to())
 			->with('notice', __('tinyissue.issue_has_been_created'));
@@ -74,17 +92,33 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return Redirect
 	 */
 	public function post_index() {
+
 		if(!Input::get('comment')) {
 			return Redirect::to(Project\Issue::current()->to() . '#new-comment')
 				->with('notice-error', __('tinyissue.you_put_no_comment'));
 		}
 		$comment = \Project\Issue\Comment::create_comment(Input::all(), Project::current(), Project\Issue::current());
 
-		//Email to followers
-		$this->Courriel ("Issue", true, Project::current()->id, Project\Issue::current()->id, \Auth::user()->id, array('comment'), array('tinyissue'));
+//		//Email to followers
+//		$this->Courriel ("Issue", true, Project::current()->id, Project\Issue::current()->id, \Auth::user()->id, array('comment'), array('tinyissue'));
+		/*Notifications by email to those who concern */
+		\Mail::letMailIt(array(
+			'ProjectID' => Project::current()->id, 
+			'IssueID' => Project\Issue::current()->id, 
+			'SkipUser' => true,
+			'Type' => 'Issue', 
+			'user' => \Auth::user()->id,
+			'contenu' => array('comment'),
+			'src' => array('tinyissue')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
 
-		return Redirect::to(Project\Issue::current()->to() . '#comment' . $comment->id)
-			->with('notice', __('tinyissue.your_comment_added').(((Input::get('status') == 0 || Input::get('Fermons') == 0) && \Auth::user()->role_id != 1) ? ' --- '.__('tinyissue.issue_has_been_closed') : ''));
+
+		$message = __('tinyissue.your_comment_added').(((Input::get('status') == 0 || Input::get('Fermons') == 0) && \Project\User::GetRole(Project::current()->id) != 1) ? ' --- '.__('tinyissue.issue_has_been_closed') : '');
+		$retour = '/project/'.Project::current()->id.'/issues?tag_id=1';   
+		return Redirect::to($retour)->with('notice', $message);
 	}
 
 	/**
@@ -116,7 +150,20 @@ class Project_Issue_Controller extends Base_Controller {
 			if (\User\Activity::add(8, intval(Input::get('projetOld')), Input::get('ticketNum'), $NumNew, "From ".Input::get('projetOld')." to ".$NumNew )) { $msg = $msg + 1; } else { $msg = $TheFile["error"]; }
 
 			//Email to followers
-			$this->Courriel ('Issue', true, $NumNew, Project\Issue::current()->id, Auth::user()->id, array('issueproject', $ancProj), array('tinyissue', 'value'));
+			//$this->Courriel ('Issue', true, $NumNew, Project\Issue::current()->id, Auth::user()->id, array('issueproject', 'static:'.$ancProj), array('tinyissue', 'value'));
+			\Mail::letMailIt(array(
+				'ProjectID' => $NumNew, 
+				'IssueID' => Project\Issue::current()->id, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('issueproject', 'static:'.$ancProj),
+				'src' => array('tinyissue', 'value')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
+
 
 			return Redirect::to("project/".$NumNew."/issues?tag_id=1");
 
@@ -130,6 +177,7 @@ class Project_Issue_Controller extends Base_Controller {
 			foreach(Project\Issue::current()->tags as $tag) {
 				$issue_tags .= (!empty($issue_tags) ? ',' : '') . $tag->tag;
 			}
+			// Get issue content
 			return $this->layout->nest('content', 'project.issue.edit', array(
 				'issue' => Project\Issue::current(),
 				'issue_tags' => $issue_tags,
@@ -137,7 +185,20 @@ class Project_Issue_Controller extends Base_Controller {
 			));
 
 			//Email to followers
-			$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned'), array('tinyissue'));
+			//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned'), array('tinyissue'));
+			\Mail::letMailIt(array(
+				'ProjectID' => Project::current()->id, 
+				'IssueID' => Project\Issue::current()->id, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('assigned'),
+				'src' => array('tinyissue')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
+
 		}
 	}
 
@@ -155,7 +216,19 @@ class Project_Issue_Controller extends Base_Controller {
 		}
 
 		//Email to followers
-		$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('issue', $avant), array('tinyissue', 'value'));
+		//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('issue', 'static:'.$avant), array('tinyissue', 'value'));
+		\Mail::letMailIt(array(
+			'ProjectID' => Project::current()->id, 
+			'IssueID' => Project\Issue::current()->id, 
+			'SkipUser' => true,
+			'Type' => 'Issue', 
+			'user' => \Auth::user()->id,
+			'contenu' => array('issue', 'static:'.$avant),
+			'src' => array('tinyissue', 'value')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
 
 		return Redirect::to(Project\Issue::current()->to())
 			->with('notice', __('tinyissue.issue_has_been_updated'));
@@ -169,23 +242,19 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return string
 	 */
 	public function post_edit_comment() {
-//		Project\Issue\Comment::edit_comment(Input::get('id'), Project\Issue::current()->id,Input::get('content'));
-
 		$idComment = static::find(Input::get('id'));
 		if(!$idComment) { return false; }
-		$Avant = \DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
-		$edited_id = \DB::table('users_activity')->insert_get_id(array(
-						'id'=>NULL,
-						'user_id'=>\Auth::user()->id,
-						'parent_id'=>$Avant->project_id,
-						'item_id'=>$Avant->issue_id,
-						'action_id'=>Input::get('id'),
-						'type_id'=>12,
-						'data'=>$Avant->comment,
-						'created_at'=>$Avant->created_at,
-						'updated_at'=>date("Y-m-d H:i:s")
-					));
 
+		$Avant = \DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->first(array('id', 'project_id', 'issue_id', 'comment', 'created_at'));
+		$Avant->comment = str_replace("`", "'", $Avant->comment );
+		$Avant->comment = str_replace("<li>", "&nbsp;&nbsp;&nbsp;-&nbsp;", $Avant->comment );
+		$Avant->comment = str_replace("</li>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ol>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("<ul>", "<br />", $Avant->comment );
+		$Avant->comment = str_replace("</ul>", "<br />", $Avant->comment );
+
+		\User\Activity::add(12, $Avant->project_id, $Avant->issue_id, Input::get('id'), $Avant->comment, $Avant->created_at, NULL);
 		\DB::table('projects_issues_comments')->where('id', '=', Input::get('id'))->update(array('comment' => Input::get('body'), 'updated_at' => date("Y-m-d H:i:s")));
 
 		return Redirect::to(Project\Issue::current()->to())
@@ -232,8 +301,9 @@ class Project_Issue_Controller extends Base_Controller {
 
 		Project\Issue::current()->change_status($status);
 
-		return Redirect::to(Project\Issue::current()->to())
-			->with('notice', $message);
+		$retour = (Input::get('Fermons') == 0) ? '/project/'.Project::current()->id.'/issues?tag_id=1' : Project\Issue::current()->to();   
+		return Redirect::to($retour)->with('notice', $message);
+
 	}
 
 	/**
@@ -305,9 +375,18 @@ class Project_Issue_Controller extends Base_Controller {
 				$text .= "<br />";
 				$text .= __('tinyissue.assigned_to').' '.$WhoName.'.';
 				$text .= "<br /><br />";
-				//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, $text, __('tinyissue.following_email_assigned_tit'));
-				//2 sept 2021 : ceci bloque les fonctions javascript
-				//$this->Courriel ('Issue', true, Project::current()->id, Project\Issue::current()->id, Auth::user()->id, array('assigned', 'reassigned_by', 'reassigned_to', $WhoName), array('tinyissue', 'email', 'tinyissue', 'variable'));
+				\Mail::letMailIt(array(
+					'ProjectID' => Project::current()->id, 
+					'IssueID' => Project\Issue::current()->id, 
+					'SkipUser' => true,
+					'Type' => 'Issue', 
+					'user' => \Auth::user()->id,
+					'contenu' => array('assigned', 'reassigned_by', 'reassigned_to', $WhoName),
+					'src' => array('tinyissue', 'email', 'tinyissue', 'variable')
+					),
+					\Auth::user()->id, 
+					\Auth::user()->language
+				);
 			}
 
 			//Show on screen what did just happened
@@ -327,82 +406,6 @@ class Project_Issue_Controller extends Base_Controller {
 	}
 
 	/**
-	 * Change issue's tags
-	 *
-	 * @request ajax
-	 * @return string
-	 */
-	public function get_retag() {
-			$content = "";
-			$Issue = Project\Issue::current()->id;
-			$Msg = "";
-			$Show = false;
-
-			$Modif = (Input::get('Modif') !== NULL) ? Input::get('Modif') :  false;
-			$Quel = (Input::get('Quel')  !== NULL ) ? Input::get('Quel') : "xyzxyz";
-			$TagNum = Tag::where('tag', '=', $Quel )->first(array('id','tag','bgcolor','ftcolor'));
-			if (!isset($TagNum) || @$TagNum == '' ) { $Modif = false; $Quel = "xyzxyz"; }
-
-
-			/**
-			 * Edit an issue
-			 * Adding a tag
-			 */
-			if ($Modif == 'AddOneTag' ) {
-				$IssueTagNum = \DB::table('projects_issues_tags')->where('issue_id', '=', $Issue)->where('tag_id', '=', $TagNum->attributes['id'], 'AND' )->first(array('id'));
-				$now = date("Y-m-d H:i:s");
-				if ($IssueTagNum == NULL) {
-					\DB::table('projects_issues_tags')->insert(array('id'=>NULL,'issue_id'=>$Issue,'tag_id'=>$TagNum->attributes['id'],'created_at'=>$now,'updated_at'=>$now) );
-				} else {
-					\DB::table('projects_issues_tags')->where('issue_id', '=', $Issue)->where('tag_id', '=', $TagNum->attributes['id'], 'AND' )->update(array('updated_at'=>$now) );
-				}
-				$Action = NULL;
-				$Msg = __('tinyissue.tag_added');
-				$Show = true;
-				$added_tags = '"added_tags":['.$TagNum->attributes['id'].'],';
-				$removed_tags = '"removed_tags":[],';
-			}
-
-			/**
-			 * Edit an issue
-			 * Taking a tag off
-			 */
-			if ($Modif == 'eraseTag') {
-				$IssueTagNum =\DB::table('projects_issues_tags')->where('issue_id','=',$Issue)->where('tag_id','=',$TagNum->id,'AND')->first('id');
-				\DB::table('projects_issues_tags')->delete($IssueTagNum->id);
-				$Action = $Issue;
-				$Modif = true;
-				$Msg = '<span style="color:#F00;">'.__('tinyissue.tag_removed').'</span>';
-				$Show = true;
-				$added_tags = '"added_tags":[],';
-				$removed_tags = '"removed_tags":['.$TagNum->attributes['id'].'],';
-			}
-
-
-			/**
-			 * Update database
-			 */
-			if ($Show) { \User\Activity::add(6, Project::current()->id, $Issue, NULL, '{'.$added_tags.$removed_tags.'"tag_data":{"'.$TagNum->attributes['id'].'":{"id":'.$TagNum->attributes['id'].',"tag":"'.$TagNum->attributes['tag'].'","bgcolor":"'.$TagNum->attributes['bgcolor'].'","ftcolor":"'.$TagNum->attributes['ftcolor'].'"}},"tags_test":"Baboom en poudre"}' ); }
-
-			/**
-			 * Show on screen what just happened
-			 */
-			if (isset($TagNum) && $Quel != "xyzxyz") {
-				$content .= '<div class="insides"><div class="topbar"><div class="data">';
-				$content .= '<label style="color: '.$TagNum->attributes['ftcolor'].'; background-color: '.$TagNum->attributes['bgcolor'].'; padding: 5px 10px; border-radius: 8px;">';
-				$content .= $TagNum->attributes['tag'].'</label>';
-				$content .= ' : <b>'.$Msg.'</b> ';
-				$content .= __('tinyissue.by') . ' ';
-				$content .= \Auth::user()->firstname . ' ' . \Auth::user()->lastname;
-				$content .= '</div></div></div>';
-				$t = time();
-				$result = $content;
-			}
-
-		return $content;
-	}
-
-	/**
 	 * Add document to an existant issue
 	 *
 	 * upload file
@@ -412,7 +415,7 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return string
 	 */
 	public function post_upload() {
-		$pref = Config::get('application.attached');
+		$pref = \Config::get('application.attached');
 		$url =\URL::home();
 		$Qui = \Auth::user()->id;
 		$msg = 0;
@@ -495,7 +498,19 @@ class Project_Issue_Controller extends Base_Controller {
 			$msg .= '</div></div></div>';
 
 			//Sixth step: Notice the followers
-			$this->Courriel ('Issue', true, Project::current()->id, $Issue, Auth::user()->id, array('attached'), array('tinyissue'));
+			//$this->Courriel ('Issue', true, Project::current()->id, $Issue, Auth::user()->id, array('attached'), array('tinyissue'));
+			\Mail::letMailIt(array(
+				'ProjectID' => Project::current()->id, 
+				'IssueID' => $Issue, 
+				'SkipUser' => true,
+				'Type' => 'Issue', 
+				'user' => \Auth::user()->id,
+				'contenu' => array('attached'),
+				'src' => array('tinyissue')
+				),
+				\Auth::user()->id, 
+				\Auth::user()->language
+			);
 
 		}
 		return $msg;

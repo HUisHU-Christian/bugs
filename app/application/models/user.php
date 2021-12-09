@@ -19,6 +19,28 @@ class User extends Eloquent {
 		return $this->id == Auth::user()->id;
 	}
 
+	public static function pref($Quelle = "All") {
+		//Default values
+		$UserPref = array(
+			'sidebar' => 'true',
+			'orderSidebar' => 'desc',
+			'noticeOnLogIn' => 'false',
+			'numSidebar' => 990,
+			'Roulbar' => 'true',
+			'template' => 'default',
+			'boutons' => 'true'
+		);
+		//User's preferences from 'Preferences' field  ( table 'users' ) 
+		$Pref = Auth::user()->preferences;
+		$Prefs = explode("&", $Pref);
+		foreach ($Prefs as $ind => $val) {
+			$ceci = explode("=", $val);
+			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }
+		}
+		return ($Quelle == "All") ? $UserPref : $UserPref[$Quelle];
+		
+	}
+
 	/**
 	* Check to see if current user has given permission
 	*
@@ -50,6 +72,15 @@ class User extends Eloquent {
 
 		return false;
 	}
+	
+	public static function myPermissions_onThisProject($project_id = null) {
+		$role = array();
+		if (is_null($project_id)) { return false; }
+		if(Project\User::check_assign(Auth::user()->id, $project_id)) {
+			$role[] =  Project\User::check_role(Auth::user()->id, $project_id);
+		}
+		return $role;
+	}
 
 	/**
 	* Select all issues assigned to a user
@@ -58,8 +89,7 @@ class User extends Eloquent {
 	* @return mixed
 	*/
 /*
-	public function issues($status = 1)
-	{
+	public function issues($status = 1) {
 		return $this->has_many('Project\Issue', 'created_by')
 			->where('status', '=', 1)
 			->where('assigned_to', '=', $this->id);
@@ -87,6 +117,12 @@ class User extends Eloquent {
 
 			/* Loop through all the logic from the project and cache all the needed data so we don't load the same data twice */
 			foreach(User\Activity::where('parent_id', '=', $project->id)->order_by('created_at', 'DESC')->take($activity_limit)->get() as $activity) {
+// La version ci-bas pourrait être utile
+//			foreach(User\Activity::where('parent_id', '=', $project->id)
+//				->join('projects_issues', 'projects_issues.id', '=', 'users_activity.item_id')
+//				->where('projects_issues.start_at', '<=', date())
+//				->order_by('created_at', 'DESC')
+//				->take($activity_limit)->get() as $activity) {
 				$dashboard[$project->id][] = $activity;
 
 				switch($activity->type_id) {
@@ -238,8 +274,17 @@ class User extends Eloquent {
 		if($info['password']) {
 			$update['password'] = Hash::make($info['password']);
 		}
-
-		User::find($id)->fill($update)->save();
+		\User::find($id)->fill($update)->save();
+		
+		//Modification des rôles de cet usager dans les différents projets
+		foreach ($info["roles"] as $proj => $role ) {
+			if (!\DB::query("UPDATE projects_users SET role_id = ".$role.", updated_at = NOW() WHERE user_id = ".$id." AND project_id = ".$proj." ")) {
+				if ($role == 0) { continue; }
+				\DB::query("INSERT INTO projects_users (user_id, project_id, role_id, created_at) VALUES (".$id.", ".$proj.", ".$role.", NOW() ) ");
+				\DB::query("DELETE FROM following WHERE user_id = ".$id." AND project_id = ".$proj." AND issue_id = 0 ");
+				\DB::query("INSERT INTO following (user_id, project_id, issue_id, project, attached, tags) VALUES (".$id.", ".$proj.", 0, 1, 1, 1) ");
+			}
+		}
 
 		return array(
 			'success' => true
@@ -266,6 +311,7 @@ class User extends Eloquent {
 				'errors' => $validator->errors
 			);
 		}
+		$MotPasse =  Str::random(6);
 
 		//Inscription du nouveau membre dans la bdd
 		$insert = array(
@@ -274,25 +320,50 @@ class User extends Eloquent {
 			'lastname' => $info['lastname'],
 			'language' => $info['language'],
 			'role_id' => $info['role_id'],
-			'password' => Hash::make($password = Str::random(6))
+			'password' => Hash::make($password = $MotPasse)
 		);
-
 		$user = new User;
 		$user->fill($insert)->save();
 
+		
+		//Attribution d'un premier projet à ce nouvel usager
+		$NewUser = \User::where('id', '>', 1)->order_by('id','DESC')->get(array('id'));
+		$ID = $NewUser[0]->id;
+
+		//Attribution des rôles de cet usager dans les différents projets actifs de l'administrateur qui l'inscrit
+		foreach ($info["roles"] as $proj => $role ) {
+			if ($role == 0) { continue; }
+			\DB::query("INSERT INTO projects_users (user_id, project_id, role_id, created_at) VALUES (".$ID.", ".$proj.", ".$role.", NOW() ) ");
+			\DB::query("DELETE FROM following WHERE user_id = ".$ID." AND project_id = ".$proj." AND issue_id = 0 ");
+			\DB::query("INSERT INTO following (user_id, project_id, issue_id, project, attached, tags) VALUES (".$ID.", ".$proj.", 0, 1, 1, 1) ");
+		}
+
+
 		//Émission d'un courriel à l'adresse du nouveau membre
-		$contenu = array('useradded',$password);
-		$src = array('email', 'value');
-		$Type = 'User';
-		$SkipUser = false;
-		$ProjectID = 0;
-		$IssueID = 0;
-		$User = $info['email'];
-		include "application/controllers/ajax/SendMail.php";
+//		$contenu = array('useradded','static:'.$MotPasse);
+//		$src = array('email', 'value');
+//		$Type = 'User';
+//		$SkipUser = false;
+//		$ProjectID = 0;
+//		$IssueID = 0;
+//		$User = $info['email'];
+//		include "application/controllers/ajax/SendMail.php";
+		\Mail::letMailIt(array(
+			'ProjectID' => 0, 
+			'IssueID' => 0, 
+			'SkipUser' => false,
+			'Type' => 'User', 
+			'user' => $info['email'],
+			'contenu' => array('useradded','static:'.$MotPasse),
+			'src' => array('email', 'value')
+			),
+			\Auth::user()->id, 
+			\Auth::user()->language
+		);
 
 		return array(
 			'success' => true,
-			'password' => $password
+			'password' => $MotPasse
 		);
 	}
 
@@ -302,8 +373,7 @@ class User extends Eloquent {
 	* @param  int   $id
 	* @return bool
 	*/
-	public static function delete_user($id)
-	{
+	public static function delete_user($id) {
 		$update = array(
 			'email' => '',
 			'deleted' => 1

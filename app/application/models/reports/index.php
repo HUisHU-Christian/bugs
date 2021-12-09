@@ -6,7 +6,6 @@ if ( file_exists("application/language/".Auth::user()->language."/reports.php"))
 	$rappLng = array_merge($rappLng, $rappMaLng);
 }
 $colonnes = array();
-$config_app = require_once path('public') . 'config.app.php';
 $compte = 0;
 $colorFont = array(0,0,0,0,0,0);
 $colorStatus = array(
@@ -17,21 +16,25 @@ $colorStatus = array(
 	4 => array(255,225,50),
 	5 => array(255,70,70)
 	);
-if (isset($config_app["PriorityColors"])) {
-	foreach ($config_app["PriorityColors"] as $ind => $val ) {
-		if ($config_app["PriorityColors"][$ind] == 'transparent') {
+	foreach (\Config::get('application.pref.prioritycolors') as $ind => $val ) {
+		if (\Config::get('application.pref.prioritycolors')[$ind] == 'transparent') {
 			$colorStatus[$ind] = array(255,255,255);
-		} else if (strlen($config_app["PriorityColors"][$ind]) == 6 && hexdec($config_app["PriorityColors"][$ind])) {
-			$colorStatus[$ind][0] = hexdec(substr(0, 2, $config_app["PriorityColors"][$ind]));
-			$colorStatus[$ind][1] = hexdec(substr(2, 2, $config_app["PriorityColors"][$ind]));
-			$colorStatus[$ind][2] = hexdec(substr(4, 2, $config_app["PriorityColors"][$ind]));
-			if (hexdec($config_app["PriorityColors"][$ind]) < 10066329) { $colorFont[$ind] = 255; }
+		} else if (strlen(\Config::get('application.pref.prioritycolors')[$ind]) == 6 && hexdec(\Config::get('application.pref.prioritycolors')[$ind])) {
+			$colorStatus[$ind][0] = hexdec(substr(0, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			$colorStatus[$ind][1] = hexdec(substr(2, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			$colorStatus[$ind][2] = hexdec(substr(4, 2, \Config::get('application.pref.prioritycolors')[$ind]));
+			if (hexdec(\Config::get('application.pref.prioritycolors')[$ind]) < 10066329) { $colorFont[$ind] = 255; }
 		}
 	}
-}
 $rendu = "";
 $SautPage = false;
 $untel = "";
+
+function EnPied ($pdf, $page) {
+	$pdf->SetFont("Times", "", 9);
+	$pdf->Text(16, 258,date("Y-m-d H:m"));
+	$pdf->Text(186, 258, "p.".$page);
+}
 
 function EnTete ($pdf, $colonnes, $untel, $rappLng) {
 	global $_POST;
@@ -41,8 +44,9 @@ function EnTete ($pdf, $colonnes, $untel, $rappLng) {
 	$pdf->SetFont("Times", "B", 15);
 	$pdf->Text(86, 28,utf8_decode($rappLng[$_POST["RapType"]][0]));
 	$pdf->SetFont("Times", "", 10);
-	if (trim(@$_POST["DteInit"]) != '' ) { $pdf->Text(86, 32, " Date >= ".$_POST["DteInit"]); }
-	if (trim(@$_POST["DteEnds"]) != '' ) { $pdf->Text(86, 35, " Date <= ".$_POST["DteEnds"]); }
+	$_POST["DteInit"] = $_POST["DteInit"] ?? '';
+	$_POST["DteEnds"] = $_POST["DteEnds"] ?? date("Y-m-d");
+	$pdf->Text(86, 32, $_POST["DteInit"]. ' -> '.$_POST["DteEnds"]);
 	if (trim(@$_POST["FilterUser"]) > 0 ) {$pdf->Text(86, 38, " ... ".$untel); }
 
 	$pdf->SetXY(10, 40);
@@ -96,15 +100,17 @@ if ($_POST["RapType"] != 'users_customized') {
 		$Untel = \DB::table('users')->where('id', '=', $_POST["FilterUser"])->get();
 		$untel = strtoupper($Untel[0]->lastname).', '.$Untel[0]->firstname; 
 	}
+	if (isset($Groupage)) { $query .= " GROUP BY ".$Groupage." "; }
 	$query .= "ORDER BY ".$OrdreTRI;
 	$results = \DB::query($query);
 	
 	
 	//Production du rapport lui-même
 	EnTete ($pdf, $colonnes, $untel,$rappLng);
+	$page = 1;
 	
 	foreach($results as $result) {
-		if ($SautPage && $rendu != $result->zero && $rendu != '') { EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
+		if ($SautPage && $rendu != $result->zero && $rendu != '') { EnPied ($pdf, $page++); EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
 		$rendu = $result->zero;
 		$pdf->SetFillColor($colorStatus[$result->status][0],$colorStatus[$result->status][1],$colorStatus[$result->status][2]);
 		$pdf->Cell($colonnes[0],10, 	utf8_decode($result->zero), 	1, 0, (($colonnes[0]  > 23) ? "L" : "C"), true, "");
@@ -121,6 +127,9 @@ if ($_POST["RapType"] != 'users_customized') {
 		if (isset($PosiX['special1']) && isset($result->special1)) { $pdf->Text($PosiX['special1'], ($pdf->GetY())-1,  $result->special1); }
 		if (isset($PosiX['special2']) && isset($result->special2)) { $pdf->Text($PosiX['special2'], ($pdf->GetY())-1,  $result->special2); }
 		if (isset($PosiX['special3']) && isset($result->special3)) { $pdf->Text($PosiX['special3'], ($pdf->GetY())-1,  $result->special3); }
-		if (++$compte >= $NbLignes) { EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
+		if (++$compte >= $NbLignes) { EnPied ($pdf, $page++); EnTete ($pdf, $colonnes, $untel,$rappLng); $compte = 0;}
 	}
+	
+	EnPied ($pdf, $page);
+
 }

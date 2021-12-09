@@ -15,7 +15,7 @@
 				<span><?php echo $role->description; ?></span>
 			</h4>
 
-			<ul>
+			<ul class="ListUsers" style="position: relative; margin-left: 8%; margin-right: 40%;">
 				<?php foreach(User::where('role_id', '=', $role->id)->where('deleted', '=', 0)->order_by('firstname', 'asc')->get() as $user): ?>
 				<li>
 					<ul>
@@ -25,7 +25,13 @@
 						</li>
 						<?php endif; ?>
 						<li class="edit">
-							<a href="<?php echo URL::to('administration/users/edit/' . $user->id);?>"><?php echo __('tinyissue.edit'); ?></a>
+						<?php 
+							if($user->me()) {
+								echo '<a href="'.URL::to('user/settings').'">'. __('tinyissue.edit').'</a>';
+							} else {
+								echo '<a href="'.URL::to('administration/users/edit/' . $user->id).'">'. __('tinyissue.edit').'</a>';
+							}
+						?>
 						</li>
 					</ul>
 

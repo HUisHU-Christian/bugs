@@ -1,6 +1,24 @@
 <?php 
-	$config_app = require path('public') . 'config.app.php';  
-	if(!isset($config_app['PriorityColors'])) { $config_app['PriorityColors'] = array("black","Orchid","Cyan","Lime","orange","red"); }
+	$MonRole = Project\User::GetRole(Project::current()->id);
+	$ChronoCeluiCi = false;
+	$verif = \DB::table('projects_issues_comments AS COM')->whereNotNull('temps_fait_deb')->whereNull('temps_fait_fin')->where('COM.created_by', '=', \Auth::user()->id)->left_join('projects AS PRO', 'COM.project_id', '=', 'PRO.id')->left_join('projects_issues AS TIK', 'COM.issue_id', '=', 'TIK.id')->count();
+	if ($verif > 0) {
+		if ($verif == 1) {
+			$reverif = \DB::table('projects_issues_comments')
+				->where('project_id', '=', Project::current()->id)
+				->where('issue_id', '=', Project\Issue::current()->id)
+				->whereNotNull('temps_fait_deb')
+				->whereNull('temps_fait_fin')
+				->where('created_by', '=', \Auth::user()->id)
+				->count();
+			if ($reverif == 1) { $ChronoCeluiCi = true; }
+		}
+		if ($ChronoCeluiCi == false) {
+			echo '<script>alert("Vous avez déjà un commentaire ouvert.");</script>';
+			$reverif = \DB::table('projects_issues_comments AS COM')->where('COM.id', '=', Project\Issue::current()->id)->whereNotNull('temps_fait_deb')->whereNull('temps_fait_fin')->where('COM.created_by', '=', \Auth::user()->id)->left_join('projects AS PRO', 'COM.project_id', '=', 'PRO.id')->left_join('projects_issues AS TIK', 'COM.issue_id', '=', 'TIK.id')->get(array('COM.id', 'COM.project_id', 'PRO.name', 'COM.issue_id', 'TIK.title', 'temps_fait_deb'));
+		}
+	}
+  
 	$url =\URL::home();
 	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 		echo '<script>document.location.href="'.URL::to().'";</script>';
@@ -17,20 +35,26 @@
 		$follower["comment"] = $following[0]->comment ?? 0;
 	}
 
-	echo '<h3>';
-	if (Auth::user()->role_id != 1) { 
-		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
+	echo '<h3 '.(($MonRole != 1) ? 'onclick="document.location.href=\''.Project::current()->to('issue/new').'\';"' : '').'>';
+	if ($MonRole != 1) { 
+		echo '<a href="javascript: null(0);" class="newissue">'.__('tinyissue.new_issue').'</a>';
 	}
-	echo '<span class="colstate" style="color: '.$config_app['PriorityColors'][$issue->status].'; " onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
-	echo '<a href="'.((Auth::user()->permission('issue-modify') && $issue->status > 0 ) ? $issue->to('edit') : $issue->to() ).'" class="edit-issue" style="font-size: 60%; font-weight: bold;">'.$issue->title.'</a>';
-	echo '</span>';	
-	echo '<span>'.__('tinyissue.on_project').' <a href="'.$project->to().'">'.$project->name.'</a></span>';
+	echo '<div style="position: relative; min-height: 70px;">';
+		echo '<div class="colstate" style="color: '.\Config::get('application.pref.prioritycolors')[$issue->status].'; position: absolute; left: 0; top: 0;" onmouseover="document.getElementById(\'taglev\').style.display = \'block\';" onmouseout="document.getElementById(\'taglev\').style.display = \'none\';">&#9899;';
+		echo '</div>';
+		echo '<span style="position: absolute; top: 10px; left: 5%; font-size: 150%; font-weight: bold; ">';	
+		echo ''.$issue->title.'';
+		echo '<a href="'.((Auth::user()->permission('issue-modify') && $issue->status > 0 ) ? $issue->to('edit') : $issue->to() ).'" class="edit-issue" style="font-size: 60%; font-weight: bold;"></a>';
+		echo '</span>';	
+		echo '<br clear="all" />';
+		echo '<span style="position: absolute; left: 5%; margin-top: 7px; font-size: 70%; ">'.__('tinyissue.on_project').' <a href="'.$project->to().'">'.$project->name.'</a></span>';
+	echo '</div>';
 	echo '</h3>';
 ?>
 
 <div class="pad">
 
-	<div style="background-color: #ededed; width: 20%; float: right; ">
+	<div class="Suivre">
 		<?php if (isset($follower)) { ?>
 		<div style="width:25%; float:left;">
 			<span style="font-weight: bold; font-size: 125%;"><?php echo __('tinyissue.following'); ?></span>
@@ -60,9 +84,9 @@
 			$EtatTodo = Todo::load_todo($issue->id);
 
 		////Here we show the progress bar
-		if (Auth::user()->role_id != 1) {
+		if ($MonRole != 1) {
 			if (is_object($EtatTodo)) {
-				echo '<div class="Percent">';
+				echo '<div class="Percent" id="div_ProgressBarPercent">';
 				echo '<div style="background-color: green; position: absolute; top: 0; left: 0; width: '.($EtatTodo->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.$EtatTodo->weight.'%</div>';
 				echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$EtatTodo->weight.'%; width: '.(100-$EtatTodo->weight).'%; height: 100%; text-align: center; line-height:20px;" />'.(100-$EtatTodo->weight).'%</div>';
 				echo '</div>';
@@ -71,22 +95,23 @@
 	
 			//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 			////Calculations
-			$config_app = require path('public') . 'config.app.php';
-			$Deb = strtotime($issue->created_at);
+			$Deb = strtotime($issue->start_at);
 			$Dur = (time() - $Deb) / 86400;
-			if (@$issue->duration === 0 || @is_null($issue->duration)) { $issue->duration = 30; }
+			$Dur = ($Dur < 0) ? 0 : $Dur;
+			if (!isset($issue->duration)) { $issue->duration = 30; }
+			if ($issue->duration === 0 || is_null($issue->duration)) { $issue->duration = 30; }
 			$DurRelat = round(($Dur / $issue->duration) * 100);
 			$Dur = round($Dur);
-			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > $config_app['Percent'][3]) ? 'white' : 'black') ;
-			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > $config_app['Percent'][3]) ? 'red' : 'yellow') ;
+			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'white' : 'black') ;
+			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 			if ($DurRelat >= 50 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'yellow'; }
 			if ($DurRelat >= 75 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'red'; }
 			$TxtColor = ($DurColor == 'green') ? 'white' : 'black' ;
 			////Here we show to progress bar
 			echo __('tinyissue.countdown').' ('.__('tinyissue.day').'s) : ';
-			echo '<div class="Percent">';
+			echo '<div class="Percent" id="div_ProgressBarDays">';
 			echo '<div style="color: '.$DurColoF.'; background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$issue->duration : $Dur).'</div>';
-			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.$issue->duration.'</div>'; }
+			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.((substr($issue->start_at,0,10) > date("Y-m-d")) ? '<b>'.substr($issue->start_at, 0, 10).'</b> + ' : '').''.$issue->duration.'</div>'; }
 			echo '</div>';
 	
 	
@@ -95,11 +120,12 @@
 
 		$IssueTags = array();
 		if(!empty($issue->tags)) {
+			$Lng = strtoupper(\Auth::user()->language);
 			foreach($issue->tags()->order_by('tag', 'ASC')->get() as $tag) {
-			//2 sept 2021 : la ligne suivante a été remplacée temporairement par l'autre suit afin de déboguer un appel de ftcolor
-			echo '<label class="label" style="background-color: '.$tag->bgcolor.';'.($tag->ftcolor ? 'color: '.$tag->ftcolor.'; ' : '').'">' . $tag->tag . '</label>&nbsp;';
-			//echo '<label class="label" style="background-color: '.$tag->bgcolor.';color: '.((isset($tag->ftcolor)) ? $tag->ftcolor : 'black') . ';">' . $tag->tag . '</label>&nbsp;';
-			$IssueTags[] = $tag->tag;
+				//2 sept 2021 : la ligne suivante a été remplacée temporairement par l'autre suit afin de déboguer un appel de ftcolor
+				echo '<label class="label" style="background-color: '.$tag->bgcolor.';'.($tag->ftcolor ? 'color: '.$tag->ftcolor.'; ' : '').'">'.(($tag->$Lng != '') ? $tag->$Lng : $tag->tag).'</label>&nbsp;';
+				//echo '<label class="label" style="background-color: '.$tag->bgcolor.';color: '.((isset($tag->ftcolor)) ? $tag->ftcolor : 'black') . ';">' . $tag->tag . '</label>&nbsp;';
+				$IssueTags[] = $tag->tag;
 			}  //endforeach
 		} //endif
 	?>
@@ -111,7 +137,7 @@
 			<div class="insides">
 				<div class="topbar">
 					<strong><?php echo $issue->user->firstname . ' ' . $issue->user->lastname; ?> </strong>
-					<?php echo __('tinyissue.opened_this_issue'); ?>  <?php echo date(Config::get('application.my_bugs_app.date_format'), strtotime($issue->created_at)); ?>
+					<?php echo __('tinyissue.opened_this_issue'); ?>  <?php echo date(\Config::get('application.my_bugs_app.date_format'), strtotime($issue->created_at)); ?>
 				</div>
 
 				<div class="issue">
@@ -121,10 +147,10 @@
 				<ul class="attachments">
 					<?php foreach($issue->attachments()->get() as $attachment) { ?>
 					<li>
-						<?php if(in_array($attachment->fileextension, Config::get('application.image_extensions'))): ?>
-							<a href="<?php echo \URL::home() . Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><img src="<?php echo \URL::home() . Config::get('application.attachment_path') . $project->id . '/' . $attachment->upload_token . '/' . $attachment->filename; ?>" style="max-width: 100px;"  alt="<?php echo $attachment->filename; ?>" /></a>
+						<?php if(in_array($attachment->fileextension, \Config::get('application.image_extensions'))): ?>
+							<a href="<?php echo \URL::home() . \Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><img src="<?php echo \URL::home() . Config::get('application.attachment_path') . $project->id . '/' . $attachment->upload_token . '/' . $attachment->filename; ?>" style="max-width: 100px;"  alt="<?php echo $attachment->filename; ?>" /></a>
 						<?php else: ?>
-							<a href="<?php echo \URL::home() . Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><?php echo \URL::home().$attachment->filename; ?></a>
+							<a href="<?php echo \URL::home() . \Config::get('application.attachment_path') . '/' . rawurlencode($attachment->filename); ?>" title="<?php echo $attachment->filename; ?>"><?php echo \URL::home().$attachment->filename; ?></a>
 						<?php endif; ?>
 					</li>
 					<?php } ?>
@@ -135,6 +161,14 @@
 		</li>
 
 		<?php 
+			//Bouton « Commencer » / « Finir »
+			if (\User::pref("boutons") == 'true' && $MonRole != 1) {
+				$q = "on"; $r = "off";
+				if ($ChronoCeluiCi) { $q = "off"; $r = "on"; } 
+				echo '<input name="Temps" id="input_chrono" type="button" value="'.__('tinyissue.issue_chrono_'.$q.'').'" class="chrono_'.$q.'" onclick="Chronometrons(\''.$q.'\', \''.__('tinyissue.issue_chrono_'.$r).'\', '.\Auth::user()->id.', '.Project\Issue::current()->id.', '.Project::current()->id.');" />';
+			}
+
+			//Liste des commentaires et activités
 			foreach($issue->activity() as $activity) {
 				echo (strlen($activity) > 1) ? $activity : '';
 			}
@@ -199,19 +233,19 @@
 				<textarea name="comment" id="textarea_comment_0" style="width: 98%; height: 90px;"></textarea>
 				<!-- New options in the form : percentage of work done after this ticket  -->
 				<br />
-				<span style="text-align: left;">
+				<span style="text-align: left; position: relative; display: inline-block;">
 				<?php 
 					if (!isset($EtatTodo)) { $EtatTodo = 1; }
 					$percent = ((is_object($EtatTodo)) ? (($EtatTodo->weight == 100) ? 91 : $EtatTodo->weight+1) : 2 );
 					if (Project\Issue::current()->assigned->id == \Auth::user()->id ) { 
 						echo '<b>'.__('tinyissue.percentage_of_work_done').'</b> : ';
-						echo '<input type="number" name="Pourcentage" value="'.$percent.'" min="'.$percent.'" max="100" /> %';
+						echo '<input type="number" name="Pourcentage" value="'.$percent.'" min="'.$percent.'" max="100"  size="4" /> %';
 						echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 						echo '<b>'.__('tinyissue.priority').'</b> : ';
 						echo '&nbsp;&nbsp;&nbsp;';
-						echo Form::select('status', array(0=>__('tinyissue.priority_desc_0'),1=>__('tinyissue.priority_desc_1'),2=>__('tinyissue.priority_desc_2'),3=>__('tinyissue.priority_desc_3'),4=>__('tinyissue.priority_desc_4'),5=>__('tinyissue.priority_desc_5')), $issue->status); 
+						echo Form::select('status', array(5=>__('tinyissue.priority_desc_5'),4=>__('tinyissue.priority_desc_4'),3=>__('tinyissue.priority_desc_3'),2=>__('tinyissue.priority_desc_2'),1=>__('tinyissue.priority_desc_1'),0=>__('tinyissue.priority_desc_0')), $issue->status); 
 					} else {
-						if (Auth::user()->role_id != 1 ) { 
+						if ($MonRole != 1 ) { 
 							echo '<br />'; 
 							echo '<b>'.__('tinyissue.percentage_of_work_done').'</b> : ';
 							echo '<input type="hidden" name="Pourcentage" value="'.$percent.'"  /> '.$percent.' %';
@@ -220,10 +254,18 @@
 						}
 					}	
 					echo '<br />'; 
-				?>					
+				?>
+				</span>
+				<span style="text-align: left; position: relative; display: inline-block; margin-left: 15%;">
+				<?php
+					if ($MonRole > 1) {
+						echo '<b>'.__('tinyissue.issue_hours_done').'</b> : ';
+						echo '<input type="number" name="temps_fait" value="'.\Config::get('application.pref.tempsfait').'" min="0" max="'.((isset($EtatTodo->temps_plan)) ? $EtatTodo->temps_plan : '').'"  size="4" />';
+					}
+				?>
 				</span>
 				<div style="text-align: right; width: 98%; margin-top: -25px;"><br /><br /></div>
-			<?php  if (Auth::user()->role_id != 1) { ?>
+			<?php  if ($MonRole > 1) { ?>
 					<!-- Tags modification  -->
 					<span style="float:left; font-weight: bold; margin: 7px;"><?php echo  __('tinyissue.tags'); ?><br /><span style="font-weight: lighter;">Joker : % *</span></span>
 					<div style="width: 73%; float: left">
@@ -240,7 +282,10 @@
 							});
 						});
 						//Viendra ici
-						<?php echo $Retagage; ?>
+						<?php 
+							//Ligne (ci-bas) mise en remarque le 29 nov 2021 sans compromettre le bon fonctionnement.
+							//echo $Retagage; 
+						?>
 						</script>
 					</div>
 			</p>
@@ -295,41 +340,9 @@ var path = '<?php echo $url; ?>app/application/controllers/ajax/';
 var d = new Date();
 var t = d.getTime();
 var AllTags = "";
+var ProjectID = <?php echo Project::current()->id; ?>; 
+var IssueID = <?php echo Project\Issue::current()->id; ?>;
 
-
-function AddTag (Quel,d) {
-	if (d == true ) { return true; }
-	var Modif = "AddOneTag";
-	var IDcomment = 'comment' + new Date().getTime();
-	var xhttpTAG = new XMLHttpRequest();
-	var NextPage = '<?php echo $url.substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'project')); ?>/retag?Modif=' + Modif + '&Quel=' + Quel;
-	xhttpTAG.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		if (xhttpTAG.responseText != '' ) {
-				var adLi = document.createElement("LI");
-				adLi.className = 'comment';
-				adLi.id = IDcomment;
-				document.getElementById('ul_IssueDiscussion').appendChild(adLi);
-				document.getElementById(IDcomment).innerHTML = xhttpTAG.responseText;
-			}
-		}
-	};
-	xhttpTAG.open("GET", NextPage, true);
-	xhttpTAG.send(); 
-
-	var xhttpMAIL = new XMLHttpRequest();
-	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsADD&src=tinyissue";
-	xhttpMAIL.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttpMAIL.responseText != '' ) {
-				alert("Courriels envoyés avec retour = \n" + this.responseText);
-			}
-		}
-	};
-	xhttpMAIL.open("GET", NextPage, true);
-	xhttpMAIL.send(); 
-
-}
 
 function Following(Quoi, etat) {
 	if (Quoi == 'comments' ) {
@@ -340,16 +353,7 @@ function Following(Quoi, etat) {
 		document.getElementById('input_following_comments').checked = true;
 		document.getElementById('img_following').src = "<?php echo \URL::home();?>app/assets/images/layout/icon-comments_1.png";
 	}
-	var xhttp = new XMLHttpRequest();
-	var NextPage = path + 'Following.php?Quoi=1&Qui=<?php echo \Auth::user()->id; ?>&Quel=<?php echo Project\Issue::current()->id; ?>&Project=<?php echo Project::current()->id; ?>&Etat=' + ((etat) ? 0 : 1);
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttp.responseText != '' ) {
-			}
-		}
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	Follows(1, <?php echo \Auth::user()->id; ?>, <?php echo Project::current()->id; ?>, <?php echo Project\Issue::current()->id; ?>, ((etat) ? 0 : 1));
 }
 
 function IMGupload(input) {
@@ -414,92 +418,9 @@ function IMGupload_progressHandler(event){
 	document.getElementById("progressBar").value = percent;
 }
 
-function OteTag(Quel) {
-	Modif = "eraseTag";
-	var IDcomment = 'comment' + new Date().getTime();
-	var xhttpTAG = new XMLHttpRequest();
-	var NextPage = '<?php echo $_SERVER['REQUEST_URI']; ?>/retag?Modif=' + Modif + '&Quel=' + Quel;
-	xhttpTAG.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		if (xhttpTAG.responseText != '' ) {
-				var adLi = document.createElement("LI");
-				adLi.className = 'comment';
-				adLi.id = IDcomment;
-				document.getElementById('ul_IssueDiscussion').appendChild(adLi);
-				document.getElementById(IDcomment).innerHTML = xhttpTAG.responseText;
-			}
-		}
-	};
-	xhttpTAG.open("GET", NextPage, true);
-	xhttpTAG.send(); 
-
-	var xhttpMAIL = new XMLHttpRequest();
-	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=tagsOTE&src=tinyissue";
-	xhttpMAIL.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttpMAIL.responseText != '' ) {
-				alert("Courriels envoyés avec retour = \n" + this.responseText);
-			}
-		}
-	};
-	xhttpMAIL.open("GET", NextPage, true);
-	xhttpMAIL.send(); 
-}
-
-function Reassignment (Project, Prev, Suiv, Issue) {
-	Modif = "reassign";
-	var n = new Date();
-	var Modif = "false";
-	if (n-d > 3000 ) { Modif = "AddOneTag"; }
-	var IDcomment = 'comment' + n.getTime();
-	var xhttpASGMT = new XMLHttpRequest();
-	var NextPage = '<?php echo $_SERVER['REQUEST_URI']; ?>/reassign?Modif=' + Modif + '&Project=' + Project + '&Prev=' + Prev + '&Suiv=' + Suiv + '&Issue=' + Issue;
-	xhttpASGMT.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		if (xhttpASGMT.responseText != '' ) {
-				var adLi = document.createElement("LI");
-				adLi.className = 'comment';
-				adLi.id = IDcomment;
-				document.getElementById('ul_IssueDiscussion').appendChild(adLi);
-				document.getElementById(IDcomment).innerHTML = xhttpASGMT.responseText;
-				
-				var MyDropDown = document.getElementById('dropdown_ul');
-				var items = MyDropDown.getElementsByTagName("li");
-				for (var i = 1; i < items.length; ++i) {
-					var monID = items[i].getAttribute('id');
-					var num = monID.substring(12);
-					var contenu = items[i].innerHTML;
-					var nomDeb = contenu.indexOf('>',0);
-					var nomFin = contenu.indexOf('<', nomDeb);
-					var nom = contenu.substring(nomDeb+1,nomFin);
-					var contenu = '<a class="user0" href="javascript: Reassignment(' + Project + ', ' + Prev + ', ' + num + ',' + Issue + ');">' + nom + '</a>';
-					if (num == Suiv) {
-						contenu = '<span style="color: #FFF; margin-left: 10px; font-weight: bold;">' + nom + '</span>';
-						document.getElementById('span_currentlyAssigned_name').innerHTML = nom;
-					}
-					items[i].innerHTML = contenu;
-				}
-			}
-		}
-	};
-	xhttpASGMT.open("GET", NextPage, true);
-	xhttpASGMT.send(); 
-
-	var xhttpMAIL = new XMLHttpRequest();
-	var NextPage = path + "SendMail.php?Type=Issue&SkipUser=true&ProjectID=<?php echo Project::current()->id; ?>&IssueID=<?php echo Project\Issue::current()->id; ?>&User=<?php echo Auth::user()->id; ?>&contenu=assigned&src=tinyissue";
-	xhttpMAIL.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (xhttpMAIL.responseText != '' ) {
-				alert("Courriels envoyés avec retour = \n" + this.responseText);
-			}
-		}
-	};
-	xhttpMAIL.open("GET", NextPage, true);
-	xhttpMAIL.send(); 
-}
 <?php
 	$rendu = 0;
-	$wysiwyg = Config::get('application.editor');
+	$wysiwyg = \Config::get('application.editor');
 	if (trim(@$wysiwyg['directory']) != '') {
 		if (file_exists($wysiwyg['directory']."/Bugs_code/showeditor.js")) {
 			include $wysiwyg['directory']."/Bugs_code/showeditor.js"; 

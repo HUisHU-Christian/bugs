@@ -1,9 +1,12 @@
 <?php
 
+require_once "application/libraries/mail.php";
+
 class Project extends Eloquent {
 
 	public static $table = 'projects';
 	public static $timestamps = true;
+	
 
 	/**********************************************************
 	 * Methods to use with loaded Project
@@ -27,6 +30,23 @@ class Project extends Eloquent {
 	public function issues() {
 		return $this->has_many('Project\Issue', 'project_id')->order_by('status', 'DESC')->order_by('weight', 'ASC');
 	}
+	
+	
+	public function nextissuesThisTab($tag_id, $thisCount, $NbIssues) {
+		if ($thisCount > $NbIssues || 1==1) {
+			$rendu = 0;
+			$col = 0;
+			if ($thisCount >= $NbIssues) {
+				echo '&nbsp;&nbsp;&nbsp;'; 
+				while ($rendu < $thisCount) {
+					echo '<span class="smallNum" onclick="javascript: AffichonsAutres('.$col.', '.($rendu-0).');" sytle="cursor: url();" >'.(($rendu/$NbIssues)+1).'</span>&nbsp;&nbsp;';
+					if (((($rendu+$NbIssues)/$NbIssues)/6) == round((($rendu+$NbIssues)/$NbIssues)/5)) { echo '<br />&nbsp;&nbsp;&nbsp;'; }
+					$rendu = $rendu + $NbIssues;
+				}
+			}
+		}  
+	}
+
 
 	/**
 	* Assign a user to a project
@@ -36,6 +56,9 @@ class Project extends Eloquent {
 	* @return void
 	*/
 	public function assign_user($user_id, $role_id = 0) {
+		if ($role_id == 0) {
+			$role_id = \USER::where('id', '=', $user_id)->get(array('role_id'));
+		}
 		Project\User::assign($user_id, $this->id, $role_id);
 	}
 
@@ -46,15 +69,9 @@ class Project extends Eloquent {
 	public function users_not_in() {
 		$users = array();
 
-		foreach($this->users()->get(array('user_id')) as $user) {
-			$users[] = $user->id;
-		}
-
+		foreach($this->users()->get(array('user_id')) as $user) { $users[] = $user->id; }
 		$results = User::where('deleted', '=', 0);
-
-		if(count($users) > 0) {
-			$results->where_not_in('id', $users);
-		}
+		if(count($users) > 0) { $results->where_not_in('id', $users); }
 
 		return $results->get();
 	}
@@ -69,21 +86,33 @@ class Project extends Eloquent {
 		if(is_null($user_id)) {
 			$user_id = \Auth::user()->id;
 		}
-		return \Tag::find(1)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
 				->where('assigned_to', '=', $user_id)
+//				->where('start_at', '<=', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
 	}
 
 	public function count_open_issues() {
-		return \Tag::find(1)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
+				->where('start_at', '<=', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
 	}
 
 	public function count_closed_issues() {
-		return \Tag::find(2)->issues()
+		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
+				->where_null('closed_at', 'and', true)
+				->count();
+ 	}
+	public function count_future_issues() {
+		return \DB::table('projects_issues')
+				->where('project_id', '=', $this->id)
+				->where('start_at', '>', date("Y-m-d"))
+				->where_null('closed_at', 'and', false)
 				->count();
  	}
 	/**
@@ -247,9 +276,16 @@ class Project extends Eloquent {
 			);
 		}
 
+		$id_max = $val_max = 0;
+		if(isset($input['user']) && count($input['user']) > 0) {
+			foreach($input['user'] as $ind => $id) {
+				$id_max = ($input["role"][$ind] > $val_max) ? $id : $id_max;
+			}
+		}
+
 		$fill = array(
 			'name' => $input['name'],
-			'default_assignee' => $input['default_assignee'],
+			'default_assignee' => $id_max,
 		);
 
 		$project = new Project;
@@ -257,18 +293,21 @@ class Project extends Eloquent {
 		$project->save();
 
 		/* Assign selected users to the project */
+		$id_max = 0;
+		$val_max = 0;
 		if(isset($input['user']) && count($input['user']) > 0) {
-			foreach($input['user'] as $id) {
-				$project->assign_user($id);
+			foreach($input['user'] as $ind => $id) {
+				$id_max = ($input["role"][$ind] > $val_max) ? $id : $id_max;
+				$project->assign_user($id, $input["role"][$ind]);
 			}
 		}
-
 		return array(
+			'id' => $project->attributes["id"],
 			'project' => $project,
 			'success' => true
 		);
 	}
-
+	
 	/**
 	* Update a project
 	*
@@ -303,6 +342,7 @@ class Project extends Eloquent {
 			'success' => true
 		);
 	}
+
 	public static function update_weblnks($input, $project) {
 		/* Update all the links attached to the project, setting the « desactivated » date as NOW */
 		\DB::table('projects_links')->where('id_project', '=', $project->id)->update(array('desactivated' => date("Y-m-d")));

@@ -1,3 +1,4 @@
+<?php if (isset($issue)) { ?>
 <li onclick="window.location='<?php echo $issue->to(); ?>';">
 	<div class="tag">
 		<label class="label info"><?php echo __('tinyissue.tag_update'); ?></label>
@@ -6,9 +7,11 @@
 	<div class="data">
 		<div class="tag-activity">
 			<?php 
+				$Lng = strtolower(\Auth::user()->language);
 				if($tag_counts['added'] > 0) {
-					foreach($tag_diff['added_tags'] as $tag) { 
-						echo '<label class="label notice" style="color:'.$tag_diff['tag_data'][$tag]['ftcolor'].';background-color:'.$tag_diff['tag_data'][$tag]['bgcolor'].';">' . $tag_diff['tag_data'][$tag]['tag'] . '</label>'; 
+					foreach($tag_diff['added_tags'] as $tag) {
+						$ceTag = \DB::table('tags')->where('id', '=', $tag_diff['tag_data'][$tag]['id'])->get();
+						echo '<label class="label notice" style="color:'.$tag_diff['tag_data'][$tag]['ftcolor'].';background-color:'.$tag_diff['tag_data'][$tag]['bgcolor'].';">'.(($ceTag[0]->$Lng != '') ? $ceTag[0]->$Lng : $tag_diff['tag_data'][$tag]['tag']).'</label>'; 
 					} 
 					echo __($tag_counts['added'] > 1 ? 'tinyissue.tags_added' : 'tinyissue.tag_added');
 					echo ' '; 
@@ -23,7 +26,7 @@
 			
 				if($tag_counts['removed'] > 0) {
 					foreach($tag_diff['removed_tags'] as $tag) { 
-						echo '<label class="label notice" style="color:'.$tag_diff['tag_data'][$tag]['ftcolor'].';background-color:'.$tag_diff['tag_data'][$tag]['bgcolor'].';">' . $tag_diff['tag_data'][$tag]['tag'] . '</label>'; 
+						echo '<label class="label notice" style="color:'.$tag_diff['tag_data'][$tag]['ftcolor'].';background-color:'.$tag_diff['tag_data'][$tag]['bgcolor'].';">'.(($tag_diff['tag_data'][$tag][$Lng] != '') ? $tag_diff['tag_data'][$tag][$Lng] : $tag_diff['tag_data'][$tag]['tag']).'</label>'; 
 					}
 					echo __($tag_counts['removed'] > 1 ? 'tinyissue.tags_removed' : 'tinyissue.tag_removed'); 
 						echo ' '; 
@@ -42,3 +45,4 @@
 
 	<div class="clr"></div>
 </li>
+<?php } ?>

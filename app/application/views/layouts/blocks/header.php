@@ -25,7 +25,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title><?php echo Config::get('application.my_bugs_app.name'); ?></title>
 		<script>
-			//La branche PHP8 est vouée à disparaître si - comme il semble - toutes les corrections ont été apportées adéquatement aux nom de fonctions qui ne doivent pas être identiques aux noms des classes correspondantes
 			var siteurl = '<?php echo URL::to(); ?>';
 			var current_url = '<?php echo URL::to(Request::uri()); ?>';
 			var baseurl = '<?php echo URL::base(); ?>';
@@ -33,13 +32,13 @@
 		<?php echo Asset::styles(); ?>
 		<?php echo Asset::scripts(); ?>
 		<?php
-			//Testons de savoir si l'usager en ligne en faisant ping 8.8.8.8
+			//Tentons de savoir si l'usager en ligne en faisant ping 8.8.8.8
 			$status = 0;
 			$pingresult = shell_exec('ping -c 1 -w 1 8.8.8.8');
 			$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
 			if (date("Y-m-d", fileatime ("../install/get_updates_list")) != date("Y-m-d") && $EnLigne) {
 				include "../app/application/libraries/checkVersion.php";
-				$Etat =  ($verActu == $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
+				$Etat =  ($verActu == $verNum || $verActu > $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
 				file_put_contents ("../install/get_updates_list", $Etat);
 			}
 
@@ -71,7 +70,9 @@
 					<ul>
 						<li class="dashboard <?php echo $active == 'dashboard' ? 'active' : ''; ?>"><a href="<?php echo URL::to(); ?>"><?php echo __('tinyissue.dashboard');?></a></li>
 						<li class="issues <?php echo $active == 'issues' ? 'active' : ''; ?>"><a href="<?php echo URL::to('user/issues'); ?>"><?php echo __('tinyissue.your_issues');?></a></li>
-						<?php if (Auth::user()->role_id != 1) { ?><li class="todo <?php echo $active == 'todo' ? 'active' : ''; ?>"><a href="<?php echo URL::to('todo'); ?>"><?php echo __('tinyissue.your_todos');?></a></li><?php } ?>
+						<?php
+						//Selon l'analyse du 13 novembre 2021, il ne faut pas changer l'évaluation du role_id ci-bas 
+						if (Auth::user()->role_id != 1) { ?><li class="todo <?php echo $active == 'todo' ? 'active' : ''; ?>"><a href="<?php echo URL::to('todo'); ?>"><?php echo __('tinyissue.your_todos');?></a></li><?php } ?>
 						<li class="projects <?php echo $active == 'projects' ? 'active' : ''; ?>"><a href="<?php echo URL::to('projects'); ?>"><?php echo __('tinyissue.projects');?></a></li>
 					</ul>
 				</li>

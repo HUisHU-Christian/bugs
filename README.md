@@ -44,7 +44,7 @@ If your version is older than september 2018
 ## Requirements:
 
 - Tested on: Apache, IIS;
-- PHP 7.3+;   (since 2021/09/21, no longer PHP 7.0 is no longer supported)   
+- PHP 7.3+;   (since 2021/08/21, PHP 7.0 is no longer supported)   
 - MySQL 5+;
 - PDO Extension for PHP (MySQL);
 - MCrypt Extension for PHP : soon MCrypt will be removed from Bugs project;
@@ -53,11 +53,11 @@ If your version is older than september 2018
 
 ### How to contribute
 
-We welcome and appreciate all contributions. The `develop` branch is the branch you should base all your pull requests and development on.
-The `master` branch is tagged releases only.
+We welcome and appreciate all contributions. 
 
 For any coding contribution, please use a git tool ( visit https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git to know more ).
 Then, push your modifications through a new branch. NEVER push on master. 
+
 
 # Changelog
 - v.1.8 : Responsive template.  Now matches the window size wherever you use BUG ( tablet, phone, computer ) 
@@ -72,8 +72,14 @@ Then, push your modifications through a new branch. NEVER push on master.
     - March 2021: Reader can no longer edit ticket, nor watch stats (rev 3).
     - March 2021: Search field now will search also into comments' content ( not only title or projects' name  (rev 3).
     - March 2021: Comment and close at once - new button added (rev 3).
-    - Arpil 2021: User can follow project / ticket and receive email when something appends ( rev 4x ).
-    - May 2021: Admin may change some options and edit texts sent when activity occurs in issues or projects  ( rev 5 ).
+    - Arpil 2021: User can follow project / ticket and receive email when something appends (rev 4).
+    - May 2021: Admin may change some options and edit texts sent when activity occurs in issue or project  (rev 5).
+    - Aug 2021: BUGS can no more work under PHP 7.0; PHP 7.3 is now minimal requirement
+    - Sep 2021: install process now includes creation of first project and first ticket
+    - Oct 2021: Admin may manage many more options, even the way BUGS shows error on screen or by email; ready for PHP 8 (rev 6)
+    - Nov 2021: Project member may ask BUGS to count his worktime spent on specific ticket ( punch in, punch out ) so your company may charge accordingly the client (rev 7)
+    - Dec 2021: Acitivites report - what every single user have done (rev 7)
+    - Dec 2021: Dark templates B-> with touch of blue  G-> with touche of green  R-> with touch of red/orange (rev 7)
 - v.1.7 : July 2019 
 	- reports are now totally integrated to BUGS which produces pdf files
 - v.1.6 : February 2019 

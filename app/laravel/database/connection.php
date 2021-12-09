@@ -39,8 +39,7 @@ class Connection {
 	 * @param  array  $config
 	 * @return void
 	 */
-	public function __construct(PDO $pdo, $config)
-	{
+	public function __construct(PDO $pdo, $config) {
 		$this->pdo = $pdo;
 		$this->config = $config;
 	}
@@ -59,8 +58,7 @@ class Connection {
 	 * @param  string  $table
 	 * @return Query
 	 */
-	public function table($table)
-	{
+	public function table($table) {
 		return new Query($this, $this->grammar(), $table);
 	}
 
@@ -69,17 +67,14 @@ class Connection {
 	 *
 	 * @return Query\Grammars\Grammar
 	 */
-	protected function grammar()
-	{
+	protected function grammar() {
 		if (isset($this->grammar)) return $this->grammar;
 
-		if (isset(\Laravel\Database::$registrar[$this->driver()]))
-		{
+		if (isset(\Laravel\Database::$registrar[$this->driver()])) {
 			\Laravel\Database::$registrar[$this->driver()]['query']();
 		}
 
-		switch ($this->driver())
-		{
+		switch ($this->driver()) {
 			case 'mysql':
 				return $this->grammar = new Query\Grammars\MySQL($this);
 
@@ -103,19 +98,16 @@ class Connection {
 	 * @param  callback  $callback
 	 * @return void
 	 */
-	public function transaction($callback)
-	{
+	public function transaction($callback) {
 		$this->pdo->beginTransaction();
 
 		// After beginning the database transaction, we will call the callback
 		// so that it can do its database work. If an exception occurs we'll
 		// rollback the transaction and re-throw back to the developer.
-		try
-		{
+		try {
 			call_user_func($callback);
 		}
-		catch (\Exception $e)
-		{
+		catch (\Exception $e) {
 			$this->pdo->rollBack();
 
 			throw $e;
@@ -139,8 +131,7 @@ class Connection {
 	 * @param  array   $bindings
 	 * @return mixed
 	 */
-	public function only($sql, $bindings = array())
-	{
+	public function only($sql, $bindings = array()) {
 		$results = (array) $this->first($sql, $bindings);
 
 		return reset($results);
@@ -161,10 +152,8 @@ class Connection {
 	 * @param  array   $bindings
 	 * @return object
 	 */
-	public function first($sql, $bindings = array())
-	{
-		if (count($results = $this->query($sql, $bindings)) > 0)
-		{
+	public function first($sql, $bindings = array()) {
+		if (count($results = $this->query($sql, $bindings)) > 0) {
 			return $results[0];
 		}
 	}
@@ -176,8 +165,7 @@ class Connection {
 	 * @param  array   $bindings
 	 * @return array
 	 */
-	public function query($sql, $bindings = array())
-	{
+	public function query($sql, $bindings = array()) {
 		$sql = trim($sql);
 
 		list($statement, $result) = $this->execute($sql, $bindings);
@@ -185,23 +173,16 @@ class Connection {
 		// The result we return depends on the type of query executed against the
 		// database. On SELECT clauses, we will return the result set, for update
 		// and deletes we will return the affected row count.
-		if (stripos($sql, 'select') === 0 || stripos($sql, 'show') === 0)
-		{
+		if (stripos($sql, 'select') === 0 || stripos($sql, 'show') === 0) {
 			return $this->fetch($statement, Config::get('database.fetch'));
-		}
-		elseif (stripos($sql, 'update') === 0 or stripos($sql, 'delete') === 0)
-		{
+		} elseif (stripos($sql, 'update') === 0 or stripos($sql, 'delete') === 0) {
 			return $statement->rowCount();
-		}
+		} elseif (stripos($sql, 'insert') === 0 and stripos($sql, 'returning') !== false) {
 		// For insert statements that use the "returning" clause, which is allowed
 		// by database systems such as Postgres, we need to actually return the
 		// real query result so the consumer can get the ID.
-		elseif (stripos($sql, 'insert') === 0 and stripos($sql, 'returning') !== false)
-		{
 			return $this->fetch($statement, Config::get('database.fetch'));
-		}
-		else
-		{
+		} else {
 			return $result;
 		}
 	}
@@ -215,15 +196,13 @@ class Connection {
 	 * @param  array   $bindings
 	 * @return array
 	 */
-	protected function execute($sql, $bindings = array())
-	{
+	protected function execute($sql, $bindings = array()) {
 		$bindings = (array) $bindings;
 
 		// Since expressions are injected into the query as strings, we need to
 		// remove them from the array of bindings. After we have removed them,
 		// we'll reset the array so there are not gaps within the keys.
-		$bindings = array_filter($bindings, function($binding)
-		{
+		$bindings = array_filter($bindings, function($binding) {
 			return ! $binding instanceof Expression;
 		});
 
@@ -236,10 +215,8 @@ class Connection {
 		// define it's own date-time format according to its needs.
 		$datetime = $this->grammar()->datetime;
 
-		for ($i = 0; $i < count($bindings); $i++)
-		{
-			if ($bindings[$i] instanceof \DateTime)
-			{
+		for ($i = 0; $i < count($bindings); $i++) {
+			if ($bindings[$i] instanceof \DateTime) {
 				$bindings[$i] = $bindings[$i]->format($datetime);
 			}
 		}
@@ -247,8 +224,7 @@ class Connection {
 		// Each database operation is wrapped in a try / catch so we can wrap
 		// any database exceptions in our custom exception class, which will
 		// set the message to include the SQL and query bindings.
-		try
-		{
+		try {
 			$statement = $this->pdo->prepare($sql);
 
 			$start = microtime(true);
@@ -258,8 +234,7 @@ class Connection {
 		// If an exception occurs, we'll pass it into our custom exception
 		// and set the message to include the SQL and query bindings so
 		// debugging is much easier on the developer.
-		catch (\Exception $exception)
-		{
+		catch (\Exception $exception) {
 			$exception = new Exception($sql, $bindings, $exception);
 
 			throw $exception;
@@ -268,8 +243,7 @@ class Connection {
 		// Once we have executed the query, we log the SQL, bindings, and
 		// execution time in a static array that is accessed by all of
 		// the connections actively being used by the application.
-		if (Config::get('database.profile'))
-		{
+		if (Config::get('database.profile')) {
 			$this->log($sql, $bindings, $start);
 		}
 
@@ -283,17 +257,13 @@ class Connection {
 	 * @param  int           $style
 	 * @return array
 	 */
-	protected function fetch($statement, $style)
-	{
+	protected function fetch($statement, $style) {
 		// If the fetch style is "class", we'll hydrate an array of PHP
 		// stdClass objects as generic containers for the query rows,
 		// otherwise we'll just use the fetch style value.
-		if ($style === PDO::FETCH_CLASS)
-		{
+		if ($style === PDO::FETCH_CLASS) {
 			return $statement->fetchAll(PDO::FETCH_CLASS, 'stdClass');
-		}
-		else
-		{
+		} else {
 			return $statement->fetchAll($style);
 		}
 	}
@@ -306,8 +276,7 @@ class Connection {
 	 * @param  int     $start
 	 * @return void
 	 */
-	protected function log($sql, $bindings, $start)
-	{
+	protected function log($sql, $bindings, $start) {
 		$time = number_format((microtime(true) - $start) * 1000, 2);
 
 		Event::fire('laravel.query', array($sql, $bindings, $time));
@@ -320,16 +289,14 @@ class Connection {
 	 *
 	 * @return string
 	 */
-	public function driver()
-	{
+	public function driver() {
 		return $this->config['driver'];
 	}
 
 	/**
 	 * Magic Method for dynamically beginning queries on database tables.
 	 */
-	public function __call($method, $parameters)
-	{
+	public function __call($method, $parameters) {
 		return $this->table($method);
 	}
 

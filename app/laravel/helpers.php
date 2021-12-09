@@ -62,8 +62,7 @@ function array_get($array, $key, $default = null) {
 	// will return it, otherwise we will set the depth of the array and
 	// look for the next segment.
 	foreach (explode('.', $key) as $segment) {
-		if ( ! is_array($array) or ! array_key_exists($segment, $array))
-		{
+		if ( ! is_array($array) or ! array_key_exists($segment, $array)) {
 			return value($default);
 		}
 
@@ -106,8 +105,7 @@ function array_set(&$array, $key, $value) {
 		// If the key doesn't exist at this depth, we will just create an
 		// empty array to hold the next value, allowing us to create the
 		// arrays to hold the final value.
-		if ( ! isset($array[$key]) or ! is_array($array[$key]))
-		{
+		if ( ! isset($array[$key]) or ! is_array($array[$key])) {
 			$array[$key] = array();
 		}
 
@@ -146,8 +144,7 @@ function array_forget(&$array, $key) {
 		// if a value higher up in the chain doesn't exist, there is no
 		// need to keep digging into the array, since it is impossible
 		// for the final value to even exist.
-		if ( ! isset($array[$key]) or ! is_array($array[$key]))
-		{
+		if ( ! isset($array[$key]) or ! is_array($array[$key])) {
 			return;
 		}
 
@@ -248,7 +245,7 @@ function array_only($array, $keys) {
  * @param  array  $keys
  * @return array
  */
-function array_except($array, $keys) {
+function array_exceptFct($array, $keys) {
 	return array_diff_key( $array, array_flip((array) $keys) );
 }
 
@@ -532,8 +529,7 @@ function yieldContent($section) {
  */
 function get_cli_option($option, $default = null) {
 	foreach (Laravel\Request::foundation()->server->get('argv') as $argument) {
-		if (starts_with($argument, "--{$option}="))
-		{
+		if (starts_with($argument, "--{$option}=")) {
 			return substr($argument, strlen($option) + 3);
 		}
 	}

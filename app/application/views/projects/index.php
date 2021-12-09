@@ -8,7 +8,6 @@ $_GET["status"] = $_GET["status"] ?? 1;
 </h3>
 
 <div class="pad">
-
 	<ul class="tabs">
 		<li <?php echo $active == 'active' ? 'class="active"' : ''; ?>>
 			<a href="<?php echo URL::to('projects'); ?>">
@@ -35,8 +34,8 @@ $_GET["status"] = $_GET["status"] ?? 1;
 						$etcday = 0;
 						if($velocity > 0){ $etcday = ceil($issues / $velocity); }else{ $etcday = $issues / 1; }
 						$etc = date("d-m-Y",strtotime("+".$etcday." days"));
-						echo '<li>';
-							echo '<a href="'.$row->to().'">'.$row->name.'</a><br />';
+						echo '<li style="position: relative;">';
+							echo '<a href="'.$row->to().'" style="font-size: 150%;">'.$row->name.'</a><br />';
 							echo $issues == 1 ? '1 '. __('tinyissue.open_issue') : $issues . ' '. __('tinyissue.open_issues');
 							echo '&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;'; 
 							echo $closedissues == 1 ? '1 '. __('tinyissue.closed_issue') : $closedissues . ' '. __('tinyissue.closed_issues'); 
@@ -45,13 +44,22 @@ $_GET["status"] = $_GET["status"] ?? 1;
 								echo '<strong>'.__('tinyissue.velocity_velocity').':</strong>&nbsp;'.$velocity.'&nbsp;'.__('tinyissue.velocity_rate').'&nbsp;&nbsp;&nbsp;';
 								echo '<strong>'.__('tinyissue.velocity_etc').':</strong>&nbsp;'.$etc;
 							}
+							echo '
+								<div class="divEditProj" style="position: absolute; right: 0; bottom: 25px; ">
+								<a href="'.$row->to().'/edit">
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<br />
+								</a>
+								</div>
+							';
 							echo '<br />';
 						echo '</li>';
 					} 
 					echo '<li>';
 					if(Auth::user()->permission('project-create') && @$_GET["status"] == 1) { 
 						echo (count($projects) == 0) ? __('tinyissue.you_do_not_have_any_projects') : '<br />';
-						echo '<a href="'.URL::to('projects/new').'">';
+						echo '<a href="'.URL::to('projects/new').'" style="font-size: 150%;">';
 						echo __('tinyissue.create_project'); 
 						echo '</a>';
 					}
