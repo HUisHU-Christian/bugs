@@ -127,6 +127,8 @@ class Project_Issue_Controller extends Base_Controller {
 	 * @return View
 	 */
 	public function get_edit() {
+//		var_dump($_POST);
+//		exit();
 		$_GET["ticketAct"] = $_GET["ticketAct"] ?? '';
 		if ($_GET["ticketAct"] == 'changeProject') {
 			//Change the asssociation between this issue and its related project

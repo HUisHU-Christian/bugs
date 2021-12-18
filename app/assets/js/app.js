@@ -300,6 +300,14 @@ function saving_toggle(nouvEtat){
 	return true;
 }
 
+function supprimerIssue(issue_id) {
+	$.post(siteurl + 'ajax/project/issueDelete', {
+		issue_id : issue_id
+	}, function(data){
+		document.location.href = '../../issues?tag_id=1';
+	});
+}
+
 setTimeout(function(){ 
 	Nouv = true; 
 	}, 3000
