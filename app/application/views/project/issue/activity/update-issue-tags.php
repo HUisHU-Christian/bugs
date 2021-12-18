@@ -9,13 +9,15 @@
 		<div class="topbar">
 			<div class="data">
 				<?php
+					$Lng = strtolower(\Auth::user()->language);
 					if (trim($activity->attributes['data']) == '') {
 						$Msg = ($activity->attributes['parent_id'] == $activity->attributes['item_id'] ) ? __('tinyissue.tag_removed') : __('tinyissue.tag_added');
 						$Col = ($activity->attributes['parent_id'] == $activity->attributes['item_id'] ) ? "none" : "underline";
 						$TagNum = Tag::where('id', '=', $activity->attributes['action_id'] )->first(array('id','tag','bgcolor','ftcolor'));
 						$Who = \User::where('id', '=', $activity->attributes['user_id'] )->get(array('firstname','lastname','email'));
 						echo '<label style="background-color: '.@$TagNum->attributes['bgcolor'].';color: '.@$TagNum->attributes['ftcolor'].'; padding: 5px 10px; border-radius: 8px;">';
-						echo @$TagNum->attributes['tag'];
+						echo (($TagNum->attributes[$Lng] != '') ? $TagNum->attributes[$Lng] : $TagNum->attributes['tag']);
+						//echo $TagNum->attributes['tag'];
 						echo '</label> : BAboom';
 						echo '<span style="font-weight: bold; text-decoration: '.$Col.';">'.$Msg.'</span>';
 						echo  __('tinyissue.by') . ' <b>' .$Who[0]->attributes["firstname"].' '.$Who[0]->attributes["lastname"].'</b> ';
@@ -29,7 +31,7 @@
 						$numtag = ($valadd != '') ? $valadd : intval(trim(substr($activity->attributes['data'], $deux+1, ($deuy-$deux)-1))) * -1;
 						$tag_info = \DB::table('tags')->where('id', '=', abs($numtag))->get();
 						if (count($tag_info) > 0) {
-						 	echo '<label style="background-color: '.$tag_info[0]->bgcolor.'; '.($tag_info[0]->ftcolor ? 'color: '.$tag_info[0]->ftcolor.'; ' : '').' padding: 5px 10px; border-radius: 8px;">'.$tag_info[0]->tag.'</label><b>';
+						 	echo '<label style="background-color: '.$tag_info[0]->bgcolor.'; '.($tag_info[0]->ftcolor ? 'color: '.$tag_info[0]->ftcolor.'; ' : '').' padding: 5px 10px; border-radius: 8px;">'.(($tag_info[0]->$Lng != '') ? $tag_info[0]->$Lng : $tag_info[0]->tag).'</label><b>';
 						 	echo ' ';
 						 	echo ($numtag > 0) ? '<span style="color: green;">'.__('tinyissue.tag_added').'</span>' : '<span style="color: red;">'.__('tinyissue.tag_removed').'</span>'; 
 							echo ' '.__('tinyissue.by').' '.$user->attributes["firstname"].' '.$user->attributes["lastname"].'</b></a> ';
