@@ -127,7 +127,7 @@ class Asset_Container {
 		$posiSource = strrpos($source, "/") + 1;
 		$cetteSource = substr($source, $posiSource);
 		$ceRep = substr($source, 0, strlen($source)-strlen($cetteSource));
-		$source = in_array(($cetteSource), array("app.css", "config.css", "project.css")) ? $ceRep."Default/".$cetteSource : $source;  
+		$source = in_array(($cetteSource), array("app.css", "config.css", "project.css")) ? $ceRep."".\User::pref("template")."/".$cetteSource : $source;  
 		$this->register('style', $name, $source, $dependencies, $attributes);
 
 		return $this;

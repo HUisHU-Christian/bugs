@@ -101,7 +101,16 @@
 		<br />
 		<h4><?php echo $LngSRV["UserPref_modele"]; ?></h4>
 		<br />
-		<select name="template"><option value="Default">Default</option></select>
+		<select name="template">
+		<?php
+			$pasCeuxCi = array(".","..","jquery.tagit.css","spectrum.css","tagit.ui-zendesk.css", "login.css","install.css");
+			$canevas = scandir("assets/css");
+			foreach ($canevas as $caneva) {
+				if (in_array($caneva, $pasCeuxCi)) { continue; }
+				echo '<option value="'.$caneva.'" '.((strtolower($pref['template']) == strtolower($caneva)) ? ' selected="selected" ' : '').'>'.$caneva.'</option>';
+			}
+		?>
+		</select>
 		<br /><br />
 		<br /><br />
 

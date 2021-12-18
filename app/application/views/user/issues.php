@@ -17,10 +17,11 @@
 					<a href="<?php echo $row->to(); ?>" class="comments"><?php echo $row->comment_count(); ?></a>
 					<?php 
 					if(!empty($row->tags)) {
+						$Lng = strtoupper(\Auth::user()->language);
 						echo '<div class="tags">';
 						foreach($row->tags()->order_by('tag', 'ASC')->get() as $tag) { 
 							//2 sept 2021 recherche d'un bogue lié à ftcolor
-							echo '<label class="label" style="'.($tag->ftcolor ? 'color: '.$tag->ftcolor . ';' : '').($tag->bgcolor ? 'background-color: '.$tag->bgcolor . ';' : '').'">' . $tag->tag . '</label>';
+							echo '<label class="label" style="'.($tag->ftcolor ? 'color: '.$tag->ftcolor . ';' : '').($tag->bgcolor ? 'background-color: '.$tag->bgcolor . ';' : '').'">' . (($tag->$Lng != '') ? $tag->$Lng : $tag->tag) . '</label>';
 						}
 						echo '</div>';
 					} 

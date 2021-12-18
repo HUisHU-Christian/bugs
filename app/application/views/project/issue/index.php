@@ -54,7 +54,7 @@
 
 <div class="pad">
 
-	<div style="background-color: #ededed; width: 20%; float: right; ">
+	<div class="Suivre">
 		<?php if (isset($follower)) { ?>
 		<div style="width:25%; float:left;">
 			<span style="font-weight: bold; font-size: 125%;"><?php echo __('tinyissue.following'); ?></span>
@@ -120,11 +120,12 @@
 
 		$IssueTags = array();
 		if(!empty($issue->tags)) {
+			$Lng = strtoupper(\Auth::user()->language);
 			foreach($issue->tags()->order_by('tag', 'ASC')->get() as $tag) {
-			//2 sept 2021 : la ligne suivante a été remplacée temporairement par l'autre suit afin de déboguer un appel de ftcolor
-			echo '<label class="label" style="background-color: '.$tag->bgcolor.';'.($tag->ftcolor ? 'color: '.$tag->ftcolor.'; ' : '').'">' . $tag->tag . '</label>&nbsp;';
-			//echo '<label class="label" style="background-color: '.$tag->bgcolor.';color: '.((isset($tag->ftcolor)) ? $tag->ftcolor : 'black') . ';">' . $tag->tag . '</label>&nbsp;';
-			$IssueTags[] = $tag->tag;
+				//2 sept 2021 : la ligne suivante a été remplacée temporairement par l'autre suit afin de déboguer un appel de ftcolor
+				echo '<label class="label" style="background-color: '.$tag->bgcolor.';'.($tag->ftcolor ? 'color: '.$tag->ftcolor.'; ' : '').'">'.(($tag->$Lng != '') ? $tag->$Lng : $tag->tag).'</label>&nbsp;';
+				//echo '<label class="label" style="background-color: '.$tag->bgcolor.';color: '.((isset($tag->ftcolor)) ? $tag->ftcolor : 'black') . ';">' . $tag->tag . '</label>&nbsp;';
+				$IssueTags[] = $tag->tag;
 			}  //endforeach
 		} //endif
 	?>

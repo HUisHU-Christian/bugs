@@ -95,9 +95,10 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 				echo '<a href="javascript: Following('.$row->id.', '.$row->project_id.', '.\Auth::user()->id.');" class="commentstate_'.$follower.'" id="a_following_'.$row->id.'"  style="min-height: '.$follower.'; "  title="'.$row->comment_count().' '.__('tinyissue.following_stand').' / '.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" >'.$row->comment_count().'</a>';
 
 				if(!empty($row->tags)) {
+					$Lng = strtoupper(\Auth::user()->language);
 					echo '<div class="tags">';
 					foreach($row->tags()->order_by('tag', 'ASC')->get() as $tag) {
-						echo '<label class="label" style="'.($tag->bgcolor ? ' background-color: ' . $tag->bgcolor . ';' : '').($tag->ftcolor ? ' color: ' . $tag->ftcolor . ';' : '').'">' . $tag->tag . '</label>';
+						echo '<label class="label" style="'.($tag->bgcolor ? ' background-color: ' . $tag->bgcolor . ';' : '').($tag->ftcolor ? ' color: ' . $tag->ftcolor . ';' : '').'">' . (($tag->$Lng != '') ? $tag->$Lng : $tag->tag) . '</label>';
 					}
 					echo '</div>';
 				} 
@@ -112,7 +113,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 						</span>
 					</div>';
 				echo '<div class="data">';
-					echo '<a href="'.$row->to().'" style="font-size: 130%; ">'.$row->title.'</a>';
+					echo '<a href="'.$row->to().'" style="font-size: 150%; ">'.$row->title.'</a>';
 					echo '<div class="info">';
 					echo __('tinyissue.created_by'); 
 					echo '&nbsp;&nbsp;<strong>'.$row->user->firstname . ' ' . $row->user->lastname.'</strong>';
@@ -125,7 +126,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 						echo '</strong> ';
 						echo Time::age(strtotime($row->updated_at));
 					} 
-					if (substr($row->start_at, 0, 10) > date("Y-m-d")) { echo ' <span style="background-color: yellow;">'.__('tinyissue.issue_start_at').' '.substr($row->start_at, 0, 10).'</span>'; }
+					if (substr($row->start_at, 0, 10) > date("Y-m-d")) { echo ' <span style="color: black; background-color: yellow;">'.__('tinyissue.issue_start_at').' '.substr($row->start_at, 0, 10).'</span>'; }
 					if($row->assigned_to != 0) {
 						echo ' - '.__('tinyissue.assigned_to'); 
 						echo '&nbsp;&nbsp;<strong>'.((isset($row->assigned->firstname)) ? $row->assigned->firstname : '') . ' ' . ((isset($row->assigned->lastname)) ? $row->assigned->lastname : '').'</strong>';
