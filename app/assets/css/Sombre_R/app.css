@@ -729,6 +729,7 @@ div.stat_form {
 	display: table-column;
 	min-height: 1000px;
 	height: 100%;
+	padding-bottom: 25px;
 }
 #sidebar .inside{
 		 

@@ -65,6 +65,7 @@ return array(
 	'delete_project_confirm' => 'Êtes-vous sûr de vouloir supprimer ce projet ? Vous ne pourrez pas faire marche arrière !',
 	'delete_user_confirm' => 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
 	'delete' => 'Supprimer ',
+	'delete_issue_confirm' => 'Êtes-vous sûr de vouloir supprimer cet billet ?',
 	'duration' => 'Temps accordé',
 	'edit_issue' => 'Modifier le billet',
 	'edit_tag' => 'Modifier une étiquette',

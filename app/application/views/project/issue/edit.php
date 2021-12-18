@@ -149,7 +149,7 @@ if (count($active_projects)>1 && $issue->closed_by == 0 ) {
 ?>
 </select>
 &nbsp;&nbsp;&nbsp;
-<input type="submit" value="<?php echo __('tinyissue.selected_to_project'); ?>" style="color: navy; padding: 3px 10px; border:none;" />
+<input type="submit" value="<?php echo __('tinyissue.selected_to_project'); ?>" style="font-weight:normal; padding: 6px 12px; border:none;" />
 <input type="hidden" name="projetOld" value="<?php echo Project::current()->id; ?>" />
 <input type="hidden" name="ticketNum" value="<?php echo $issue->id; ?>" />
 <input type="hidden" name="ticketAct" value="changeProject" />
@@ -157,6 +157,12 @@ if (count($active_projects)>1 && $issue->closed_by == 0 ) {
 </form>
 
 </div>
+<hr style="width: 80%; margin-top: 25px; margin-bottom: 50px;" />
+<p style="text-align: center;">
+<input type="submit" value="<?php echo __('tinyissue.delete').' << '.$issue->title; ?> >>" onclick="if (confirm('<?php echo __('tinyissue.delete_issue_confirm');  ?>')) { supprimerIssue(<?php echo $issue->id; ?>);}" style="background-color: red; border-color: black;" />
+</p>
+<input type="hidden" name="ticketNum" value="<?php echo $issue->id; ?>" />
+<br />
 <hr style="width: 80%; margin-top: 25px; margin-bottom: 50px;" />
 <?php
 }
