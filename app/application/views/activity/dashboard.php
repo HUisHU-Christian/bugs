@@ -15,8 +15,7 @@
 		}
 		asort($SansAccent);
 	}
-
-	if (count($SansAccent) == 0) {
+	if (count($SansAccent) == 0 && Auth::user()->role_id == 4) {
 		$prefixe = "../";
 		$Lng = require_once($prefixe."app/application/language/en/install.php"); 
 		if ( file_exists($prefixe."app/application/language/".\Auth::user()->language."/install.php") && \Auth::user()->language != 'en') {
@@ -64,6 +63,7 @@ setTimeout(function() { showckeditor ('body', 0);} , 567);
 </script>
 <?php
 	} else {
+		
 		echo '<h3>'.__('tinyissue.dashboard').'<span>'.__('tinyissue.dashboard_description').'</span></h3>';
 
 		echo '<div class="pad">';
