@@ -154,22 +154,19 @@ class URL {
 	 * @param  array   $parameters
 	 * @return string
 	 */
-	public static function to_action($action, $parameters = array())
-	{
+	public static function to_action($action, $parameters = array()) {
 		// This allows us to use true reverse routing to controllers, since
 		// URIs may be setup to handle the action that do not follow the
 		// typical Laravel controller URI conventions.
 		$route = Router::uses($action);
 
-		if ( ! is_null($route))
-		{
+		if ( ! is_null($route)) {
 			return static::explicit($route, $action, $parameters);
 		}
 		// If no route was found that handled the given action, we'll just
 		// generate the URL using the typical controller routing setup
 		// for URIs and turn SSL to false by default.
-		else
-		{
+		else {
 			return static::convention($action, $parameters);
 		}
 	}
@@ -182,8 +179,7 @@ class URL {
 	 * @param  array   $parameters
 	 * @return string
 	 */
-	protected static function explicit($route, $action, $parameters)
-	{
+	protected static function explicit($route, $action, $parameters) {
 		$https = array_get(current($route), 'https', null);
 
 		return static::to(static::transpose(key($route), $parameters), $https);
@@ -196,8 +192,7 @@ class URL {
 	 * @param  array   $parameters
 	 * @return string
 	 */
-	protected static function convention($action, $parameters)
-	{
+	protected static function convention($action, $parameters) {
 		list($bundle, $action) = Bundle::parse($action);
 
 		$bundle = Bundle::get($bundle);
@@ -226,15 +221,13 @@ class URL {
 	 * @param  bool    $https
 	 * @return string
 	 */
-	public static function to_asset($url, $https = null)
-	{
+	public static function to_asset($url, $https = null) {
 		if (static::valid($url)) return $url;
 
 		// If a base asset URL is defined in the configuration, use that and don't
 		// try and change the HTTP protocol. This allows the delivery of assets
 		// through a different server or third-party content delivery network.
-		if ($root = Config::get('application.asset_url', false))
-		{
+		if ($root = Config::get('application.asset_url', false)) {
 			return rtrim($root, '/').'/'.ltrim($url, '/');
 		}
 
@@ -243,11 +236,9 @@ class URL {
 		// Since assets are not served by Laravel, we do not need to come through
 		// the front controller. So, we'll remove the application index specified
 		// in the application config from the generated URL.
-		if (($index = Config::get('application.index')) !== '')
-		{
+		if (($index = Config::get('application.index')) !== '') {
 			$url = str_replace($index.'/', '', $url);
 		}
-
 		return $url;
 	}
 
@@ -266,10 +257,8 @@ class URL {
 	 * @param  array   $parameters
 	 * @return string
 	 */
-	public static function to_route($name, $parameters = array())
-	{
-		if (is_null($route = Routing\Router::find($name)))
-		{
+	public static function to_route($name, $parameters = array()) {
+		if (is_null($route = Routing\Router::find($name))) {
 			throw new \Exception("Error creating URL for undefined route [$name].");
 		}
 
@@ -290,13 +279,11 @@ class URL {
 	 * @param  array   $parameters
 	 * @return string
 	 */
-	public static function transpose($uri, $parameters)
-	{
+	public static function transpose($uri, $parameters) {
 		// Spin through each route parameter and replace the route wildcard segment
 		// with the corresponding parameter passed to the method. Afterwards, we'll
 		// replace all of the remaining optional URI segments.
-		foreach ((array) $parameters as $parameter)
-		{
+		foreach ((array) $parameters as $parameter) {
 			if ( ! is_null($parameter))
 			{
 				$uri = preg_replace('/\(.+?\)/', $parameter, $uri, 1);
@@ -317,8 +304,7 @@ class URL {
 	 * @param  string  $url
 	 * @return bool
 	 */
-	public static function valid($url)
-	{
+	public static function valid($url) {
 		return filter_var($url, FILTER_VALIDATE_URL) !== false;
 	}
 
