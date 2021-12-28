@@ -124,14 +124,13 @@ class Asset_Container {
 		if ( ! array_key_exists('media', $attributes)) {
 			$attributes['media'] = 'all';
 		}
-		$posiSource = strrpos($source, "/") + 1;
-		$cetteSource = substr($source, $posiSource);
-		$ceRep = substr($source, 0, strlen($source)-strlen($cetteSource));
+		$cetteSource = substr($source, strrpos($source, "/") + 1);
 		if (in_array($cetteSource, array("app.css", "config.css", "project.css"))) {
+			$ceRep = substr($source, 0, strpos($source, "css")+4);
 			$repCSS = \User::pref("template");
-			if (!file_exists($ceRep."".$repCSS."/".$cetteSource)) { $repCSS = ucfirst(\User::pref("template")); }
-			if (!file_exists($ceRep."".$repCSS."/".$cetteSource)) { $repCSS = "Default"; }
-			$source = $ceRep."".$repCSS."/".$cetteSource;
+			if (!file_exists("../".$ceRep.$repCSS."/".$cetteSource)) { $repCSS = ucfirst(\User::pref("template")); }
+			if (!file_exists("../".$ceRep.$repCSS."/".$cetteSource)) { $repCSS = "Default"; }
+			$source = $ceRep.$repCSS."/".$cetteSource;
 		}  
 		$this->register('style', $name, $source, $dependencies, $attributes);
 
