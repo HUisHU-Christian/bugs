@@ -94,6 +94,25 @@ h1{padding:1em 0 0; color:#F8E71C}
   font-family: Arial, sans-serif;
   line-height: 18px;
 }
+
+input.update {
+	background-color: #030; 
+	border-color: gray; 
+	border-width: 2px; 
+	border-style: solid;
+	border-radius: 4px;
+	color: white; 
+	font-weight: bold; 
+	font-size: 120%;
+	margin-top: 25px;
+	padding: 5px 20px; 
+}
+
+input.update:hover {
+	background-color: #0C0; 
+	color: black; 
+}
+
 .button.danger,
 .alert-message.danger,
 .button.error,
