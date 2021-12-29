@@ -88,7 +88,7 @@
 			$prem = "";
 			foreach ($diff as $nom) { 
 				$prem = ($prem == '') ? $nom : $prem; 
-				echo '<form method="POST" id="form_MAJsql_'.$compte.'"><input type="submit" name="MAJsql" value="'.$nom.'" class="update" /><br />'; 
+				echo '<form method="POST" id="form_MAJsql_'.$compte.'"><input type="submit" name="MAJsql" value="'.$nom.'" class="update" /></form><br />'; 
 			}
 			echo '<form method="POST" id="form_MAJsql">';
 			echo '<input type="hidden" name="MAJsql" id="input_MAJsql" value="'.$prem.'" />';
