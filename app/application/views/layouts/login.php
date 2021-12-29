@@ -93,7 +93,7 @@
 			echo '<form method="POST" id="form_MAJsql">';
 			echo '<input type="hidden" name="MAJsql" id="input_MAJsql" value="'.$prem.'" />';
 			echo '</form>';
-//			echo '<script>document.getElementById(\'form_MAJsql\').submit();</script>';
+			echo '<script>document.getElementById(\'form_MAJsql\').submit();</script>';
 		} 
 ?>
 	</div>
