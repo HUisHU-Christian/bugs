@@ -36,6 +36,11 @@
 		<div id="login">
 
 			<h1><span id="span_Welcome"><?php echo (isset($Welcome[$lng])) ? $Welcome[$lng] : $Welcome["en"]; ?></span><br><img src="<?php echo URL::to_asset('app/assets/images/layout/tinyissue.svg');?>" alt="<?php echo Config::get('application.my_bugs_app.name'); ?>" style="width:350px;;"></h1>
+<?php
+	$LngSRV = array("Database_Update_ok" => "Baboom", "Database_Update_need"=> "Besoin de mise à jour");
+	$diff = \Administration::VerifDataBase();
+	if (count($diff) == 0) { 
+?>
 			<form method="post">
 				<table class="form" >
 					<tr>
@@ -76,6 +81,17 @@
 			?>
 		</select>
 		</div>
+<?php
+		} else { 
+			echo '<h4 style="color: red; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>';
+			$prem = "";
+			foreach ($diff as $nom) { $prem = ($prem == '') ? $nom : $prem; echo '<span id="span_ajour_'.$nom.'">- <a href="javascript: DatabaseAjour(\''.$nom.'\');">'.$nom.'</a><br /></span>'; }
+			echo '<form method="POST" id="form_MAJsql">';
+			echo '<input type="hidden" name="MAJsql" value="'.$prem.'" />';
+			echo '</form>';
+			echo '<script>document.getElementById(\'form_MAJsql\').submit();</script>';
+		} 
+?>
 	</div>
 </body>
 
