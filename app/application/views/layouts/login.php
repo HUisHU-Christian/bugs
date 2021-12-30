@@ -86,14 +86,15 @@
 			echo '<h4 style="color: red; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>';
 			$compte = 0;
 			$prem = "";
-			foreach ($diff as $nom) { 
-				$prem = ($prem == '') ? $nom : $prem; 
+			foreach ($diff as $nom) {
+				if (trim($nom) == '') { continue; } 
+				$prem = ($prem == '' && trim($nom) != '') ? $nom : $prem; 
 				echo '<form method="POST" id="form_MAJsql_'.$compte.'"><input type="submit" name="MAJsql" value="'.$nom.'" class="update" /></form><br />'; 
 			}
 			echo '<form method="POST" id="form_MAJsql">';
 			echo '<input type="hidden" name="MAJsql" id="input_MAJsql" value="'.$prem.'" />';
 			echo '</form>';
-			echo '<script>document.getElementById(\'form_MAJsql\').submit();</script>';
+//			echo '<script>document.getElementById(\'form_MAJsql\').submit();</script>';
 		} 
 ?>
 	</div>
