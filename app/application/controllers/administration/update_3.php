@@ -20,6 +20,14 @@
 						$rendu = abs($rendu -1);
 					}
 				}
+				foreach ($prevSQL as $fichier) {
+					\DB::table('update_history')->insert(array(
+						'Footprint'=>'Database update via admin',
+						'Description'=>$fichier, 
+						'DteRelease'=>date("Y-m-d H:i:s"), 
+						'DteInstall'=>date("Y-m-d H:i:s")
+					));
+				}
 			}
 			echo '<br /><br />';
 			echo '<h3><a href="../">'.$MyLng['ResultData_1'].'</a></h3>';
