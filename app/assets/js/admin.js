@@ -150,10 +150,10 @@
 	}
 	
 	function DatabaseAjour(fichier) {
-		$.post(siteurl + 'administration/AjourDataBase', {
+		$.post(siteurl + 'ajax/administration/AjourDataBase', {
 			fichier : fichier
 		}, function(data){
-			document.getElementById('span_ajour_' + $nom).innerHTML = "";
+			document.getElementById('span_ajour_' + fichier).innerHTML = "";
 		});
 	}
 

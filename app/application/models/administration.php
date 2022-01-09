@@ -9,6 +9,9 @@ class Administration extends Eloquent {
 	}
 	
 	public static function AjourDataBase () {
+		//31 décembre 2021: cette fonction ne sert plus, 
+		//Voir plutôt controllers/ajax/administration.php
+		/*
 		$sql = file_get_contents("../install/".Input::get('fichier'));
 		\DB::query($sql);
 		
@@ -16,6 +19,7 @@ class Administration extends Eloquent {
 		$hist .= ";".Input::get('fichier');
 		file_put_contents('../install/historique.txt', $hist);
 		return true;
+		*/
 	}
 	
 	public static function VerifDataBase () {
@@ -24,8 +28,11 @@ class Administration extends Eloquent {
 			if (substr($val, 0, 7) != 'update_') { unset ($dir[$ind]); } 
 			if (substr($val, -3) != 'sql') { unset ($dir[$ind]); } 
 		}
-		$dbfile = file_get_contents("../install/historique.txt");
-		$dbitem = explode(";", $dbfile);
+		$dbitem = array();
+		$DBitem = \DB::table('update_history')->where('Footprint', '=', 'Database update via admin')->get(array('Description'));
+		foreach ($DBitem as $cetItem) { $dbitem[] = $cetItem->description; }
+//		$dbfile = file_get_contents("../install/historique.txt");
+//		$dbitem = explode(";", $dbfile);
 		return array_diff($dir, $dbitem);
 	}
 

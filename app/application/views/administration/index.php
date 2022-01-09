@@ -21,6 +21,22 @@
 	foreach ($Def as $ind => $val) {
 		$Conf[$ind] = isset($Conf[$ind]) ? $Conf[$ind] : $val;
 	}
+	
+	//Un ajout du 31 décembre 2021 qui devra être supprimé autour du mois de juin 2022
+	$hist = file_get_contents('../install/historique.txt');
+	$jour = explode(";", $hist);
+	foreach ($jour as $fichier) {
+		if (\DB::table('update_history')->where('Description', 'LIKE', '%'.$fichier.'%')->count() == 0) {
+			\DB::table('update_history')->insert(array(
+				'Footprint'=>'Database update via admin',
+				'Description'=>$fichier, 
+				'DteRelease'=>date("Y-m-d H:i:s"), 
+				'DteInstall'=>date("Y-m-d H:i:s")
+			));
+		}
+	}
+
+	//Fin de l'ajout du 31 décembre 2021
 ?>
 
 <div class="pad">
