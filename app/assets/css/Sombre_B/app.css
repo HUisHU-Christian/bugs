@@ -709,10 +709,11 @@ div.stat_form {
 }
 #header .nav-right a{
 	background: url('images/icon-empty.png') no-repeat;
-	padding-left: 21px;
 }
 #header .nav-right .logout a{
 	background: url('images/icon-logout.png') no-repeat;
+	vertical-align: middle;
+	padding-left: 21px;
 }
 #header .nav-right .logout a:hover{
 	background: url('images/icon-logout_active.png') no-repeat;
