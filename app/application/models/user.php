@@ -327,7 +327,7 @@ class User extends Eloquent {
 
 		
 		//Attribution d'un premier projet à ce nouvel usager
-		$NewUser = \User::where('id', '>', 1)->order_by('id','DESC')->get(array('id'));
+		$NewUser = \User::where('email', '=', $info['email'])->where('firstname', '=', $info['firstname'])->where('lastname', '=', $info['lastname'])->get(array('id'));
 		$ID = $NewUser[0]->id;
 
 		//Attribution des rôles de cet usager dans les différents projets actifs de l'administrateur qui l'inscrit
@@ -352,7 +352,21 @@ class User extends Eloquent {
 			'ProjectID' => 0, 
 			'IssueID' => 0, 
 			'SkipUser' => false,
-			'Type' => 'User', 
+			'Type' => 'Admin', 
+			'user' => $info['email'],
+			'contenu' => array('useradded','static:'.$MotPasse),
+			'src' => array('email', 'value')
+			),
+			$ID, 
+			$info['language']
+		);
+		
+		//A copy email to the admin
+		\Mail::letMailIt(array(
+			'ProjectID' => 0, 
+			'IssueID' => 0, 
+			'SkipUser' => false,
+			'Type' => 'Admin', 
 			'user' => $info['email'],
 			'contenu' => array('useradded','static:'.$MotPasse),
 			'src' => array('email', 'value')
