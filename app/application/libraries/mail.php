@@ -35,7 +35,7 @@ class Mail {
 		if ($detail['Type'] == 'User') {
 			$resu = \DB::table('users')->where('email', '=', $UserID)->get();
 		} else {
-			$UserID = $UserID ?? (is_array($User) ? $User[0] : $User) ?? \Auth::user()->id;
+			$UserID = $UserID ?? (is_array($User) ? $User[0] : $User);
 			$resu = \DB::table('users')->where('id', '=', $UserID)->get();
 		}
 		$QuelUser = $resu[0];
