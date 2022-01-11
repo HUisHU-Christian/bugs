@@ -352,12 +352,12 @@ class User extends Eloquent {
 			'ProjectID' => 0, 
 			'IssueID' => 0, 
 			'SkipUser' => false,
-			'Type' => 'Admin', 
-			'user' => $info['email'],
+			'Type' => 'User', 
+			'user' => $ID,
 			'contenu' => array('useradded','static:'.$MotPasse),
 			'src' => array('email', 'value')
 			),
-			$ID, 
+			$info['email'], 
 			$info['language']
 		);
 		
@@ -366,12 +366,12 @@ class User extends Eloquent {
 			'ProjectID' => 0, 
 			'IssueID' => 0, 
 			'SkipUser' => false,
-			'Type' => 'Admin', 
-			'user' => $info['email'],
+			'Type' => 'User', 
+			'user' => \Auth::user()->id,
 			'contenu' => array('useradded','static:'.$MotPasse),
 			'src' => array('email', 'value')
 			),
-			\Auth::user()->id, 
+			\Auth::user()->email, 
 			\Auth::user()->language
 		);
 
