@@ -30,17 +30,8 @@ class Ajax_Administration_Controller extends Base_Controller {
 	}
 
 	public function post_AjourDataBase() {
-		$sql = file_get_contents("../install/".Input::get('fichier'));
-		\DB::table('update_history')->insert(array(
-			'Footprint'=>'Database update via admin',
-			'Description'=>Input::get('fichier'), 
-			'DteRelease'=>date("Y-m-d H:i:s"), 
-			'DteInstall'=>date("Y-m-d H:i:s")
-		));
-		\DB::query($sql);
-//		$hist = file_get_contents('../install/historique.txt');
-//		$hist .= ";".Input::get('fichier');
-//		file_put_contents('../install/historique.txt', $hist);
+		$_GET["MAJsql"] = Input::get('MAJsql');
+		Administration::AjourStructureBase("admin");
 		return true;
 	}
 
