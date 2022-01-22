@@ -110,6 +110,10 @@ class Ajax_Project_Controller extends Base_Controller {
 		return $retour.' car nous avons reçu : '.Input::get('quoi');
 	}
 
+	public function post_issue_assign() {
+		Project\Issue::find(Input::get('issue_id'))->reassign(Input::get('user_id'));
+	}
+
 	public function post_issueChgListMbre() {
 		$membres = "";
 		$requRESP  = "SELECT USR.id, USR.firstname, USR.lastname, CONCAT(USR.firstname, ' ', UPPER(USR.lastname)) AS NM, PRO.default_assignee AS Deft ";
@@ -127,8 +131,8 @@ class Ajax_Project_Controller extends Base_Controller {
 		return $membres;
 	}
 
-	public function post_issue_assign() {
-		Project\Issue::find(Input::get('issue_id'))->reassign(Input::get('user_id'));
+	public function post_issueDelete() {
+		DB::table('projects_issues')->delete(Input::get('issue_id'));
 	}
 
 	//Patrick 25 mars 2017

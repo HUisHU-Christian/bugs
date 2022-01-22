@@ -94,7 +94,7 @@
 					if (count($roles) == 0) { 
 						continue; 
 					} else {
-						echo '<tr style="background-color: #'.$coul[$rang].'">';
+						echo '<tr style="background-color: #'.$coul[$rang].'; color: black;">';
 						echo '<td>';
 						echo $row->name;
 						echo '</td>';

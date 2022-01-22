@@ -2,6 +2,14 @@
 	include "application/language/all.php";
 	$lng = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
 	if (file_exists("../install/config-setup.php")) { unlink ("../install/config-setup.php"); }
+
+	//Auto-update the database if conditions are fullfilled
+	if (isset($_SERVER ["REDIRECT_SCRIPT_URL"]) && isset($_GET["MAJsql"])) {
+		if (substr($_SERVER ["REDIRECT_SCRIPT_URL"], 0, -5) == substr($_SERVER["PHP_SELF"], 0, -9)  && substr($_SERVER ["REDIRECT_SCRIPT_URL"], -5) == 'login' && trim($_GET["MAJsql"]) != '' && substr($_GET["MAJsql"], 0, 7) == 'update_' && substr($_GET["MAJsql"], -4) == '.sql') {
+			\Administration::AjourStructureBase("login");
+		}
+	}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,6 +44,11 @@
 		<div id="login">
 
 			<h1><span id="span_Welcome"><?php echo (isset($Welcome[$lng])) ? $Welcome[$lng] : $Welcome["en"]; ?></span><br><img src="<?php echo URL::to_asset('app/assets/images/layout/tinyissue.svg');?>" alt="<?php echo Config::get('application.my_bugs_app.name'); ?>" style="width:350px;;"></h1>
+<?php
+	$LngSRV = array("Database_Update_ok" => "Base de données vérifiée.", "Database_Update_need"=> "Besoin de mise à jour");
+	$diff = \Administration::VerifDataBase();
+	if (count($diff) == 0) { 
+?>
 			<form method="post">
 				<table class="form" >
 					<tr>
@@ -76,6 +89,22 @@
 			?>
 		</select>
 		</div>
+<?php
+		} else { 
+			echo '<h4 style="color: yellow; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>
+			';
+			$compte = 0;
+			$prem = "";
+			foreach ($diff as $nom) {
+				if (trim($nom) == '') { continue; } 
+				$prem = ($prem == '' && trim($nom) != '') ? $nom : $prem; 
+				echo '<form method="GET" id="form_MAJsql_'.$compte++.'"><input type="submit" name="MAJsql" value="'.$nom.'" class="update" /></form><br />
+				'; 
+			}
+			echo '<form method="GET" id="form_MAJsql_'.$compte.'"><input type="submit" name="MAJsql" id="input_MAJsql_'.$compte.'" value="'.$prem.'" class="update" /></form><br />';
+			echo '<script>document.getElementById(\'input_MAJsql_'.$compte.'\').click();</script>';
+		} 
+?>
 	</div>
 </body>
 

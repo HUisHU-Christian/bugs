@@ -132,7 +132,7 @@
 					<br /><br />
 					<br /><br />
 					<br /><br />
-					<input type="submit" name="delete" value="<?php echo __('tinyissue.delete').' << '.Project::current()->name; ?> >>" onclick="return confirm('<?php echo __('tinyissue.delete_project_confirm'); ?>');" style="background-color: red; border-color: black;"/>
+					<input type="submit" name="delete" value="<?php echo __('tinyissue.delete').' << '.Project::current()->name; ?> >>" onclick="return confirm('<?php echo __('tinyissue.delete_project_confirm'); ?>');" style="background-color: red; border-color: black;" />
 				</td>
 			</tr>
 		</table>

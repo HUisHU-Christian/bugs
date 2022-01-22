@@ -685,14 +685,15 @@ div.stat_form {
 	color: yellow;
 }
 #header .nav-right a{
-	background: url('../../images/layout/icon-empty.png') no-repeat;
-	padding-left: 21px;
+	background: url('images/icon-empty.png') no-repeat;
 }
 #header .nav-right .logout a{
-	background: url('../../images/layout/icon-logout.png') no-repeat;
+	background: url('images/icon-logout.png') no-repeat;
+	vertical-align: middle;
+	padding-left: 21px;
 }
 #header .nav-right .logout a:hover{
-	background: url('../../images/layout/icon-logout_active.png') no-repeat;
+	background: url('images/icon-logout_active.png') no-repeat;
 }
 
 
@@ -706,6 +707,7 @@ div.stat_form {
 	display: table-column;
 	min-height: 1000px;
 	height: 100%;
+	padding-bottom: 25px;
 }
 #sidebar .inside{
 		 

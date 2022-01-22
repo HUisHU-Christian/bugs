@@ -138,7 +138,7 @@ code{
   font-size: 9.75px;
   font-weight: bold;
   color: #ffffff;
-  text-transform: uppercase #FFFFFF-space: nowrap;
+  text-transform: uppercase;
   background-color: #4f4f4f;
   border-radius: 3px;
   border-color: #0C0;
@@ -709,10 +709,11 @@ div.stat_form {
 }
 #header .nav-right a{
 	background: url('images/icon-empty.png') no-repeat;
-	padding-left: 21px;
 }
 #header .nav-right .logout a{
 	background: url('images/icon-logout.png') no-repeat;
+	vertical-align: middle;
+	padding-left: 21px;
 }
 #header .nav-right .logout a:hover{
 	background: url('images/icon-logout_active.png') no-repeat;
@@ -729,6 +730,7 @@ div.stat_form {
 	display: table-column;
 	min-height: 1000px;
 	height: 100%;
+	padding-bottom: 25px;
 }
 #sidebar .inside{
 		 
