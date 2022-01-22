@@ -149,11 +149,12 @@
 		});
 	}
 	
-	function DatabaseAjour(fichier) {
-		$.post(siteurl + 'administration/AjourDataBase', {
-			fichier : fichier
+	function DatabaseAjour (valeur) {
+		$.post(siteurl + 'ajax/administration/AjourDataBase', {
+			MAJsql  : valeur,
+			comment : "admin"
 		}, function(data){
-			document.getElementById('span_ajour_' + $nom).innerHTML = "";
+			document.getElementById('span_ajour_' + valeur).innerHTML = "";
 		});
 	}
 

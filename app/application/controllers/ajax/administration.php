@@ -29,6 +29,13 @@ class Ajax_Administration_Controller extends Base_Controller {
 		$this->Langue = $LngSRV;
 	}
 
+	public function post_AjourDataBase() {
+		$_GET["MAJsql"] = Input::get('MAJsql');
+		Administration::AjourStructureBase("admin");
+		return true;
+	}
+
+
 	/**
 	* Backup the database into temp directory  
 	* @return text			message | count

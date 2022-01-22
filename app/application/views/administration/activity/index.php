@@ -1,12 +1,9 @@
 <h3>
-	<?php 
-		echo __('tinyissue.activities') 
-	?>
+	<?php echo __('tinyissue.activities') ?>
 </h3>
 
 <div class="pad">
-
-	<?php 
+<?php 
 	$lng = scandir('application/language');
 	$PasCeuxCi = array('.','..','all.php');
 	$lang = array();
@@ -26,17 +23,10 @@
 			echo '</tr>';
 		} 
 	echo '</table>';
-	?>
-	
+?>
 	<br />
 	
 	<form method="to" action="<?php echo URL::to('activity/new'); ?>">
-<!-- 	
-		<input type="submit" value="<?php echo __('tinyissue.create_activity'); ?>" class="button primary" />
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		&nbsp;&nbsp;&nbsp;&nbsp;
- -->
 		<input type="button" value="<?php echo __('tinyissue.cancel'); ?>" class="button primary" onclick="document.location.href='<?php echo \Config::get('application.url'); ?>';" />
 	</form>
-
 </div>
