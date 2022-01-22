@@ -126,7 +126,7 @@ class User extends Eloquent {
 				$dashboard[$project->id][] = $activity;
 
 				switch($activity->type_id) {
-					case 2:
+					case 2:	//Comentaire à un billet
 						if(!isset($issues[$activity->item_id])) {
 							$issues[$activity->item_id] = Project\Issue::find($activity->item_id);
 						}
@@ -138,7 +138,7 @@ class User extends Eloquent {
 						}
 						break;
 
-					case 5:
+					case 5:  //Réassignation de billet
 						if(!isset($issues[$activity->item_id])) {
 							$issues[$activity->item_id] = Project\Issue::find($activity->item_id);
 						}
