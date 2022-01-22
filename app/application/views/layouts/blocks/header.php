@@ -81,9 +81,11 @@
 			<nav class="nav-right">
 				<ul>
 				<?php
-					echo __('tinyissue.welcome').', <a href="'.URL::to('user/settings').'" class="user">'.Auth::user()->firstname.'</a></li>';
+					echo __('tinyissue.welcome').' <a href="'.URL::to('user/settings').'" class="user">'.Auth::user()->firstname.'</a></li>';
 					if (\Role\Permission::inherits_permission(array('reports-view','reports-create','project-create'))) {
-						echo '<li class="reports '.(($active == 'repprts') ? 'active' : '').'">';
+						echo '<li>';
+						echo '&nbsp;&nbsp;&nbsp;&nbsp;';
+						echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 						echo '<a href="'.URL::to('projects/reports').'" ">'.__('tinyissue.report').'</a>';
 						echo '</li>';
 					}
