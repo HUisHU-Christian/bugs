@@ -24,8 +24,9 @@ class Administration extends Eloquent {
 	
 	public static function AjourStructureBase ($comment = "admin") {
 		if (file_exists("../install/".$_GET["MAJsql"])) {
-			$sql = file_get_contents("../install/".$_GET["MAJsql"], $flags = null, $context = null, $offset = null, $maxlen = null);
-			$commande = explode(";", $sql);
+			$sql = file_get_contents("../install/".$_GET["MAJsql"]);
+			$dte = filemtime("../install/".$_GET["MAJsql"]);
+			$commande = explode("\n", $sql);
 			foreach ($commande as $cmd) {
 				if (trim($cmd) == "") { continue; }
 				$passe = false;
@@ -36,11 +37,13 @@ class Administration extends Eloquent {
 					foreach ($struc as $champ) {
 						if (trim($champ->field) == trim($field)) { $passe = true; break; }
 					}
+				} elseif (strstr($cmd, "SERT INTO") > 0 && strstr($cmd, "on duplicate") == 0) {
+					$cmd = substr($cmd, 0, -1)." on duplicate key update id = id;";
 				}
 				if ($passe) { continue; }
 				\DB::query($cmd);
 			}
-			\DB::table('update_history')->insert(array('Footprint' => 'Database update via '.$comment.'', 'Description' => $_GET["MAJsql"], 'DteRelease' => date("Y-m-d H:i:s"), 'DteInstall' => date("Y-m-d H:i:s")));
+			\DB::table('update_history')->insert(array('Footprint' => 'Database update via '.$comment.'', 'Description' => $_GET["MAJsql"], 'DteRelease' => date("Y-m-d", $dte), 'DteInstall' => date("Y-m-d H:i:s")));
 			unset($_GET["MAJsql"]);
 		}
 	}
