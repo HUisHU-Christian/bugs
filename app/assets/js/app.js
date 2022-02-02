@@ -206,7 +206,6 @@ function OteTag(Quel) {
 function propose_project_user(user, project_id, cettepage, MonRole) {
 	var n = new Date();
 	var Modif = "false";
-	if (n-d > 3000 ) { Modif = "AddOneTag"; }
 	$.post(siteurl + 'ajax/project/proposeProjectUser', {
 		user		: user,
 		projet 	: project_id,
