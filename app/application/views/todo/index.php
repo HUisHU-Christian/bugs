@@ -40,7 +40,7 @@
 				echo '	</div>';
 				echo '</div>
 				';
-				if (++$rendu > $NbIssues) { break; }
+				if (++$rendu == $NbIssues) { break; }
 			}
 		}
 		echo '</div>';
