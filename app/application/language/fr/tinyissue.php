@@ -318,7 +318,7 @@ return array(
 	'update_tag' => 'Mettre à jour cette étiquette',
 	'update_user_description' => 'Modifier les informations de l`utilisateur',
 	'update_user' => 'Modifier l`utilisateur',
-	'update' => 'Mettre à jour le projet',
+	'update' => 'Appliquer les modifications',
 	'update_my' => 'Mettre mon profil à jour',
 	'update_mypref' => 'Mettre mes préférences à jour',
 	'updating' => 'Mettre à jour',
