@@ -35,7 +35,7 @@ $_GET["status"] = $_GET["status"] ?? 1;
 						if($velocity > 0){ $etcday = ceil($issues / $velocity); }else{ $etcday = $issues / 1; }
 						$etc = date("d-m-Y",strtotime("+".$etcday." days"));
 						echo '<li style="position: relative;">';
-							echo '<a href="'.$row->to().'">'.$row->name.'</a><br />';
+							echo '<a href="'.$row->to().'" style="font-size: 150%;">'.$row->name.'</a><br />';
 							echo $issues == 1 ? '1 '. __('tinyissue.open_issue') : $issues . ' '. __('tinyissue.open_issues');
 							echo '&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;'; 
 							echo $closedissues == 1 ? '1 '. __('tinyissue.closed_issue') : $closedissues . ' '. __('tinyissue.closed_issues'); 
@@ -59,7 +59,7 @@ $_GET["status"] = $_GET["status"] ?? 1;
 					echo '<li>';
 					if(Auth::user()->permission('project-create') && @$_GET["status"] == 1) { 
 						echo (count($projects) == 0) ? __('tinyissue.you_do_not_have_any_projects') : '<br />';
-						echo '<a href="'.URL::to('projects/new').'">';
+						echo '<a href="'.URL::to('projects/new').'" style="font-size: 150%;">';
 						echo __('tinyissue.create_project'); 
 						echo '</a>';
 					}

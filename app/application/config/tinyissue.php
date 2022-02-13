@@ -1,7 +1,6 @@
 <?php
-//Petite ligne pour forcer une mise à jour
 return array(
-	'release_date' => '28-10-2021',
+	'release_date' => '13-02-2022',
 	'version' => '1.8',
-	'release' => '7o'
+	'release' => '7bi'
 );

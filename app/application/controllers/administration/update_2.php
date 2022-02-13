@@ -3,7 +3,7 @@
 		$CoulFond = array("FFFFFF", "CCCCCC");
 		$hist = file_exists('../install/historique.txt') ?  file_get_contents('../install/historique.txt') : '';
 		$prevSQL = explode(";", $hist);
-		$prevSQL = versionsSQL($prevSQL);
+		$prevSQL = \Administration::versionsSQL($prevSQL);
 		$rendu = 0;
 		$renduFichier = 0;
 

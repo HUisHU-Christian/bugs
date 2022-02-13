@@ -8,8 +8,7 @@ class Tag extends Eloquent {
 	/**
 	* @return Collection
 	*/
-	public function issues()
-	{
+	public function issues() {
 		return $this->has_many_and_belongs_to('\Project\Issue', 'projects_issues_tags', 'tag_id', 'issue_id');
 	}
 	

@@ -10,9 +10,10 @@
 	////1. Create new model in /app/application/models/reports/*
 	//////How to name the model:  type_spreadout.php
 	//////type: tags, issues, projects, users
-	//////spreadout:  all, active, inactive, progress
+	//////spreadout:  all, active, activeBill, inactive, progress
 	////2. Add new line in /app/application/language/en/reports.php and other languages
 	////3. Add div below in this actual file and modify the link's value in the javascript "onclick" function 
+	////4. Assurez-vous que le descriptif court apparaisse dans le fichier cité en 2. 
 	if(@$Rapport_Prod != '') {
 		$NomSimple = substr($Rapport_Prod, strrpos($Rapport_Prod, "/")+1);
 		$NomSimple = substr($NomSimple, 0, -4);
@@ -57,7 +58,8 @@
 	</select>
 	</form>
 	</div>
-	
+
+	<!-- Première colonne : Utilisasteurs -->	
 	<div class="stat">
 		<div class="stat_element stat_users">
 			<img src="../app/assets/images/reports/users.png" align="left" />
@@ -67,9 +69,13 @@
 			<img src="../app/assets/images/reports/Stat_users.png" align="left" />
 			<b><?php echo __('tinyissue.reports_allusers');?></b><br />
 			<?php echo __('tinyissue.reports_allusersdesc');?>
-			
 		</div>	
-		<div class="stat_data stat_custom_data" onclick="document.getElementById('input_Couleur').value='dab435'; document.getElementById('div_reportcustom').style.display = 'block'; document.getElementById('div_reporttous').style.display = 'none';" style="margin-top: 150px;">
+		<div class="stat_data stat_users_data" onclick="document.getElementById('input_Couleur').value='efd583'; document.getElementById('input_RapType').value='users_activities'; document.getElementById('form_reports').submit();">
+			<img src="../app/assets/images/reports/Stat_users.png" align="left" />
+			<b><?php echo __('tinyissue.reports_activities');?></b><br />
+			<?php echo __('tinyissue.reports_activitiesdesc');?>
+		</div>	
+		<div class="stat_data stat_custom_data" onclick="document.getElementById('input_Couleur').value='dab435'; document.getElementById('div_reportcustom').style.display = 'block'; document.getElementById('div_reporttous').style.display = 'none';" >
 			<img src="../app/assets/images/reports/Stat_custom.png" align="left" />
 			<b><?php echo __('tinyissue.reports_custom');?></b><br />
 			<?php echo __('tinyissue.reports_customdesc');?>
@@ -77,6 +83,7 @@
 		</div>	
 	</div>
 	
+	<!-- Deuxième colonnes : Projets -->
 	<div class="stat">
 		<div class="stat_element stat_projects">
 			<img src="../app/assets/images/reports/projects.png" align="left" />
@@ -95,8 +102,14 @@
 			<b><?php echo __('tinyissue.reports_allprojects');?></b><br />
 			<?php echo __('tinyissue.reports_actprojectsdesc');?>
 		</div>	
+		<div class="stat_data stat_projects_data" onclick="document.getElementById('input_Couleur').value='79cf9e'; document.getElementById('input_RapType').value='projects_activeBill'; document.getElementById('form_reports').submit();">
+			<img src="../app/assets/images/reports/Stat_projects.png" align="left" />
+			<b><?php echo __('tinyissue.reports_allprojectsbill');?></b><br />
+			<?php echo __('tinyissue.reports_allprojectsbilldesc');?>
+		</div>	
 	</div>
 	
+	<!-- Troisième colonne : Billets -->
 	<div class="stat">
 		<div class="stat_element stat_issues">
 			<img src="../app/assets/images/reports/issues.png" align="left" />
@@ -122,6 +135,7 @@
 		</div>	
 	</div>
 	
+	<!-- Quatrième colonne: Étiquettes -->
 	<div class="stat">
 		<div class="stat_element stat_tags">
 			<img src="../app/assets/images/reports/tags.png" align="left" />
@@ -165,18 +179,21 @@
 				if (isset($Rap[2])) { $Liste[$Rap[0]][$Rap[1]][$Rap[2]] = $LeRap; }
 			}
 		}
+
 		foreach ($Ordre as $col) {
 			echo '<div class="stat">';
 			if (isset($Liste[$col])) {
 				foreach($Liste[$col] as $ligne  => $LesDates) {
 					foreach ($LesDates as $LaDate => $Fichier) {
-						if (isset($Liste[$col][$ligne][$LaDate])) {
+						if (isset($Liste[$col][$ligne][$LaDate]) && isset($rappLng[$ligne])) {
 							echo '<div class="stat_data stat_'.(($ligne == 'customized') ? 'custom' : $col).'_data" onclick="window.open(\'../app/storage/reports/'.$Fichier.'\');" >';
 							echo '<img src="../app/assets/images/upload_type/pdf.png" align="left" />';
 							echo '<span style="font-size: 120%; font-weight: bold;">'.(($ligne == 'customized') ? __('tinyissue.reports_custom') : $rappLng[$col]).'</span><br />';
 							echo $rappLng[$ligne].'<br />';
 							echo substr($LaDate, 0, 4),'-'.substr($LaDate, 4, 2).'-'.substr($LaDate, 6, 2).' '.substr($LaDate, 8, 2).'h'.substr($LaDate, 10, 2).':'.substr($LaDate, 12, 2).'<br />';
 							echo '</div>';
+						} else {
+							echo 'Problème avec '.$ligne.'<br /><br />';
 						}
 					}
 				}

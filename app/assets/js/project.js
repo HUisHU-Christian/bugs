@@ -9,25 +9,6 @@ $(function() {
     	return this.hostname != window.location.hostname;
 	}).attr('target', '_blank');
 
-	/*
-	//Patrick, 7 février 2021
-	//Nous devons nous débarasser de ces références à des outils désuets
-	
-	//Ceci a un impact sur l'affichage et la sélection des étiquettes rattachées à un billet
-	//Aussi sur les étiquettes du billet, en mode « Mofidication du billet »
-
-	/* Uploadify */
-	/*
-	var uploaded_attachments = $('#uploaded-attachments');
-	var upload_token = $('input[name=token]').val();
-	var session = $('input[name=session]').val();
-	var project = $('input[name=project_id]').val();
-	*/
-
-//	$("#upload").uploadify({
-//		return true;
-//	});
-
 	uploaded_attachments.find('.delete').live('click', function(){
 		var attachment = $(this);
 		var id = attachment.attr('rel');

@@ -3,7 +3,17 @@
 CREATE TABLE IF NOT EXISTS `activity` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `description` varchar(255) character set UTF8 default NULL,
+  `DE` VARCHAR(255) character set UTF8 default NULL,
+  `EN` VARCHAR(255) character set UTF8 default NULL,
+  `ES` VARCHAR(255) character set UTF8 default NULL,
+  `FR` VARCHAR(255) character set UTF8 default NULL,
+  `IT` VARCHAR(255) character set UTF8 default NULL,
+  `RU` VARCHAR(255) character set UTF8 default NULL,
+  `ZH_CN` VARCHAR(255) character set UTF8 default NULL,
+  `ZH_TW` VARCHAR(255) character set UTF8 default NULL,
   `activity` varchar(255) character set UTF8 default NULL,
+  `created_at` datetime default NOW(),
+  `updated_at` datetime default NOW(),
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 #--
@@ -31,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `projects` (
 #--
 
 #--#Create Projects Issues Table
-CREATE TABLE `projects_issues` (
+CREATE TABLE IF NOT EXISTS  `projects_issues` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `created_by` bigint(20) NOT NULL DEFAULT '1',
   `closed_by` bigint(20) DEFAULT NULL,
@@ -55,7 +65,7 @@ CREATE TABLE `projects_issues` (
 #--
 
 #--#Create Projects Issues Attachments Table
-CREATE TABLE `projects_issues_attachments` (
+CREATE TABLE IF NOT EXISTS  `projects_issues_attachments` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `issue_id` bigint(20) default NULL,
   `comment_id` bigint(20) default '0',
@@ -77,9 +87,9 @@ CREATE TABLE IF NOT EXISTS `projects_issues_comments` (
   `project_id` bigint(20) default NULL,
   `issue_id` bigint(20) default '0',
   `comment` text character set UTF8,
-  `temps_fait` smallint(4) DEFAULT 0,
-  `temps_fait_deb` time DEFAULT NULL,
-  `temps_fait_fin` time DEFAULT NULL,
+  `temps_fait` smallint(4) DEFAULT 1,
+  `temps_fait_deb` datetime DEFAULT NULL,
+  `temps_fait_fin` datetime DEFAULT NULL,
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
@@ -87,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `projects_issues_comments` (
 #--
 
 #--#Create issue-tag relationship table
-CREATE TABLE `projects_issues_tags` (
+CREATE TABLE IF NOT EXISTS  `projects_issues_tags` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `issue_id` bigint(20) unsigned NOT NULL,
   `tag_id` bigint(20) unsigned NOT NULL,
@@ -99,7 +109,7 @@ CREATE TABLE `projects_issues_tags` (
 #--
 
 #--#Create Projects Links Table
-CREATE TABLE `projects_links` (
+CREATE TABLE IF NOT EXISTS  `projects_links` (
   `id_link` int(11) NOT NULL AUTO_INCREMENT,
   `id_project` int(11) NOT NULL DEFAULT '1',
   `category` enum('dev','git','prod') NOT NULL DEFAULT 'dev',
@@ -162,9 +172,17 @@ CREATE TABLE IF NOT EXISTS `settings` (
 #--
 
 #--#Create tags table
-CREATE TABLE `tags` (
+CREATE TABLE IF NOT EXISTS  `tags` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(255) NOT NULL,
+  `DE` VARCHAR(255) character set UTF8 default NULL,
+  `EN` VARCHAR(255) character set UTF8 default NULL,
+  `ES` VARCHAR(255) character set UTF8 default NULL,
+  `FR` VARCHAR(255) character set UTF8 default NULL,
+  `IT` VARCHAR(255) character set UTF8 default NULL,
+  `RU` VARCHAR(255) character set UTF8 default NULL,
+  `ZH_CN` VARCHAR(255) character set UTF8 default NULL,
+  `ZH_TW` VARCHAR(255) character set UTF8 default NULL,
   `bgcolor` varchar(50) DEFAULT '#330033',
   `ftcolor` varchar(50) DEFAULT '#FFFFFF',
   `created_at` datetime DEFAULT NULL,
@@ -290,33 +308,33 @@ INSERT IGNORE INTO `roles_permissions` (`id`, `role_id`, `permission_id`) VALUES
 #--
 
 #--#Insert Activity Types
-INSERT IGNORE INTO `activity` (`id`, `description`, `activity`)
+INSERT IGNORE INTO `activity` (`id`, `description`, `EN`,`FR`,`activity`)
 VALUES
-	(1,'Opened a new issue','create-issue'),
-	(2,'Commented on a issue','comment'),
-	(3,'Closed an issue','close-issue'),
-	(4,'Reopened an issue','reopen-issue'),
-	(5,'Reassigned an issue','reassign-issue'),
-	(6,'Updated issue tags','update-issue-tags'),
-	(7,'Attached a file to issue','attached-file'),
-	(8,'Move an issue from project A to project B',	'ChangeIssue-project'),
-	(9,'User starts or stop following issue or project', 'Follow'),
-	(10,'Updated an issue', 'IssueEdit'),
-	(11,'Deleted a comment', 'delete_comment'),
-	(12,'Edited a comment','edit_comment' ),
-	(13,'Elapsed time worked on an issue', 'issue_chrono');
+	(1,'Opened a new issue','Opened a new issue','Nouveau billet créé','create-issue'),
+	(2,'Commented on a issue','Commented on a issue','Nouveau commentaire sur un billet','comment'),
+	(3,'Closed an issue','Closed an issue','Billet fermé','close-issue'),
+	(4,'Reopened an issue','Reopened an issue','Billet rouvert','reopen-issue'),
+	(5,'Reassigned an issue','Reassigned an issue','Changement de responsable du billet','reassign-issue'),
+	(6,'Updated issue tags','Updated issue tags','Mise à jour des étiquettes','update-issue-tags'),
+	(7,'Attached a file to issue','Attached a file to issue','Fichier joint au billet','attached-file'),
+	(8,'Move an issue from project A to project B','Move an issue from project A to project B','éplacement d`un billet du projet A vers le projet B',	'ChangeIssue-project'),
+	(9,'User starts or stop following issue or project','User starts or stop following issue or project','Un usager a commencé ou cessé de suivre le billet', 'Follow'),
+	(10,'Updated an issue','Updated an issue','Mise à jour d`un billet', 'IssueEdit'),
+	(11,'Deleted a comment','Deleted a comment','Commentaire supprimé', 'delete_comment'),
+	(12,'Edited a comment','Edited a comment','	Commentaire modifié','edit_comment' ),
+	(13,'Elapsed time worked on an issue','Elapsed time worked on an issue','Temps de travail d`un ouvrier', 'issue_chrono');
 #--
 
 #--#Create default tags : id 10
-INSERT INTO `tags` (`id`, `tag`, `bgcolor`, `ftcolor`, `created_at`, `updated_at`) VALUES
-(1,	'status:open',		'#c43c35',		'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
-(2,	'status:closed',	'#46A546',		'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
-(3,	'type:feature',	'#62cffc',		'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
-(4,	'type:bug',			'#f89406',		'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
-(6,	'resolution:won`t fix','#812323','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
-(7,	'resolution:fixed',	'#048383',	'#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01'),
-(8,	'status:testing',	'#FCC307',		'#FFFFFF',	'2013-11-30 11:23:01',	'2016-11-30 23:11:01'),
-(9,	'status:inProgress','#FF6600',	'#FFFFFF',	'2016-11-10 23:12:01',	'2016-11-10 23:12:01');
+INSERT INTO `tags` (`id`, `tag`, `bgcolor`, `ftcolor`, `created_at`, `updated_at`, `EN`,`FR`,`ES`) VALUES
+(1,	'status:open',				'#c43c35','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','status:open',			'État:ouvert',					'Estado: Aberto'),
+(2,	'status:closed',			'#46A546','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','status:closed',			'État:fermé',					'Estado: Cerrado'),
+(3,	'type:feature',			'#62cffc','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','type:feature',			'Type: développement',		'Tipo: desarollo'),
+(4,	'type:bug',					'#f89406','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','type:bug',				'Type: débogage',				'Tipo: debug'),
+(6,	'resolution:won`t fix',	'#812323','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','resolution:won`t fix','Verdict: impossible :(',	'Deicsion: impossible'),
+(7,	'resolution:fixed',		'#048383','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','resolution:fixed',		'Verdict: Résolu ! :)',		'Decision: Solucionado'),
+(8,	'status:testing',			'#FCC307','#FFFFFF',	'2013-11-30 11:23:01',	'2016-11-30 23:11:01','status:testing',		'État: nous testons',		'Estado: haciendo tests'),
+(9,	'status:inProgress',		'#FF6600','#FFFFFF',	'2016-11-10 23:12:01',	'2016-11-10 23:12:01','status:inProgress',	'État: Progressons',			'Estado: progressamos');
 #--
 
 #--#Import open/closed states
@@ -325,6 +343,33 @@ INSERT INTO projects_issues_tags (issue_id, tag_id, created_at, updated_at)
 	SELECT id as issue_id, IF(status = 1, 1, 2) as tag_id, NOW(), NOW()
 	FROM projects_issues
 );
+
+#--#Database updates
+INSERT INTO `update_history` (`id`, `Footprint`, `Description`, `DteRelease`, `DteInstall`) VALUES
+(1,'-------------------------','Version 1.6.0','2017-05-01',NULL),
+(2,'Database update via admin','update_v1-1_1.sql','2017-05-10',NULL),
+(3,'Database update via admin','update_v1-2_9.sql','2018-06-01',NULL),
+(4,'Database update via admin','update_v1-3_1.sql','2018-07-04',NULL),
+(5,'Database update via admin','update_v1-3_2.sql','2018-07-05',NULL),
+(6,'Database update via login','update_v1-3_3.sql','2018-09-18',NULL),
+(7,'Database update via admin','update_v1-8_3a.sql','2018-10-10',NULL),
+(8,'Database update via admin','update_v1-8_4a.sql','2019-02-14',NULL),
+(9,'Database update via admin','update_v1-8_4b.sql','2019-05-08',NULL),
+(10,'Database update via admin','update_v1-8_4d.sql','2019-07-08',NULL),
+(11,'Database update via admin','update_v1-8_5af.sql','2020-04-01',NULL),
+(12,'Database update via admin','update_v1-8_5t.sql','2020-05-30',NULL),
+(13,'Database update via admin','update_v1-8_6e.sql','2020-08-11',NULL),
+(14,'Database update via admin','update_v1-8_7a.sql','2020-10-12',NULL),
+(15,'Database update via admin','update_v1-8_7ag.sql','2021-04-03',NULL),
+(16,'Database update via admin','update_v1-8_7b.sql','2021-05-04',NULL),
+(17,'Database update via admin','update_v1-8_7c.sql','2021-06-24',NULL),
+(18,'Database update via admin','update_v1-8_7m.sql','2021-07-17',NULL),
+(19,'Database update via admin','update_v1-8_7p.sql','2021-07-20',NULL),
+(20,'Database update via admin','update_v1-8_7r.sql','2021-09-01',NULL),
+(21,'Database update via admin','update_v1-8_7s.sql','2021-10-01',NULL),
+(22,'Database update via admin','update_v1-8_7u.sql','2021-12-31',NULL);
+#--
+
 
 #----- Last line of this file .... Anything bellow this line will be lost. -----
 

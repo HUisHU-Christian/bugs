@@ -5,9 +5,11 @@
 
 <div class="pad">
 
+	<div id="preferences" style="border: none black 2px; padding-right: 100px; width:50%; float:left; ">
+
 	<form method="post" action="">
 
-		<table class="form">
+		<table class="form" style="float: left">
 			<tr>
 				<th><?php echo __('tinyissue.first_name'); ?></th>
 				<td>
@@ -39,7 +41,6 @@
 				<td>	
 					<select name="language">
 					<?php
-						//Language has added in nov 2016
 						$Lng = scandir("application/language/");
 						$Not = array(".", "..", "all.php");
 						foreach ($Lng as $val) { if(!in_array(trim($val), $Not) && is_dir("application/language/".$val)) { echo '<option value="'.$val.'" '; if ($val == Input::old('language',$user->language)) { echo ' selected="selected" '; } echo '>'.$val.'</option>'; } }
@@ -79,6 +80,41 @@
 				</td>
 			</tr>
 		</table>
+	</div>
+
+	<div id="projects_list" class="projectsList_user" style="border: none black 2px; padding-right: 100px; width:40%; float:left; max-height: 600px; overflow-y: auto;">
+		<?php
+			$coul = array('FFFFFF','CCCCCC');
+			$rang = 1;
+			$affiche = __('tinyissue.project_roleuser');
+			$affiche = str_replace('{last}', $user->lastname, $affiche );
+			$affiche = str_replace('{first}', $user->firstname, $affiche);
+			echo '<h3>'.$affiche.'</h3>';
+			$active_projects = Project\User::active_projects();
+			echo '<table width="100%">';
+			foreach($active_projects as $row) {
+				$Proj[$row->to()] = $row->name;
+				$roles = User::myPermissions_onThisProject($row->id);
+				if (count($roles) == 0) { 
+					continue; 
+				} else {
+					$userRole = Project\User::check_role($user->id, $row->id, 0);
+					echo '<tr style="background-color: #'.$coul[$rang].'; color: black;">';
+					echo '<td>';
+					echo $row->name;
+					echo '</td>';
+					echo '<td style="text-align: right; padding-bottom: 5px; padding-top: 7px;">';
+					echo Project\User::list_roles(Auth::user()->id, $row->id, $userRole);
+					echo '</td>';
+					echo '</tr>';
+					$rang = abs($rang-1);
+				}
+			}
+			echo '</table>';
+
+		?>
+	</div>
+
 
 		<?php echo Form::token(); ?>
 	</form>

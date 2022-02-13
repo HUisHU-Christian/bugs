@@ -1,5 +1,7 @@
 <?php
 $active_projects = Project\User::active_projects();
+$MonRole = Project\User::GetRole(Project::current()->id);
+
 if(count($active_projects)>1) {
 ?>
 
@@ -12,17 +14,8 @@ if(count($active_projects)>1) {
 	</button>
 	<div class="div_menuprojetsgauche">
 <?php
-	//Valeurs par défaut
-	$Preferences['orderSidebar'] = $Preferences['orderSidebar'] ?? "asc";
-	$Preferences['numSidebar'] = $Preferences['numSidebar'] ?? 999;
-	
 	//Récupération des préférences dans le dossier personnel de l'usager
-	$Pref = \Auth::user()->attributes;
-	$Prefs = explode(";", $Pref["preferences"]);
-	foreach ($Prefs as $ind => $val) {
-		$ceci = explode("=", $val);
-		if (isset($ceci[1])) { $Preferences[$ceci[0]] = $ceci[1]; }
-	}
+	$Pref = \User::pref();
 
 	//Liste des projets dans un menu déroulant
 	////Collecte des informations
@@ -43,7 +36,7 @@ if(count($active_projects)>1) {
 	////Tri des données du menu déroulant
 	asort($SansAccent);
 
-	////Affichage du menu dans l'espace latéral gauche
+	////Affichage des projets en menu déroulant dans l'espace latéral gauche
 	foreach($SansAccent as $ind => $val) {
 		$selected = (substr($ind, strrpos($ind, "/")+1) == Project::current()->id) ? 'selected' : '';
 		echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'" title="'.$Proj[$ind].'" >'.((strlen($Proj[$ind]) < 30 ) ? $Proj[$ind] : substr($Proj[$ind], 0, 27).' ...').'</a>';
@@ -83,7 +76,10 @@ if(count($active_projects)>1) {
 </ul>
 </div>
 
-<?php if (Auth::user()->role_id != 1) { ?>
+<?php 
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il n'est pas néssaire de changer le calcul du droit ci-bas
+if (Auth::user()->role_id != 1) { ?>
 <div id="sidebar_Users_title" class="sidebarTitles"><?php echo __('tinyissue.assigned_users'); ?></div>
 <div id="sidebar_Users" class="sidebarItem">
 <h2>
@@ -106,23 +102,24 @@ if(count($active_projects)>1) {
 </ul>
 
 <?php if(Auth::user()->permission('project-modify')): ?>
-	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar'); }" />
+	<input type="text" id="add-user-project" placeholder="<?php echo __('tinyissue.assign_a_user');?>" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'sidebar', <?php echo $MonRole; ?>); }" />
 	<div id="projetProsedNamesList">
 	</div>
 <?php endif; ?>
 </div>
-<?php } ?>
-
-<div id="sidebar_Website_title" class="sidebarTitles"><?php echo __('tinyissue.website_title'); ?></div>
-<div id="sidebar_Website" class="sidebarItem">
-<?php
+<?php } 
 	$project_WebLnks = \DB::table('projects_links')->where('id_project', '=', Project::current()->id)->order_by('category','ASC')->get();
 	$WebLnk = array();
 	foreach($project_WebLnks as $WebLnks) {
 		if (trim($WebLnks->desactivated) == '') { $WebLnk[$WebLnks->category] = $WebLnks->link; }
 	}
+?>
+
+<div id="sidebar_Website_title" class="sidebarTitles"><?php echo (count($WebLnk) > 0 ) ? __('tinyissue.website_title') : ''; ?></div>
+<?php
 if (count($WebLnk) > 0 ) {
 ?>
+<div id="sidebar_Website" class="sidebarItem">
 <h2>
 	<?php 
 		//echo __('tinyissue.website_title');
@@ -135,12 +132,13 @@ if (count($WebLnk) > 0 ) {
 		echo '<li><a href="'.$link.'" class="links" target="_blank">'.__('tinyissue.website_'.$categ).'</a></li>';
 	}
 	echo '</ul>';
+	echo '</div>';
+	echo '<br /><br />'; 
+	echo '<br /><br />'; 
 }
-echo '<br /><br />'; 
-echo '<br /><br />'; 
 include_once "application/views/layouts/blocks/wiki.php";
 ?>
-</div>
+
 
 
 <script type="text/javascript" >

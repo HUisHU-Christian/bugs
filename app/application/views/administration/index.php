@@ -57,6 +57,10 @@
 				<td><b><?php echo $tags; ?></b></td>
 			</tr>
 			<tr>
+				<th><a href="administration/activity"><?php echo __('tinyissue.activity'); ?>s</a></th>
+				<td><b><?php echo $acitivities; ?></b></td>
+			</tr>
+			<tr>
 				<th><a href="user/issues"><?php echo __('tinyissue.issues'); ?></a>
 					<div class="adminListe">
 						<?php echo __('tinyissue.open_issues'); ?><br />
@@ -88,6 +92,7 @@
 	<div class="pad2">
 		<br />
 		<?php
+			//Vérification des mises à jour disponibles
 			include "application/libraries/checkVersion.php";
 			echo '<h4><b>'.$LngSRV["version_check"].'</b> : ';
 			echo '<br /><br />';
@@ -103,8 +108,6 @@
 				echo '<a href="https://github.com/pixeline/bugs/" target="_blank">https://github.com/pixeline/bugs/</a>';
 			} else if ($verNum < $verActu) {
 				echo '<h4><b>'.$LngSRV["version_ahead"].'</b></h4>';
-				//echo $LngSRV["version_disp"].' : '.$verNum.'<br />';
-				//echo $LngSRV["version_commit"].' : '.$verCommit.'<br />';
 				echo '<br />';
 				echo '<a href="https://github.com/pixeline/bugs/releases" target="_blank">'.$LngSRV["version_details"].'</a> <br />';
 			} else {
@@ -123,6 +126,16 @@
 				echo Form::token();
 				echo '</form>';
 			}
+			echo '<br /><br />';
+			echo '<hr style="border: dotted;" /><br />';
+			echo '<h4><b>'.$LngSRV["Database_Update_check"].'</b></h4> ';
+			$diff = \Administration::VerifDataBase();
+			if (count($diff) == 0) { 
+				echo '<h4 style="color: green; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_ok"].'</h4>';
+			} else { 
+				echo '<h4 style="color: red; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>';
+				foreach ($diff as $nom) { echo '<span id="span_ajour_'.$nom.'">- <a href="javascript: DatabaseAjour(\''.$nom.'\');">'.$nom.'</a><br /></span>'; }
+			} 
 		?>
 	</div>
 	</details>
@@ -185,7 +198,7 @@
 			<summary><?php echo __('tinyissue.email_head2'); ?></summary>
 			<br />
 			<div>
-			<select name="ChxTxt" id="select_ChxTxt" onchange="ChangeonsText(this.value, <?php echo "'".\Auth::user()->language."','".__('tinyissue.following_email')."'"; ?>);" class="sombre">
+			<select name="ChxTxt" id="select_ChxTxt" onchange="ChangeonsText(this.value, <?php echo "'".__('tinyissue.following_email')."','".\Auth::user()->language."'"; ?>);" class="sombre">
 			<?php
 				$LesOptions = array(
 					"assigned" 	=> __('tinyissue.following_email_assigned_tit'),
@@ -212,8 +225,8 @@
 			<?php
 				$con = __('tinyissue.tinyissue.following_email_comment');
 				$tit = __('tinyissue.tinyissue.following_email_comment_tit');
-				if (file_exists($dir."attached.html")) { $con = file_get_contents($dir."/comment.html"); }
-				if (file_exists($dir."attached_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
+				if (file_exists($dir."comment.html")) { $con = file_get_contents($dir."/comment.html"); }
+				if (file_exists($dir."comment_tit.html")) { $tit = file_get_contents($dir."/comment_tit.html"); }
 			?>
 			<?php echo __('tinyissue.title'); ?> : <input name="TitreMsg" id="input_TitreMsg" value="<?php echo $tit; ?>" size="40" />
 			&nbsp;&nbsp;&nbsp;&nbsp;
@@ -225,7 +238,7 @@
 			<textarea id="txt_contenu" name="contenu" ><?php echo $con; ?></textarea>
 			<input name="Modifies" type="hidden" id="input_modifies" value="0" />
 			<br />
-			<div style="text-align: center;"><input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: ChangeonsText(document.getElementById('select_ChxTxt').value, '<?php echo \Auth::user()->language; ?>', 'OUI');" class="button2"/></div>
+			<div style="text-align: center;"><input type="button" value="<?php echo __('tinyissue.updating'); ?>" onclick="javascript: ChangeonsText(document.getElementById('select_ChxTxt').value, 'OUI', '<?php echo \Auth::user()->language; ?>');" class="button2"/></div>
 		</details>
 		<details id="details_emailserver_head">
 			<summary><?php echo $LngSRV['UpdateConfigFile']; ?></summary>
@@ -296,6 +309,7 @@
 				<?php echo $LngSRV["preferences_pct_prog"]; ?> (10) : <input name="prog" id="input_prog" value="<?php echo $Conf[2]; ?>" type="number" size="3" min="2" max="85" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_pct_test"]; ?> (80) : <input name="test" id="input_test" value="<?php echo $Conf[3]; ?>" type="number" size="3" min="55" max="99" onchange="this.style.backgroundColor = 'yellow';" /><br />
 				<?php echo $LngSRV["preferences_todonbitems"]; ?> (25) : <input name="TodoNbItems" id="input_TodoNbItems" value="<?php echo $config_app['TodoNbItems'] ?? 25; ?>" type="number" size="5" min="5" max="999" onchange="this.style.backgroundColor = 'yellow';" /><br />
+				<?php echo $LngSRV["preferences_tempsfait"]; ?> (1) : <input name="TempsFait" id="input_TempsFait" value="<?php echo $config_app['TempsFait'] ?? 1; ?>" type="number" size="5" min="0" max="100" onchange="this.style.backgroundColor = 'yellow';" /><br />
 		</details>
 
 		<details id="details_sauvegardes">
@@ -335,6 +349,40 @@
 			<span style="float: right; vertical-align: middle; margin-top: -150px;">
 			<input name="Lancer" type="button" class="button2" value="<?php echo $LngSRV["TXT_DatabaseGo"]; ?>" id="input_databaseLancer" onclick="javascript: BackupTXT();" />
 			</span>
+			</div>
+			<br /><br />
+			<br /><br />
+		</details>
+
+		<details id="details_erreurs">
+			<summary><?php echo $LngSRV["err_tit"]; ?></summary>
+			<br /><br />
+				<h4><strong><?php echo $LngSRV["err_tit"]; ?></strong> : </h4>
+				<span id="span_errors">
+				<?php echo $LngSRV["err_detail"]; ?>
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrDet" id="input_err_detail_true" value="true" type="radio" <?php echo (Config::get('error.detail') ? ' checked="checked"' : ''); ?> />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrDet" id="input_err_detail_false" value="false" type="radio" <?php echo (Config::get('error.detail') ? '' : ' checked="checked"'); ?> />
+				<br />
+				<?php echo $LngSRV["err_log"]; ?>
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log_true" value="true" type="radio" <?php echo (Config::get('error.log') ? ' checked="checked"' : ''); ?> />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log_false" value="false" type="radio" <?php echo (Config::get('error.log') ? '' : ' checked="checked"'); ?> />
+				<br />
+				<?php echo $LngSRV["err_exit"]; ?>
+				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExt" id="input_err_exit_true" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrExt" id="input_err_exit_false" value="false" type="radio" <?php echo (Config::get('error.exit') ? '' : ' checked="checked"'); ?> />
+				<br /><br />
+				<?php echo $LngSRV["err_exittxt"]; ?> :  	 <input name="ErrExittxt" id="input_err_exittxt" value="<?php echo substr(Config::get('error.exit'), 0, strpos(Config::get('error.exit'), "<")-1); ?>" type="input" size="60" maxlength="100"  onkeyup="document.getElementById('span_exemple').innerHTML = this.value + ' <a href=\'todo\'>BUGS</a>';" />
+				</span>
+				<br /><br />
+			<span style="float: right; vertical-align: middle; margin-top: -42px;">
+			<input name="ErrLancer" type="button" class="button2" value="<?php echo __('tinyissue.updating'); ?>" id="input_errLancer" onclick="javascript: AppliquerErr();" />
+			</span>
+			<?php echo $LngSRV['err_result']; ?> : <span id="span_exemple"><?php echo substr(Config::get('error.exit'), 0, strpos(Config::get('error.exit'), "<")-1); ?>&nbsp;<a href="todo" >BUGS</a></span>
+			<br /><br />
+				<?php echo $LngSRV['err_delay']; ?> : <input name="ErrDelay" id="input_err_delay" type="number" min="5" max="99" size="3" value="<?php echo ((Config::get('error.delay') !== NULL) ? Config::get('error.delay') : 10); ?>" />
 			</div>
 			<br /><br />
 			<br /><br />

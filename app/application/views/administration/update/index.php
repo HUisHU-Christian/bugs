@@ -5,15 +5,6 @@
 <div class="pad">
 
 <?php
-function versionsSQL ($comparable) {
-	$lesVersions = array();
-	$prevUpdates = scandir("../install");
-	foreach ($prevUpdates as $ind => $nom) {
-		if (substr($nom, 0, 8) == 'update_v' && !in_array($nom, $comparable) ) { $lesVersions[] = $nom; }
-	}
-	return $lesVersions;
-}
-
 //Sécurisation de l'accès
 $_SERVER ["HTTP_REFERER"] = $_SERVER ["HTTP_REFERER"] ?? 'Patates pilées';
 $venant = substr($_SERVER ["HTTP_REFERER"], strpos($_SERVER ["HTTP_REFERER"], '//')+2);
@@ -41,8 +32,9 @@ if (($venant == $valableAdmin  || $venant == $valableUpadte) && isset($_POST["Et
 	
 	if ($Etape == 1) {
 		//Enregistrement des mises à jour antérieurement complétées
-		$prevSQL = versionsSQL (array());
-		file_put_contents('../install/historique.txt', implode(";", $prevSQL));
+		//31 decembre l'appel à la fonction versionsSQL est désuète
+		//$prevSQL = \Administration::versionsSQL (array());
+		//file_put_contents('../install/historique.txt', implode(";", $prevSQL));
 		include_once "application/controllers/administration/update_1.php";
 	} else if ($Etape == 2) {
 		//Installation du code source
@@ -71,13 +63,19 @@ if (($venant == $valableAdmin  || $venant == $valableUpadte) && isset($_POST["Et
 	$MaDate = explode("-", $CetteVersion["release_date"]);
 	$CetteVersion["release_date"] = (strlen($MaDate[0]) == 4) ? $CetteVersion["release_date"] : $MaDate[2].'-'.$MaDate[1].'-'.$MaDate[0];
 	$val = \DB::query("SHOW tables");
-	if (in_array('update_history', $val)) {
-		\DB::table('update_history')->insert(array(
-			'Description'=>$CetteVersion['version'].$CetteVersion['release'], 
-			'DteRelease'=>$CetteVersion["release_date"], 
-			'DteInstall'=>date("Y-m-d H:i:s")
-		));
+	if (!in_array('update_history', $val)) {
+		\DB::query("CREATE TABLE `update_history` (
+					  `id` int(11) NOT NULL AUTO_INCREMENT,`Footprint` varchar(25) DEFAULT NULL,	`Description` varchar(100) DEFAULT NULL,
+					  `DteRelease` date DEFAULT NULL,		`DteInstall` date DEFAULT NULL,			PRIMARY KEY (`id`)
+					  ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+					);
 	}
+	\DB::table('update_history')->insert(array(
+		'Footprint'=>'Administration forced update',
+		'Description'=>$CetteVersion['version'].$CetteVersion['release'], 
+		'DteRelease'=>$CetteVersion["release_date"], 
+		'DteInstall'=>date("Y-m-d H:i:s")
+	));
 } else {
 	echo 'Accès interdit';
 	echo '<script>document.location.href="../";</script>';

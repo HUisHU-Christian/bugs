@@ -2,25 +2,24 @@
 	$Rol = \DB::table('roles')->order_by('id','ASC')->get();
 	$roles = array();
 	foreach($Rol as $R) {  $roles[$R->id] = $R->name;  }
-	if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
-//		echo '<script>document.location.href="'.URL::to().'";</script>';
-	}
+	$MonRole = Project\User::GetRole(Project::current()->id);
 ?>
 
-			<h3>
-				<?php echo __('tinyissue.update'); ?> <em><?php echo Project::current()->name; ?></em>
-				<?php
-				if (Auth::user()->role_id != 1) { ?>
-			   	<a href="<?php echo Project::current()->to('issue/new'); ?>" class="newissue"><?php echo __('tinyissue.new_issue');?></a>
-			   <?php } ?> 
-				<span><?php echo __('tinyissue.update_project_description'); ?></span>
-			</h3>
+<h3>
+	<?php echo __('tinyissue.update'); ?> <em><?php echo Project::current()->name; ?></em>
+	<?php
+	if ($MonRole != 1) {
+		echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue').'</a>';
+   }
+   echo '<span>'.__('tinyissue.update_project_description').'</span>';
+   ?>
+</h3>
 
 <div class="pad">
 	<h3>
 		<?php echo __('tinyissue.thisproject_members'); ?> 
 	</h3>
-	<table class="form" style="width: 50%;">
+	<table id="table_ListUsers" class="form" style="width: 50%;">
 		<th class="project-user"><?php echo __('tinyissue.name'); ?></th>
 		<th class="project-user"><?php echo __('tinyissue.role'); ?></th>
 		<th class="project-user"><?php echo __('tinyissue.following'); ?></th>
@@ -29,27 +28,37 @@
 		<?php 
 		foreach(Project::current()->users()->get() as $row) { 
 			$Deja[] = Auth::user()->id;
+			$userrole = \DB::table('projects_users')->where('project_id','=',Project::current()->id)->where('user_id','=',$row->id)->get();
 			$follower = \DB::table('following')->where('project','=',1)->where('project_id','=',Project::current()->id)->where('user_id','=',$row->id)->count();
 			$follower = ($follower > 0) ? 1 : 0;
 			echo '<tr id="project-user_'.$row->id.'">';
 			echo '	<td width="60%" class="project-user">'.$row->firstname . ' ' . $row->lastname.'</td>';
-			echo '	<td width="20%" class="project-user">'.$roles[$row->role_id].'</td>';
+			echo '	<td width="20%" class="project-user">';
+			if ($row->id == \Auth::user()->id) {
+				echo $roles[$MonRole];
+			} else {
+				echo '	<select name="role[]" onchange="ChgRoleUser(this.value, '.Project::current()->id.', '.$row->id.');">';
+				foreach($roles as $ind => $val) { echo '<option value="'.$ind.'" '.(($ind == $userrole[0]->role_id) ? ' selected="selected" ' : '').' >'.$val.'</option>'; }
+				echo '	</select>';
+			}
+			echo '</td>';
 			echo '	<td width="10%" class="project-user"><input type="checkbox" value="1" id="input_user_'.$row->id.'" '.(($follower) ? 'checked' : '' ).' onclick="Following(this.checked, '.Project::current()->id.', '.$row->id.');" /></td>';
 			echo '	<td width="10%" class="project-user">';
-			if(Auth::user()->permission('project-modify') && count(Project::current()->users()->get())  > 1) {
+			if(Auth::user()->permission('project-modify') && count(Project::current()->users()->get())  > 1 && $MonRole > 2 && $row->id != \Auth::user()->id) {
 				echo '<a href="javascript:void(0);" onclick="remove_project_user('.$row->id.', '.Project::current()->id.', \''.__('tinyissue.projsuppmbre').'\', \'page\');" class="delete">'.__('tinyissue.remove').'</a>';
 			}
 			echo '	</td>';
-			echo '</tr>';
+			echo '</tr>
+			';
 		}
 		?>
-		<tr id="page-users"></tr>
+
 	</table>
 	<br />
 
 <?php if(Auth::user()->permission('project-modify')): ?>
 	<div style="width: 50%;">
-	<input type="text" placeholder="" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'page'); }" style="margin-left: 0; border-color: grey; border-style: solid; border-width: 3px;" />
+	<input type="text" id="input_rechNom" placeholder="" onkeyup="if(this.value.length > 2) { propose_project_user(this.value, <?php echo Project::current()->id; ?>, 'page', <?php echo $MonRole; ?>); }" style="margin-left: 0; border-color: grey; border-style: solid; border-width: 3px;" />
 	</div>
 	<div id="projetProsedNamesPage" class="projetProsedNamesPage">
 	</div>
@@ -96,7 +105,7 @@
 			<tr>
 			<th><?php echo __('tinyissue.website_dev'); ?></th>
 				<td>
-					<input size="50" name="Dev" value="<?php echo @$WebLnk['dev']; ?>" placeholder="http://127.0.0.1/<?php echo Project::current()->name; ?>" />
+					<input size="50" name="Dev" value="<?php echo ((isset($WebLnk['dev'])) ? $WebLnk['dev'] : ''); ?>" placeholder="http://127.0.0.1/<?php echo Project::current()->name; ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -123,7 +132,7 @@
 					<br /><br />
 					<br /><br />
 					<br /><br />
-					<input type="submit" name="delete" value="<?php echo __('tinyissue.delete').' << '.Project::current()->name; ?> >>" onclick="return confirm('<?php echo __('tinyissue.delete_project_confirm'); ?>');" style="background-color: red; border-color: black;"/>
+					<input type="submit" name="delete" value="<?php echo __('tinyissue.delete').' << '.Project::current()->name; ?> >>" onclick="return confirm('<?php echo __('tinyissue.delete_project_confirm'); ?>');" style="background-color: red; border-color: black;" />
 				</td>
 			</tr>
 		</table>
@@ -133,12 +142,8 @@
 </div>
 <script type="text/javascript" >
 function Following(etat, Project, Qui) {
-	var xhttp = new XMLHttpRequest();
 	etat = (etat) ? 0 : 1;
-	var NextPage = '../../app/application/controllers/ajax/Following.php?Quoi=2&Qui=' + Qui + '&Project=' + Project + '&Etat=' + etat;
-	xhttp.onreadystatechange = function() {
-	};
-	xhttp.open("GET", NextPage, true);
-	xhttp.send(); 
+	Follows(2, Qui, Project, 0, etat);
+ 
 }
 </script>

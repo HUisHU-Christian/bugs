@@ -23,10 +23,8 @@ class Asset {
 	 * @param  string            $container
 	 * @return Asset_Container
 	 */
-	public static function container($container = 'default')
-	{
-		if ( ! isset(static::$containers[$container]))
-		{
+	public static function container($container = 'default') {
+		if ( ! isset(static::$containers[$container])) {
 			static::$containers[$container] = new Asset_Container($container);
 		}
 
@@ -44,8 +42,7 @@ class Asset {
 	 *		Asset::add('jquery', 'js/jquery.js');
 	 * </code>
 	 */
-	public static function __callStatic($method, $parameters)
-	{
+	public static function __callStatic($method, $parameters) {
 		return call_user_func_array(array(static::container(), $method), $parameters);
 	}
 
@@ -80,8 +77,7 @@ class Asset_Container {
 	 * @param  string  $name
 	 * @return void
 	 */
-	public function __construct($name)
-	{
+	public function __construct($name) {
 		$this->name = $name;
 	}
 
@@ -109,8 +105,7 @@ class Asset_Container {
 	 * @param  array   $attributes
 	 * @return Asset_Container
 	 */
-	public function add($name, $source, $dependencies = array(), $attributes = array())
-	{
+	public function add($name, $source, $dependencies = array(), $attributes = array()) {
 		$type = (pathinfo($source, PATHINFO_EXTENSION) == 'css') ? 'style' : 'script';
 
 		return $this->$type($name, $source, $dependencies, $attributes);
@@ -125,13 +120,18 @@ class Asset_Container {
 	 * @param  array            $attributes
 	 * @return Asset_Container
 	 */
-	public function style($name, $source, $dependencies = array(), $attributes = array())
-	{
-		if ( ! array_key_exists('media', $attributes))
-		{
+	public function style($name, $source, $dependencies = array(), $attributes = array()) {
+		if ( ! array_key_exists('media', $attributes)) {
 			$attributes['media'] = 'all';
 		}
-
+		$cetteSource = substr($source, strrpos($source, "/") + 1);
+		if (in_array($cetteSource, array("app.css", "config.css", "project.css"))) {
+			$ceRep = substr($source, 0, strpos($source, "css")+4);
+			$repCSS = \User::pref("template");
+			if (!file_exists("../".$ceRep.$repCSS."/".$cetteSource)) { $repCSS = ucfirst(\User::pref("template")); }
+			if (!file_exists("../".$ceRep.$repCSS."/".$cetteSource)) { $repCSS = "Default"; }
+			$source = $ceRep.$repCSS."/".$cetteSource;
+		}  
 		$this->register('style', $name, $source, $dependencies, $attributes);
 
 		return $this;
@@ -146,8 +146,7 @@ class Asset_Container {
 	 * @param  array            $attributes
 	 * @return Asset_Container
 	 */
-	public function script($name, $source, $dependencies = array(), $attributes = array())
-	{
+	public function script($name, $source, $dependencies = array(), $attributes = array()) {
 		$this->register('script', $name, $source, $dependencies, $attributes);
 
 		return $this;
@@ -159,8 +158,7 @@ class Asset_Container {
 	 * @param  string  $source
 	 * @return string
 	 */
-	public function path($source)
-	{
+	public function path($source) {
 		return Bundle::assets($this->bundle).$source;
 	}
 
@@ -170,8 +168,7 @@ class Asset_Container {
 	 * @param  string           $bundle
 	 * @return Asset_Container
 	 */
-	public function bundle($bundle)
-	{
+	public function bundle($bundle) {
 		$this->bundle = $bundle;
 		return $this;
 	}
@@ -186,8 +183,7 @@ class Asset_Container {
 	 * @param  array   $attributes
 	 * @return void
 	 */
-	protected function register($type, $name, $source, $dependencies, $attributes)
-	{
+	protected function register($type, $name, $source, $dependencies, $attributes) {
 		$dependencies = (array) $dependencies;
 
 		$attributes = (array) $attributes;
@@ -200,8 +196,7 @@ class Asset_Container {
 	 *
 	 * @return  string
 	 */
-	public function styles()
-	{
+	public function styles() {
 		return $this->group('style');
 	}
 
@@ -210,8 +205,7 @@ class Asset_Container {
 	 *
 	 * @return  string
 	 */
-	public function scripts()
-	{
+	public function scripts() {
 		return $this->group('script');
 	}
 
@@ -221,14 +215,12 @@ class Asset_Container {
 	 * @param  string  $group
 	 * @return string
 	 */
-	protected function group($group)
-	{
+	protected function group($group) {
 		if ( ! isset($this->assets[$group]) or count($this->assets[$group]) == 0) return '';
 
 		$assets = '';
 
-		foreach ($this->arrange($this->assets[$group]) as $name => $data)
-		{
+		foreach ($this->arrange($this->assets[$group]) as $name => $data) {
 			$assets .= $this->asset($group, $name);
 		}
 		
@@ -242,8 +234,7 @@ class Asset_Container {
 	 * @param  string  $name
 	 * @return string
 	 */
-	protected function asset($group, $name)
-	{
+	protected function asset($group, $name) {
 		if ( ! isset($this->assets[$group][$name])) return '';
 
 		$asset = $this->assets[$group][$name];
@@ -251,8 +242,7 @@ class Asset_Container {
 		// If the bundle source is not a complete URL, we will go ahead and prepend
 		// the bundle's asset path to the source provided with the asset. This will
 		// ensure that we attach the correct path to the asset.
-		if (filter_var($asset['source'], FILTER_VALIDATE_URL) === false)
-		{
+		if (filter_var($asset['source'], FILTER_VALIDATE_URL) === false) {
 			$asset['source'] = $this->path($asset['source']);
 		}
 
@@ -265,12 +255,10 @@ class Asset_Container {
 	 * @param   array  $assets
 	 * @return  array
 	 */
-	protected function arrange($assets)
-	{
+	protected function arrange($assets) {
 		list($original, $sorted) = array($assets, array());
 
-		while (count($assets) > 0)
-		{
+		while (count($assets) > 0) {
 			foreach ($assets as $asset => $value)
 			{
 				$this->evaluate_asset($asset, $value, $original, $sorted, $assets);
@@ -290,19 +278,16 @@ class Asset_Container {
 	 * @param  array   $assets
 	 * @return void
 	 */
-	protected function evaluate_asset($asset, $value, $original, &$sorted, &$assets)
-	{
+	protected function evaluate_asset($asset, $value, $original, &$sorted, &$assets) {
 		// If the asset has no more dependencies, we can add it to the sorted list
 		// and remove it from the array of assets. Otherwise, we will not verify
 		// the asset's dependencies and determine if they've been sorted.
-		if (count($assets[$asset]['dependencies']) == 0)
-		{
+		if (count($assets[$asset]['dependencies']) == 0) {
 			$sorted[$asset] = $value;
 
 			unset($assets[$asset]);
 		}
-		else
-		{
+		else {
 			foreach ($assets[$asset]['dependencies'] as $key => $dependency)
 			{
 				if ( ! $this->dependency_is_valid($asset, $dependency, $original, $assets))
@@ -335,18 +320,14 @@ class Asset_Container {
 	 * @param  array   $assets
 	 * @return bool
 	 */
-	protected function dependency_is_valid($asset, $dependency, $original, $assets)
-	{
-		if ( ! isset($original[$dependency]))
-		{
+	protected function dependency_is_valid($asset, $dependency, $original, $assets) {
+		if ( ! isset($original[$dependency])) {
 			return false;
 		}
-		elseif ($dependency === $asset)
-		{
+		elseif ($dependency === $asset) {
 			throw new \Exception("Asset [$asset] is dependent on itself.");
 		}
-		elseif (isset($assets[$dependency]) and in_array($asset, $assets[$dependency]['dependencies']))
-		{
+		elseif (isset($assets[$dependency]) and in_array($asset, $assets[$dependency]['dependencies'])) {
 			throw new \Exception("Assets [$asset] and [$dependency] have a circular dependency.");
 		}
 

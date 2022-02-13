@@ -1,7 +1,8 @@
 <?php
 		//Enregistrement des mises à jour antérieurement complétées
-		$prevSQL = versionsSQL (array());
-		file_put_contents('../install/historique.txt', implode(";", $prevSQL));
+		//31 décembre, ceci est devenu désuet
+//		$prevSQL = \Administration::versionsSQL (array());
+//		file_put_contents('../install/historique.txt', implode(";", $prevSQL));
 		
 		//Consignes à l'utilisateur
 		echo '<div style="margin-left: 5%;">';

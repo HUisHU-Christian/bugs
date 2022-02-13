@@ -2,7 +2,20 @@
 	<?php echo __('tinyissue.create_a_new_project');?>
 	<span><?php echo __('tinyissue.create_a_new_project_description');?></span>
 </h3>
-
+<script type="text/javascript" >
+<?php
+	$liste = '<select name="role[]">';
+//Gestion des droits basée sur le rôle spécifique à un projet
+//Selon l'analyse du 13 novembre 2021, il ne faut pas changer cette valeur
+	$r = \DB::table('roles')->where('id', '<=', Auth::user()->role_id)->order_by('id','DESC')->get();
+//	$r = \DB::table('roles')->where('id', '<=', \Project\User::GetRole($project->id))->order_by('id','DESC')->get();
+	foreach ($r as $val) {
+		$liste .= '<option value="'.$val->id.'">'.$val->name.'</option>';
+	}
+	$liste .= '</select>';
+?>
+var liste = '<?php echo $liste; ?>';
+</script>
 <div class="pad">
 
 	<form method="post" action="" id="submit-project">
@@ -13,15 +26,7 @@
 			</tr>
 		</table>
 
-		<ul class="assign-users" style="display: none">
-			<li class="project-user<?php echo Auth::user()->id; ?>">
-				<a href="javascript:void(0);" onclick="$('.project-user<?php echo Auth::user()->id; ?>').remove();" class="delete"><?php echo __('tinyissue.remove');?></a>
-				<?php echo Auth::user()->firstname . ' ' . Auth::user()->lastname; ?>
-				<input type="hidden" name="user[]" value="<?php echo Auth::user()->id; ?>" />
-			</li>
-		</ul>
-		<input type="hidden" name="default_assignee" value="1" id="default_assignee-id" />
-	</form>
+		<input type="hidden" name="default_assignee" value="<?php echo Auth::user()->id; ?>" id="default_assignee-id" />
 
 	<table class="form" style="width: 80%;">
 		<tr>
@@ -29,11 +34,13 @@
 			<td>
 				<input type="text" id="add-user-project" style="margin: 0;  background-color: #FFF; color: #000; border-width: 2px; border-color: #999;" placeholder="<?php echo __('tinyissue.assign_users_holder');?>" />
 
-				<ul class="assign-users" style="width: 218px;">
+				<ul class="assign-users" style="width: 40%;">
 					<li class="project-user<?php echo Auth::user()->id; ?>">
 						<a href="javascript:void(0);" onclick="$('.project-user<?php echo Auth::user()->id; ?>').remove();" class="delete">Remove</a>
 						<?php echo Auth::user()->firstname . ' ' . Auth::user()->lastname; ?>
 						<input type="hidden" name="user[]" value="<?php echo Auth::user()->id; ?>" />
+						<div style="float: right; padding-right: 10px;"><?php echo $liste; ?></div>
+						<br clear="all" />
 					</li>
 				</ul>
 			</td>
@@ -43,5 +50,6 @@
 			<td><input type="submit" onclick="$('#submit-project').submit();" value="<?php echo __('tinyissue.create_project');?>"  /></td>
 		</tr>
 	</table>
+	</form>
 
 </div>

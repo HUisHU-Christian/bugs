@@ -1,9 +1,12 @@
 <?php
 
+require_once "application/libraries/mail.php";
+
 class Project extends Eloquent {
 
 	public static $table = 'projects';
 	public static $timestamps = true;
+	
 
 	/**********************************************************
 	 * Methods to use with loaded Project
@@ -53,6 +56,9 @@ class Project extends Eloquent {
 	* @return void
 	*/
 	public function assign_user($user_id, $role_id = 0) {
+		if ($role_id == 0) {
+			$role_id = \USER::where('id', '=', $user_id)->get(array('role_id'));
+		}
 		Project\User::assign($user_id, $this->id, $role_id);
 	}
 
@@ -83,7 +89,7 @@ class Project extends Eloquent {
 		return \DB::table('projects_issues')
 				->where('project_id', '=', $this->id)
 				->where('assigned_to', '=', $user_id)
-				->where('start_at', '<=', date("Y-m-d"))
+//				->where('start_at', '<=', date("Y-m-d"))
 				->where_null('closed_at', 'and', false)
 				->count();
 	}
@@ -270,9 +276,16 @@ class Project extends Eloquent {
 			);
 		}
 
+		$id_max = $val_max = 0;
+		if(isset($input['user']) && count($input['user']) > 0) {
+			foreach($input['user'] as $ind => $id) {
+				$id_max = ($input["role"][$ind] > $val_max) ? $id : $id_max;
+			}
+		}
+
 		$fill = array(
 			'name' => $input['name'],
-			'default_assignee' => $input['default_assignee'],
+			'default_assignee' => $id_max,
 		);
 
 		$project = new Project;
@@ -280,18 +293,21 @@ class Project extends Eloquent {
 		$project->save();
 
 		/* Assign selected users to the project */
+		$id_max = 0;
+		$val_max = 0;
 		if(isset($input['user']) && count($input['user']) > 0) {
-			foreach($input['user'] as $id) {
-				$project->assign_user($id);
+			foreach($input['user'] as $ind => $id) {
+				$id_max = ($input["role"][$ind] > $val_max) ? $id : $id_max;
+				$project->assign_user($id, $input["role"][$ind]);
 			}
 		}
-
 		return array(
+			'id' => $project->attributes["id"],
 			'project' => $project,
 			'success' => true
 		);
 	}
-
+	
 	/**
 	* Update a project
 	*
@@ -326,6 +342,7 @@ class Project extends Eloquent {
 			'success' => true
 		);
 	}
+
 	public static function update_weblnks($input, $project) {
 		/* Update all the links attached to the project, setting the « desactivated » date as NOW */
 		\DB::table('projects_links')->where('id_project', '=', $project->id)->update(array('desactivated' => date("Y-m-d")));

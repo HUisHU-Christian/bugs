@@ -55,12 +55,11 @@ class Autoloader {
 		// called again for the "real" class name to load its file.
 		if (isset(static::$aliases[$class])) {
 			return class_alias(static::$aliases[$class], $class);
-		}
 
+		} elseif (isset(static::$mappings[$class])) {
 		// All classes in Laravel are statically mapped. There is no crazy search
 		// routine that digs through directories. It's just a simple array of
 		// class to file path maps for ultra-fast file loading.
-		elseif (isset(static::$mappings[$class])) {
 			require static::$mappings[$class];
 
 			return;
@@ -162,7 +161,6 @@ class Autoloader {
 	 */
 	public static function namespaces($mappings, $append = '\\') {
 		$mappings = static::format_mappings($mappings, $append);
-
 		static::$namespaces = array_merge($mappings, static::$namespaces);
 	}
 
