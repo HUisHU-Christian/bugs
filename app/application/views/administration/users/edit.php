@@ -95,10 +95,10 @@
 			foreach($active_projects as $row) {
 				$Proj[$row->to()] = $row->name;
 				$roles = User::myPermissions_onThisProject($row->id);
-				$userRole = Project\User::check_role($user->id, $row->id, 0);
 				if (count($roles) == 0) { 
 					continue; 
 				} else {
+					$userRole = Project\User::check_role($user->id, $row->id, 0);
 					echo '<tr style="background-color: #'.$coul[$rang].'; color: black;">';
 					echo '<td>';
 					echo $row->name;
