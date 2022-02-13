@@ -344,6 +344,33 @@ INSERT INTO projects_issues_tags (issue_id, tag_id, created_at, updated_at)
 	FROM projects_issues
 );
 
+#--#Database updates
+INSERT INTO `update_history` (`id`, `Footprint`, `Description`, `DteRelease`, `DteInstall`) VALUES
+(1,'-------------------------','Version 1.6.0','2017-05-01',NULL),
+(2,'Database update via admin','update_v1-1_1.sql','2017-05-10',NULL),
+(3,'Database update via admin','update_v1-2_9.sql','2018-06-01',NULL),
+(4,'Database update via admin','update_v1-3_1.sql','2018-07-04',NULL),
+(5,'Database update via admin','update_v1-3_2.sql','2018-07-05',NULL),
+(6,'Database update via login','update_v1-3_3.sql','2018-09-18',NULL),
+(7,'Database update via admin','update_v1-8_3a.sql','2018-10-10',NULL),
+(8,'Database update via admin','update_v1-8_4a.sql','2019-02-14',NULL),
+(9,'Database update via admin','update_v1-8_4b.sql','2019-05-08',NULL),
+(10,'Database update via admin','update_v1-8_4d.sql','2019-07-08',NULL),
+(11,'Database update via admin','update_v1-8_5af.sql','2020-04-01',NULL),
+(12,'Database update via admin','update_v1-8_5t.sql','2020-05-30',NULL),
+(13,'Database update via admin','update_v1-8_6e.sql','2020-08-11',NULL),
+(14,'Database update via admin','update_v1-8_7a.sql','2020-10-12',NULL),
+(15,'Database update via admin','update_v1-8_7ag.sql','2021-04-03',NULL),
+(16,'Database update via admin','update_v1-8_7b.sql','2021-05-04',NULL),
+(17,'Database update via admin','update_v1-8_7c.sql','2021-06-24',NULL),
+(18,'Database update via admin','update_v1-8_7m.sql','2021-07-17',NULL),
+(19,'Database update via admin','update_v1-8_7p.sql','2021-07-20',NULL),
+(20,'Database update via admin','update_v1-8_7r.sql','2021-09-01',NULL),
+(21,'Database update via admin','update_v1-8_7s.sql','2021-10-01',NULL),
+(22,'Database update via admin','update_v1-8_7u.sql','2021-12-31',NULL);
+#--
+
+
 #----- Last line of this file .... Anything bellow this line will be lost. -----
 
 #--#Create a first admin user:

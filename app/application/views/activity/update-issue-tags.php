@@ -11,7 +11,7 @@
 				if($tag_counts['added'] > 0) {
 					foreach($tag_diff['added_tags'] as $tag) {
 						$ceTag = \DB::table('tags')->where('id', '=', $tag_diff['tag_data'][$tag]['id'])->get();
-						echo '<label class="label notice" style="color:'.$tag_diff['tag_data'][$tag]['ftcolor'].';background-color:'.$tag_diff['tag_data'][$tag]['bgcolor'].';">'.(($ceTag[0]->$Lng != '') ? $ceTag[0]->$Lng : $tag_diff['tag_data'][$tag]['tag']).'</label>'; 
+						if (isset($ceTag[0])) { echo '<label class="label notice" style="color:'.$tag_diff['tag_data'][$tag]['ftcolor'].'; background-color:'.$tag_diff['tag_data'][$tag]['bgcolor'].';">'.(($ceTag[0]->$Lng != '') ? $ceTag[0]->$Lng : $tag_diff['tag_data'][$tag]['tag']).'</label>'; }
 					} 
 					echo __($tag_counts['added'] > 1 ? 'tinyissue.tags_added' : 'tinyissue.tag_added');
 					echo ' '; 
