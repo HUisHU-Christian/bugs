@@ -106,7 +106,7 @@
 				}
 			}
 			echo '<form method="GET" id="form_MAJsql_'.$compte.'"><input type="submit" name="MAJsql" id="input_MAJsql_'.$compte.'" value="'.$prem.'" class="update" /></form><br />';
-			echo '<script>document.getElementById(\'input_MAJsql_'.$compte.'\').click();</script>';
+//			echo '<script>document.getElementById(\'input_MAJsql_'.$compte.'\').click();</script>';
 		} 
 ?>
 	</div>
