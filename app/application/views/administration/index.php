@@ -134,7 +134,14 @@
 				echo '<h4 style="color: green; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_ok"].'</h4>';
 			} else { 
 				echo '<h4 style="color: red; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>';
-				foreach ($diff as $nom) { echo '<span id="span_ajour_'.$nom.'">- <a href="javascript: DatabaseAjour(\''.$nom.'\');">'.$nom.'</a><br /></span>'; }
+				foreach ($diff as $nom) { 
+					if (trim($nom) == '') { continue; }
+					if (in_array(substr(trim($nom), 0, 13), array("update_v1-1_1","update_v1-2_9","update_v1-3_1","update_v1-3_1","update_v1-3_2","update_v1-3_3","update_v1-3_4","update_v1-8_3","update_v1-8_4")) ) {
+						rename("../install/".$nom, "../install/"."OLD_".$nom);
+					} else { 
+						echo '<span id="span_ajour_'.$nom.'">- <a href="javascript: DatabaseAjour(\''.$nom.'\');">'.$nom.'</a><br /></span>';
+					} 
+				}
 			} 
 		?>
 	</div>
