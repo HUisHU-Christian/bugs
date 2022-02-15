@@ -47,7 +47,7 @@
 <?php
 	$LngSRV = array("Database_Update_ok" => "Base de données vérifiée.", "Database_Update_need"=> "Besoin de mise à jour");
 	$diff = \Administration::VerifDataBase();
-	if (count($diff) == 0) { 
+//	if (count($diff) == 0) { 
 ?>
 			<form method="post">
 				<table class="form" >
@@ -90,24 +90,24 @@
 		</select>
 		</div>
 <?php
-		} else { 
-			echo '<h4 style="color: yellow; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>
-			';
-			$compte = 0;
-			$prem = "";
-			foreach ($diff as $nom) {
-				if (trim($nom) == '') { continue; }
-				if (in_array(substr(trim($nom), 0, 13), array("update_v1-1_1","update_v1-2_9","update_v1-3_1","update_v1-3_1","update_v1-3_2","update_v1-3_3","update_v1-3_4","update_v1-8_3","update_v1-8_4")) ) {
-					rename("../install/".$nom, "../install/"."OLD_".$nom);
-				} else { 
-					$prem = ($prem == '' && trim($nom) != '') ? $nom : $prem; 
-					echo '<form method="GET" id="form_MAJsql_'.$compte++.'"><input type="submit" name="MAJsql" value="'.$nom.'" class="update" /></form><br />
-					'; 
-				}
-			}
-			echo '<form method="GET" id="form_MAJsql_'.$compte.'"><input type="submit" name="MAJsql" id="input_MAJsql_'.$compte.'" value="'.$prem.'" class="update" /></form><br />';
-			echo '<script>document.getElementById(\'input_MAJsql_'.$compte.'\').click();</script>';
-		} 
+//		} else { 
+//			echo '<h4 style="color: yellow; font-weight: bold; font-size: 110%;">'.$LngSRV["Database_Update_need"].'</h4>
+//			';
+//			$compte = 0;
+//			$prem = "";
+//			foreach ($diff as $nom) {
+//				if (trim($nom) == '') { continue; }
+//				if (in_array(substr(trim($nom), 0, 13), array("update_v1-1_1","update_v1-2_9","update_v1-3_1","update_v1-3_1","update_v1-3_2","update_v1-3_3","update_v1-3_4","update_v1-8_3","update_v1-8_4")) ) {
+//					rename("../install/".$nom, "../install/"."OLD_".$nom);
+//				} else { 
+//					$prem = ($prem == '' && trim($nom) != '') ? $nom : $prem; 
+//					echo '<form method="GET" id="form_MAJsql_'.$compte++.'"><input type="submit" name="MAJsql" value="'.$nom.'" class="update" /></form><br />
+//					'; 
+//				}
+//			}
+//			echo '<form method="GET" id="form_MAJsql_'.$compte.'"><input type="submit" name="MAJsql" id="input_MAJsql_'.$compte.'" value="'.$prem.'" class="update" /></form><br />';
+//			echo '<script>document.getElementById(\'input_MAJsql_'.$compte.'\').click();</script>';
+//		}  
 ?>
 	</div>
 </body>
