@@ -63,44 +63,50 @@ class Ajax_Administration_Controller extends Base_Controller {
 					";
 		
 					$resuTABL = \DB::query("SHOW TABLES FROM ".$this->config_app['database']['database']);
+$LesTables = array();
 					foreach($resuTABL as $ind => $QuelTABL) {
 						foreach ($QuelTABL as $nom => $val) { $tab = $val; }
+$LesTables[] = $val;
 						////Récupération de la structure
 						$key = "";
 						$resuCOLS = \DB::query("SHOW COLUMNS FROM ".$tab);
 						$sortie .= "CREATE TABLE IF NOT EXISTS ".$tab." (";
+						$lesChampsDeCetteTable = array();
 						foreach ($resuCOLS as $QuelCOLS) {
 							if ($QuelCOLS->key == 'PRI') { $key = $QuelCOLS->field; }
 							$sortie .= "`".$QuelCOLS->field.'` '.$QuelCOLS->type.' '.(($QuelCOLS->null=='NO') ? 'NOT NULL' : 'DEFAULT NULL').''.((trim($QuelCOLS->extra) !='') ? ' ': '').$QuelCOLS->extra.', ';
+							$lesChampsDeCetteTable[] = $QuelCOLS->field;
+							$lesTypesChampsCetteTa[] = $QuelCOLS->type;
 						}
 						$sortie .= "PRIMARY KEY (`".$key."`)";
 						$sortie .= ") ENGINE=MyISAM DEFAULT CHARSET=utf8;
 						";
 						$sortie .= "
 						";
-
 						////Récupération des données
 						$compte = 0;
 						$lien = "";
 						if (\DB::table($tab)->count() > 0 && $tab != 'update_history') {
 							$resuVALS = \DB::query("SELECT * FROM ".$tab." ");
+							$sortie .= "INSERT INTO `".$tab."` VALUES";
+							$sortie .= $lien." (".implode(",", $lesChampsDeCetteTable).") VALUES 
+							";
+							$lien2 = "";
 							foreach ($resuVALS as $QuelVALS) {
-								$sortie .= "INSERT INTO `".$tab."` VALUES";
-								$sortie .= $lien." (";
-								$lien2 = "";
-								foreach ($resuCOLS as $QuelCOLS) {
-									$NomCol = $QuelCOLS->field;
-									$sortie .= $lien2." '".((trim($QuelCOLS->type) == '') ? NULL : addslashes($QuelVALS->$NomCol))."' ";
-									//$sortie .= $lien2." '".addslashes($QuelVALS->$NomCol)."' ";
-									$lien2 = ", ";
+								$lien3 = "";
+								$sortie .= $lien2." (";
+								foreach ($QuelVALS as $val) {
+									$sortie .= $lien3;
+									$sortie .= (trim($val) == '') ? NULL : "'".addslashes($val)."'";
+									$lien3 = ", ";
 								}
 								$sortie .= ");
 								";
+								$lien2 = ", ";
 							}
 						}
 						unset($resuCOLS);
 					}
-							
 					$f = fopen($fichier.".sql", "w");
 					fwrite($f, $sortie);
 					fclose($f);
