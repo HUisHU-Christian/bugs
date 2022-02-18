@@ -343,6 +343,8 @@ INSERT INTO projects_issues_tags (issue_id, tag_id, created_at, updated_at)
 	SELECT id as issue_id, IF(status = 1, 1, 2) as tag_id, NOW(), NOW()
 	FROM projects_issues
 );
+#--
+
 
 #--#Database updates
 INSERT INTO `update_history` (`id`, `Footprint`, `Description`, `DteRelease`, `DteInstall`) VALUES
@@ -368,7 +370,6 @@ INSERT INTO `update_history` (`id`, `Footprint`, `Description`, `DteRelease`, `D
 (20,'Database update via admin','update_v1-8_7r.sql','2021-09-01',NULL),
 (21,'Database update via admin','update_v1-8_7s.sql','2021-10-01',NULL),
 (22,'Database update via admin','update_v1-8_7u.sql','2021-12-31',NULL);
-#--
 
 
 #----- Last line of this file .... Anything bellow this line will be lost. -----
