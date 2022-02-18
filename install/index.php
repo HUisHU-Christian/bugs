@@ -45,20 +45,16 @@ $requirement_check = $install->check_requirements();
 <div class="InstallLogo"></div>
 
 <?php
-if($database_check) {
-	//La base de données est peut-être déjà là
-	$prefixe = "";
-	while (!file_exists($prefixe."config.app.php")) {
-		$prefixe .= "../";
-	}
-	$config = require $prefixe."config.app.php";
-	$dataSrc = mysqli_connect($config['database']['host'], $config['database']['username'], $config['database']['password'], $config['database']['database']);
-	$resuUSER = mysqli_query($dataSrc, "SELECT * FROM users");
-	//Puisque la base de données est déjà installée, procédons à l'ouverture d'une session d'usager.
-	if (mysqli_num_rows($resuUSER) > 0) {
-		echo '<script>document.location.href = "../";</script>';
-		die();
-	}
+if ($database_check) {
+		$resuUSER = $install->Requis("SELECT * FROM users");
+		//Puisque la base de données est déjà installée, procédons à l'ouverture d'une session d'usager.
+		//if (!$resuUSER) { echo '<h2>Une erreur est survenue, les tables n`ont pas été créées dans la base de données</h2>'; die(); }
+		if ($resuUSER) { 
+			if ($install->Combien($resuUSER) > 0) {
+				echo '<script>document.location.href = "../";</script>';
+				die();
+			}
+		}
 
 	//Comme la base de données n'est pas encore installée, procédons à l'inscription de l'administrateur du système et l'installation de la BDD
 	if(isset($_POST['email'])) {
