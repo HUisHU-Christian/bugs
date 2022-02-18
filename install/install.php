@@ -99,4 +99,12 @@ class install {
 
 		return false;
 	}
+	
+	public function Combien($resu) {
+		return mysqli_num_rows($resu);
+	}
+	
+	public function Requis ($query) {
+		return mysqli_query($GLOBALS["___mysqli_ston"], $query);
+	}
 }

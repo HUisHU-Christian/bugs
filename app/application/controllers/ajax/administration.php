@@ -63,10 +63,10 @@ class Ajax_Administration_Controller extends Base_Controller {
 					";
 		
 					$resuTABL = \DB::query("SHOW TABLES FROM ".$this->config_app['database']['database']);
-$LesTables = array();
+					$LesTables = array();
 					foreach($resuTABL as $ind => $QuelTABL) {
 						foreach ($QuelTABL as $nom => $val) { $tab = $val; }
-$LesTables[] = $val;
+						$LesTables[] = $val;
 						////Récupération de la structure
 						$key = "";
 						$resuCOLS = \DB::query("SHOW COLUMNS FROM ".$tab);
