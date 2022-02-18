@@ -68,6 +68,7 @@
 			<nav class="nav">
 				<li>
 					<ul>
+						<li class="help"><a href="https://bugs.rcmission.net/<?php echo (strtolower((\Auth::user()->language) == 'en') ? '' : strtoupper(\Auth::user()->language).'/' ); ?>" target="_blank"><?php echo __('tinyissue.wiki');?></a></li>
 						<li class="dashboard <?php echo $active == 'dashboard' ? 'active' : ''; ?>"><a href="<?php echo URL::to(); ?>"><?php echo __('tinyissue.dashboard');?></a></li>
 						<li class="issues <?php echo $active == 'issues' ? 'active' : ''; ?>"><a href="<?php echo URL::to('user/issues'); ?>"><?php echo __('tinyissue.your_issues');?></a></li>
 						<?php

@@ -349,5 +349,6 @@ return array(
 	'website_description' => 'Direct links to this project',
 	'website_dev' => 'Developpement',
 	'website_git' => 'Git repository',
-	'website_prod' => 'Production'
+	'website_prod' => 'Production',
+	'wiki' => 'Help (wiki)'
 );
