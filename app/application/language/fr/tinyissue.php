@@ -353,5 +353,6 @@ return array(
 	'website_description' => 'Liens directs vers les pages du projet',
 	'website_dev' => 'Développement',
 	'website_git' => 'Dépôt git',
-	'website_prod' => 'Production'
+	'website_prod' => 'Production',
+	'wiki' => 'Aide (wiki)'
 );

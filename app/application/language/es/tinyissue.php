@@ -192,5 +192,6 @@ return array(
 	'website_description' => 'Enlace dircto a tus paginas',
 	'website_dev' => 'Desaroyo',
 	'website_git' => 'Deposito Git',
-	'website_prod' => 'Produccion'
+	'website_prod' => 'Produccion',
+	'wiki' => 'Ayuda (wiki)'
 );
