@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="apple-touch-icon" sizes="57x57" href="<?php echo URL::to_asset('/apple-touch-icon-57x57.png'); ?>">
-		<link rel="apple-touch-icon" sizes="114x114" href="<?php echo URL::to_asset('/apple-touch-icon-114x114.png');?>">
-		<link rel="apple-touch-icon" sizes="72x72" href="<?php echo URL::to_asset('/apple-touch-icon-72x72.png');?>">
-		<link rel="apple-touch-icon" sizes="144x144" href="<?php echo URL::to_asset('/apple-touch-icon-144x144.png');?>">
-		<link rel="apple-touch-icon" sizes="60x60" href="<?php echo URL::to_asset('/apple-touch-icon-60x60.png');?>">
-		<link rel="apple-touch-icon" sizes="120x120" href="<?php echo URL::to_asset('/apple-touch-icon-120x120.png');?>">
-		<link rel="apple-touch-icon" sizes="76x76" href="<?php echo URL::to_asset('/apple-touch-icon-76x76.png');?>">
-		<link rel="apple-touch-icon" sizes="152x152" href="<?php echo URL::to_asset('/apple-touch-icon-152x152.png');?>">
-		<meta name="apple-mobile-web-app-title" content="Bugs">
-		<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-196x196.png');?>" sizes="196x196">
-		<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-160x160.png');?>" sizes="160x160">
-		<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-96x96.png');?>" sizes="96x96">
-		<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-16x16.png');?>" sizes="16x16">
-		<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-32x32.png');?>" sizes="32x32">
-		<meta name="msapplication-TileColor" content="#39404f">
-		<meta name="msapplication-TileImage" content="<?php echo URL::to_asset('/mstile-144x144.png');?>">
-		<meta name="application-name" content="<?php Config::get('my_bugs_app.name'); ?>">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title><?php echo Config::get('application.my_bugs_app.name'); ?></title>
-		<script>
-			var siteurl = '<?php echo URL::to(); ?>';
-			var current_url = '<?php echo URL::to(Request::uri()); ?>';
-			var baseurl = '<?php echo URL::base(); ?>';
-		</script>
-		<?php echo Asset::styles(); ?>
-		<?php echo Asset::scripts(); ?>
-		<?php
-			$Preferences = \Auth::user()->pref();
-			//Tentons de savoir si l'usager en ligne en faisant ping 8.8.8.8
-			$status = 0;
-			$pingresult = shell_exec('ping -c 1 -w 1 8.8.8.8');
-			$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
-			if (date("Y-m-d", fileatime ("../install/get_updates_list")) != date("Y-m-d") && $EnLigne) {
-				include "../app/application/libraries/checkVersion.php";
-				$Etat =  ($verActu == $verNum || $verActu > $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
-				file_put_contents ("../install/get_updates_list", $Etat);
-			}
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="apple-touch-icon" sizes="57x57" href="<?php echo URL::to_asset('/apple-touch-icon-57x57.png'); ?>">
+	<link rel="apple-touch-icon" sizes="114x114" href="<?php echo URL::to_asset('/apple-touch-icon-114x114.png');?>">
+	<link rel="apple-touch-icon" sizes="72x72" href="<?php echo URL::to_asset('/apple-touch-icon-72x72.png');?>">
+	<link rel="apple-touch-icon" sizes="144x144" href="<?php echo URL::to_asset('/apple-touch-icon-144x144.png');?>">
+	<link rel="apple-touch-icon" sizes="60x60" href="<?php echo URL::to_asset('/apple-touch-icon-60x60.png');?>">
+	<link rel="apple-touch-icon" sizes="120x120" href="<?php echo URL::to_asset('/apple-touch-icon-120x120.png');?>">
+	<link rel="apple-touch-icon" sizes="76x76" href="<?php echo URL::to_asset('/apple-touch-icon-76x76.png');?>">
+	<link rel="apple-touch-icon" sizes="152x152" href="<?php echo URL::to_asset('/apple-touch-icon-152x152.png');?>">
+	<meta name="apple-mobile-web-app-title" content="Bugs">
+	<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-196x196.png');?>" sizes="196x196">
+	<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-160x160.png');?>" sizes="160x160">
+	<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-96x96.png');?>" sizes="96x96">
+	<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-16x16.png');?>" sizes="16x16">
+	<link rel="icon" type="image/png" href="<?php echo URL::to_asset('/favicon-32x32.png');?>" sizes="32x32">
+	<meta name="msapplication-TileColor" content="#39404f">
+	<meta name="msapplication-TileImage" content="<?php echo URL::to_asset('/mstile-144x144.png');?>">
+	<meta name="application-name" content="<?php Config::get('my_bugs_app.name'); ?>">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title><?php echo Config::get('application.my_bugs_app.name'); ?></title>
+	<script>
+		var siteurl = '<?php echo URL::to(); ?>';
+		var current_url = '<?php echo URL::to(Request::uri()); ?>';
+		var baseurl = '<?php echo URL::base(); ?>';
+	</script>
+	<?php echo Asset::styles(); ?>
+	<?php echo Asset::scripts(); ?>
+	<?php
+		$Preferences = \Auth::user()->pref();
+		//Tentons de savoir si l'usager en ligne en faisant ping 8.8.8.8
+		$status = 0;
+		$pingresult = shell_exec('ping -c 1 -w 1 8.8.8.8');
+		$EnLigne = (intval(substr($pingresult, strpos($pingresult, "transmitted")+12, 2)) == 1) ? true : false;
+		if (date("Y-m-d", fileatime ("../install/get_updates_list")) != date("Y-m-d") && $EnLigne) {
+			include "../app/application/libraries/checkVersion.php";
+			$Etat =  ($verActu == $verNum || $verActu > $verNum) ? '' :  $styleAdmin = 'class=".blink_me" style="color: yellow; text-decoration: underline wavy red; " ';
+			file_put_contents ("../install/get_updates_list", $Etat);
+		}
 
-			$styleAdmin = file_get_contents ("../install/get_updates_list");
-			$wysiwyg = Config::get('application.editor');
-			if (trim($wysiwyg['BasePage']) != '') {
-				if (file_exists($wysiwyg['directory'].'/Bugs_code/header.php')) { include_once $wysiwyg['directory'].'/Bugs_code/header.php'; }
-				if (substr($wysiwyg['BasePage'], -2) == 'js') { echo '<script src="'.URL::base().$wysiwyg['BasePage'].'"></script>'; }
-				if (substr($wysiwyg['BasePage'], -3) == 'php') { include $wysiwyg['BasePage']; }
-			}
-			$RepInstalled = false;
-		?>
-	</head>
+		$styleAdmin = file_get_contents ("../install/get_updates_list");
+		$wysiwyg = Config::get('application.editor');
+		if (trim($wysiwyg['BasePage']) != '') {
+			if (file_exists($wysiwyg['directory'].'/Bugs_code/header.php')) { include_once $wysiwyg['directory'].'/Bugs_code/header.php'; }
+			if (substr($wysiwyg['BasePage'], -2) == 'js') { echo '<script src="'.URL::base().$wysiwyg['BasePage'].'"></script>'; }
+			if (substr($wysiwyg['BasePage'], -3) == 'php') { include $wysiwyg['BasePage']; }
+		}
+		$RepInstalled = false;
+	?>
+</head>
 <body>
 	<div id="container">
 		<div id="header" <?php echo ($Preferences["headfix"] == 'true') ? 'style="position: fixed;"' : ''; ?> >
