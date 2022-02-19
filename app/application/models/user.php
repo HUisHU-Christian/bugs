@@ -5,7 +5,6 @@ class User extends Eloquent {
 	public static $table = 'users';
 	public static $timestamps = true;
 
-
 	/**********************************************************
 	* Methods to use with loaded User
 	**********************************************************/
@@ -28,6 +27,7 @@ class User extends Eloquent {
 			'numSidebar' => 990,
 			'Roulbar' => 'true',
 			'template' => 'default',
+			'headfix' => 'true',
 			'boutons' => 'true'
 		);
 		//User's preferences from 'Preferences' field  ( table 'users' ) 
