@@ -25,7 +25,6 @@
 				<th><?php echo __('tinyissue.first_name'); ?></th>
 				<td>
 					<input type="text" name="firstname" value="<?php echo Input::old('firstname', $user->firstname); ?>" autocomplete="off" style="width: 300px;" />
-
 					<?php echo $errors->first('firstname', '<span class="error">:message</span>'); ?>
 				</td>
 			</tr>
@@ -70,7 +69,6 @@
 					<input style="display:none" type="text" name="fakeusernameremembered"/>
 					<input style="display:none" type="password" name="fakepasswordremembered"/>
 					<input type="password" name="password" value="" autocomplete="off" style="width: 300px;" />
-
 					<?php echo $errors->first('password', '<span class="error">:message</span>'); ?>
 				</td>
 			</tr>
