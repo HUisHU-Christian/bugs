@@ -120,6 +120,7 @@ return array(
 	'UserPref_projet_3a' => 'Alphabétique',
 	'UserPref_projet_3b' => 'Alphabétique inverse',
 	'UserPref_projet_4' => 'Utiliser de bouton « Commencer » et « Finir » pour compter mon temps de travail',
+	'UserPref_projet_5' => 'L`en-tête de BUGS doit toujours être visible.',
 	'version' => 'Version',
 	'version_actuelle' => 'Votre version active',
 	'version_ahead' => 'Votre version est plus avancée que celle du serveur',
