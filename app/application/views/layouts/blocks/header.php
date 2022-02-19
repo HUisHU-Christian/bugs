@@ -64,7 +64,6 @@
 				if ($styleAdmin != '') { echo '</a>'; } 
 			?>
 			</div>
-
 			<nav class="nav">
 				<li>
 					<ul>
