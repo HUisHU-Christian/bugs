@@ -318,7 +318,7 @@ return array(
 	'update_tag' => 'Mettre à jour cette étiquette',
 	'update_user_description' => 'Modifier les informations de l`utilisateur',
 	'update_user' => 'Modifier l`utilisateur',
-	'update' => 'Mettre à jour le projet',
+	'update' => 'Appliquer les modifications',
 	'update_my' => 'Mettre mon profil à jour',
 	'update_mypref' => 'Mettre mes préférences à jour',
 	'updating' => 'Mettre à jour',
@@ -353,5 +353,6 @@ return array(
 	'website_description' => 'Liens directs vers les pages du projet',
 	'website_dev' => 'Développement',
 	'website_git' => 'Dépôt git',
-	'website_prod' => 'Production'
+	'website_prod' => 'Production',
+	'wiki' => 'Aide (wiki)'
 );

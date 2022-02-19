@@ -32,6 +32,7 @@
 		<?php echo Asset::styles(); ?>
 		<?php echo Asset::scripts(); ?>
 		<?php
+			$Preferences = \Auth::user()->pref();
 			//Tentons de savoir si l'usager en ligne en faisant ping 8.8.8.8
 			$status = 0;
 			$pingresult = shell_exec('ping -c 1 -w 1 8.8.8.8');
@@ -55,7 +56,7 @@
 <body>
 
 	<div id="container">
-		<div id="header">
+		<div id="header" <?php echo ($Preferences["headfix"] == 'true') ? 'style="position: fixed;"' : ''; ?> >
 			<a href="<?php echo URL::to(); ?>" class="logo" title="<?php echo  Config::get('application.my_bugs_app.name') ?>" ></a>
 			<div class="logoVersion" id="logo_version" >version: 
 			<?php 
@@ -68,6 +69,7 @@
 			<nav class="nav">
 				<li>
 					<ul>
+						<li class="help"><a href="https://bugs.rcmission.net/<?php echo (strtolower((\Auth::user()->language) == 'en') ? '' : strtoupper(\Auth::user()->language).'/' ); ?>" target="_blank"><?php echo __('tinyissue.wiki');?></a></li>
 						<li class="dashboard <?php echo $active == 'dashboard' ? 'active' : ''; ?>"><a href="<?php echo URL::to(); ?>"><?php echo __('tinyissue.dashboard');?></a></li>
 						<li class="issues <?php echo $active == 'issues' ? 'active' : ''; ?>"><a href="<?php echo URL::to('user/issues'); ?>"><?php echo __('tinyissue.your_issues');?></a></li>
 						<?php

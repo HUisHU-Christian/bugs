@@ -619,8 +619,14 @@ div.stat_form {
 	display:inline-block;
 }
 
+#header .nav li {
+	margin-left: -10%;
+}
 #header .nav li.dashboard a{
 	background: url('images/icon-dashboard_inactive.png') no-repeat 0 1px;
+}
+#header .nav li.help a{
+	background: url('../../images/layout/icon-help_inactive.png') no-repeat 0 1px;
 }
 #header .nav li.projects a{
 	background: url('images/icon-projects_inactive.png') no-repeat 0 0;
@@ -646,6 +652,9 @@ div.stat_form {
 #header .nav li.dashboard.active a,
 #header .nav li.dashboard a:hover{
 	background: url('images/icon-dashboard.png') no-repeat 0 1px;
+}
+#header .nav li.help a:hover{
+	background: url('../../images/layout/icon-help.png') no-repeat 0 1px;
 }
 #header .nav li.issues.active a,
 #header .nav li.issues a:hover{
@@ -1823,7 +1832,7 @@ input.inputRech:focus {
 		float: left;
 		margin-left: 16px;
 		top: 50%;
-		width: 20%;
+		width: 15%;
 	}
 	#header .nav li ul li:hover{
 		background: transparent;s
@@ -1988,7 +1997,7 @@ input.inputRech:focus {
 		vertical-align: top;
 	}
 	#sidebar ul li a.links{
-		background: url('images/icon-website_noire.png') right center no-repeat;
+		background: url('images/icon-website.png') right center no-repeat;
 	}
 }
 
