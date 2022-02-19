@@ -2,6 +2,12 @@
 	<?php echo __('tinyissue.my_settings'); ?>
 	<span><?php echo __('tinyissue.my_settings_description'); ?></span>
 </h3>
+<script type="text/javascript" >
+	function VisualisonsCanevas(Quel) {
+		var actu = document.getElementById('lnk_appCSS').href;
+		document.getElementById('lnk_appCSS').href = actu.substr(0, actu.indexOf("css")+4 ) + Quel + "/app.css";
+	}
+</script>
 <?php
 	$prefixe = "";
 	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
@@ -100,7 +106,7 @@
 		<br />
 		<h4><?php echo $LngSRV["UserPref_modele"]; ?></h4>
 		<br />
-		<select name="template">
+		<select name="template" onchange="VisualisonsCanevas(this.value);">
 		<?php
 			$pasCeuxCi = array(".","..","jquery.tagit.css","spectrum.css","tagit.ui-zendesk.css", "login.css","install.css","app.css","images");
 			$canevas = scandir("assets/css");
