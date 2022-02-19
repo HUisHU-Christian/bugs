@@ -2,6 +2,12 @@
 	<?php echo __('tinyissue.my_settings'); ?>
 	<span><?php echo __('tinyissue.my_settings_description'); ?></span>
 </h3>
+<script type="text/javascript" >
+	function VisualisonsCanevas(Quel) {
+		var actu = document.getElementById('lnk_appCSS').href;
+		document.getElementById('lnk_appCSS').href = actu.substr(0, actu.indexOf("css")+4 ) + Quel + "/app.css";
+	}
+</script>
 <?php
 	$prefixe = "";
 	while (!file_exists($prefixe."config.app.php")) { $prefixe .= "../"; }
@@ -25,7 +31,6 @@
 				<th><?php echo __('tinyissue.first_name'); ?></th>
 				<td>
 					<input type="text" name="firstname" value="<?php echo Input::old('firstname', $user->firstname); ?>" autocomplete="off" style="width: 300px;" />
-
 					<?php echo $errors->first('firstname', '<span class="error">:message</span>'); ?>
 				</td>
 			</tr>
@@ -101,9 +106,9 @@
 		<br />
 		<h4><?php echo $LngSRV["UserPref_modele"]; ?></h4>
 		<br />
-		<select name="template">
+		<select name="template" onchange="VisualisonsCanevas(this.value);">
 		<?php
-			$pasCeuxCi = array(".","..","jquery.tagit.css","spectrum.css","tagit.ui-zendesk.css", "login.css","install.css");
+			$pasCeuxCi = array(".","..","jquery.tagit.css","spectrum.css","tagit.ui-zendesk.css", "login.css","install.css","app.css","images");
 			$canevas = scandir("assets/css");
 			foreach ($canevas as $caneva) {
 				if (in_array($caneva, $pasCeuxCi)) { continue; }
@@ -121,6 +126,7 @@
 			echo $LngSRV["UserPref_projet_1"].' : <input type="number" name="numSidebar" id="input_numSidebar" max="990" min="-990" step="10" value="'.$pref['numSidebar'].'" size="4" onchange="if(this.value == 0) { document.getElementById(\'input_sidebar_non\').checked = true; } else { document.getElementById(\'input_sidebar_oui\').checked = true;} if(this.value < 1) { document.getElementById(\'input_orderSidebar_desc\').checked = true; } else { document.getElementById(\'input_orderSidebar_asc\').checked = true;}" /><br />';
 			echo $LngSRV["UserPref_projet_3"].' : '.$LngSRV["UserPref_projet_3a"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_asc" value="asc" '.(($pref["orderSidebar"] == 'asc') ? 'checked="chekcked"' : '').' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_3b"].'<input type="radio"  name="orderSidebar" id="input_orderSidebar_desc" value="desc" '.(($pref["orderSidebar"] == 'desc') ? 'checked="chekcked"' : '').' /><br />';
 			echo $LngSRV["UserPref_projet_4"].' : '.$LngSRV["UserPref_projet_2a"].'<input type="radio" name="boutons" id="input_boutons_oui" value="true" '.(($pref["boutons"] == 'true') ? 'checked="chekcked"' : '').' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_2b"].'<input type="radio"  name="boutons" id="input_boutons_non" value="false" '.(($pref["boutons"] == 'false') ? 'checked="chekcked"' : '').'  /><br />';
+			echo $LngSRV["UserPref_projet_5"].' : '.$LngSRV["UserPref_projet_2a"].'<input type="radio" name="headfix" id="input_headfix_oui" value="true" '.(($pref["headfix"] == 'true') ? 'checked="chekcked"' : '').' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_2b"].'<input type="radio"  name="headfix" id="input_headfix_non" value="false" '.(($pref["headfix"] == 'false') ? 'checked="chekcked"' : '').'  /><br />';
 			if ($user->role_id == 4) {
 				echo '
 					<br /><br />
