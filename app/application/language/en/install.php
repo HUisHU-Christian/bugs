@@ -120,6 +120,7 @@ return array(
 	'UserPref_projet_3a' => 'Ascending',
 	'UserPref_projet_3b' => 'Descending',
 	'UserPref_projet_4' => 'Use buttons « IN » and « OUT » to count my worktime',
+	'UserPref_projet_5' => 'Fix the header to top of BUGS window',
 	'version' => 'Version',
 	'version_actuelle' => 'The actual version',
 	'version_ahead' => 'Your version is ahead from the stable distributed version.',

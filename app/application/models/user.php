@@ -28,6 +28,7 @@ class User extends Eloquent {
 			'numSidebar' => 990,
 			'Roulbar' => 'true',
 			'template' => 'default',
+			'headfix' => 'true',
 			'boutons' => 'true'
 		);
 		//User's preferences from 'Preferences' field  ( table 'users' ) 
