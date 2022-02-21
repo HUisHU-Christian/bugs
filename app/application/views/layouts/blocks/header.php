@@ -64,7 +64,6 @@
 				if ($styleAdmin != '') { echo '</a>'; } 
 			?>
 			</div>
-
 			<nav class="nav">
 				<li>
 					<ul>
@@ -107,7 +106,7 @@
 
 		</div>
 <div style="clear:both;"></div>
-		<div id="main">
+		<div id="main" <?php echo ($Preferences["headfix"] == 'true') ? 'style="padding-top: 40px;"' : ''; ?>>
 			<div id="sidebar">
 				<div class="inside">
 					<?php echo $sidebar; ?>
