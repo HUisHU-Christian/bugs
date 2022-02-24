@@ -374,9 +374,9 @@ INSERT INTO `update_history` (`id`, `Footprint`, `Description`, `DteRelease`, `D
 
 #----- Last line of this file .... Anything bellow this line will be lost. -----
 
-#--#Create a first admin user:
-##--# email = myemail@email.com
-##--# password = admin
-INSERT INTO `users` (`id`, `role_id`, `email`, `password`, `firstname`, `lastname`, `language`, `created_at`, `updated_at`, `deleted`) VALUES
-(NULL,	4,	'myemail@email.com',	'XhS.DHsB8wt1o',	'admin',	'admin',	'en',	NOW(),	NOW(),	0);
+#--###--#Create a first admin user:
+##--###--# email = myemail@email.com
+##--###--# password = admin
+##--#INSERT INTO `users` (`id`, `role_id`, `email`, `password`, `firstname`, `lastname`, `language`, `created_at`, `updated_at`, `deleted`) VALUES
+##--#(NULL,	4,	'myemail@email.com',	'XhS.DHsB8wt1o',	'admin',	'admin',	'en',	NOW(),	NOW(),	0);
 
