@@ -1,12 +1,12 @@
 <?php
 class Mail {
 	
-	private array $detail;
-	private array $bye;
-	private array $intro;
-	private array $message;
-	private array $subject;
-	private array $values;
+	private $detail = array();
+	private $bye = array();
+	private $intro = array();
+	private $message = array();
+	private $subject = array();
+	private $values = array();
 
 	
 	public function __construct() {
