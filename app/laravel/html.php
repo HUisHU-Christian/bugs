@@ -95,6 +95,7 @@ class HTML {
 		$defaults = array('media' => 'all', 'type' => 'text/css', 'rel' => 'stylesheet');
 		$attributes = $attributes + $defaults;
 		$url = URL::to_asset($url);
+		if (substr($url, -7) == 'app.css') { $attributes["id"] = 'lnk_appCSS'; } 
 		return '<link href="'.$url.'"'.static::attributes($attributes).'>'.PHP_EOL;
 	}
 

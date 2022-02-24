@@ -24,7 +24,7 @@
 		} else {
 			$LngSRV = $Lng;
 		}
-		echo '<h3 style="background-color: yellow; font-size: 200%; color: black;">'.$LngSRV["welcome_1"].'<span style="color:black;">'.$LngSRV["welcome_2"].'</span></h3>';
+		echo '<h3 style="background-color: yellow; font-size: 200%; color: black; padding-top: 100px;">'.$LngSRV["welcome_1"].'<span style="color:black;">'.$LngSRV["welcome_2"].'</span></h3>';
 		echo '<div class="pad">';
 		echo '<form action="'.URL::to('home/new').'" method="post" id="agissons">';
 		echo '<h3>'.__('tinyissue.create_a_new_project').'</h3>';
