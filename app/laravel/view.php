@@ -1,6 +1,9 @@
-<?php namespace Laravel; use Closure, ArrayAccess;
+<?php 
+//namespace Laravel; use Closure, ArrayAccess;
+namespace Laravel; use Closure;
 
-class View implements ArrayAccess {
+//class View implements ArrayAccess {
+class View {
 
 	/**
 	 * The name of the view.

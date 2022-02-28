@@ -32,12 +32,12 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	$config_file = str_replace('Your E-Mail Name', $_POST['email_name'], $config_file);
 	$config_file = str_replace('name@domain.com', $_POST['email_address'], $config_file);
 	$config_file = str_replace("'transport' => 'smtp'", "'transport' => '".$_POST['email_transport']."'", $config_file);
-	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".$_POST['email_username']."'", $config_file);
-	$config_file = str_replace("'server' => 'smtp.gmail.com'", "'server' => '".$_POST['email_server']."'", $config_file);
-	$config_file = str_replace("'port' => 587", "'port' => ".((trim($_POST['email_port']) == '') ? 25 : $_POST['email_port']), $config_file);
-	$config_file = str_replace("'encryption' => 'tls'", "'encryption' =>  '".$_POST['email_encryption']."'", $config_file);
-	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".$_POST['email_username']."'", $config_file);
-	$config_file = str_replace("'password' => '******'", "'password' =>  '".$_POST['email_password']."'", $config_file);
+	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".($_POST['email_username'] ?? 'BUGS')."'", $config_file);
+	$config_file = str_replace("'server' => 'smtp.gmail.com'", "'server' => '".($_POST['email_server'] ?? 'smtp.gmail.com')."'", $config_file);
+	$config_file = str_replace("'port' => 587", "'port' => ".($_POST['email_port'] ?? '665'), $config_file);
+	$config_file = str_replace("'encryption' => 'tls'", "'encryption' =>  '".($_POST['email_encryption'] ?? 'SSL')."'", $config_file);
+	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".($_POST['email_username'] ?? $_POST['email_address'] ?? 'undefined')."'", $config_file);
+	$config_file = str_replace("'password' => '******'", "'password' =>  '".($_POST['email_password'] ?? 'admin')."'", $config_file);
 
 	/* Timezone */
 	$config_file = str_replace('Europe/Brussels', $_POST['timezone'], $config_file);

@@ -28,10 +28,8 @@ class Session {
 	 *
 	 * @return void
 	 */
-	public static function load()
-	{
+	public static function load() {
 		static::start(Config::get('session.driver'));
-
 		static::$instance->load(Cookie::get(Config::get('session.cookie')));
 	}
 
@@ -41,8 +39,7 @@ class Session {
 	 * @param  string  $driver
 	 * @return void
 	 */
-	public static function start($driver)
-	{
+	public static function start($driver) {
 		static::$instance = new Session\Payload(static::factory($driver));
 	}
 
@@ -52,17 +49,13 @@ class Session {
 	 * @param  string  $driver
 	 * @return Session\Drivers\Driver
 	 */
-	public static function factory($driver)
-	{
-		if (isset(static::$registrar[$driver]))
-		{
+	public static function factory($driver) {
+		if (isset(static::$registrar[$driver])) {
 			$resolver = static::$registrar[$driver];
-
 			return $resolver();
 		}
 
-		switch ($driver)
-		{
+		switch ($driver) {
 			case 'apc':
 				return new Session\Drivers\APC(Cache::driver('apc'));
 
@@ -102,8 +95,7 @@ class Session {
 	 *
 	 * @return Session\Payload
 	 */
-	public static function instance()
-	{
+	public static function instance() {
 		if (static::started()) return static::$instance;
 
 		throw new \Exception("A driver must be set before using the session.");
@@ -114,8 +106,7 @@ class Session {
 	 *
 	 * @return bool
 	 */
-	public static function started()
-	{
+	public static function started() {
 		return ! is_null(static::$instance);
 	}
 
@@ -126,8 +117,7 @@ class Session {
 	 * @param  Closure  $resolver
 	 * @return void
 	 */
-	public static function extend($driver, Closure $resolver)
-	{
+	public static function extend($driver, Closure $resolver) {
 		static::$registrar[$driver] = $resolver;
 	}
 
@@ -145,8 +135,7 @@ class Session {
 	 *		$value = Session::instance()->put('name', 'Taylor');
 	 * </code>
 	 */
-	public static function __callStatic($method, $parameters)
-	{
+	public static function __callStatic($method, $parameters) {
 		return call_user_func_array(array(static::instance(), $method), $parameters);
 	}
 

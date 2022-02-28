@@ -39,9 +39,15 @@ if ($database_check) {
 		if ($install->Combien($resuUSER) == 0 && isset($_POST["first_name"]) && isset($_POST["last_name"]) && isset($_POST["language"]) && isset($_POST["email"]) && isset($_POST["password"])) {
 			$install->create_adminUser();
 			unlink ('config-setup.php');
+			if (!isset($_SESSION)) { session_start(); }
+			$_SESSION["usr"] = $_POST["email"];
+			$_SESSION["psw"] = $_POST["password"];
+			$_SESSION["automatiquement"] = 'oui';
+			echo '<script>document.location.href = "../login/";</script>';
+		} else {
+			echo '<script>document.location.href = "../";</script>';
+			die();
 		}
-		echo '<script>document.location.href = "../";</script>';
-		die();
 	}
 }
 ?>
