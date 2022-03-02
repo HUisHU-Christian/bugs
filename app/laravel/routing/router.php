@@ -107,9 +107,7 @@ class Router {
 	 */
 	public static function secure($method, $route, $action) {
 		$action = static::action($action);
-
 		$action['https'] = true;
-
 		static::register($method, $route, $action);
 	}
 
@@ -169,7 +167,8 @@ class Router {
 	 * @return void
 	 */
 	public static function register($method, $route, $action) {
-		if (ctype_digit($route)) $route = "({$route})";
+		if (is_array($route)) { $route = implode(', ', $route); }
+		if (ctype_digit($route)) { $route = "({$route})"; }
 
 		if (is_string($route)) $route = explode(', ', $route);
 
@@ -180,7 +179,6 @@ class Router {
 			foreach ($method as $http) {
 				static::register($http, $route, $action);
 			}
-
 			return;
 		}
 
@@ -192,15 +190,13 @@ class Router {
 				foreach (static::$methods as $method) {
 					static::register($method, $route, $action);
 				}
-
 				continue;
 			}
 
-			$uri = ltrim(str_replace('(:bundle)', static::$bundle, $uri), '/');
+			if ( static::$bundle !== NULL) { $uri = ltrim(str_replace('(:bundle)', static::$bundle, $uri), '/'); }
+			$uri = ltrim($uri, '/');
 			
-			if($uri == '') {
-				$uri = '/';
-			}
+			if($uri == '') { $uri = '/'; }
 
 			// If the URI begins with a wildcard, we want to add this route to the
 			// array of "fallback" routes. Fallback routes are always processed
@@ -472,10 +468,7 @@ class Router {
 		// back on when we know the replacement count.
 		$key = str_replace($search, $replace, $key, $count);
 
-		if ($count > 0) {
-			$key .= str_repeat(')?', $count);
-		}
-
+		if ($count > 0) { $key .= str_repeat(')?', $count); }
 		return strtr($key, static::$patterns);
 	}
 
@@ -500,7 +493,6 @@ class Router {
 			// collisions when merging the arrays together.
 			$routes[$method] = array_merge($routes[$method], $fallback);
 		}
-
 		return $routes;
 	}
 
@@ -512,7 +504,6 @@ class Router {
 	 */
 	public static function method($method) {
 		$routes = array_get(static::$routes, $method, array());
-
 		return array_merge($routes, array_get(static::$fallback, $method, array()));
 	}
 

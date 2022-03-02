@@ -32,7 +32,7 @@ class User extends Eloquent {
 		);
 		//User's preferences from 'Preferences' field  ( table 'users' ) 
 		$Pref = Auth::user()->preferences;
-		$Prefs = explode("&", $Pref);
+		$Prefs = ($Pref === NULL) ? array() : explode("&", $Pref);
 		foreach ($Prefs as $ind => $val) {
 			$ceci = explode("=", $val);
 			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }

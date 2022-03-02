@@ -1,7 +1,12 @@
 <?php
-	include "application/language/all.php";
+	$prefixe = "";
+	if (!isset($_SESSION)) { session_start(); }
+	while (!file_exists($prefixe."config.app.php")) {
+		$prefixe .= "../";
+	}
+	include $prefixe."app/application/language/all.php";
 	$lng = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-	if (file_exists("../install/config-setup.php")) { unlink ("../install/config-setup.php"); }
+	if (file_exists($prefixe."install/config-setup.php")) { unlink ($prefixe."install/config-setup.php"); }
 
 	//Auto-update the database if conditions are fullfilled
 	if (isset($_SERVER ["REDIRECT_SCRIPT_URL"]) && isset($_GET["MAJsql"])) {
@@ -9,13 +14,13 @@
 			\Administration::AjourStructureBase("login");
 		}
 	}
-
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<?php if (!isset($sautons) || @$sautons == false) { ?>
 		<link rel="apple-touch-icon" sizes="57x57" href="<?php echo URL::to_asset('/apple-touch-icon-57x57.png'); ?>">
 		<link rel="apple-touch-icon" sizes="114x114" href="<?php echo URL::to_asset('/apple-touch-icon-114x114.png');?>">
 		<link rel="apple-touch-icon" sizes="72x72" href="<?php echo URL::to_asset('/apple-touch-icon-72x72.png');?>">
@@ -37,13 +42,15 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 
 		<title><?php echo Config::get('application.my_bugs_app.name'); ?></title>
-		<?php echo Asset::styles(); ?>
+		<?php echo Asset::styles(); 
+		}
+		?>
 	</head>
 <body>
 	<div id="container">
 		<div id="login">
 
-			<h1><span id="span_Welcome"><?php echo (isset($Welcome[$lng])) ? $Welcome[$lng] : $Welcome["en"]; ?></span><br><img src="<?php echo URL::to_asset('app/assets/images/layout/tinyissue.svg');?>" alt="<?php echo Config::get('application.my_bugs_app.name'); ?>" style="width:350px;;"></h1>
+			<h1><span id="span_Welcome"><?php echo (isset($Welcome[$lng])) ? $Welcome[$lng] : $Welcome["en"]; ?></span><br><img src="<?php echo URL::to_asset('app/assets/images/layout/tinyissue.svg');?>" alt="<?php echo Config::get('application.my_bugs_app.name'); ?>" style="width:350px;"></h1>
 <?php
 	$LngSRV = array("Database_Update_ok" => "Base de données vérifiée.", "Database_Update_need"=> "Besoin de mise à jour");
 	$diff = \Administration::VerifDataBase();
@@ -77,7 +84,14 @@
 				</table>
 
 				<?php echo Form::hidden('return', Session::get('return', '')); ?>
-				<?php echo Form::token(); ?>
+				<?php echo Form::token();
+					if (isset($_SESSION["automatiquement"])) {
+						if ($_SESSION["automatiquement"] == 'oui') {
+							unset($_SESSION["automatiquement"]);
+							echo '<script>document.getElementById("input_submit").click();</script>';
+						}
+					} 
+				?>
 			</form>
 		</div>
 		<div style="text-align:center; padding-top: 50px;">

@@ -9,16 +9,15 @@ class LaravelRequest extends Request {
      *
      * @api
      */
-    static public function createFromGlobals()
-    {
+    static public function createFromGlobals() {
         $request = new static($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
-
-        if ((0 === strpos($request->server->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
-    		|| (0 === strpos($request->server->get('HTTP_CONTENT_TYPE'), 'application/x-www-form-urlencoded')))
+			$test1 = $request->server->get('CONTENT_TYPE') ?? 'rien';
+			$test2 = $request->server->get('HTTP_CONTENT_TYPE') ?? 'rien';
+        if ((0 === strpos($test1, 'application/x-www-form-urlencoded')
+    		|| (0 === strpos($test2, 'application/x-www-form-urlencoded')))
             && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
         ) {
             parse_str($request->getContent(), $data);
-            //if (magic_quotes()) $data = array_strip_slashes($data);
             $request->request = new ParameterBag($data);
         }
 
@@ -30,8 +29,7 @@ class LaravelRequest extends Request {
      *
      * @return string
      */
-    public function getRootUrl()
-    {
+    public function getRootUrl() {
         return $this->getScheme().'://'.$this->getHttpHost().$this->getBasePath();
     }
 
