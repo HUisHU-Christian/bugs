@@ -22,8 +22,10 @@ class Login_Controller extends Controller {
 			////Check owner's preferences about this function
 			$Owner = \User::where('id', '=', 1)->get(array('email','preferences','language'));
 			$Prefs = $Owner[0]->Preferences;
-			$Pref = substr($Prefs, strpos($Prefs, "noticeOnLogIn=")+13, 7);
-			$Pref = substr($Pref, strpos($Pref, "=")+1);
+			if ($Prefs == '') { $Pref = ''; } else {
+				$Pref = substr($Prefs, strpos($Prefs, "noticeOnLogIn=")+13, 7);
+				$Pref = substr($Pref, strpos($Pref, "=")+1);
+			}
 
 			if (substr($Pref, 0, 1) == 'f') { $sendmail = false; }			
 			if (Input::get('email') == $Owner[0]->email) { $sendmail = false; }
