@@ -508,7 +508,7 @@ class Issue extends \Eloquent {
 			'start_at' => $input['start_at'],
 			'temps_plan' => $input['temps_plan'],
 			'status' => $input['status'],
-			'assigned_to' => $input['assigned_to']
+			'assigned_to' => ( $input['assigned_to'] == NULL || $input['assigned_to'] < 1) ? \Auth::user()->id : $input['assigned_to']
 		);
 
 		if(\Auth::user()->permission('issue-modify')) {
