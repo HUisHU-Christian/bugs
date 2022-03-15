@@ -565,7 +565,7 @@ class Issue extends \Eloquent {
 				//Step 3 : move files from /uploads/New/id_user/date_ to /uplaods/id_issue/id_comment_
 				////Prepare the sub-directory for files
 				$newDir = $url."uploads/".$issue->id;
-				mkdir($newDir);
+				if (!file_exists($newDir)) { mkdir($newDir); }
 				////Moving files themselves
 				foreach ($attached as $ind => $filename) {
 					$nouvNom = str_replace(date("Ymd")."_", $comment_id."_", $filename);
