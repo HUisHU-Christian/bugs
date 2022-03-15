@@ -59,6 +59,9 @@ class Home_Controller extends Base_Controller {
 			'status'=>3,
 			'created_at'=>date("Y-m-d")
 		));
+		//Automatically enrole project's followers into following this issue and the assignee
+		\DB::query("INSERT INTO following (user_id, project_id, issue_id, project, attached, tags ) VALUES (1, 1, 1, 1, 0, 1)");
+
 		return Redirect::to("/")->with('notice', __('tinyissue.issue_has_been_created'));
 	}
 }
