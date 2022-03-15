@@ -311,7 +311,7 @@ class User extends Eloquent {
 				'errors' => $validator->errors
 			);
 		}
-		$MotPasse =  Str::random(6);
+		$MotPasse = (isset($info['password'])) ? $info['password'] :  Str::random(6);
 
 		//Inscription du nouveau membre dans la bdd
 		$insert = array(

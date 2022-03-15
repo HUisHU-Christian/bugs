@@ -23,7 +23,8 @@ class Home_Controller extends Base_Controller {
 			'title'=>$_POST["ticketName"],
 			'body'=>$_POST["body"],
 			'status'=>3, 
-			'created_at'=>date("Y-m-d H:i:s")
+			'created_at'=>date("Y-m-d"),
+			'start_at'=>date("Y-m-d")
 		));
 		//projects_users
 		\DB::table('projects_users')->insert(array(
@@ -31,14 +32,14 @@ class Home_Controller extends Base_Controller {
 			'user_id'=>1,
 			'project_id'=>1,
 			'role_id'=>4,
-			'created_at'=>date("Y-m-d H:i:s")
+			'created_at'=>date("Y-m-d")
 		));
 		//tags
 		\DB::table('projects_issues_tags')->insert(array(
 			'id'=>1, 
 			'issue_id'=>1,
 			'tag_id'=>1,
-			'created_at'=>date("Y-m-d H:i:s")
+			'created_at'=>date("Y-m-d")
 		));
 		//Activity
 		\DB::table('users_activity')->insert(array(
@@ -48,7 +49,7 @@ class Home_Controller extends Base_Controller {
 			'item_id'=>1,
 			'action_id'=>1,
 			'type_id'=>1,
-			'created_at'=>date("Y-m-d H:i:s")
+			'created_at'=>date("Y-m-d")
 		));
 		//Users_todos
 		\DB::table('users_todos')->insert(array(
@@ -56,7 +57,7 @@ class Home_Controller extends Base_Controller {
 			'issue_id'=>1,
 			'user_id'=>1,
 			'status'=>3,
-			'created_at'=>date("Y-m-d H:i:s")
+			'created_at'=>date("Y-m-d")
 		));
 		return Redirect::to("/")->with('notice', __('tinyissue.issue_has_been_created'));
 	}
