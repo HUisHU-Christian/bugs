@@ -94,7 +94,9 @@ class Mail {
 			$query  = "SELECT DISTINCT 0 AS project, 0 AS attached, 0 AS tages, ";
 			$query .= "USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
 			$query .= "'Robot of BUGS system' AS name, 'A user just connected to BUGS' AS title ";
-			$query .= "FROM users AS USR WHERE USR.role_id = 4 ORDER BY USR.id ASC LIMIT 0, 1";
+			$query .= "FROM users AS USR ";
+			$query .= "WHERE USR.role_id = 4 AND USR.preferences LIKE '%noticeOnLogIn=true%' AND USR.id != ".\Auth::user()->id." AND TRIM(USR.email) != '' ";
+			$query .= "ORDER BY USR.id ASC";
 		} else {
 			$detail['IssueID'] = $detail['IssueID'] ?? 0;
 			$query  = "SELECT DISTINCT FAL.project, FAL.attached, FAL.tags, ";

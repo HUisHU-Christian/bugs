@@ -134,11 +134,11 @@
 				<h4>'.$LngSRV["UserPref_Notice"].'</h4>';
 			
 				echo $LngSRV["UserPref_NoticeOnLogIn"].' : '.$LngSRV["UserPref_projet_2a"];
-				echo '<input name="noticeOnLogIn" id="radio_noticeOnLogIn_Oui" type="radio" value="true" '.(($pref['noticeOnLogIn']) ? 'checked="checked"' : '').' />';
+				echo '<input name="noticeOnLogIn" id="radio_noticeOnLogIn_Oui" type="radio" value="true" '.(($pref['noticeOnLogIn'] == 'true') ? 'checked="checked"' : '').' />';
 				echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$LngSRV["UserPref_projet_2b"];
 				echo '
 				';
-				echo '<input name="noticeOnLogIn" id="radio_noticeOnLogIn_Non" type="radio" value="false" '.((!$pref['noticeOnLogIn']) ? 'checked="checked"' : '').'/>';
+				echo '<input name="noticeOnLogIn" id="radio_noticeOnLogIn_Non" type="radio" value="false" '.(($pref['noticeOnLogIn'] != 'true') ? 'checked="checked"' : '').'/>';
 				echo '
 				';
 			} else {
