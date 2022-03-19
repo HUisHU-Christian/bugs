@@ -77,6 +77,7 @@ class Mail {
 
 		//Select email addresses
 		if ($detail['Type'] == 'User') {
+			//Message de bienvenue à un nouvel usager
 			$followers = \DB::table('users')
 				->select(array(DB::raw("0 as project"), DB::raw("1 as attached"), DB::raw("1 as tages"), 'email','firstname','lastname','language',DB::raw("'Welcome on BUGS' as name"),DB::raw("'Welcome' as title")))
 				->where('id', '<>', \Auth::user()->id)
@@ -85,6 +86,7 @@ class Mail {
 				->order_by('id')
 				->get();
 		} else if ($detail['Type'] == 'TestonsSVP') {
+			//L'administrateur teste le système de courriel via la page admin
 			$followers = \DB::table('users')
 				->select(array(DB::raw("0 as project"), DB::raw("1 as attached"), DB::raw("1 as tages"), 'email','firstname','lastname','language',DB::raw("'Testing mail for any project' as name"),DB::raw("'Test' as title")))
 				->where('id', '=', \Auth::user()->id)
@@ -95,6 +97,7 @@ class Mail {
 			$subject = $Lng['tinyissue']["email_test_tit"];
 			echo $Lng['tinyissue']["email_test_tit"];
 		} else if ($detail['Type'] == 'noticeonlogin') {
+			//Envoyons un avis de connexion d'usager aux administrateurs qui l'ont demandé.
 			$followers = \DB::table('users')
 				->select(array(DB::raw("0 as project"), DB::raw("0 as attached"), DB::raw("0 as tages"), 'email','firstname','lastname','language',DB::raw("'Robot of BUGS system' as name"),DB::raw("'A user just connected to BUGS' as title")))
 				->where('id', '<>', \Auth::user()->id)
@@ -105,17 +108,29 @@ class Mail {
 				->order_by('id')
 				->get();
 		} else {
+			//Toutes les autres occasions où un message est demandé
+			////Lorsqu'un commentaire est soumis à un usager, nous avisons ici les suiveux
 			$detail['IssueID'] = $detail['IssueID'] ?? 0;
 			$followers = \DB::table('following')
-				->select(array(DB::raw("0 as project"), DB::raw("0 as attached"), DB::raw("0 as tages"), 'users.email','users.firstname','users.lastname','users.language','projects.name', 'projects_issues.title'))
+				->select(array(
+					'following.project_id as project', 
+					'following.attached as attached', 
+					'following.tags as tages', 
+					'users.email',
+					'users.firstname',
+					'users.lastname',
+					'users.language',
+					'projects.name', 
+					'projects_issues.title')
+				)
 				->join('users', 'users.id', '=', 'following.user_id')
-				->join('projects', 'projects.id', '=', 'following.project_id')
-				->join('projects_issues', 'projects_issues.id', '=', 'following.issue_id')
-				->where('following.id', '"', $detail['ProjectID'])
+				->join((($detail['Type'] == 'Issue') ? 'projects_issues' : 'projects'), (($detail['Type'] == 'Issue') ? 'projects_issues.id' : 'projects.id'), '=', (($detail['Type'] == 'Issue') ? 'following.issue_id' : 'following.project_id'))
+				->join((($detail['Type'] == 'Issue') ? 'projects' : 'projects_issues'), (($detail['Type'] == 'Issue') ? 'projects_issues.project_id' : 'projects_issues.id'), '=', (($detail['Type'] == 'Issue') ? 'projects.id' : 'following.project.id'))
+				->where('following.id', '=', $detail['ProjectID'])
 				->where('users.email', '<>', '')
 				->whereNotNull('users.email')
 				->where('following.issue_id', '=', $detail['IssueID'])
-				->whereNotIn('following.user_id', (($detail['Type'] == 'Issue' && $detail['SkipUser']) ? $UserID : array(0)))
+				->whereNotIn('following.user_id', (($detail['Type'] == 'Issue' && $detail['SkipUser']) ? array($UserID) : array(0)))
 				->where('following.project', '=', (($detail['Type'] == 'Issue') ? 0 : 1 ))
 				->order_by('users.id')
 				->get();

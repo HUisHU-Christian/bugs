@@ -103,6 +103,8 @@ alert("Vous voyez ce message parce que SendMail.php a été appelé.\n\nPrenez n
 		} else if ($Type == 'Project') {
 			$query .= "AND FAL.project = 1 ";
 		}
+		echo 'Voici la requête: '.$query.'<br /><br />';
+		exit();
 	}
 	$followers = Requis($query);
 
