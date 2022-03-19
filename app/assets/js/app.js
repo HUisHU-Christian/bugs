@@ -7,6 +7,7 @@ $(function(){
 });
 
 var chronoOnOff = "";
+var dureeAffichage = 0;
 var delaiSauvegarde = false;
 var saving = false;
 var Nouv = false;
@@ -162,7 +163,12 @@ function Chronometrons(etat, nouvText, user_id, issue_id, project_id) {
 }
 
 function delaiAffichage() {
-	document.getElementById('global-saving').style.color = (document.getElementById('global-saving').style.color == 'yellow') ? '#660099' : 'yellow'; 
+	dureeAffichage = dureeAffichage + 1;
+	if (dureeAffichage > 5) {
+		var delaiSauvegarde = false;
+		dureeAffichage = 0;
+		document.getElementById('global-saving').style.display = 'none';
+	}
 }
 
 function Follows(Quoi, Qui, ProjectID, IssueID, Etat) {

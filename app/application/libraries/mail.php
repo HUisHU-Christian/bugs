@@ -77,50 +77,66 @@ class Mail {
 
 		//Select email addresses
 		if ($detail['Type'] == 'User') {
-			$query  = "SELECT DISTINCT 0 AS project, 1 AS attached, 1 AS tages, ";
-			$query .= "USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
-			$query .= "'Welcome on BUGS' AS name, 'Welcome' AS title ";
-			$query .= "FROM users AS USR WHERE ";
-			$query .= (is_numeric($UserID)) ? "USR.id = ".$UserID : "USR.email = '".$UserID."' "; 
+			//Message de bienvenue à un nouvel usager
+			$followers = \DB::table('users')
+				->select(array(DB::raw("0 as project"), DB::raw("1 as attached"), DB::raw("1 as tages"), 'email','firstname','lastname','language',DB::raw("'Welcome on BUGS' as name"),DB::raw("'Welcome' as title")))
+				->where('id', '<>', \Auth::user()->id)
+				->whereNotNull('email')
+				->where(((is_numeric($UserID)) ? "id" : "email"), "=", $UserID)
+				->order_by('id')
+				->get();
 		} else if ($detail['Type'] == 'TestonsSVP') {
-			$query  = "SELECT DISTINCT 0 AS project, 1 AS attached, 1 AS tages, ";
-			$query .= "USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
-			$query .= "'Testing mail for any project' AS name, 'Test' AS title ";
-			$query .= "FROM users AS USR WHERE USR.id = ".$UserID;
+			//L'administrateur teste le système de courriel via la page admin
+			$followers = \DB::table('users')
+				->select(array(DB::raw("0 as project"), DB::raw("1 as attached"), DB::raw("1 as tages"), 'email','firstname','lastname','language',DB::raw("'Testing mail for any project' as name"),DB::raw("'Test' as title")))
+				->where('id', '=', \Auth::user()->id)
+				->whereNotNull('email')
+				->order_by('id')
+				->get();
 			$message .= " ".$Lng['tinyissue']["email_test"].\Config::get('application.my_bugs_app.name').').';
 			$subject = $Lng['tinyissue']["email_test_tit"];
 			echo $Lng['tinyissue']["email_test_tit"];
 		} else if ($detail['Type'] == 'noticeonlogin') {
-			$query  = "SELECT DISTINCT 0 AS project, 0 AS attached, 0 AS tages, ";
-			$query .= "USR.email, USR.firstname AS first, USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
-			$query .= "'Robot of BUGS system' AS name, 'A user just connected to BUGS' AS title ";
-			$query .= "FROM users AS USR ";
-			$query .= "WHERE USR.role_id = 4 AND USR.preferences LIKE '%noticeOnLogIn=true%' AND USR.id != ".\Auth::user()->id." AND TRIM(USR.email) != '' ";
-			$query .= "ORDER BY USR.id ASC";
+			//Envoyons un avis de connexion d'usager aux administrateurs qui l'ont demandé.
+			$followers = \DB::table('users')
+				->select(array(DB::raw("0 as project"), DB::raw("0 as attached"), DB::raw("0 as tages"), 'email','firstname','lastname','language',DB::raw("'Robot of BUGS system' as name"),DB::raw("'A user just connected to BUGS' as title")))
+				->where('id', '<>', \Auth::user()->id)
+				->where('role_id', '=', 4)
+				->where('preferences', 'LIKE', '%noticeOnLogIn=true%')
+				->where('email', '<>', '')
+				->whereNotNull('email')
+				->order_by('id')
+				->get();
 		} else {
+			//Toutes les autres occasions où un message est demandé
+			////Lorsqu'un commentaire est soumis à un usager, nous avisons ici les suiveux
 			$detail['IssueID'] = $detail['IssueID'] ?? 0;
-			$query  = "SELECT DISTINCT FAL.project, FAL.attached, FAL.tags, ";
-			$query .= "		USR.email, USR.firstname AS first, ";
-			$query .= "		USR.lastname as last, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, ";
-			$query .= "		PRO.name, ";
-			$query .= "	(SELECT title FROM projects_issues WHERE id = ".$detail['IssueID'].") AS title ";
-			$query .= "FROM following AS FAL ";
-			$query .= "LEFT JOIN users AS USR ON USR.id = FAL.user_id "; 
-			$query .= "LEFT JOIN projects AS PRO ON PRO.id = FAL.project_id ";
-			$query .= "LEFT JOIN projects_issues AS TIK ON TIK.id = FAL.issue_id ";
-			$query .= "WHERE FAL.project_id = ".$detail['ProjectID']." ";
-			if ($detail['Type'] == 'Issue') {
-				$query .= "AND issue_id = ".$detail['IssueID']." ";
-				$query .= ($detail['SkipUser']) ? "AND FAL.user_id NOT IN (".$UserID.") " : "";
-				//$query .= "AND FAL.project = 0 ";
-			} else if ($detail['Type'] == 'Project') {
-				$query .= "AND FAL.project = 1 ";
-			}
-			$query .= " AND email IS NOT NULL AND email != '' ";
+			$followers = \DB::table('following')
+				->select(array(
+					'following.project_id as project', 
+					'following.attached as attached', 
+					'following.tags as tages', 
+					'users.email',
+					'users.firstname',
+					'users.lastname',
+					'users.language',
+					'projects.name', 
+					'projects_issues.title')
+				)
+				->join('users', 'users.id', '=', 'following.user_id')
+				->join((($detail['Type'] == 'Issue') ? 'projects_issues' : 'projects'), (($detail['Type'] == 'Issue') ? 'projects_issues.id' : 'projects.id'), '=', (($detail['Type'] == 'Issue') ? 'following.issue_id' : 'following.project_id'))
+				->join((($detail['Type'] == 'Issue') ? 'projects' : 'projects_issues'), (($detail['Type'] == 'Issue') ? 'projects_issues.project_id' : 'projects_issues.id'), '=', (($detail['Type'] == 'Issue') ? 'projects.id' : 'following.project.id'))
+				->where('following.id', '=', $detail['ProjectID'])
+				->where('users.email', '<>', '')
+				->whereNotNull('users.email')
+				->where('following.issue_id', '=', $detail['IssueID'])
+				->whereNotIn('following.user_id', (($detail['Type'] == 'Issue' && $detail['SkipUser']) ? array($UserID) : array(0)))
+				->where('following.project', '=', (($detail['Type'] == 'Issue') ? 0 : 1 ))
+				->order_by('users.id')
+				->get();
 		}		
-		$followers = \DB::query($query);
 
-		if (count($followers) > 0) {
+		if ($followers) {
 			foreach ($followers as $follower) {
 				$subject = Mail::wildcards($subject, $follower, true);
 				$passage_ligne = (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $follower->email)) ? "\r\n" : "\n";
@@ -259,20 +275,20 @@ class Mail {
 		$liss = $tit ? ' « ' : '<a href="'.$link."project/".$detail["ProjectID"]."/issue/".$detail["IssueID"]."/".'">';
 		$lpro = $tit ? ' « ' : '<a href="'.$link."project/".$detail["ProjectID"]."/issues?tag_id=1".'">';
 		$body = str_replace('BUGS', \Config::get('application.my_bugs_app.name').' (BUGS)', $body);
-		$body = str_replace('{frst}', ucwords($follower->first), $body);
-		$body = str_replace('{firt}', ucwords($follower->first), $body);
-		$body = str_replace('{firs}', ucwords($follower->first), $body);
-		$body = str_replace('{first}', ucwords($follower->first), $body);
-		$body = str_replace('{firsts}', ucwords($follower->first), $body);
-		$body = str_replace('{lst}', ucwords($follower->last), $body);
-		$body = str_replace('{lat}', ucwords($follower->last), $body);
-		$body = str_replace('{las}', ucwords($follower->last), $body);
-		$body = str_replace('{last}', ucwords($follower->last), $body);
-		$body = str_replace('{lasts}', ucwords($follower->last), $body);
-		$body = str_replace('{ful}', ucwords($follower->user), $body);
-		$body = str_replace('{fll}', ucwords($follower->user), $body);
-		$body = str_replace('{full}', ucwords($follower->user), $body);
-		$body = str_replace('{fulls}', ucwords($follower->user), $body);
+		$body = str_replace('{frst}', ucwords($follower->firstname), $body);
+		$body = str_replace('{firt}', ucwords($follower->firstname), $body);
+		$body = str_replace('{firs}', ucwords($follower->firstname), $body);
+		$body = str_replace('{first}', ucwords($follower->firstname), $body);
+		$body = str_replace('{firsts}', ucwords($follower->firstname), $body);
+		$body = str_replace('{lst}', ucwords($follower->lastname), $body);
+		$body = str_replace('{lat}', ucwords($follower->lastname), $body);
+		$body = str_replace('{las}', ucwords($follower->lastname), $body);
+		$body = str_replace('{last}', ucwords($follower->lastname), $body);
+		$body = str_replace('{lasts}', ucwords($follower->lastname), $body);
+		$body = str_replace('{ful}',  ucwords($follower->firstname.' '.$follower->lastname), $body);
+		$body = str_replace('{fll}',  ucwords($follower->firstname.' '.$follower->lastname), $body);
+		$body = str_replace('{full}', ucwords($follower->firstname.' '.$follower->lastname), $body);
+		$body = str_replace('{fulls}',ucwords($follower->firstname.' '.$follower->lastname), $body);
 		$body = str_replace('{pjet}', 	$lpro.$follower->name.$lfin, $body);
 		$body = str_replace('{prjet}', 	$lpro.$follower->name.$lfin, $body);
 		$body = str_replace('{projet}', 	$lpro.$follower->name.$lfin, $body);
