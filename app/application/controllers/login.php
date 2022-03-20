@@ -8,6 +8,29 @@ class Login_Controller extends Controller {
 	}
 
 	public function post_index() {
+		if ( Input::get('MotPasseOublie') !== NULL && Input::get('password') == "RechMotPasse") {
+			if ( Input::get('MotPasseOublie') == 1 && Input::get('retrouver') > time()-60 && Input::get('MonAdrs') == $_SERVER['REMOTE_ADDR'] && Input::get('CetAdrs') == $_SERVER['SERVER_ADDR'] ) {
+				$NouvPass = rand(10000000, 99999999);
+				$Retrouve = \User::where("email", "=", Input::get('email'))->get();
+				if (count($Retrouve) == 1) { 
+					\DB::table('users')->where('id', '=', $Retrouve[0]->id)->update(array('password' => Hash::make($NouvPass)));
+					\Mail::letMailIt(array(
+						'ProjectID' => 0, 
+						'IssueID' => $Retrouve[0]->id, 
+						'SkipUser' => false,
+						'Type' => 'Recup', 
+						'user' => $Retrouve[0]->id,
+						'contenu' => array('email:'.$Retrouve[0]->email, 'lang:'.$Retrouve[0]->language, 'message: Voici votre nouveau mot de passe '.$NouvPass),
+						'src' => array('value','value', 'value')
+						),
+						$Retrouve[0]->id, 
+						$Retrouve[0]->language
+					);
+				}
+			return Redirect::to(Input::get('return', '/'));
+			}
+		}
+
 		$userdata = array(
 			'username' => Input::get('email'),
 			'password' => Input::get('password'),

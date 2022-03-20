@@ -32,12 +32,10 @@ class Mail {
 		$UserID = ($UserID === NULL) ? (( $detail['user'] !== NULL ) ? $detail['user'] : \Auth::user()->id) : $UserID;
 		$values = array();
 
-		if ($detail['Type'] == 'User') {
-			$resu = \DB::table('users')->where('email', '=', $UserID)->get();
-		} else {
+		if ($detail['Type'] != 'User') {
 			$UserID = $UserID ?? (is_array($User) ? $User[0] : $User);
-			$resu = \DB::table('users')->where('id', '=', $UserID)->get();
 		}
+		$resu = \User::find($UserID)->get();
 		$QuelUser = $resu[0];
 		$QuelUser->language = ($Langue === NULL)  ? $QuelUser->language : $Langue;
 		//Chargement des fichiers linguistiques
@@ -56,7 +54,7 @@ class Mail {
 		$message = "";
 		$subject = (file_exists('../uploads/'.$detail["contenu"][0].'_tit.html')) 
 					? file_get_contents('../uploads/'.$detail["contenu"][0].'_tit.html')
-					: $Lng[$detail['src'][0]]['following_email_'.strtolower($detail["contenu"][0]).'_tit'];
+					: ((isset($Lng[$detail['src'][0]]['following_email_'.strtolower($detail["contenu"][0]).'_tit'])) ? $Lng[$detail['src'][0]]['following_email_'.strtolower($detail["contenu"][0]).'_tit'] : "BUGS");
 		$byeCnt = file_exists('../'.\Config::get('application.attached.directory')."bye.html") 
 					? file_get_contents('../'.\Config::get('application.attached.directory')."bye.html") 
 					: \Config::get('application.mail.bye');
@@ -67,20 +65,21 @@ class Mail {
 		foreach ($detail["contenu"] as $ind => $val) {
 			if ($detail['src'][$ind] == 'value') {
 				$vals = explode(":", $val);
-				$values[$vals[0]] = $vals[1];
+				$values[$vals[0]] = ((isset($vals[1])) ? $vals[1] : "BABOOM");
 			} else {
 				$message .= (file_exists('../uploads/'.$val.'.html')) 
 							? file_get_contents('../uploads/'.$val.'.html') 
-							: $Lng[$detail['src'][$ind]]['following_email_'.strtolower($val)];
+							: ((isset($Lng[$detail['src'][$ind]]['following_email_'.strtolower($val)])) ? $Lng[$detail['src'][$ind]]['following_email_'.strtolower($val)] : "Contenu à venir");
 			}
 		}
 
 		//Select email addresses
-		if ($detail['Type'] == 'User') {
+		if ($detail['Type'] == 'User' || $detail['Type'] == 'Recup') {
 			//Message de bienvenue à un nouvel usager
+			//Récupération d'un mot de passe
 			$followers = \DB::table('users')
 				->select(array(DB::raw("0 as project"), DB::raw("1 as attached"), DB::raw("1 as tages"), 'email','firstname','lastname','language',DB::raw("'Welcome on BUGS' as name"),DB::raw("'Welcome' as title")))
-				->where('id', '<>', \Auth::user()->id)
+				->where('id', '<>', (($detail['Type'] == 'Recup') ? $UserID : \Auth::user()->id))
 				->whereNotNull('email')
 				->where(((is_numeric($UserID)) ? "id" : "email"), "=", $UserID)
 				->order_by('id')
