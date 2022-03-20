@@ -63,4 +63,34 @@ $WrongPwd["ru"] = 'Упсс, имя пользователя и пароль н�
 $WrongPwd["zh-CN"] = '哎呀, 您的账号或密码不符';
 $WrongPwd["zh-TW"] = '哎呦, 您的帳號或密碼不符';
 
+$Oublie["en"] = 'Fogotten password';
+$Oublie["es"] = 'Si me olvido la contraseña';
+$Oublie["fr"] = 'J`ai oublié mon mot de passe';
+$Oublie["pt"] = 'Senha esquecida';
+$Oublie["pt-BR"] = 'Senha esquecida';
+$Oublie["it"] = 'Password dimenticata';
+
+$OublieQuoi["en"] = 'Drag and drop the password box into the trash can ';
+$OublieQuoi["es"] = 'Arrastre y suelte el cuadro de contraseña en la papelera ';
+$OublieQuoi["fr"] = 'Glissez-déposez la case du mot de passe dans la poubelle';
+$OublieQuoi["pt"] = 'Arraste e solte a caixa de senha na lixeira ';
+$OublieQuoi["pt-BR"] = 'Arraste e solte a caixa de senha na lixeira ';
+$OublieQuoi["it"] = 'Trascina e rilascia la casella della password nel cestino ';
+
+$OublieResu["en"] = 'A new password will be generated and sent to ';
+$OublieResu["es"] = 'Se generará una nueva contraseña y se enviará a ';
+$OublieResu["fr"] = 'Un nouveau mot de passe sera généré et envoyé à';
+$OublieResu["pt"] = 'Uma nova senha será gerada e enviada para';
+$OublieResu["pt-BR"] = 'Uma nova senha será gerada e enviada para';
+$OublieResu["it"] = 'Verrà generata e inviata una nuova password';
+
+$OublieCour["en"] = 'Please enter your login email ';
+$OublieCour["es"] = 'Por favor, introduzca su correo electrónico de inicio de sesión';
+$OublieCour["fr"] = 'Veuillez indiquer votre courriel de connexion';
+$OublieCour["pt"] = 'Por favor, digite seu e-mail de login';
+$OublieCour["pt-BR"] = 'Por favor, digite seu e-mail de login';
+$OublieCour["it"] = 'Per favore inserisci la tua email di accesso ';
+
+
+
 $NoConfigApp = "A major error occured: the template file for configuration does not exists!";
