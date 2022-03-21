@@ -124,7 +124,7 @@ class Mail {
 				)
 				->join('users', 'users.id', '=', 'following.user_id')
 				->join((($detail['Type'] == 'Issue') ? 'projects_issues' : 'projects'), (($detail['Type'] == 'Issue') ? 'projects_issues.id' : 'projects.id'), '=', (($detail['Type'] == 'Issue') ? 'following.issue_id' : 'following.project_id'))
-				->join((($detail['Type'] == 'Issue') ? 'projects' : 'projects_issues'), (($detail['Type'] == 'Issue') ? 'projects_issues.project_id' : 'projects_issues.id'), '=', (($detail['Type'] == 'Issue') ? 'projects.id' : 'following.project.id'))
+				->join((($detail['Type'] == 'Issue') ? 'projects' : 'projects_issues'), (($detail['Type'] == 'Issue') ? 'projects_issues.project_id' : 'projects_issues.id'), '=', (($detail['Type'] == 'Issue') ? 'projects.id' : 'following.project_id'))
 				->where('following.id', '=', $detail['ProjectID'])
 				->where('users.email', '<>', '')
 				->whereNotNull('users.email')
