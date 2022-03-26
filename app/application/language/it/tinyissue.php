@@ -91,7 +91,7 @@ return array(
 	'password_incorrect' => 'Ooops, il tuo nome utente o la tua password non corrispondono.',
 	'project_has_been_deleted'=>'Il progetto è stato cancellato.',
 	'project_has_been_updated' => 'Il Progetto È Stato Aggiornato!',
-	'project_overview' => 'Riepilogo del progetto',
+	'project_overview' => 'Administratores del progetto',
 	'project' => 'Progetto',
 	'projects_description' => 'Lista di tutti i progetti',
 	'projects' => 'Progetti',

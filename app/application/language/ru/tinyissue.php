@@ -91,7 +91,7 @@ return array(
 	'password_incorrect' => 'Упсс, имя пользователя и пароль не совпадают.',
 	'project_has_been_deleted'=>'Данный проект удален.',
 	'project_has_been_updated' => 'Проект обновлен!',
-	'project_overview' => 'Обзор проекта',
+	'project_overview' => 'Статистика  проекта',
 	'project' => 'Проект',
 	'projects_description' => 'Список ваших проектов',
 	'projects' => 'Проекты',

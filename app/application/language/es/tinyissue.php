@@ -110,7 +110,7 @@ return array(
 	'password_incorrect' => 'Usuario o clave no son correctos',
 	'project_has_been_deleted'=>'El proyecto se ha eliminado.',
 	'project_has_been_updated' => 'El proyecto ha sido actualizado!',
-	'project_overview' => 'Estado del proyecto',
+	'project_overview' => 'Los administradores del proyecto',
 	'project' => 'Proyecto',
 	'projects_description' => 'Lista completa de proyectos',
 	'projects' => 'Proyectos',
