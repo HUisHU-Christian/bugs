@@ -96,7 +96,7 @@ return array(
 	'password_incorrect' => 'Der Benutzername und das Passwort sind nicht korrekt.',
 	'project_has_been_deleted'=>'Das Projekt wurde gelöscht.',
 	'project_has_been_updated' => 'Projekt wurde aktualisiert!',
-	'project_overview' => 'Projektübersicht',
+	'project_overview' => 'Projektüberadmin',
 	'project' => 'Projekt',
 	'projects_description' => 'Liste aller Projekte',
 	'projects' => 'Projekte',

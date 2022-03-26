@@ -215,7 +215,7 @@ return array(
 	'percentage_of_work_done' => 'Pourcentage du travail accompli',
 	'project_has_been_deleted' => 'Le projet a été supprimé.',
 	'project_has_been_updated' => 'Le projet a été mis à jour !',
-	'project_overview' => 'Vue du projet',
+	'project_overview' => 'Gestionnaires du projet',
 	'project' => 'Projet',
 	'project_created_success' => 'Projet créé avec succès,\n vous pouvez y créer un nouveau billet',
 	'projects_description' => 'Liste de tous vos projets',
