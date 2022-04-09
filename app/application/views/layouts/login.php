@@ -192,7 +192,6 @@ function ChgLng(Lng) {
 		document.getElementById('span_Remember').innerHTML =  values[Lng]["Remember"];
 		document.getElementById('th_Title').innerHTML =  values[Lng]["Title"];
 		document.getElementById('span_Welcome').innerHTML =  values[Lng]["Welcome"];
-		document.getElementById('span_Welcome').innerHTML =  values[Lng]["Oublie"];
 		document.getElementById('span_MotPasseOublie').innerHTML =  values[Lng]["Oublie"];
 		document.getElementById('span_MotPasseOublieQuoi').innerHTML =  values[Lng]["OublieQuoi"];
 		resu =  values[Lng]["OublieResu"];
