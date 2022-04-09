@@ -30,6 +30,7 @@ class Ajax_Administration_Controller extends Base_Controller {
 	}
 
 	public function post_AjourDataBase() {
+		\Log::write(2,'Admin management : Update BDD');
 		$_GET["MAJsql"] = Input::get('MAJsql');
 		Administration::AjourStructureBase("admin");
 		return true;
@@ -41,6 +42,7 @@ class Ajax_Administration_Controller extends Base_Controller {
 	* @return text			message | count
 	*/
 	public function post_backupbdd() {
+		\Log::write(2,'Admin management : backup BDD');
 		$compte = 0;
 		$retour = "Non";
 		$sortie = "";
@@ -132,6 +134,7 @@ class Ajax_Administration_Controller extends Base_Controller {
 	* @return message | count
 	*/
 	public function post_backuptxt() {
+		\Log::write(2,'Admin management : backup options');
 		$compte = 0;
 		$retour = "Non";
 		$namedir = date("YmdHis");
@@ -172,6 +175,7 @@ class Ajax_Administration_Controller extends Base_Controller {
 	* @return confirmation phrase
 	*/
 	public function post_courriels() {
+		\Log::write(2,'Admin management : edit the email intro and bye files');
 		//Définition des variables
 		
 		$dir = $this->config_app["attached"]["directory"];
@@ -242,11 +246,13 @@ class Ajax_Administration_Controller extends Base_Controller {
 	* @return confirmation phrase
 	*/
 	public function post_emails() {
+		\Log::write(2,'Admin management : edit the email content texts');
 		$a = 0;
 		$dir = $this->prefixe.$this->config_app['attached']['directory'];
 	
 		//Enregistrement du texte reçu
 		if (Input::get('Enreg') != 'false') {
+			\Log::write(4,'Admin management : edit the email content text for '.Input::get('Quel').' ');
 			$a = file_put_contents($dir.Input::get('Quel').".html", Input::get('Prec'));
 			$c = file_put_contents($dir.Input::get('Quel')."_tit.html", Input::get('Titre'));
 			$a = ($c == 0) ? 0 : $a;
@@ -271,32 +277,67 @@ class Ajax_Administration_Controller extends Base_Controller {
 	/**
 	* Edit the administrator's preferences on error managing
 	*
+	* @param  integer	$acuracy   	... 3 		: how acurate are the log recordings
 	* @param  text		$detail    	... 'true' : show details on user's screen   		'false' : show error 500 page
+	* @param  integer	$delay    	...  99    : show details on user's screen for $delay seconds long
 	* @param  text		$log       	... 'true' : log errors into  app/storage/logs		'false' : do not log
 	* @param  text		$exit	   	... 'true' : use exitxt content							'false' : exit(0)
 	* @param  text		$exittxt	   ... show text on screen
 	* @return confirmation phrase
 	*/
 	public function post_errors() {
+		\Log::write(2,'Admin management : Errors logging -> edit the setup.php file');
 		if (Auth::user()->role_id != 4) {
 			$a = 0;
 		} else {
+			$depuisAvr22 = array('acuracy');
+			$repereAvr22 = array();
+			$descrptions = array(
+				'acuracy' => '
+	/*
+	|--------------------------------------------------------------------------
+	| Acuracy
+	|--------------------------------------------------------------------------
+	|
+	| Précision et fréquence des informations enregistrées dans le registre
+	| 0: ERROR : seules les erreurs sont enregistrées
+	| 1: ERR  : 
+	| 2: MORE : 
+	| 3: INFO : 
+	| 4: SAYS :
+	| 5: DETAILS : toutes les actions sont enregistrées
+	| 
+	*/
+'
+			);
 			$NomFichier = "application/config/error.php";
 			$RefFichier = fopen($NomFichier, "r");
 			$rendu = 0;
 			while (!feof($RefFichier)) {
 				$MesLignes[$rendu] = fgets($RefFichier);
-				if (strpos($MesLignes[$rendu], "'detail' => ") > 0) { $MesLignes[$rendu] = "   'detail' => ".Input::get('detail').", 
+				if (strpos($MesLignes[$rendu], "'acuracy' => ")   > 0) { $MesLignes[$rendu] = "   'acuracy' => ".Input::get('acuracy').",
+				"; $repereAvr22[] = 'acuracy'; }
+				if (strpos($MesLignes[$rendu], "'delay' => ")   > 0) { $MesLignes[$rendu] = "   'delay' => ".Input::get('delay').",
 				"; }
-				if (strpos($MesLignes[$rendu], "'log' => ") 	  > 0) { $MesLignes[$rendu] = "   'log' => ".Input::get('log') .",
+				if (strpos($MesLignes[$rendu], "'detail' => ") > 0) { $MesLignes[$rendu] = "   'detail' => ".Input::get('detail').", 
 				"; }
 				if (strpos($MesLignes[$rendu], "'exit' => ")   > 0) { $MesLignes[$rendu] = "   'exit' => ".((Input::get('exit') == 'false') ? 1 : "'".Input::get('exittxt').".'").",
 				"; }
-				if (strpos($MesLignes[$rendu], "'delay' => ")   > 0) { $MesLignes[$rendu] = "   'delay' => ".Input::get('delay').",
+				if (strpos($MesLignes[$rendu], "'log' => ") 	  > 0) { $MesLignes[$rendu] = "   'log' => ".Input::get('log') .",
 				"; }
 				$rendu = $rendu + 1;
 			}
 			fclose($RefFichier);
+			foreach (array_diff($depuisAvr22, $repereAvr22) as $ind => $val) {
+				array_pop($MesLignes);
+				$MesLignes[] = $descrptions[$val];
+				$MesLignes[] = '
+	\''.$val.'\' => '.Input::get($val).',
+';
+				$MesLignes[] = '
+);';
+				\Log::write(4,'Admin management : Errors logging -> add new element ( '.$val.') in setup.php');
+			}
 			$a = file_put_contents($NomFichier, $MesLignes);
 		}
 		return Administration::retournons($a);
@@ -318,6 +359,7 @@ class Ajax_Administration_Controller extends Base_Controller {
 	*/	
 	public function post_prefGen() {
 		//Sauvegarde du fichier original
+		\Log::write(2,'Admin management : General preferences');
 		$SavFichier = "config.app.".date("Ymdhis").".php";
 		copy ($this->prefixe."config.app.php", $this->prefixe.$SavFichier);
 	
@@ -409,6 +451,7 @@ class Ajax_Administration_Controller extends Base_Controller {
 	* @return confirmation phrase
 	*/
 	public function post_smtp() {
+		\Log::write(2,'Admin management : email exchange definitions');
 		//Définition des variables
 		$MesLignes = array();
 		$NumLigne = array();

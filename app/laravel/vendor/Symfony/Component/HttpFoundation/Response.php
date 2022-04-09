@@ -137,7 +137,7 @@ class Response {
         $this->setStatusCode($status);
         $this->setProtocolVersion('1.0');
         if (!$this->headers->has('Date')) {
-            $this->setDate(new \DateTime(null, new \DateTimeZone('UTC')));
+            $this->setDate(new \DateTime(date("Y-m-d H:i:s"), new \DateTimeZone('UTC')));
         }
     }
 

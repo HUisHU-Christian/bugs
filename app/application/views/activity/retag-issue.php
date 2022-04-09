@@ -1,5 +1,5 @@
 <?php if (isset($issue)) { ?>
-<li onclick="window.location='<?php echo $issue->to(); ?>';">
+<li onclick="window.location='<?php echo $issue->to(); ?>';" class="activity-item">
 	<div class="tag">
 		<label class="label warning"><?php echo __('tinyissue.tag_has_been_updated'); ?></label>
 	</div>

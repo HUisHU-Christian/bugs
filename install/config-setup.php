@@ -21,7 +21,7 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	/* Edit URL Information */
 	$_POST['URL'] = (substr($_POST['URL'], -1) == '/') ? $_POST['URL'] : $_POST['URL'].'/';
 	$config_file = str_replace("'url' => '',", "'url' => '".$_POST['URL']."',", $config_file);
-	
+
 	/* Edit Database Information */
 	$config_file = str_replace('localhost', $_POST['database_host'], $config_file);
 	$config_file = str_replace('database_user', $_POST['database_username'], $config_file);
@@ -32,12 +32,12 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	$config_file = str_replace('Your E-Mail Name', $_POST['email_name'], $config_file);
 	$config_file = str_replace('name@domain.com', $_POST['email_address'], $config_file);
 	$config_file = str_replace("'transport' => 'smtp'", "'transport' => '".$_POST['email_transport']."'", $config_file);
-	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".$_POST['email_username']."'", $config_file);
-	$config_file = str_replace("'server' => 'smtp.gmail.com'", "'server' => '".$_POST['email_server']."'", $config_file);
-	$config_file = str_replace("'port' => 587", "'port' => ".((trim($_POST['email_port']) == '') ? 25 : $_POST['email_port']), $config_file);
-	$config_file = str_replace("'encryption' => 'tls'", "'encryption' =>  '".$_POST['email_encryption']."'", $config_file);
-	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".$_POST['email_username']."'", $config_file);
-	$config_file = str_replace("'password' => '******'", "'password' =>  '".$_POST['email_password']."'", $config_file);
+	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".($_POST['email_username'] ?? 'BUGS')."'", $config_file);
+	$config_file = str_replace("'server' => 'smtp.gmail.com'", "'server' => '".($_POST['email_server'] ?? 'smtp.gmail.com')."'", $config_file);
+	$config_file = str_replace("'port' => 587", "'port' => ".($_POST['email_port'] ?? '665'), $config_file);
+	$config_file = str_replace("'encryption' => 'tls'", "'encryption' =>  '".($_POST['email_encryption'] ?? 'SSL')."'", $config_file);
+	$config_file = str_replace("'username' => 'xyzxyz'", "'username' =>  '".($_POST['email_username'] ?? $_POST['email_address'] ?? 'undefined')."'", $config_file);
+	$config_file = str_replace("'password' => '******'", "'password' =>  '".($_POST['email_password'] ?? 'admin')."'", $config_file);
 
 	/* Timezone */
 	$config_file = str_replace('Europe/Brussels', $_POST['timezone'], $config_file);
@@ -54,16 +54,16 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 			</head>
 			<body>
 			<div class="InstallLogo"></div>
-			
+
 			<div id="container">
 				<table class="form">
 				<tr>
 					<td colspan="2">
 						<p>'.$MyLng['NoAPPfile_0'].'</p>
 						<p>'.$MyLng['NoAPPfile_1'].'</p>
-			
+
 						<textarea cols="98" rows="15" class="code">'.htmlentities($config_file, ENT_COMPAT, 'UTF-8').'</textarea>
-			
+
 						<p>'.$MyLng['NoAPPfile_2'].'</p>
 						<p><a href="index.php?Lng='.$_GET["Lng"].'" class="button primary">'.$MyLng['RunInstall'].'</a></p>
 					</td>
@@ -74,23 +74,22 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	} else {
 
 	file_put_contents('../config.app.php', $config_file);
-
-	//From the freshly made mysql-structure.php file, we'll create tables and default data along the install.php process
+	//Fill the database with basics
 	require "./install.php";
 	$install = new install();
-	$database_check = $install->check_connect();
-	$install->config = require '../config.app.php';
-	
-	//Fill the database with basics
+	$install->create_database($_POST);
 	$command='mysql --host='.$_POST["database_host"].' --user='.$_POST["database_username"] .' --password='.$_POST["database_password"] .' \''.$_POST["database_name"].'\' < MySQL_DB_Schema.sql';
-	unset($output);
 	exec($command,$output,$worked);
+	unset($output);
 	switch($worked){
 		case 0:
 			//Success import of MySQL_DB_Schema.sql
 			break;
 	    case 1:
+		//From the freshly made mysql-structure.php file, we'll create tables and default data along the install.php process
+		$install->config = require '../config.app.php';
 	    	//Import of MySQL_DB_Schema.sql didn't work, so we'll pass by long way
+	    	if (file_exists('mysql-structure.php') && file_exists('MySQL_DB_Schema.sql')) { unlink('mysql-structure.php'); } 
 			if (!file_exists('mysql-structure.php') && file_exists('MySQL_DB_Schema.sql') ) {
 				$FILEsql = file('MySQL_DB_Schema.sql');
 				$FILEphp = fopen('mysql-structure.php', 'w+');
@@ -107,11 +106,11 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 				fwrite($FILEphp, $linePHP);
 				fclose($FILEphp);
 				//From the MySQL_DB_Schema.sql file, we create a usable php file for php install
-				$install->create_database($_POST);
+				$database_check = $install->check_connect();
+				$install->create_tables();
 			}
 			break;
 	}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -120,29 +119,67 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 </head>
 <body>
 <div class="InstallLogo"></div>
-
 <div id="container">
-	<table class="form">
-		<tr>
-			<td colspan="2">
-				<p>
-					<?php echo $MyLng['OkAPPfile']; ?>
-				</p>
+	<form method="post" action="index.php?Lng=<?php echo $_GET["Lng"]; ?>" autocomplete="off">
+		<table class="form">
+			<tr>
+				<td colspan="2">
+				<?php
+					echo '<h2>'.$MyLng['Installation'].'</h2>';
+					echo $MyLng['Installation_Thanks'];
+				?>
 
-				<p><a href="index.php?Lng=<?php echo $_GET["Lng"]; ?>" class="button primary"><?php echo $MyLng['RunInstall']; ?></a></p>
-				<div id="CountDown" style="width: 100%; text-align: center; padding-top:10px;">600</div>
-		  </td>
-	  </tr>
-	</table>
+				<br /><br />
+				</td>
+			</tr>
+
+			<tr>
+				<th><label for="first_name"><?php echo $MyLng['Name_first']; ?></label>
+					<input autocomplete="off" type="text" name="first_name" id="first_name" value="<?php echo $_POST['email_name']; ?>"/>
+					<br />
+				</th>
+			</tr>
+			<tr>
+				<th><label for="last_name"><?php echo $MyLng['Name_last']; ?></label>
+					<input autocomplete="off" type="text" name="last_name" id="last_name" value=""/>
+					<br />
+				</th>
+			</tr>
+			<tr>
+				<th><label for="language"><?php echo $MyLng['Name_lang']; ?></label>
+				<select name="language" id="language" style="background-color: #FFF;">
+				<?php
+					foreach ($Language as $ind => $lang) {
+						echo '<option value="'.$ind.'" '.(($ind == $_GET["Lng"]) ? 'selected="selected"' : '').'>'.$lang.'</option>';
+					}
+				?>
+				</select>
+				<br /><br />
+				</th>
+			</tr>
+			<tr>
+				<th><label for="email"><?php echo $MyLng['Name_email']; ?></label>
+					<input autocomplete="off" type="text" name="email" id="email" value="<?php echo $_POST['email_address']; ?>"/>
+					<br />
+				</th>
+			</tr>
+			<tr>
+				<th><label for="password"><?php echo $MyLng['Name_pswd']; ?></label>
+					<input type="password" name="autocompletion_off" value="" style="display:none;">
+					<input autocomplete="off" type="password" name="password" id="password" />
+					<br />
+				</th>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					<br />
+					<input type="submit" value="<?php echo $MyLng['Name_finish']; ?>" class="button primary"/>
+					<br /><br />
+				</td>
+			</tr>
+		</table>
+	</form>
 </div>
-<script type="text/javascript">
-var CountDown = 600;
-setInterval(function () {
-	document.getElementById('CountDown').innerHTML = CountDown;
-	if (--CountDown <= 0) { document.location.href = "index.php?Lng=<?php echo $_GET["Lng"]; ?>";}
-}, 1000);
-
-</script>
 
 <?php
 	}
@@ -306,16 +343,12 @@ if(!file_exists('../config.app.php')){ ?>
 					<select name="timezone">
 						<?php
 						$timezones = timezone_identifiers_list();
-						
 						echo 'select name="timezone" size="10">' . "\n";
-						
-						foreach($timezones as $timezone)
-						{
+						foreach($timezones as $timezone) {
 						  echo '<option';
 						  echo $timezone == date("e") ? ' selected' : '';
 						  echo '>' . $timezone . '</option>' . "\n";
 						}
-						
 						echo '</select>' . "\n";
 						?>
 					</select>

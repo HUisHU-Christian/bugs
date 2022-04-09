@@ -28,8 +28,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	public function select(Query $query)
-	{
+	public function select(Query $query) {
 		return $this->concatenate($this->components($query));
 	}
 
@@ -39,15 +38,12 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query  $query
 	 * @return array
 	 */
-	final protected function components($query)
-	{
+	final protected function components($query) {
 		// Each portion of the statement is compiled by a function corresponding
 		// to an item in the components array. This lets us to keep the creation
 		// of the query very granular and very flexible.
-		foreach ($this->components as $component)
-		{
-			if ( ! is_null($query->$component))
-			{
+		foreach ($this->components as $component) {
+			if ( ! is_null($query->$component)) {
 				$sql[$component] = call_user_func(array($this, $component), $query);
 			}
 		}
@@ -61,10 +57,8 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $components
 	 * @return string
 	 */
-	final protected function concatenate($components)
-	{
-		return implode(' ', array_filter($components, function($value)
-		{
+	final protected function concatenate($components) {
+		return implode(' ', array_filter($components, function($value) {
 			return (string) $value !== '';
 		}));
 	}
@@ -75,8 +69,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function selects(Query $query)
-	{
+	protected function selects(Query $query) {
 		if ( ! is_null($query->aggregate)) return;
 
 		$select = ($query->distinct) ? 'SELECT DISTINCT ' : 'SELECT ';
@@ -90,15 +83,13 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function aggregate(Query $query)
-	{
+	protected function aggregate(Query $query) {
 		$column = $this->columnize($query->aggregate['columns']);
 
 		// If the "distinct" flag is set and we're not aggregating everything
 		// we'll set the distinct clause on the query, since this is used
 		// to count all of the distinct values in a column, etc.
-		if ($query->distinct and $column !== '*')
-		{
+		if ($query->distinct and $column !== '*') {
 			$column = 'DISTINCT '.$column;
 		}
 
@@ -111,8 +102,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function from(Query $query)
-	{
+	protected function from(Query $query) {
 		return 'FROM '.$this->wrap_table($query->from);
 	}
 
@@ -122,13 +112,11 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function joins(Query $query)
-	{
+	protected function joins(Query $query) {
 		// We need to iterate through each JOIN clause that is attached to the
 		// query and translate it into SQL. The table and the columns will be
 		// wrapped in identifiers to avoid naming collisions.
-		foreach ($query->joins as $join)
-		{
+		foreach ($query->joins as $join) {
 			$table = $this->wrap_table($join->table);
 
 			$clauses = array();
@@ -136,8 +124,7 @@ class Grammar extends \Laravel\Database\Grammar {
 			// Each JOIN statement may have multiple clauses, so we will iterate
 			// through each clause creating the conditions then we'll join all
 			// of them together at the end to build the clause.
-			foreach ($join->clauses as $clause)
-			{
+			foreach ($join->clauses as $clause) {
 				extract($clause);
 
 				$column1 = $this->wrap($column1);
@@ -171,20 +158,17 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	final protected function wheres(Query $query)
-	{
+	final protected function wheres(Query $query) {
 		if (is_null($query->wheres)) return '';
 
 		// Each WHERE clause array has a "type" that is assigned by the query
 		// builder, and each type has its own compiler function. We will call
 		// the appropriate compiler for each where clause.
-		foreach ($query->wheres as $where)
-		{
+		foreach ($query->wheres as $where) {
 			$sql[] = $where['connector'].' '.$this->{$where['type']}($where);
 		}
 
-		if  (isset($sql))
-		{
+		if  (isset($sql)) {
 			// We attach the boolean connector to every where segment just
 			// for convenience. Once we have built the entire clause we'll
 			// remove the first instance of a connector.
@@ -198,8 +182,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $where
 	 * @return string
 	 */
-	protected function where_nested($where)
-	{
+	protected function where_nested($where) {
 		return '('.substr($this->wheres($where['query']), 6).')';
 	}
 
@@ -209,8 +192,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $where
 	 * @return string
 	 */
-	protected function where($where)
-	{
+	protected function where($where) {
 		$parameter = $this->parameter($where['value']);
 
 		return $this->wrap($where['column']).' '.$where['operator'].' '.$parameter;
@@ -222,8 +204,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $where
 	 * @return string
 	 */
-	protected function where_in($where)
-	{
+	protected function where_in($where) {
 		$parameters = $this->parameterize($where['values']);
 
 		return $this->wrap($where['column']).' IN ('.$parameters.')';
@@ -235,8 +216,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $where
 	 * @return string
 	 */
-	protected function where_not_in($where)
-	{
+	protected function whereNotIn($where) {
 		$parameters = $this->parameterize($where['values']);
 
 		return $this->wrap($where['column']).' NOT IN ('.$parameters.')';
@@ -248,8 +228,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array  $where
 	 * @return string
 	 */
-	protected function where_between($where)
-	{
+	protected function where_between($where) {
 		$min = $this->parameter($where['min']);
 		$max = $this->parameter($where['max']);
 
@@ -261,8 +240,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array $where 
 	 * @return string        
 	 */
-	protected function where_not_between($where)
-	{		
+	protected function where_not_between($where) {		
 		$min = $this->parameter($where['min']);
 		$max = $this->parameter($where['max']);
 		
@@ -275,8 +253,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $where
 	 * @return string
 	 */
-	protected function where_null($where)
-	{
+	protected function where_null($where) {
 		return $this->wrap($where['column']).' IS NULL';
 	}
 
@@ -286,8 +263,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $where
 	 * @return string
 	 */
-	protected function where_not_null($where)
-	{
+	protected function where_not_null($where) {
 		return $this->wrap($where['column']).' IS NOT NULL';
 	}
 
@@ -297,8 +273,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $where
 	 * @return string
 	 */
-	final protected function where_raw($where)
-	{
+	final protected function where_raw($where) {
 		return $where['sql'];
 	}
 
@@ -308,8 +283,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function groupings(Query $query)
-	{
+	protected function groupings(Query $query) {
 		return 'GROUP BY '.$this->columnize($query->groupings);
 	}
 
@@ -319,12 +293,10 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query  $query
 	 * @return string
 	 */
-	protected function havings(Query $query)
-	{
+	protected function havings(Query $query) {
 		if (is_null($query->havings)) return '';
 
-		foreach ($query->havings as $having)
-		{
+		foreach ($query->havings as $having) {
 			$sql[] = 'AND '.$this->wrap($having['column']).' '.$having['operator'].' '.$this->parameter($having['value']);
 		}
 
@@ -337,10 +309,8 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function orderings(Query $query)
-	{
-		foreach ($query->orderings as $ordering)
-		{
+	protected function orderings(Query $query) {
+		foreach ($query->orderings as $ordering) {
 			$sql[] = $this->wrap($ordering['column']).' '.strtoupper($ordering['direction']);
 		}
 
@@ -353,8 +323,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function limit(Query $query)
-	{
+	protected function limit(Query $query) {
 		return 'LIMIT '.$query->limit;
 	}
 
@@ -364,8 +333,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	protected function offset(Query $query)
-	{
+	protected function offset(Query $query) {
 		return 'OFFSET '.$query->offset;
 	}
 
@@ -378,8 +346,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $values
 	 * @return string
 	 */
-	public function insert(Query $query, $values)
-	{
+	public function insert(Query $query, $values) {
 		$table = $this->wrap_table($query->from);
 
 		// Force every insert to be treated like a batch insert. This simply makes
@@ -410,8 +377,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  string  $column
 	 * @return string
 	 */
-	public function insert_get_id(Query $query, $values, $column)
-	{
+	public function insert_get_id(Query $query, $values, $column) {
 		return $this->insert($query, $values);
 	}
 
@@ -422,15 +388,13 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $values
 	 * @return string
 	 */
-	public function update(Query $query, $values)
-	{
+	public function update(Query $query, $values) {
 		$table = $this->wrap_table($query->from);
 
 		// Each column in the UPDATE statement needs to be wrapped in the keyword
 		// identifiers, and a place-holder needs to be created for each value in
 		// the array of bindings, so we'll build the sets first.
-		foreach ($values as $column => $value)
-		{
+		foreach ($values as $column => $value) {
 			$columns[] = $this->wrap($column).' = '.$this->parameter($value);
 		}
 
@@ -448,8 +412,7 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  Query   $query
 	 * @return string
 	 */
-	public function delete(Query $query)
-	{
+	public function delete(Query $query) {
 		$table = $this->wrap_table($query->from);
 
 		return trim("DELETE FROM {$table} ".$this->wheres($query));
@@ -462,15 +425,12 @@ class Grammar extends \Laravel\Database\Grammar {
 	 * @param  array   $bindings
 	 * @return string
 	 */
-	public function shortcut($sql, &$bindings)
-	{
+	public function shortcut($sql, &$bindings) {
 		// Laravel provides an easy short-cut notation for writing raw WHERE IN
 		// statements. If (...) is in the query, it will be replaced with the
 		// correct number of parameters based on the query bindings.
-		if (strpos($sql, '(...)') !== false)
-		{
-			for ($i = 0; $i < count($bindings); $i++)
-			{
+		if (strpos($sql, '(...)') !== false) {
+			for ($i = 0; $i < count($bindings); $i++) {
 				// If the binding is an array, we can just assume it's used to fill a
 				// where in condition, so we'll just replace the next place-holder
 				// in the query with the constraint and splice the bindings.

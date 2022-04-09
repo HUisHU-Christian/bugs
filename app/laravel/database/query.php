@@ -288,7 +288,7 @@ class Query {
 	 * @return Query
 	 */
 	public function where_in($column, $values, $connector = 'AND', $not = false) {
-		$type = ($not) ? 'where_not_in' : 'where_in';
+		$type = ($not) ? 'whereNotIn' : 'where_in';
 
 		$this->wheres[] = compact('type', 'column', 'values', 'connector');
 
@@ -316,7 +316,7 @@ class Query {
 	 * @param  string  $connector
 	 * @return Query
 	 */
-	public function where_not_in($column, $values, $connector = 'AND') {
+	public function whereNotIn($column, $values, $connector = 'AND') {
 		return $this->where_in($column, $values, $connector, true);
 	}
 
@@ -327,8 +327,8 @@ class Query {
 	 * @param  array   $values
 	 * @return Query
 	 */
-	public function or_where_not_in($column, $values) {
-		return $this->where_not_in($column, $values, 'OR');
+	public function or_whereNotIn($column, $values) {
+		return $this->whereNotIn($column, $values, 'OR');
 	}
 	
 	/**

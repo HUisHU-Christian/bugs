@@ -42,6 +42,15 @@
 			</tr>
 			<tr>
 				<th>
+					<?php echo __('tinyissue.new_password'); ?>
+				</th>
+				<td>
+					<input type="password" name="password" value="" autocomplete="off" />
+					<?php echo $errors->first('password', '<span class="error">:message</span>'); ?>
+				</td>
+			</tr>
+			<tr>
+				<th>
 					<?php echo __('tinyissue.language'); ?>
 				</th>
 				<td>	

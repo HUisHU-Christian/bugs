@@ -14,11 +14,9 @@ class File extends Laravel\File {
 	 * @param  string  $path
 	 * @return bool
 	 */
-	public static function upload($key, $path)
-	{
+	public static function upload($key, $path) {
 		if ( ! isset($_FILES[$key])) return false;
 
 		return move_uploaded_file($_FILES[$key]['tmp_name'], $path);
 	}
-
 }

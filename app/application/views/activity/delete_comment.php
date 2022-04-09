@@ -1,4 +1,4 @@
-<li onclick="window.location='<?php echo $issue->to(); ?>#comment<?php echo $comment->id ?? ''; ?>';">
+<li onclick="window.location='<?php echo $issue->to(); ?>#comment<?php echo $comment->id ?? ''; ?>';" class="activity-item">
 
 	<div class="tag">
 		<label class="label notice" ><?php echo __('tinyissue.comment_deleted'); ?></label>

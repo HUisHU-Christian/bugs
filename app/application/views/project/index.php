@@ -6,14 +6,24 @@
 	
 ?>
 <h3>
-	<?php 
+<?php 
 	//Gestion des droits basée sur le rôle spécifique à un projet
-	//Selon l'analyse du 13 novembre 2021, il n'est pas néssaire de changer le calcul du droit ci-bas
-	if (Auth::user()->role_id != 1) { ?>
-   	<a href="<?php echo Project::current()->to('issue/new'); ?>" class="newissue"><?php echo __('tinyissue.new_issue');?>
-   <?php } ?> 
-   <a href="<?php echo Project::current()->to(); ?>"><?php echo Project::current()->name; ?></a>
-	<span><?php echo __('tinyissue.project_overview');?></span>
+	//Selon l'analyse du 13 novembre 2021, il n'est pas nécessaire de changer le calcul du droit ci-bas
+	if (Auth::user()->role_id != 1) { 
+   	echo '<a href="'.Project::current()->to('issue/new').'" class="newissue">'.__('tinyissue.new_issue');
+	} 
+   echo '<a href="'.Project::current()->to().'">'.Project::current()->name.'</a>
+			<span>';
+	$lesProj = array(Project::current()->id);
+	$mesAdmin = \Project\User::where('projects_users.project_id', '=', Project::current()->id)->where('projects_users.role_id', '=', 4)->join('users', 'users.id', '=', 'projects_users.user_id')->get(array('users.firstname', 'users.lastname', 'users.id', 'projects_users.user_id'));
+	$lien = " ";
+	echo __('tinyissue.project_overview').' : '; 
+	foreach ($mesAdmin as $id_admin) {
+		echo $lien.$id_admin->firstname.' '.$id_admin->lastname;
+		$lien = ", ";
+	}
+	echo '</span>';
+?>
 </h3>
 
 <div class="pad">
@@ -25,7 +35,6 @@
 			<?php 
 				echo '<a href="'.Project::current()->to('issues').'?tag_id=1">';
 				echo $open_count.' '.($open_count < 2 ? __('tinyissue.open_issue') : __('tinyissue.open_issues')).'</a>';
-//				if ($active == 'open') { Project::current()->nextissuesThisTab('?tag_id=1', $open_count, $NbIssues); }
 			?>
 			
 		</li>
@@ -33,7 +42,6 @@
 			<?php
 				echo '<a href="'.Project::current()->to('issues').'?tag_id=2">';
 				echo $closed_count.' '.($closed_count < 2 ? __('tinyissue.closed_issue') : __('tinyissue.closed_issues')).'</a>';
-//				if ($active == 'closed') { Project::current()->nextissuesThisTab('?tag_id=2', $closed_count, $NbIssues); }
 			?>
 			
 		</li>
@@ -46,7 +54,6 @@
 			<?php 
 				echo '<a href="'.Project::current()->to('issues').'?tag_id=3">';
 				echo $future_count.' '.($future_count < 2 ? __('tinyissue.issue_avenir') : __('tinyissue.issues_avenir')).'</a>'; 
-//				if ($active == 'future') { Project::current()->nextissuesThisTab('?tag_id=3', $future_count, $NbIssues); }
 			?>
 		</li>
 	</ul>

@@ -207,7 +207,7 @@ footer{
 	color: yellow; 
 }
 .global-saving span{
-	background: url('../images/icons/global-saving.gif') no-repeat 10px 10px #222727;
+	background: url('../images/global-saving.gif') no-repeat 10px 10px #222727;
 	font-size: 15px;
 	text-align: center;
 	width: 100px;
@@ -1193,6 +1193,9 @@ td.project-user, th.project-user {
 }
 .issue-actions .close{
 	color: #48a547;
+}
+li.activity-item:hover{
+	background-color: #EEF;
 }
 
 /* style markdowned elements */
