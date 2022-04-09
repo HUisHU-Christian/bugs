@@ -31,7 +31,7 @@ return array(
 	*/
 
    'detail' => true, 
-																																																																																																																																																																																																																																																													
+																																																																																																																																																																																																																																																																																																					
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return array(
 	*/
 
    'log' => true,
-																																																																																																																																																																																																																																																																	
+																																																																																																																																																																																																																																																																																																									
 																					
 
 	/*
@@ -68,7 +68,7 @@ return array(
 	|  - write your message in the message box
 	*/
    'exit' => 'Cliquez ci-contre pour retourner à la page d`accueil de.',
-																																																																																																																																																																																																																																																													
+																																																																																																																																																																																																																																																																																																					
 
 	/*
 	|--------------------------------------------------------------------------
@@ -90,6 +90,32 @@ return array(
 		Log::exception($exception);
 	},
 	
+	/*
+	|--------------------------------------------------------------------------
+	| Delay
+	|--------------------------------------------------------------------------
+	|
+	| Temps d'affichage de la page d'erreur (en secondes) avant que l'usager soit ramené à la page index.php
+	|
+	*/
+
    'delay' => 99,
 								
+	/*
+	|--------------------------------------------------------------------------
+	| Acuracy
+	|--------------------------------------------------------------------------
+	|
+	| Précision et fréquence des informations enregistrées dans le registre
+	| 0: ERROR : seules les erreurs sont enregistrées
+	| 1: ERR  : 
+	| 2: MORE : 
+	| 3: INFO : 
+	| 4: SAYS :
+	| 5: DETAILS : toutes les actions sont enregistrées
+	| 
+	*/
+
+   'acuracy' => 3,
+				
 );

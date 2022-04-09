@@ -31,6 +31,7 @@ class Mail {
 		$bons = $mals = 0;
 		$UserID = ($UserID === NULL) ? (( $detail['user'] !== NULL ) ? $detail['user'] : \Auth::user()->id) : $UserID;
 		$values = array();
+		\Log::write(3,'Mailing');
 
 		if ($detail['Type'] != 'User') {
 			$UserID = $UserID ?? (is_array($User) ? $User[0] : $User);
@@ -61,6 +62,7 @@ class Mail {
 		$introCnt = file_exists('../'.\Config::get('application.attached.directory')."intro.html") 
 					? file_get_contents('../'.\Config::get('application.attached.directory')."intro.html") 
 					: \Config::get('application.mail.intro'); 
+		\Log::write(4,'Mailing : Set subject, intro and bye contents');
 
 		foreach ($detail["contenu"] as $ind => $val) {
 			if ($detail['src'][$ind] == 'value') {
@@ -72,6 +74,7 @@ class Mail {
 							: ((isset($Lng[$detail['src'][$ind]]['following_email_'.strtolower($val)])) ? $Lng[$detail['src'][$ind]]['following_email_'.strtolower($val)] : "Contenu à venir");
 			}
 		}
+		\Log::write(4,'Mailing : set the message content');
 
 		//Select email addresses
 		if ($detail['Type'] == 'User' || $detail['Type'] == 'Recup') {
@@ -84,6 +87,7 @@ class Mail {
 				->where(((is_numeric($UserID)) ? "id" : "email"), "=", $UserID)
 				->order_by('id')
 				->get();
+			\Log::write(5,'Mailing : Set address ...welcome');
 		} else if ($detail['Type'] == 'TestonsSVP') {
 			//L'administrateur teste le système de courriel via la page admin
 			$followers = \DB::table('users')
@@ -95,6 +99,7 @@ class Mail {
 			$message .= " ".$Lng['tinyissue']["email_test"].\Config::get('application.my_bugs_app.name').').';
 			$subject = $Lng['tinyissue']["email_test_tit"];
 			echo $Lng['tinyissue']["email_test_tit"];
+			\Log::write(5,'Mailing : Set address ...testing');
 		} else if ($detail['Type'] == 'noticeonlogin') {
 			//Envoyons un avis de connexion d'usager aux administrateurs qui l'ont demandé.
 			$followers = \DB::table('users')
@@ -106,6 +111,7 @@ class Mail {
 				->whereNotNull('email')
 				->order_by('id')
 				->get();
+			\Log::write(5,'Mailing : Set address ...noticelogon');
 		} else {
 			//Toutes les autres occasions où un message est demandé
 			////Lorsqu'un commentaire est soumis à un usager, nous avisons ici les suiveux
@@ -133,9 +139,11 @@ class Mail {
 				->where('following.project', '=', (($detail['Type'] == 'Issue') ? 0 : 1 ))
 				->order_by('users.id')
 				->get();
+			\Log::write(5,'Mailing : Set address ...any event not welcoming, testing or login on');
 		}		
 
 		if ($followers) {
+			\Log::write(4,'Mailing : Enter into followers section');
 			foreach ($followers as $follower) {
 				$subject = Mail::wildcards($subject, $follower, true);
 				$passage_ligne = (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $follower->email)) ? "\r\n" : "\n";
@@ -156,11 +164,14 @@ class Mail {
 				if ($result == "Email successfully sent!") { $bons = $bons + 1; } else { $mals = $mals + 1; }
 			}
 			if ($mals == 0) {
+				\Log::write(4,'Mailing : All messages have been sent');
 				return "Emails: All goods";
 			} else {
+				\Log::write(4,'Mailing : '.$bons.' messages sent, but some '.$mals.' not');
 				return "Emails: ".$bons." get good, but ".$mals." get wrong";
 			}
 		} else {
+			\Log::write(4,'Mailing : There is no follower, so nothing to do');
 			return "Nothing to do";
 		}	
 	}
@@ -200,8 +211,10 @@ class Mail {
 		try { 
 			mail($follower->email, $subject, $body, $headers);
 		} catch (\Exception $e) {
+			\Log::write(5,'Mailing : Mail; message to '.$follower->email.' could not be sent ');
 			return "Error! Email never found its way out.";
 		};
+		\Log::write(5,'Mailing : Mail; message sent to '.$follower->email.' ');
 		return "Email successfully sent!";
 	}
 
@@ -262,8 +275,10 @@ class Mail {
 		try { 
 			$mail->Send();
 		} catch (\Exception $e) {
+			\Log::write(5,'Mailing : PHPmailer; message to '.$follower->email.' could not be sent ');
 			return "Mailer Error: " . $mail->ErrorInfo;
 		};
+		\Log::write(5,'Mailing : PHPmailer; message sent to '.$follower->email.' ');
 		return "Email successfully sent!";
 	}
 
@@ -301,6 +316,7 @@ class Mail {
 		$body = str_replace('{issues}',	$liss.$follower->title.$lfin, $body);
 		if (isset($values["email"])) 	{ $body = str_replace('{email}',	 $values["email"], $body); } 
 		if (isset($values["static"])) { $body = str_replace('{static}', $values["static"], $body);}
+		\Log::write(5,'Mailing : wildcard processed ');
 		return $body;
 	}
 	

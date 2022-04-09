@@ -6,7 +6,7 @@
 	
 ?>
 <h3>
-	<?php 
+<?php 
 	//Gestion des droits basée sur le rôle spécifique à un projet
 	//Selon l'analyse du 13 novembre 2021, il n'est pas nécessaire de changer le calcul du droit ci-bas
 	if (Auth::user()->role_id != 1) { 
@@ -14,16 +14,16 @@
 	} 
    echo '<a href="'.Project::current()->to().'">'.Project::current()->name.'</a>
 			<span>';
-			$lesProj = array(Project::current()->id);
-			$mesAdmin = \Project\User::where('projects_users.project_id', '=', Project::current()->id)->where('projects_users.role_id', '=', 4)->join('users', 'users.id', '=', 'projects_users.user_id')->get(array('users.firstname', 'users.lastname', 'users.id', 'projects_users.user_id'));
-			$lien = " ";
-			echo __('tinyissue.project_overview').' : '; 
-			foreach ($mesAdmin as $id_admin) {
-				echo $lien.$id_admin->firstname.' '.$id_admin->lastname;
-				$lien = ", ";
-			}
-			echo '</span>';
-   ?>
+	$lesProj = array(Project::current()->id);
+	$mesAdmin = \Project\User::where('projects_users.project_id', '=', Project::current()->id)->where('projects_users.role_id', '=', 4)->join('users', 'users.id', '=', 'projects_users.user_id')->get(array('users.firstname', 'users.lastname', 'users.id', 'projects_users.user_id'));
+	$lien = " ";
+	echo __('tinyissue.project_overview').' : '; 
+	foreach ($mesAdmin as $id_admin) {
+		echo $lien.$id_admin->firstname.' '.$id_admin->lastname;
+		$lien = ", ";
+	}
+	echo '</span>';
+?>
 </h3>
 
 <div class="pad">
