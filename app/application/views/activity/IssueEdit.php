@@ -1,5 +1,5 @@
 <?php if (isset($issue) && isset($comment)) { ?>
-<li onclick="window.location='<?php echo $issue->to(); ?>#comment<?php echo $comment->id; ?>';">
+<li onclick="window.location='<?php echo $issue->to(); ?>#comment<?php echo $comment->id; ?>';" class="activity-item">
 
 	<div class="tag">
 		<label class="label notice"><?php echo __('tinyissue.label_comment'); ?></label>

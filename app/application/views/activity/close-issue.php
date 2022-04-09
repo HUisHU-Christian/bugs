@@ -1,4 +1,4 @@
-<li onclick="window.location='<?php echo $issue->to(); ?>';">
+<li onclick="window.location='<?php echo $issue->to(); ?>';" class="activity-item">
 
 	<div class="tag">
 		<label class="label success"><?php echo __('tinyissue.label_closed'); ?></label>

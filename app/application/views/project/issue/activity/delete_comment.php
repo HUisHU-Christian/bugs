@@ -4,7 +4,7 @@
 	}
 ?>
 <?php if ($activity) { ?>
-<li id="comment<?php echo $activity->id; ?>" class="comment">
+<li id="comment<?php echo $activity->id; ?>" class="comment activity-item">
 	<div class="insides">
 		<div class="topbar">
 				<?php

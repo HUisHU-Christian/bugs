@@ -4,7 +4,7 @@
 	}
 if ($comment !== NULL) {
 ?>
-<li id="comment<?php echo @$comment->id; ?>" class="comment">
+<li id="comment<?php echo @$comment->id; ?>" class="comment activity-item">
 	<div class="insides" id="div_comment_<?php echo @$comment->id; ?>">
 		<div class="topbar">
 			<?php if(Auth::user()->permission('issue-modify')): ?>

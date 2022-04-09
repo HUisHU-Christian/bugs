@@ -77,7 +77,7 @@
 					<tr id="tr_form_rappeler">
 						<th></th>
 						<td>
-							<label><input type="checkbox" value="1" name="remember" /><span id="span_Remember"><?php echo (isset($Remember[$lng])) ? $Remember[$lng] : $Remember["en"]; ?>&nbsp;? &nbsp;&nbsp;</span></label>
+							<label><input type="checkbox" value="1" name="remember" checked="checked" /><span id="span_Remember"><?php echo (isset($Remember[$lng])) ? $Remember[$lng] : $Remember["en"]; ?>&nbsp;? &nbsp;&nbsp;</span></label>
 							<input type="submit" id="input_submit" value="<?php echo (isset($Login[$lng])) ? $Login[$lng] : $Login["en"]; ?>" class="button primary"/>
 						</td>
 					</tr>
