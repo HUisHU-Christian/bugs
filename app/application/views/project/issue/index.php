@@ -55,7 +55,18 @@
 <div class="pad">
 
 	<div class="Suivre">
-		<?php if (isset($follower)) { ?>
+		<?php
+		if ($issue->closed_at !== NULL) {
+			echo '
+			<br /><br />
+			<img src="'.\URL::home().'app/assets/images/layout/icon-comments_'.$follower["comment"].'.png" id="img_following" />
+			&nbsp;&nbsp;&nbsp;
+			<span style="font-weight: bold; font-size: 125%;">'.__('tinyissue.closed_issue').'</span>
+			<br /><br /><br />
+			';
+		} else { 
+			if (isset($follower)) { 
+		?>
 		<div style="width:25%; float:left;">
 			<span style="font-weight: bold; font-size: 125%;"><?php echo __('tinyissue.following'); ?></span>
 			<br />
@@ -72,12 +83,12 @@
 			<input id="input_following_tags" type="checkbox" value="1" <?php echo ($follower["tags"]) ? 'checked' : ''; ?> onclick="Following('tags', this.checked);" />
 			<?php echo __('tinyissue.following_email_tags_tit'); ?>
 		</div>
-		<?php } ?>
+		<?php } } ?>
 	</div>
 	<div id="issue-tags">
 	<?php
-			//Percentage of work done
-			////Calculations
+			//Pourcentage du travail accompli
+			////Calculs
 			$SizeXtot = 500;
 			$SizeX = $SizeXtot / 100;
 			echo __('tinyissue.issue_percent').' : ';
@@ -94,27 +105,26 @@
 			if (is_bool($EtatTodo)) { unset($EtatTodo); }
 	
 			//Timing bar, according to the time planified (field projects_issues - duration) for this issue
-			////Calculations
-			$Deb = strtotime($issue->start_at);
-			$Dur = (time() - $Deb) / 86400;
-			$Dur = ($Dur < 0) ? 0 : $Dur;
-			if (!isset($issue->duration)) { $issue->duration = 30; }
-			if ($issue->duration === 0 || is_null($issue->duration)) { $issue->duration = 30; }
-			$DurRelat = round(($Dur / $issue->duration) * 100);
+			////Calculs
+			////Si le billet est fermée, nous calculons le nombre de jour séparant l'ouverture de la fermeture, si non, de l'ouverture à maintenant 
+			$Dur = ($issue->closed_at !== NULL) ? (strtotime($issue->closed_at) - strtotime($issue->start_at)) : (time() - strtotime($issue->start_at));
+			$Dur = ($Dur < 86400) ? 0 : $Dur / 86400;					//Conversion de la valeur en nombre de jours
+			$issue->duration = $issue->duration ?? 0;
+			$issue->duration = ($issue->duration === 0 || is_null($issue->duration)) ? 30 : $issue->duration;
+			$DurRelat = round(($Dur / $issue->duration) * 100);	//Conversion en pourcentage par rapport au temps planifié
 			$Dur = round($Dur);
+			////Détermination de la couleur à utiliser
 			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'white' : 'black') ;
 			$DurColor = ($DurRelat < 65) ? 'green' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'red' : 'yellow') ;
 			if ($DurRelat >= 50 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'yellow'; }
 			if ($DurRelat >= 75 && isset($EtatTodo) && $EtatTodo->weight <= 50 ) { $DurColor = 'red'; }
 			$TxtColor = ($DurColor == 'green') ? 'white' : 'black' ;
-			////Here we show to progress bar
+			////Affichage de la barre de progression selon le critères ci-haut calculés et déterminés
 			echo __('tinyissue.countdown').' ('.__('tinyissue.day').'s) : ';
 			echo '<div class="Percent" id="div_ProgressBarDays">';
 			echo '<div style="color: '.$DurColoF.'; background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$issue->duration : $Dur).'</div>';
 			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.((substr($issue->start_at,0,10) > date("Y-m-d")) ? '<b>'.substr($issue->start_at, 0, 10).'</b> + ' : '').''.$issue->duration.'</div>'; }
 			echo '</div>';
-	
-	
 			echo '<br clear="all" />';
 		}
 

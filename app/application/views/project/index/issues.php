@@ -91,7 +91,7 @@ if (!Project\User::MbrProj(\Auth::user()->id, Project::current()->id)) {
 				$follower = \DB::table('following')->where('project','=',0)->where('issue_id','=',$row->id)->where('user_id','=',\Auth::user()->id)->count();
 				$follower = ($follower > 0) ? 1 : 0;
 				
-				echo '<li class="sortable-li" data-issue-id="'.$row->id.'">';
+				echo '<li class="sortable-li activity-item" data-issue-id="'.$row->id.'">';
 				echo '<a href="javascript: Following('.$row->id.', '.$row->project_id.', '.\Auth::user()->id.');" class="commentstate_'.$follower.'" id="a_following_'.$row->id.'"  style="min-height: '.$follower.'; "  title="'.$row->comment_count().' '.__('tinyissue.following_stand').' / '.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" >'.$row->comment_count().'</a>';
 
 				if(!empty($row->tags)) {
