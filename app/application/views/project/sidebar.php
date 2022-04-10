@@ -71,8 +71,8 @@ if(count($active_projects)>1) {
 </h2>
 
 <ul>
-	<li><a href="<?php echo Project::current()->to('issues'); ?>?tag_id=1"><?php echo Project::current()->count_open_issues(); ?> <?php echo __('tinyissue.open_issues');?></a></li>
-	<li><a href="<?php echo Project::current()->to('issues'); ?>?tag_id=2"><?php echo Project::current()->count_closed_issues(); ?> <?php echo __('tinyissue.closed_issues');?></a></li>
+	<li class="activity-item"><a href="<?php echo Project::current()->to('issues'); ?>?tag_id=1"><?php echo Project::current()->count_open_issues(); ?> <?php echo __('tinyissue.open_issues');?></a></li>
+	<li class="activity-item"><a href="<?php echo Project::current()->to('issues'); ?>?tag_id=2"><?php echo Project::current()->count_closed_issues(); ?> <?php echo __('tinyissue.closed_issues');?></a></li>
 </ul>
 </div>
 
@@ -92,7 +92,7 @@ if (Auth::user()->role_id != 1) { ?>
 
 <ul class="sidebar-users" id="sidebar-users">
 <?php foreach(Project::current()->users()->get() as $row): ?>
-	<li id="project-user<?php echo $row->id; ?>">
+	<li id="project-user<?php echo $row->id; ?>" class="activity-item">
 		<?php if(Auth::user()->permission('project-modify') && count(Project::current()->users()->get())  > 1): ?>
 		<a href="javascript:void(0);" onclick="remove_project_user(<?php echo $row->id; ?>, <?php echo Project::current()->id; ?>, '<?php echo __('tinyissue.projsuppmbre'); ?>', 'sidebar');" class="delete"><?php echo __('tinyissue.remove');?></a>
 		<?php endif; ?>
@@ -129,7 +129,7 @@ if (count($WebLnk) > 0 ) {
 <?php
 	echo '<ul>';
 	foreach($WebLnk as $categ => $link) {
-		echo '<li><a href="'.$link.'" class="links" target="_blank">'.__('tinyissue.website_'.$categ).'</a></li>';
+		echo '<li class="activity-item"><a href="'.$link.'" class="links" target="_blank">'.__('tinyissue.website_'.$categ).'</a></li>';
 	}
 	echo '</ul>';
 	echo '</div>';

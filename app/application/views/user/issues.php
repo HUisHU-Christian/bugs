@@ -13,7 +13,7 @@
 				<?php foreach($project['issues'] as $row):
 					if ($row->start_at > date("Y-m-d")) { continue; }  
 				?>
-				<li>
+				<li class="activity-item">
 					<a href="<?php echo $row->to(); ?>" class="comments"><?php echo $row->comment_count(); ?></a>
 					<?php 
 					if(!empty($row->tags)) {
