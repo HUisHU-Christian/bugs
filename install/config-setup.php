@@ -21,7 +21,7 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 	/* Edit URL Information */
 	$_POST['URL'] = (substr($_POST['URL'], -1) == '/') ? $_POST['URL'] : $_POST['URL'].'/';
 	$config_file = str_replace("'url' => '',", "'url' => '".$_POST['URL']."',", $config_file);
-	
+
 	/* Edit Database Information */
 	$config_file = str_replace('localhost', $_POST['database_host'], $config_file);
 	$config_file = str_replace('database_user', $_POST['database_username'], $config_file);
@@ -54,16 +54,16 @@ if(isset($_POST['create_config']) && isset($_POST['database_host'])) {
 			</head>
 			<body>
 			<div class="InstallLogo"></div>
-			
+
 			<div id="container">
 				<table class="form">
 				<tr>
 					<td colspan="2">
 						<p>'.$MyLng['NoAPPfile_0'].'</p>
 						<p>'.$MyLng['NoAPPfile_1'].'</p>
-			
+
 						<textarea cols="98" rows="15" class="code">'.htmlentities($config_file, ENT_COMPAT, 'UTF-8').'</textarea>
-			
+
 						<p>'.$MyLng['NoAPPfile_2'].'</p>
 						<p><a href="index.php?Lng='.$_GET["Lng"].'" class="button primary">'.$MyLng['RunInstall'].'</a></p>
 					</td>
@@ -343,16 +343,12 @@ if(!file_exists('../config.app.php')){ ?>
 					<select name="timezone">
 						<?php
 						$timezones = timezone_identifiers_list();
-						
 						echo 'select name="timezone" size="10">' . "\n";
-						
-						foreach($timezones as $timezone)
-						{
+						foreach($timezones as $timezone) {
 						  echo '<option';
 						  echo $timezone == date("e") ? ' selected' : '';
 						  echo '>' . $timezone . '</option>' . "\n";
 						}
-						
 						echo '</select>' . "\n";
 						?>
 					</select>
