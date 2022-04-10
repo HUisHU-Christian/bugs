@@ -55,7 +55,18 @@
 <div class="pad">
 
 	<div class="Suivre">
-		<?php if (isset($follower)) { ?>
+		<?php
+		if ($issue->closed_at !== NULL) {
+			echo '
+			<br /><br />
+			<img src="'.\URL::home().'app/assets/images/layout/icon-comments_'.$follower["comment"].'.png" id="img_following" />
+			&nbsp;&nbsp;&nbsp;
+			<span style="font-weight: bold; font-size: 125%;">'.__('tinyissue.closed_issue').'</span>
+			<br /><br /><br />
+			';
+		} else { 
+			if (isset($follower)) { 
+		?>
 		<div style="width:25%; float:left;">
 			<span style="font-weight: bold; font-size: 125%;"><?php echo __('tinyissue.following'); ?></span>
 			<br />
@@ -72,7 +83,7 @@
 			<input id="input_following_tags" type="checkbox" value="1" <?php echo ($follower["tags"]) ? 'checked' : ''; ?> onclick="Following('tags', this.checked);" />
 			<?php echo __('tinyissue.following_email_tags_tit'); ?>
 		</div>
-		<?php } ?>
+		<?php } } ?>
 	</div>
 	<div id="issue-tags">
 	<?php
@@ -96,10 +107,10 @@
 			//Timing bar, according to the time planified (field projects_issues - duration) for this issue
 			////Calculations
 			$Deb = strtotime($issue->start_at);
-			$Dur = (time() - $Deb) / 86400;
+			$Dur = ($issue->closed_at !== NULL) ? (strtotime($issue->closed_at) - $Deb) / 86400 : (time() - $Deb) / 86400;
 			$Dur = ($Dur < 0) ? 0 : $Dur;
-			if (!isset($issue->duration)) { $issue->duration = 30; }
-			if ($issue->duration === 0 || is_null($issue->duration)) { $issue->duration = 30; }
+			$issue->duration = $issue->duration ?? 30;
+			$issue->duration = ($issue->duration === 0 || is_null($issue->duration)) ? 30 : $issue->duration;
 			$DurRelat = round(($Dur / $issue->duration) * 100);
 			$Dur = round($Dur);
 			$DurColoF = ($DurRelat < 65) ? 'white' : (( $DurRelat > \Config::get('application.pref.percent')[3]) ? 'white' : 'black') ;
@@ -113,8 +124,6 @@
 			echo '<div style="color: '.$DurColoF.'; background-color: '.$DurColor.'; position: absolute; top: 0; left: 0; width: '.(($DurRelat <= 100) ? $DurRelat : 100).'%; height: 100%; text-align: center; line-height:20px;" />'.((($DurRelat  >= 100)) ? $Dur.' / '.@$issue->duration : $Dur).'</div>';
 			if ($DurRelat < 100) {  echo '<div style="background-color: gray; position: absolute;  top: 0; left: '.$DurRelat.'%; width: '.(100-$DurRelat).'%; height: 100%; text-align: center; line-height:20px;" />'.((substr($issue->start_at,0,10) > date("Y-m-d")) ? '<b>'.substr($issue->start_at, 0, 10).'</b> + ' : '').''.$issue->duration.'</div>'; }
 			echo '</div>';
-	
-	
 			echo '<br clear="all" />';
 		}
 
