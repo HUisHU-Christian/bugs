@@ -1493,6 +1493,9 @@ ul.isssues li {
   border: 1px solid #9BD969;
   border-radius: 5px;
 }
+.todo-list-item:hover {
+  background-color: black;
+}
 
 .todo-list-item span {
   color: #ACACAC;
