@@ -38,6 +38,11 @@ class Log {
 	 * @return void
 	 */
 	public static function write($type, $message) {
+		$acuray = Config::get('error.acuracy') ?? 3;
+		if (is_numeric($type)) {
+			if ($acuray > $type) { return true; }
+			$type = array('ERROR','ERR','MORE','INFO','SAYS','DETAILS')[$type];
+		}
 		// If there is a listener for the log event, we'll delegate the logging
 		// to the event and not write to the log files. This allows for quick
 		// swapping of log implementations for debugging.

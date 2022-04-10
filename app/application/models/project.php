@@ -115,13 +115,17 @@ class Project extends Eloquent {
 				->where_null('closed_at', 'and', false)
 				->count();
  	}
+	public function count_project_activity() {
+ 			return User\Activity::where('parent_id', '=', $this->id)->count();
+ 	}
+ 	
 	/**
 	* Select activity for a project
 	*
 	* @param  int    $activity_limit
 	* @return array
 	*/
-	public function activity($activity_limit) {
+	public function activity($activity_limit, $debut = 1) {
 		$users = $issues = $comments = $activity_type = array();
 
 		/* Load the activity types */
@@ -133,6 +137,7 @@ class Project extends Eloquent {
 		$project_activity = User\Activity::where('parent_id', '=', $this->id)
 			->order_by('created_at', 'DESC')
 			->take($activity_limit)
+			->for_page($debut, $activity_limit)
 			->get();
 
 		if(!$project_activity) {

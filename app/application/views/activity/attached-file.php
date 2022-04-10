@@ -4,7 +4,7 @@ $url =\URL::home();
 $FileTypes = (is_dir($url.'app/assets/images/upload_type')) ? $FileTypes= scandir($url.'app/assets/images/upload_type') : array();
 $What = \DB::table('projects_issues_attachments')->where('id', '=', $activity->attributes['action_id'])->order_by('id','DESC')->get();
 ?>
-<li id="comment<?php echo $activity->id; ?>" class="comment">
+<li id="comment<?php echo $activity->id; ?>" class="comment activity-item">
 	<div class="tag">
 		<img src="<?php echo $url; ?>app/assets/images/icons/attached.png" height="30" align="left" />
 	</div>

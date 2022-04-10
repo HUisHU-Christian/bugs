@@ -67,11 +67,12 @@
 	function AppliquerErr() {
 		//Afin que cette fonction appelle correctement la fonction ajax ci-bas, il fallut modifier le fichier ./app/application/routes.php
 		$.post(siteurl + 'ajax/administration/errors', {
+			acuracy : document.getElementById('select_err_acuracy').value,
+			delay : document.getElementById('input_err_delay').value,
 			detail : (document.getElementById('input_err_detail_true').checked ? 'true': 'false'),
-			log : (document.getElementById('input_err_log_true').checked ? 'true' : 'false'),
 			exit : (document.getElementById('input_err_exit_true').checked ? 'true' : 'false'),
 			exittxt : document.getElementById('input_err_exittxt').value,
-			delay : document.getElementById('input_err_delay').value
+			log : (document.getElementById('input_err_log_true').checked ? 'true' : 'false')
 		}, function(data){
 			Verdissons(Array('input_err_exittxt'),data);
 		});

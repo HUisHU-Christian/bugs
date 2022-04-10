@@ -77,7 +77,21 @@ setTimeout(function() { showckeditor ('body', 0);} , 567);
 			echo '		<ul class="activity">';
 			foreach($actiProj[$id] as $activity) { echo $activity; }
 			echo '		</ul>';
-			echo '		<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
+			echo '		<a href="project/'.$id.'">'.__('tinyissue.activity').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=1">'.__('tinyissue.open_issues').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=2">'.__('tinyissue.closed_issues').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=5&assigned_to='.\Auth::user()->id.'">'.__('tinyissue.issues_assigned_to_you').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=3">'.__('tinyissue.issues_avenir').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
 			echo '	</div>';
 			echo '</div>';
 		}

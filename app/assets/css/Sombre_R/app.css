@@ -1219,6 +1219,9 @@ td.project-user, th.project-user {
 .issue-actions .close{
 	color: #48a547;
 }
+li.activity-item:hover{
+	background-color: black;
+}
 
 /* style markdowned elements */
 .issue ul {
@@ -1490,6 +1493,9 @@ ul.isssues li {
   margin-bottom: 15px;
   border: 1px solid #D99B69;
   border-radius: 5px;
+}
+.todo-list-item:hover {
+  background-color: black;
 }
 
 .todo-list-item span {

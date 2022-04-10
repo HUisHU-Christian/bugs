@@ -1,4 +1,4 @@
-<li onclick="window.location='<?php echo $issue->to(); ?>';">
+<li onclick="window.location='<?php echo $issue->to(); ?>';" class="activity-item">
 
 	<div class="tag">
 		<label class="label reproject" style="color:black;"><?php echo __('tinyissue.label_reprojected'); ?></label>

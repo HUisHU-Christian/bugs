@@ -9,7 +9,7 @@ $FileTypes = (is_dir('../app/assets/images/upload_type')) ? $FileTypes= scandir(
 $url =\URL::home();
 $What = \DB::table('projects_issues_attachments')->where('id', '=', $activity->attributes['action_id'])->order_by('id','DESC')->get();
 ?>
-<li id="comment<?php echo $activity->id; ?>" class="comment">
+<li id="comment<?php echo $activity->id; ?>" class="comment activity-item">
 	<div class="insides">
 		<div class="topbar">
 			<div class="data">

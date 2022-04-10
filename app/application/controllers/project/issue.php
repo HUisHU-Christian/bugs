@@ -425,6 +425,7 @@ class Project_Issue_Controller extends Base_Controller {
 		$Issue = Project\Issue::current()->id;
 		$Project = Project::current()->id;
 		$rep = (substr($pref["directory"], 0, 1) == '/') ? $pref["directory"] : "../".$pref["directory"];
+		\Log::write(3,'Attach file to issue num '.$Issue);
 
 		//Common data for the insertion into database: file's type, date, ect
 		if ($Issue == 1) {
@@ -444,6 +445,7 @@ class Project_Issue_Controller extends Base_Controller {
 		//Preparing the name and directories' names according to user preferences
 		///First step: preparing the directories
 		$TheFile	= $_FILES["Loading"];
+		\Log::write(4,'Attach file to issue num '.$Issue.' : Prepare the directory to receive file');
 		if($pref["method"] == 'i') {
 			if (!file_exists($rep."/".$Issue."/".$idComment)) {
 				if (!file_exists($rep.$Issue)) {
@@ -455,6 +457,8 @@ class Project_Issue_Controller extends Base_Controller {
 
 		////Second step: setting the file's name
 		$fileName = (($pref["method"] == 'i') ? "" : $Issue."_").$idComment."_".$_GET["Nom"];	//Default value  ( 'ICN' )
+		$cntLog = 'Attach file `'.$rep.$fileName.'`to issue num '.$Issue.' : ';
+		\Log::write(3, $cntLog.'Setting the file name'); 
 		switch ($pref["format"]) {
 			case "NCI":
 				$fileName = $_GET["Nom"]."_".$idComment.(($pref["method"] == 'i') ? "" : "_".$Issue);
@@ -465,6 +469,7 @@ class Project_Issue_Controller extends Base_Controller {
 		}
 
 		//Third step: process the file
+		\Log::write(4, $cntLog.'Copy the file'); 
 		if(move_uploaded_file($TheFile["tmp_name"], $rep.$fileName)) {
 			$msg = $msg + 1;
 			//Make sure the file will be openable to all users, not only the php engine
@@ -478,7 +483,9 @@ class Project_Issue_Controller extends Base_Controller {
 		} else {
 			return 0;
 		}
+
 		//Forth step: Store it into database
+		\Log::write(4, $cntLog.'File infos recorded into database'); 
 		if ($Issue != 'New/'.$Qui) {
 			//Modifié le 23 juin 2019, retrait des  "../" imposés dans l'enregistrement de l'adresse
 			\DB::table('projects_issues_attachments')->insert(array('id'=>NULL,'issue_id'=>$Issue,'comment_id'=>$idComment,'uploaded_by'=>$Qui,'filesize'=>$TheFile["size"],'filename'=>str_replace("../", "", $rep).$fileName,'fileextension'=>$_GET["ext"],'upload_token'=>$TheFile["tmp_name"],'created_at'=>$now,'updated_at'=>$now) );
@@ -487,6 +494,7 @@ class Project_Issue_Controller extends Base_Controller {
 		}
 
 		//Fifth step: Show on user's desk
+		\Log::write(4, $cntLog.'Show the result to the user'); 
 		if (is_numeric($msg)) {
 			$rep = (substr($rep, 0, 3) == '../') ? substr($rep, 3) : $rep;
 			$msg .= ';';
@@ -501,6 +509,7 @@ class Project_Issue_Controller extends Base_Controller {
 
 			//Sixth step: Notice the followers
 			//$this->Courriel ('Issue', true, Project::current()->id, $Issue, Auth::user()->id, array('attached'), array('tinyissue'));
+			\Log::write(4, $cntLog.'Send notice to followers'); 
 			\Mail::letMailIt(array(
 				'ProjectID' => Project::current()->id, 
 				'IssueID' => $Issue, 

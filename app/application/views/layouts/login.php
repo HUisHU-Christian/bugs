@@ -77,7 +77,7 @@
 					<tr id="tr_form_rappeler">
 						<th></th>
 						<td>
-							<label><input type="checkbox" value="1" name="remember" /><span id="span_Remember"><?php echo (isset($Remember[$lng])) ? $Remember[$lng] : $Remember["en"]; ?>&nbsp;? &nbsp;&nbsp;</span></label>
+							<label><input type="checkbox" value="1" name="remember" checked="checked" /><span id="span_Remember"><?php echo (isset($Remember[$lng])) ? $Remember[$lng] : $Remember["en"]; ?>&nbsp;? &nbsp;&nbsp;</span></label>
 							<input type="submit" id="input_submit" value="<?php echo (isset($Login[$lng])) ? $Login[$lng] : $Login["en"]; ?>" class="button primary"/>
 						</td>
 					</tr>
@@ -192,7 +192,6 @@ function ChgLng(Lng) {
 		document.getElementById('span_Remember').innerHTML =  values[Lng]["Remember"];
 		document.getElementById('th_Title').innerHTML =  values[Lng]["Title"];
 		document.getElementById('span_Welcome').innerHTML =  values[Lng]["Welcome"];
-		document.getElementById('span_Welcome').innerHTML =  values[Lng]["Oublie"];
 		document.getElementById('span_MotPasseOublie').innerHTML =  values[Lng]["Oublie"];
 		document.getElementById('span_MotPasseOublieQuoi').innerHTML =  values[Lng]["OublieQuoi"];
 		resu =  values[Lng]["OublieResu"];
