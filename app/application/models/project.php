@@ -194,6 +194,7 @@ class Project extends Eloquent {
 					break;
 
 				case 6:
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$tag_diff['added_tags'] = $tag_diff['added_tags'] ?? array();
 					$tag_diff['removed_tags'] = $tag_diff['removed_tags'] ?? array();
@@ -208,6 +209,7 @@ class Project extends Eloquent {
 					break;
 
 				case 8:	//Move ticket from project A to project B
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$return[] = View::make('ChangeIssue-project_acti', array(
 						'issue' => $issues[$row->item_id],

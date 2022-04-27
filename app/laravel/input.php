@@ -21,8 +21,7 @@ class Input {
 	 *
 	 * @return array
 	 */
-	public static function all()
-	{
+	public static function all() {
 		$input = array_merge(static::get(), static::query(), static::file());
 
 		unset($input[Request::spoofer]);
@@ -38,8 +37,7 @@ class Input {
 	 * @param  string  $key
 	 * @return bool
 	 */
-	public static function has($key)
-	{
+	public static function has($key) {
 		return trim((string) static::get($key)) !== '';
 	}
 
@@ -60,8 +58,7 @@ class Input {
 	 * @param  mixed   $default
 	 * @return mixed
 	 */
-	public static function get($key = null, $default = null)
-	{
+	public static function get($key = null, $default = null) {
 		$input = Request::foundation()->request->all();
 
 		if (is_null($key))
@@ -94,8 +91,7 @@ class Input {
 	 * @param  mixed   $default
 	 * @return mixed
 	 */
-	public static function query($key = null, $default = null)
-	{
+	public static function query($key = null, $default = null) {
 		return array_get(Request::foundation()->query->all(), $key, $default);
 	}
 
@@ -105,10 +101,9 @@ class Input {
 	 * @param  bool    $as_array
 	 * @return object
 	 */
-	public static function json($as_array = false)
-	{
+	public static function json($as_array = false) {
 		if ( ! is_null(static::$json)) return static::$json;
-
+		if (Request::foundation()->getContent() === NULL) { return false; }
 		return static::$json = json_decode(Request::foundation()->getContent(), $as_array);
 	}
 
@@ -126,8 +121,7 @@ class Input {
 	 * @param  array  $keys
 	 * @return array
 	 */
-	public static function only($keys)
-	{
+	public static function only($keys) {
  		return array_only(static::get(), $keys);
 	}
 
@@ -145,8 +139,7 @@ class Input {
 	 * @param  array  $keys
 	 * @return array
 	 */
-	public static function except($keys)
-	{
+	public static function except($keys) {
 		return array_exceptFct(static::get(), $keys);
 	}
 
@@ -156,8 +149,7 @@ class Input {
 	 * @param  string  $key
 	 * @return bool
 	 */
-	public static function had($key)
-	{
+	public static function had($key) {
 		return trim((string) static::old($key)) !== '';
 	}
 
@@ -176,8 +168,7 @@ class Input {
 	 * @param  mixed           $default
 	 * @return string
 	 */
-	public static function old($key = null, $default = null)
-	{
+	public static function old($key = null, $default = null) {
 		return array_get(Session::get(Input::old_input, array()), $key, $default);
 	}
 
@@ -193,8 +184,7 @@ class Input {
 	 * @param  mixed         $default
 	 * @return UploadedFile
 	 */
-	public static function file($key = null, $default = null)
-	{
+	public static function file($key = null, $default = null) {
 		return array_get($_FILES, $key, $default);
 	}
 
@@ -204,8 +194,7 @@ class Input {
 	 * @param  string  $key
 	 * @return bool
 	 */
-	public static function has_file($key)
-	{
+	public static function has_file($key) {
 		return strlen(static::file("{$key}.tmp_name", "")) > 0;
 	}
 
@@ -224,8 +213,7 @@ class Input {
 	 * @param  string  $name
 	 * @return bool
 	 */
-	public static function upload($key, $directory, $name = null)
-	{
+	public static function upload($key, $directory, $name = null) {
 		if (is_null(static::file($key))) return false;
 
 		return Request::foundation()->files->get($key)->move($directory, $name);
@@ -249,8 +237,7 @@ class Input {
 	 * @param  array   $keys
 	 * @return void
 	 */
-	public static function flash($filter = null, $keys = array())
-	{
+	public static function flash($filter = null, $keys = array()) {
 		$flash = ( ! is_null($filter)) ? static::$filter($keys) : static::get();
 
 		Session::flash(Input::old_input, $flash);
@@ -261,8 +248,7 @@ class Input {
 	 *
 	 * @return void
 	 */
-	public static function flush()
-	{
+	public static function flush() {
 		Session::flash(Input::old_input, array());
 	}
 
@@ -272,8 +258,7 @@ class Input {
 	 * @param  array  $input
 	 * @return void
 	 */
-	public static function merge(array $input)
-	{
+	public static function merge(array $input) {
 		Request::foundation()->request->add($input);
 	}
 
@@ -283,8 +268,7 @@ class Input {
 	 * @param  array  $input
 	 * @return void
 	 */
-	public static function replace(array $input)
-	{
+	public static function replace(array $input) {
 		Request::foundation()->request->replace($input);
 	}
 
@@ -292,8 +276,7 @@ class Input {
 	 * Clear the input for the current request.
 	 * @return void
 	 */
-	public static function clear()
-	{
+	public static function clear() {
 		Request::foundation()->request->replace(array());
 	}
 
