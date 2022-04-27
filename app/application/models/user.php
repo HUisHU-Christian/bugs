@@ -194,6 +194,7 @@ class User extends Eloquent {
 					break;
 					
 				case 6:	//Updated tags
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					if ($tag_diff === NULL) { $tag_diff['added_tags'] = array(); $tag_diff['removed_tags'] = array(); }
 					$return[$project_id]['activity'][] = View::make('activity/' . $activity_type[$row->type_id]->activity, array(
@@ -207,6 +208,7 @@ class User extends Eloquent {
 					break;
 
 				case 8:	//Move ticket from project A to project B
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$return[$project_id]['activity'][] = View::make('ChangeIssue-project_acti', array(
 						'issue' => $issues[$row->item_id],
