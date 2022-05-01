@@ -1,4 +1,5 @@
 #----- First line of this file .... please let it here, first with NO carriage return before nor after. -----
+
 #--#Create Activity Table
 CREATE TABLE IF NOT EXISTS `activity` (
   `id` int(11) unsigned NOT NULL auto_increment,
