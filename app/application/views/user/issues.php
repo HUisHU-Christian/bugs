@@ -11,9 +11,9 @@
 			<h4><a href="<?php echo $project['detail']->to(); ?>/issues?tag_id=1"><?php echo $project['detail']->name; ?></a></h4>
 			<ul class="issues">
 				<?php foreach($project['issues'] as $row):
-					if ($row->start_at > date("Y-m-d")) { continue; }  
+					if (substr($row->start_at, 0, 10) > date("Y-m-d")) { continue; }  
 				?>
-				<li>
+				<li class="activity-item">
 					<a href="<?php echo $row->to(); ?>" class="comments"><?php echo $row->comment_count(); ?></a>
 					<?php 
 					if(!empty($row->tags)) {

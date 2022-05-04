@@ -375,7 +375,24 @@
 				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrLog" id="input_err_log_true" value="true" type="radio" <?php echo (Config::get('error.log') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<?php echo $LngSRV["UserPref_projet_2b"]; ?> : 	 <input name="ErrLog" id="input_err_log_false" value="false" type="radio" <?php echo (Config::get('error.log') ? '' : ' checked="checked"'); ?> />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				- - - - - >
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php echo $LngSRV["err_log_acuracy"]; ?>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<select id="select_err_acuracy" name="acuracy">
+					<option value="0"<?php echo (Config::get('error.acuracy') == '0' ? ' selected="selected"' : ''); ?>>0. <?php echo $LngSRV["err_log_acuracy_0"]; ?></option>
+					<option value="1"<?php echo (Config::get('error.acuracy') == '1' ? ' selected="selected"' : ''); ?>>1. <?php echo $LngSRV["err_log_acuracy_1"]; ?></option>
+					<option value="2"<?php echo (Config::get('error.acuracy') == '2' ? ' selected="selected"' : ''); ?>>2. <?php echo $LngSRV["err_log_acuracy_2"]; ?></option>
+					<option value="3"<?php echo ((Config::get('error.acuracy') == '3' || Config::get('error.acuracy') == '') ? ' selected="selected"' : ''); ?>>3. <?php echo $LngSRV["err_log_acuracy_3"]; ?></option>
+					<option value="4"<?php echo (Config::get('error.acuracy') == '4' ? ' selected="selected"' : ''); ?>>4. <?php echo $LngSRV["err_log_acuracy_4"]; ?></option>
+					<option value="5"<?php echo (Config::get('error.acuracy') == '5' ? ' selected="selected"' : ''); ?>>5. <?php echo $LngSRV["err_log_acuracy_5"]; ?></option>
+				</select>
 				<br />
+				<br />
+
 				<?php echo $LngSRV["err_exit"]; ?>
 				<?php echo $LngSRV["UserPref_projet_2a"]; ?> : 	 <input name="ErrExt" id="input_err_exit_true" value="true" type="radio" <?php echo (Config::get('error.exit') ? ' checked="checked"' : ''); ?> />
 				&nbsp;&nbsp;&nbsp;&nbsp;

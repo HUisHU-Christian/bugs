@@ -36,8 +36,7 @@ class Payload {
 	 * @param  Driver  $driver
 	 * @return void
 	 */
-	public function __construct(Driver $driver)
-	{
+	public function __construct(Driver $driver) {
 		$this->driver = $driver;
 	}
 
@@ -47,15 +46,13 @@ class Payload {
 	 * @param  string  $id
 	 * @return void
 	 */
-	public function load($id)
-	{
+	public function load($id) {
 		if ( ! is_null($id)) $this->session = $this->driver->load($id);
 
 		// If the session doesn't exist or is invalid we will create a new session
 		// array and mark the session as being non-existent. Some drivers, such as
 		// the database driver, need to know whether it exists.
-		if (is_null($this->session) or static::expired($this->session))
-		{
+		if (is_null($this->session) or static::expired($this->session)) {
 			$this->exists = false;
 
 			$this->session = $this->driver->fresh();
@@ -64,8 +61,7 @@ class Payload {
 		// A CSRF token is stored in every session. The token is used by the Form
 		// class and the "csrf" filter to protect the application from cross-site
 		// request forgery attacks. The token is simply a random string.
-		if ( ! $this->has(Session::csrf_token))
-		{
+		if ( ! $this->has(Session::csrf_token)) {
 			$this->put(Session::csrf_token, Str::random(40));
 		}		
 	}
@@ -78,8 +74,7 @@ class Payload {
 	 * @param  array  $session
 	 * @return bool
 	 */
-	protected static function expired($session)
-	{
+	protected static function expired($session) {
 		$lifetime = Config::get('session.lifetime');
 
 		return (time() - $session['last_activity']) > ($lifetime * 60);
@@ -91,8 +86,7 @@ class Payload {
 	 * @param  string  $key
 	 * @return bool
 	 */
-	public function has($key)
-	{
+	public function has($key) {
 		return ( ! is_null($this->get($key)));
 	}
 
@@ -113,23 +107,19 @@ class Payload {
 	 * @param  mixed   $default
 	 * @return mixed
 	 */
-	public function get($key, $default = null)
-	{
+	public function get($key, $default = null) {
 		$session = $this->session['data'];
 
 		// We check for the item in the general session data first, and if it
 		// does not exist in that data, we will attempt to find it in the new
 		// and old flash data, or finally return the default value.
-		if ( ! is_null($value = array_get($session, $key)))
-		{
+		if ( ! is_null($value = array_get($session, $key))) {
 			return $value;
 		}
-		elseif ( ! is_null($value = array_get($session[':new:'], $key)))
-		{
+		elseif ( ! is_null($value = array_get($session[':new:'], $key))) {
 			return $value;
 		}
-		elseif ( ! is_null($value = array_get($session[':old:'], $key)))
-		{
+		elseif ( ! is_null($value = array_get($session[':old:'], $key))) {
 			return $value;
 		}
 
@@ -148,8 +138,7 @@ class Payload {
 	 * @param  mixed   $value
 	 * @return void
 	 */
-	public function put($key, $value)
-	{
+	public function put($key, $value) {
 		array_set($this->session['data'], $key, $value);
 	}
 
@@ -167,8 +156,7 @@ class Payload {
 	 * @param  mixed   $value
 	 * @return void
 	 */
-	public function flash($key, $value)
-	{
+	public function flash($key, $value) {
 		array_set($this->session['data'][':new:'], $key, $value);
 	}
 
@@ -177,8 +165,7 @@ class Payload {
 	 *
 	 * @return void
 	 */
-	public function reflash()
-	{
+	public function reflash() {
 		$old = $this->session['data'][':old:'];
 
 		$this->session['data'][':new:'] = array_merge($this->session['data'][':new:'], $old);
@@ -198,10 +185,8 @@ class Payload {
 	 * @param  string|array  $keys
 	 * @return void
 	 */
-	public function keep($keys)
-	{
-		foreach ((array) $keys as $key)
-		{
+	public function keep($keys) {
+		foreach ((array) $keys as $key) {
 			$this->flash($key, $this->get($key));
 		}
 	}
@@ -212,8 +197,7 @@ class Payload {
 	 * @param  string  $key
 	 * @return void
 	 */
-	public function forget($key)
-	{
+	public function forget($key) {
 		array_forget($this->session['data'], $key);
 	}
 
@@ -224,8 +208,7 @@ class Payload {
 	 *
 	 * @return void
 	 */
-	public function flush()
-	{
+	public function flush() {
 		$token = $this->token();
 
 		$session = array(Session::csrf_token => $token, ':new:' => array(), ':old:' => array());
@@ -238,8 +221,7 @@ class Payload {
 	 *
 	 * @return void
 	 */
-	public function regenerate()
-	{
+	public function regenerate() {
 		$this->session['id'] = $this->driver->id();
 
 		$this->exists = false;
@@ -250,8 +232,7 @@ class Payload {
 	 *
 	 * @return string
 	 */
-	public function token()
-	{
+	public function token() {
 		return $this->get(Session::csrf_token);
 	}
 
@@ -260,8 +241,7 @@ class Payload {
 	 *
 	 * @return int
 	 */
-	public function activity()
-	{
+	public function activity() {
 		return $this->session['last_activity'];
 	}
 
@@ -272,8 +252,7 @@ class Payload {
 	 *
 	 * @return void
 	 */
-	public function save()
-	{
+	public function save() {
 		$this->session['last_activity'] = time();
 
 		// Session flash data is only available during the request in which it
@@ -302,8 +281,7 @@ class Payload {
 		// if we need to run garbage collection.
 		$sweepage = $config['sweepage'];
 
-		if (mt_rand(1, $sweepage[1]) <= $sweepage[0])
-		{
+		if (mt_rand(1, $sweepage[1]) <= $sweepage[0]) {
 			$this->sweep();
 		}
 	}
@@ -316,10 +294,8 @@ class Payload {
 	 * 
 	 * @return void
 	 */
-	public function sweep()
-	{
-		if ($this->driver instanceof Sweeper)
-		{
+	public function sweep() {
+		if ($this->driver instanceof Sweeper) {
 			$this->driver->sweep(time() - (Config::get('session.lifetime') * 60));
 		}
 	}
@@ -329,10 +305,8 @@ class Payload {
 	 *
 	 * @return void
 	 */
-	protected function age()
-	{
+	protected function age() {
 		$this->session['data'][':old:'] = $this->session['data'][':new:'];
-
 		$this->session['data'][':new:'] = array();
 	}
 
@@ -342,15 +316,10 @@ class Payload {
 	 * @param  array  $config
 	 * @return void
 	 */
-	protected function cookie($config)
-	{
+	protected function cookie($config) {
 		extract($config, EXTR_SKIP);
-
 		$minutes = ( ! $expire_on_close) ? $lifetime : 0;
-
-//		Cookie::put($cookie, $this->session['id'], $minutes, $path, $domain, $secure);
 		Cookie::put($cookie, $this->session['id'], ['expires' => $minutes,'path' => $path,'domain' => $domain,'secure' => $secure,'httponly' => true,'samesite' => 'strict',]);
-	
 	}
 
 }

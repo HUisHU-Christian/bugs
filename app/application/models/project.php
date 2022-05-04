@@ -71,7 +71,7 @@ class Project extends Eloquent {
 
 		foreach($this->users()->get(array('user_id')) as $user) { $users[] = $user->id; }
 		$results = User::where('deleted', '=', 0);
-		if(count($users) > 0) { $results->where_not_in('id', $users); }
+		if(count($users) > 0) { $results->whereNotIn('id', $users); }
 
 		return $results->get();
 	}
@@ -115,13 +115,17 @@ class Project extends Eloquent {
 				->where_null('closed_at', 'and', false)
 				->count();
  	}
+	public function count_project_activity() {
+ 			return User\Activity::where('parent_id', '=', $this->id)->count();
+ 	}
+ 	
 	/**
 	* Select activity for a project
 	*
 	* @param  int    $activity_limit
 	* @return array
 	*/
-	public function activity($activity_limit) {
+	public function activity($activity_limit, $debut = 1) {
 		$users = $issues = $comments = $activity_type = array();
 
 		/* Load the activity types */
@@ -133,6 +137,7 @@ class Project extends Eloquent {
 		$project_activity = User\Activity::where('parent_id', '=', $this->id)
 			->order_by('created_at', 'DESC')
 			->take($activity_limit)
+			->for_page($debut, $activity_limit)
 			->get();
 
 		if(!$project_activity) {
@@ -189,6 +194,7 @@ class Project extends Eloquent {
 					break;
 
 				case 6:
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$tag_diff['added_tags'] = $tag_diff['added_tags'] ?? array();
 					$tag_diff['removed_tags'] = $tag_diff['removed_tags'] ?? array();
@@ -203,6 +209,7 @@ class Project extends Eloquent {
 					break;
 
 				case 8:	//Move ticket from project A to project B
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$return[] = View::make('ChangeIssue-project_acti', array(
 						'issue' => $issues[$row->item_id],

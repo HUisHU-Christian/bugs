@@ -4,7 +4,7 @@
 	}
 if ($comment !== NULL) {
 ?>
-<li id="comment<?php echo @$comment->id; ?>" class="comment">
+<li id="comment<?php echo @$comment->id; ?>" class="comment activity-item">
 	<div class="insides" id="div_comment_<?php echo @$comment->id; ?>">
 		<div class="topbar">
 			<?php if(Auth::user()->permission('issue-modify')): ?>
@@ -73,9 +73,9 @@ if ($comment !== NULL) {
 					foreach($comment->attachments()->get() as $attachment) {
 						echo '<li>';
 						if(in_array($attachment->fileextension, Config::get('application.image_extensions'))) {
-							echo '<a href="'.URL::base().Config::get('application.attachment_path').rawurlencode($attachment->filename).'" title="'.$attachment->filename.'"><img src="'.URL::base() . Config::get('application.attachment_path') . $project->id . '/' . $attachment->upload_token . '/' . $attachment->filename.'" style="max-width: 100px;"  alt="'.$attachment->filename.'" /></a>';
+							echo '<a href="'.URL::base().$attachment->filename.'" title="'.$attachment->filename.'"><img src="'.URL::base() . Config::get('application.attachment_path') . $project->id . '/' . $attachment->upload_token . '/' . $attachment->filename.'" style="max-width: 100px;"  alt="'.$attachment->filename.'" /></a>';
 						} else {
-							echo '<a href="'.URL::base().Config::get('application.attachment_path').rawurlencode($attachment->filename).'" title="'.$attachment->filename.'">'.$attachment->filename.'</a>';
+							echo '<a href="'.URL::base().$attachment->filename.'" title="'.$attachment->filename.'">'.$attachment->filename.'</a>';
 						}
 						echo '</li>';
 					}

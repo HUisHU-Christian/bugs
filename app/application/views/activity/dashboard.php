@@ -24,20 +24,21 @@
 		} else {
 			$LngSRV = $Lng;
 		}
-		echo '<h3 style="background-color: yellow; font-size: 200%; color: black; padding-top: 100px;">'.$LngSRV["welcome_1"].'<span style="color:black;">'.$LngSRV["welcome_2"].'</span></h3>';
-		echo '<div class="pad">';
-		echo '<form action="'.URL::to('home/new').'" method="post" id="agissons">';
-		echo '<h3>'.__('tinyissue.create_a_new_project').'</h3>';
-		echo $LngSRV['welcome_projectname'].' : <input name="projectName" size="80" style="font-size: 200%;"><br />';
-		echo '<br /><br />';
-		echo '<h3>'.__('tinyissue.create_a_new_issue').'</h3>';
-		echo $LngSRV['welcome_issuename'].' : <input name="ticketName" size="80" style="font-size: 150%;"><br />';
-		echo '<br /><br />';
-		echo $LngSRV['welcome_issuedesc'].' <br /> <textarea name="body" id="texteara_body" style="width: 98%; height: 150px; background-color: #FFF; color: #000; border-width: 2px; border-color: #999;"></textarea>';
-		echo '<br />';
-		echo '<br /><br />';
-		echo '<div style="text-align: center;"><input type="submit" value="'.$LngSRV['welcome_submit'].'" class="button	primary"/></div>';
-		echo '</form>';
+		echo '<h3 style="background-color: yellow; font-size: 200%; color: black; padding-top: 100px;">'.$LngSRV["welcome_1"].'<span style="color:black;">'.$LngSRV["welcome_2"].'</span></h3>
+				<div class="pad">
+				<form action="'.URL::to('home/new').'" method="post" id="agissons">
+				<h3>'.__('tinyissue.create_a_new_project').'</h3>'.
+				$LngSRV['welcome_projectname'].' : <input name="projectName" size="80" style="font-size: 200%;"><br />
+				<br /><br />
+				<h3>'.__('tinyissue.create_a_new_issue').'</h3>'.
+				$LngSRV['welcome_issuename'].' : <input name="ticketName" size="80" style="font-size: 150%;"><br />
+				<br /><br />'.
+				$LngSRV['welcome_issuedesc'].' <br /> <textarea name="body" id="texteara_body" style="width: 98%; height: 150px; background-color: #FFF; color: #000; border-width: 2px; border-color: #999;"></textarea>
+				<br />
+				<br /><br />
+				<div style="text-align: center;"><input type="submit" value="'.$LngSRV['welcome_submit'].'" class="button	primary"/></div>
+				</form>
+				';
 ?>
 <script type="text/javascript" >
 var AllEditors = new Array();
@@ -76,7 +77,21 @@ setTimeout(function() { showckeditor ('body', 0);} , 567);
 			echo '		<ul class="activity">';
 			foreach($actiProj[$id] as $activity) { echo $activity; }
 			echo '		</ul>';
-			echo '		<a href="project/'.$id.'">'.$NomProjet[$id].'</a>';
+			echo '		<a href="project/'.$id.'">'.__('tinyissue.activity').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=1">'.__('tinyissue.open_issues').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=2">'.__('tinyissue.closed_issues').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=5&assigned_to='.\Auth::user()->id.'">'.__('tinyissue.issues_assigned_to_you').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
+			echo '		<a href="project/'.$id.'/issues?tag_id=3">'.__('tinyissue.issues_avenir').'</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							';
 			echo '	</div>';
 			echo '</div>';
 		}

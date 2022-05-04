@@ -47,7 +47,7 @@ If your version is older than september 2018
 ## Requirements:
 
 - Tested on: Apache, IIS;
-- PHP 7.3+;   (since 2021/08/21, PHP 7.0 is no longer supported)   
+- PHP 7.4+;   (since 2022/05/05, PHP 7.3 and lower are no longer supported)   
 - MySQL 5+;
 - PDO Extension for PHP (MySQL);
 - MCrypt Extension for PHP : soon MCrypt will be removed from Bugs project;

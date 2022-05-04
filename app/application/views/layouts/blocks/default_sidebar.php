@@ -6,13 +6,7 @@
 	<br /><br />
 	</h3>
 </div>
-<?php endif; ?>
-
-<div id="sidebar_MenuDefault_title" class="sidebarTitles"><?php echo __('tinyissue.active_projects'); ?></div>
-<span><?php echo __('tinyissue.active_projects_description');?></span>
-<div id="sidebar_MenuDefault" class="sidebarItem">
-<br />
-<?php
+<?php endif; 
 	//Récupération des préférences dans le dossier personnel de l'usager
 	$Preferences = \Auth::user()->pref();
 
@@ -36,6 +30,13 @@
 	}
 	////Tri des données du menu déroulant
 	if ($Preferences['orderSidebar'] == 'desc') { asort($SansAccent); } else { arsort($SansAccent); }
+	
+if ( count($SansAccent) > 1) {
+	echo ' <div id="sidebar_MenuDefault_title" class="sidebarTitles">'.__('tinyissue.active_projects').'</div>
+			<span>'.__('tinyissue.active_projects_description').'</span>
+			<div id="sidebar_MenuDefault" class="sidebarItem">
+			<br />
+			';
 
 	////Affichage du menu déroulant (liste des projets)
 	if ($Preferences['Roulbar'] == 'true') {
@@ -53,9 +54,8 @@
 		echo '</div>';
 		echo '<br /><br />';
 	}
-?>
-<div style="max-height: 600px; overflow-y: auto;">
-<?php
+
+	echo '<div style="max-height: 600px; overflow-y: auto;">';
 	//Les préférences de l'usager ont été récupérées plus haut
 	if ($Preferences['numSidebar'] != 0) {
 		
@@ -70,22 +70,25 @@
 			$follower = \DB::table('following')->where('project','=',1)->where('project_id','=',$id)->where('user_id','=',\Auth::user()->id)->count();
 			$follower = ($follower > 0) ? 1 : 0;
 			echo '<a href="javascript: Following('.$follower.', '.$id.', '.\Auth::user()->id.');" title="'.(($follower == 0) ? __('tinyissue.following_start') : __('tinyissue.following_stop')).'" ><img id="img_follow_'.$id.'" src="'.\URL::home().'app/assets/images/layout/icon-comments_'.$follower.'.png" align="left" style="min-height:'.$follower.'px " /></a>';
-			echo '<li>';
+			echo '<li class="activity-item">';
 			echo '<a href="'.$ind.(($NbIssues[$ind] == 0) ? '' : '/issues?tag_id=1').'">'.$Proj[$ind].' </a>';
 			echo '</li>';
 			if (++$rendu > abs(intval($Preferences['numSidebar'])) && abs(intval($Preferences['numSidebar'])) < 990) { break; }
 		}
 		echo '</ul>';
+	echo '</div>';
 	}
-?>
-</div>
-<?php
+	echo '</div>';
+}
+if ( count($SansAccent) > 0) {
 	$ceci = array_keys($_GET);
 	$prefixe = isset($ceci[0]) ? (in_array($ceci[0], array("/administration/users","/projects/reports","/user/settings","/user/issues","/project/5"))) ? "../" : "" : "";
 	include_once path('public').'app/vendor/searchEngine/index.php';
+}
 	include_once "application/views/layouts/blocks/wiki.php";
+if ( count($SansAccent) > 1) {
+}
 ?>
-</div>
 
 <script type="text/javascript" >
 	$('#sidebar_MenuDefault_title').click(function() {

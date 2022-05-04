@@ -32,7 +32,7 @@ class User extends Eloquent {
 		);
 		//User's preferences from 'Preferences' field  ( table 'users' ) 
 		$Pref = Auth::user()->preferences;
-		$Prefs = explode("&", $Pref);
+		$Prefs = ($Pref === NULL) ? array() : explode("&", $Pref);
 		foreach ($Prefs as $ind => $val) {
 			$ceci = explode("=", $val);
 			if (isset($ceci[1])) { $UserPref[$ceci[0]] = $ceci[1]; }
@@ -194,6 +194,7 @@ class User extends Eloquent {
 					break;
 					
 				case 6:	//Updated tags
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					if ($tag_diff === NULL) { $tag_diff['added_tags'] = array(); $tag_diff['removed_tags'] = array(); }
 					$return[$project_id]['activity'][] = View::make('activity/' . $activity_type[$row->type_id]->activity, array(
@@ -207,6 +208,7 @@ class User extends Eloquent {
 					break;
 
 				case 8:	//Move ticket from project A to project B
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$return[$project_id]['activity'][] = View::make('ChangeIssue-project_acti', array(
 						'issue' => $issues[$row->item_id],
@@ -311,7 +313,7 @@ class User extends Eloquent {
 				'errors' => $validator->errors
 			);
 		}
-		$MotPasse =  Str::random(6);
+		$MotPasse = (isset($info['password'])) ? $info['password'] :  Str::random(6);
 
 		//Inscription du nouveau membre dans la bdd
 		$insert = array(
@@ -329,6 +331,7 @@ class User extends Eloquent {
 		//Attribution d'un premier projet à ce nouvel usager
 		$NewUser = \User::where('email', '=', $info['email'])->where('firstname', '=', $info['firstname'])->where('lastname', '=', $info['lastname'])->get(array('id'));
 		$ID = $NewUser[0]->id;
+		$lesProj = array();
 
 		//Attribution des rôles de cet usager dans les différents projets actifs de l'administrateur qui l'inscrit
 		foreach ($info["roles"] as $proj => $role ) {
@@ -336,44 +339,44 @@ class User extends Eloquent {
 			\DB::query("INSERT INTO projects_users (user_id, project_id, role_id, created_at) VALUES (".$ID.", ".$proj.", ".$role.", NOW() ) ");
 			\DB::query("DELETE FROM following WHERE user_id = ".$ID." AND project_id = ".$proj." AND issue_id = 0 ");
 			\DB::query("INSERT INTO following (user_id, project_id, issue_id, project, attached, tags) VALUES (".$ID.", ".$proj.", 0, 1, 1, 1) ");
+			$lesProj[] = $proj;
 		}
 
-
 		//Émission d'un courriel à l'adresse du nouveau membre
-//		$contenu = array('useradded','static:'.$MotPasse);
-//		$src = array('email', 'value');
-//		$Type = 'User';
-//		$SkipUser = false;
-//		$ProjectID = 0;
-//		$IssueID = 0;
-//		$User = $info['email'];
-//		include "application/controllers/ajax/SendMail.php";
 		\Mail::letMailIt(array(
 			'ProjectID' => 0, 
 			'IssueID' => 0, 
 			'SkipUser' => false,
 			'Type' => 'User', 
-			'user' => $ID,
+			'user' => $info['email'],
 			'contenu' => array('useradded','static:'.$MotPasse),
 			'src' => array('email', 'value')
 			),
-			$info['email'], 
+			$ID, 
 			$info['language']
 		);
 		
-		//A copy email to the admin
-		\Mail::letMailIt(array(
-			'ProjectID' => 0, 
-			'IssueID' => 0, 
-			'SkipUser' => false,
-			'Type' => 'User', 
-			'user' => \Auth::user()->id,
-			'contenu' => array('useradded','static:'.$MotPasse),
-			'src' => array('email', 'value')
-			),
-			\Auth::user()->email, 
-			\Auth::user()->language
-		);
+		//Une copie du courriel aux administrateurs du projet
+		//$lesAdmin = \Project\User::where_in('project_id', implode(",", $lesProj))->where('role_id', '=', 4)->get(array('user_id'));
+		$lesAdmin = \Project\User::
+			where_in('projects_users.project_id', $lesProj)
+			->where('projects_users.role_id', '=', 4)
+			->join('users', 'users.id', '=', 'projects_users.user_id')
+			->get(array('users.language', 'projects_users.user_id'));
+		foreach($lesAdmin as $admin) {
+			\Mail::letMailIt(array(
+				'ProjectID' => $lesProj[0], 
+				'IssueID' => 0, 
+				'SkipUser' => false,
+				'Type' => 'User', 
+				'user' => $admin->email,
+				'contenu' => array('useradded','static: ******'),
+				'src' => array('email', 'value')
+				),
+				$admin->user_id, 
+				$admin->language
+			);
+		}
 
 		return array(
 			'success' => true,

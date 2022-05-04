@@ -212,7 +212,7 @@ return array(
 	'priority_desc_5' => 'Very high',
 	'project_has_been_deleted'=>'The project has been deleted.',
 	'project_has_been_updated' => 'Project has been updated!',
-	'project_overview' => 'Project Overview',
+	'project_overview' => 'This project`s admin',
 	'project' => 'Project',
 	'project_created_success' => 'Project sucessfully created.\nLet create new ticket.',
 	'projects_description' => 'List of all your projects',

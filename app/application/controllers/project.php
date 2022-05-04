@@ -1,5 +1,4 @@
 <?php
-
 class Project_Controller extends Base_Controller {
 
 	public $layout = 'layouts.project';
@@ -171,18 +170,20 @@ class Project_Controller extends Base_Controller {
 	 * @return View
 	 */
 	public function get_edit() {
+		\Log::write(5,'Edit project: enter into editing page for project `'.Project::current()->name.'` ');
 		return $this->layout->nest('content', 'project.edit', array(
 			'project' => Project::current()
 		));
 	}
 
 	public function post_edit() {
+		\Log::write(3,'Edit project: project `'.Project::current()->name.'` will be edited ');
 		$ancProj = Project::current()->name;
 		/* Delete the project */
 		if(Input::get('delete')) {
 			//Email to all of this project's followers
 			$followers =\DB::query("SELECT USR.email, CONCAT(USR.firstname, ' ', USR.lastname) AS user, USR.language, PRO.name FROM following AS FAL LEFT JOIN users AS USR ON USR.id = FAL.user_id LEFT JOIN projects AS PRO ON PRO.id = FAL.project_id WHERE FAL.project_id = ".Project::current()->id." AND FAL.project = 1 ".((isset($thisIssue[0])) ? " AND FAL.user_id NOT IN (".$thisIssue[0]->attributes["assigned_to"].",".\Auth::user()->id.")" : ""). "");
-			//$this->Courriel ('Project', true, Project::current()->id, 0, $followers, array('projectdel'), array('tinyissue'));
+			\Log::write(5,'Edit project: Mailing about the edition of project `'.Project::current()->name.'` ');
 			\Mail::letMailIt(array(
 				'ProjectID' => \Project::current()->id, 
 				'IssueID' => 0, 
@@ -206,8 +207,8 @@ class Project_Controller extends Base_Controller {
 		$weblnk = Project::update_weblnks(Input::all(), Project::current());
 
 		if($update['success']) {
+			\Log::write(3,'Edit project: project `'.Project::current()->name.'` as been succefully edited ');
 			//Email to all of this project's followers
-//			$this->Courriel ('Project', true, Project::current()->id, Project::current()->id, Auth::user()->id, array('projectmod','static:'.$ancProj), array('tinyissue','value'));
 			\Mail::letMailIt(array(
 				'ProjectID' => \Project::current()->id, 
 				'IssueID' => Project::current()->id, 
@@ -233,9 +234,4 @@ class Project_Controller extends Base_Controller {
 	public function post_changeRoleUser() {
 		return "Nous sommes ici à la ligne 211 - POST de controllers/project.php";
 	}	
-	
-	public function Courriel ($Type, $SkipUser, $ProjectID, $IssueID, $User, $contenu, $src) {
-		$User = Auth::user()->id;
-		include_once "application/controllers/ajax/SendMail.php";
-	}
 }

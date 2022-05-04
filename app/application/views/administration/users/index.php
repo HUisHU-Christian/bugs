@@ -34,9 +34,13 @@
 						?>
 						</li>
 					</ul>
-
-					<a class="name" href="<?php echo URL::to('administration/users/edit/' . $user->id);?>"><?php echo $user->firstname . ' ' . $user->lastname; ?></a>
-
+					<a class="name" href="mailto: <?php echo $user->email;?>">
+						<img src="../app/assets/css/<?php echo \User::pref("template"); ?>/images/courriel.png" height="30" alt="Courriel" style="vertical-align: middle; padding-right: 15px;" />
+					</a>
+					<a class="name" href="<?php echo URL::to('administration/users/edit/' . $user->id);?>">
+						<img src="../app/assets/css/<?php echo \User::pref("template"); ?>/images/modifier.png" height="30" alt="Modifier" style="vertical-align: middle; padding-right: 15px;" />
+						<?php echo $user->firstname . ' ' . $user->lastname; ?>
+					</a>
 				</li>
 				<?php endforeach; ?>
 			</ul>
