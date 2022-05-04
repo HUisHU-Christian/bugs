@@ -130,6 +130,7 @@ class Issue extends \Eloquent {
 				case 6:
 					//using project/issue/activity/update-issue-tags.php
 					//according to db table activity, field activity's value for id = 6
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					if (strlen($row->data) > 10) { 
 						$prem = strpos($row->data, "[");
@@ -161,6 +162,7 @@ class Issue extends \Eloquent {
 				case 9:
 					//using project/issue/activity/following
 					//according to db table activity, field activity's value for id = 9 
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$return[] = \View::make('Follow', array(
 						'issue' => $issue,
@@ -172,6 +174,7 @@ class Issue extends \Eloquent {
 				case 10:
 					//using project/issue/activity/IssueEdit.php
 					//according to db table activity, field activity's value for id = 10 
+					if ($row->data === NULL) { break; }
 					$tag_diff = json_decode($row->data, true);
 					$return[] = \View::make('IssueEdit', array(
 						'issue' => $issue,
