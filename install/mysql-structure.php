@@ -1,6 +1,4 @@
-#----- First line of this file .... please let it here, first with NO carriage return before nor after. -----
-
-#--#Create Activity Table
+<?php return array("#Create Activity Table
 CREATE TABLE IF NOT EXISTS `activity` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `description` varchar(255) character set UTF8 default NULL,
@@ -17,29 +15,9 @@ CREATE TABLE IF NOT EXISTS `activity` (
   `updated_at` datetime default NOW(),
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Activity Table
-CREATE TABLE IF NOT EXISTS `activity` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `description` varchar(255) character set UTF8 default NULL,
-  `DE` VARCHAR(255) character set UTF8 default NULL,
-  `EN` VARCHAR(255) character set UTF8 default NULL,
-  `ES` VARCHAR(255) character set UTF8 default NULL,
-  `FR` VARCHAR(255) character set UTF8 default NULL,
-  `IT` VARCHAR(255) character set UTF8 default NULL,
-  `RU` VARCHAR(255) character set UTF8 default NULL,
-  `ZH_CN` VARCHAR(255) character set UTF8 default NULL,
-  `ZH_TW` VARCHAR(255) character set UTF8 default NULL,
-  `` VARCHAR(255) character set UTF8 default NULL,
-  `activity` varchar(255) character set UTF8 default NULL,
-  `created_at` datetime default NOW(),
-  `updated_at` datetime default NOW(),
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
-
-#--#Create Permissions Table
+"#Create Permissions Table
 CREATE TABLE IF NOT EXISTS `permissions` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `permission` varchar(255) character set UTF8 default NULL,
@@ -47,9 +25,9 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `auto_has` varchar(255) character set UTF8 default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Projects Table
+"#Create Projects Table
 CREATE TABLE IF NOT EXISTS `projects` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set UTF8 default NULL,
@@ -59,9 +37,9 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `default_assignee` bigint(20)  default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Projects Issues Table
+"#Create Projects Issues Table
 CREATE TABLE IF NOT EXISTS  `projects_issues` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `created_by` bigint(20) NOT NULL DEFAULT '1',
@@ -83,9 +61,9 @@ CREATE TABLE IF NOT EXISTS  `projects_issues` (
   `closed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) AUTO_INCREMENT = 2 ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Projects Issues Attachments Table
+"#Create Projects Issues Attachments Table
 CREATE TABLE IF NOT EXISTS  `projects_issues_attachments` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `issue_id` bigint(20) default NULL,
@@ -99,9 +77,9 @@ CREATE TABLE IF NOT EXISTS  `projects_issues_attachments` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Projects Issues Comments Table
+"#Create Projects Issues Comments Table
 CREATE TABLE IF NOT EXISTS `projects_issues_comments` (
   `id` bigint(20) NOT NULL auto_increment,
   `created_by` bigint(20) default '0',
@@ -115,9 +93,9 @@ CREATE TABLE IF NOT EXISTS `projects_issues_comments` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create issue-tag relationship table
+"#Create issue-tag relationship table
 CREATE TABLE IF NOT EXISTS  `projects_issues_tags` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `issue_id` bigint(20) unsigned NOT NULL,
@@ -127,9 +105,9 @@ CREATE TABLE IF NOT EXISTS  `projects_issues_tags` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `issue_tag` (`issue_id`,`tag_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Projects Links Table
+"#Create Projects Links Table
 CREATE TABLE IF NOT EXISTS  `projects_links` (
   `id_link` int(11) NOT NULL AUTO_INCREMENT,
   `id_project` int(11) NOT NULL DEFAULT '1',
@@ -140,9 +118,9 @@ CREATE TABLE IF NOT EXISTS  `projects_links` (
   PRIMARY KEY (`id_link`),
   KEY `id_project_category_desactivated_created` (`id_project`,`category`,`desactivated`,`created`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Projects Users Table
+"#Create Projects Users Table
 CREATE TABLE IF NOT EXISTS `projects_users` (
   `id` bigint(20) NOT NULL auto_increment,
   `user_id` bigint(20) default '0',
@@ -152,9 +130,9 @@ CREATE TABLE IF NOT EXISTS `projects_users` (
  	`updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Roles Table
+"#Create Roles Table
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `name` varchar(255) character set UTF8 default NULL,
@@ -162,27 +140,27 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `description` varchar(255) character set UTF8 default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Roles Permissions Table
+"#Create Roles Permissions Table
 CREATE TABLE IF NOT EXISTS `roles_permissions` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `role_id` bigint(11) default NULL,
   `permission_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Sessions Table
+"#Create Sessions Table
 CREATE TABLE IF NOT EXISTS `sessions` (
   `id` varchar(40) character set UTF8 NOT NULL,
   `last_activity` int(10) NOT NULL,
   `data` text character set UTF8 NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Settings Table
+"#Create Settings Table
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL auto_increment,
   `key` varchar(255) character set UTF8 default NULL,
@@ -190,9 +168,9 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `name` varchar(255) character set UTF8 default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create tags table
+"#Create tags table
 CREATE TABLE IF NOT EXISTS  `tags` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(255) NOT NULL,
@@ -211,9 +189,9 @@ CREATE TABLE IF NOT EXISTS  `tags` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag` (`tag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE 'utf8_general_ci';
-#--
+",
 
-#--#Create ToDo Table
+"#Create ToDo Table
 CREATE TABLE IF NOT EXISTS `users_todos` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `issue_id` bigint(20) default NULL,
@@ -224,9 +202,9 @@ CREATE TABLE IF NOT EXISTS `users_todos` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Users Table
+"#Create Users Table
 CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `role_id` bigint(20) unsigned NOT NULL default '1',
@@ -241,9 +219,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `deleted` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create update_history table
+"#Create update_history table
 CREATE TABLE IF NOT EXISTS `update_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Footprint` varchar(25) DEFAULT NULL,
@@ -252,9 +230,9 @@ CREATE TABLE IF NOT EXISTS `update_history` (
   `DteInstall` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create following table
+"#Create following table
 CREATE TABLE IF NOT EXISTS `following` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -265,9 +243,9 @@ CREATE TABLE IF NOT EXISTS `following` (
   `tags` tinyint(2) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
-#--#Create Users Activity Table
+"#Create Users Activity Table
 CREATE TABLE IF NOT EXISTS `users_activity` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `user_id` bigint(20) default NULL,
@@ -280,10 +258,10 @@ CREATE TABLE IF NOT EXISTS `users_activity` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-#--
+",
 
 
-#--#Insert Permisions Data
+"#Insert Permisions Data
 INSERT IGNORE INTO `permissions` (`id`, `permission`, `description`, `auto_has`) VALUES
 	(1, 'issue-view', 'View issues in project assigned to', NULL),
 	(2, 'issue-create', 'Create issues in projects assigned to', NULL),
@@ -293,18 +271,18 @@ INSERT IGNORE INTO `permissions` (`id`, `permission`, `description`, `auto_has`)
 	(9, 'project-create', 'Create a new project', NULL),
 	(10, 'project-modify', 'Modify a project assigned to', NULL),
 	(11, 'project-all', 'View, modify all projects and issues', '1,2,3,4');
-#--
+",
 
-#--#Insert Roles Data
+"#Insert Roles Data
 INSERT IGNORE INTO `roles` (`id`, `name`, `role`, `description`)
 VALUES
 	(1,'User','user','Only can read the issues in the projects they are assigned to'),
 	(2,'Developer','developer','Can update issues in the projects they are assigned to'),
 	(3,'Manager','manager','Can update issues in all projects, even if they aren\'t assigned'),
 	(4,'Administrator','administrator','Can update all issues in all projects, create users and view administration');
-#--
+",
 
-#--#Insert Roles Permissions Data
+"#Insert Roles Permissions Data
 INSERT IGNORE INTO `roles_permissions` (`id`, `role_id`, `permission_id`) VALUES
 	(1, 1, 1),
 	(2, 1, 2),
@@ -326,9 +304,9 @@ INSERT IGNORE INTO `roles_permissions` (`id`, `role_id`, `permission_id`) VALUES
 	(18, 4, 10),
 	(19, 4, 11),
 	(20, 4, 4);
-#--
+",
 
-#--#Insert Activity Types
+"#Insert Activity Types
 INSERT IGNORE INTO `activity` (`id`, `description`, `EN`,`FR`,`activity`)
 VALUES
 	(1,'Opened a new issue','Opened a new issue','Nouveau billet créé','create-issue'),
@@ -344,9 +322,9 @@ VALUES
 	(11,'Deleted a comment','Deleted a comment','Commentaire supprimé', 'delete_comment'),
 	(12,'Edited a comment','Edited a comment','	Commentaire modifié','edit_comment' ),
 	(13,'Elapsed time worked on an issue','Elapsed time worked on an issue','Temps de travail d`un ouvrier', 'issue_chrono');
-#--
+",
 
-#--#Create default tags : id 10
+"#Create default tags : id 10
 INSERT INTO `tags` (`id`, `tag`, `bgcolor`, `ftcolor`, `created_at`, `updated_at`, `EN`,`FR`,`ES`) VALUES
 (1,	'status:open',				'#c43c35','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','status:open',			'État:ouvert',					'Estado: Aberto'),
 (2,	'status:closed',			'#46A546','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','status:closed',			'État:fermé',					'Estado: Cerrado'),
@@ -356,18 +334,18 @@ INSERT INTO `tags` (`id`, `tag`, `bgcolor`, `ftcolor`, `created_at`, `updated_at
 (7,	'resolution:fixed',		'#048383','#FFFFFF',	'2013-11-30 11:23:01',	'2013-11-30 11:23:01','resolution:fixed',		'Verdict: Résolu ! :)',		'Decision: Solucionado'),
 (8,	'status:testing',			'#FCC307','#FFFFFF',	'2013-11-30 11:23:01',	'2016-11-30 23:11:01','status:testing',		'État: nous testons',		'Estado: haciendo tests'),
 (9,	'status:inProgress',		'#FF6600','#FFFFFF',	'2016-11-10 23:12:01',	'2016-11-10 23:12:01','status:inProgress',	'État: Progressons',			'Estado: progressamos');
-#--
+",
 
-#--#Import open/closed states
+"#Import open/closed states
 INSERT INTO projects_issues_tags (issue_id, tag_id, created_at, updated_at)
 (
 	SELECT id as issue_id, IF(status = 1, 1, 2) as tag_id, NOW(), NOW()
 	FROM projects_issues
 );
-#--
+",
 
 
-#--#Database updates
+"#Database updates
 INSERT INTO `update_history` (`id`, `Footprint`, `Description`, `DteRelease`, `DteInstall`) VALUES
 (1,'-------------------------','Version 1.6.0','2017-05-01',NULL),
 (2,'Database update via admin','update_v1-1_1.sql','2017-05-10',NULL),
@@ -393,11 +371,4 @@ INSERT INTO `update_history` (`id`, `Footprint`, `Description`, `DteRelease`, `D
 (22,'Database update via admin','update_v1-8_7u.sql','2021-12-31',NULL);
 
 
-#----- Last line of this file .... Anything bellow this line will be lost. -----
-
-#--###--#Create a first admin user:
-##--###--# email = myemail@email.com
-##--###--# password = admin
-##--#INSERT INTO `users` (`id`, `role_id`, `email`, `password`, `firstname`, `lastname`, `language`, `created_at`, `updated_at`, `deleted`) VALUES
-##--#(NULL,	4,	'myemail@email.com',	'XhS.DHsB8wt1o',	'admin',	'admin',	'en',	NOW(),	NOW(),	0);
-
+ " );
