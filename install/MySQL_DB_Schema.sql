@@ -19,6 +19,26 @@ CREATE TABLE IF NOT EXISTS `activity` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 #--
 
+#--#Create Activity Table
+CREATE TABLE IF NOT EXISTS `activity` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `description` varchar(255) character set UTF8 default NULL,
+  `DE` VARCHAR(255) character set UTF8 default NULL,
+  `EN` VARCHAR(255) character set UTF8 default NULL,
+  `ES` VARCHAR(255) character set UTF8 default NULL,
+  `FR` VARCHAR(255) character set UTF8 default NULL,
+  `IT` VARCHAR(255) character set UTF8 default NULL,
+  `RU` VARCHAR(255) character set UTF8 default NULL,
+  `ZH_CN` VARCHAR(255) character set UTF8 default NULL,
+  `ZH_TW` VARCHAR(255) character set UTF8 default NULL,
+  `` VARCHAR(255) character set UTF8 default NULL,
+  `activity` varchar(255) character set UTF8 default NULL,
+  `created_at` datetime default NOW(),
+  `updated_at` datetime default NOW(),
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+#--
+
 #--#Create Permissions Table
 CREATE TABLE IF NOT EXISTS `permissions` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
