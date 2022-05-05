@@ -83,6 +83,20 @@ Then, push your modifications through a new branch. NEVER push on master.
     - Nov 2021: Project member may ask BUGS to count his worktime spent on specific ticket ( punch in, punch out ) so your company may charge accordingly the client (rev 7)
     - Dec 2021: Acitivites report - what every single user have done (rev 7)
     - Dec 2021: Dark templates B-> with touch of blue  G-> with touche of green  R-> with touch of red/orange (rev 7)
+    - Feb 2022: While install, you'll skip some (apparently) useless steps
+    - Feb 2022: Ending the install: the new issue you'll create will now show among the « open issues » list
+    - Feb 2022: Default creator_id forced onto new issue
+    - Feb 2022: Connection notice sent to whichever admin who asked it.
+    - Feb 2022: Pop-up when adding or supressing tags on issue does now dispear properly
+    - Feb 2022: Message to admin on user's login
+    - Feb 2022: Timed work charged to clients
+    - Feb 2022: User's role managed from project window
+    - Feb 2022: User's roles managed in user's window
+    - Feb 2022: The admin may now define a password when he creates a new user
+    - Mar 2022: lot more informations logged ( tracability of activities as well as bugs)
+    - Mar 2022: Recover forgotten password
+    - Apr 2022: backcolor of tickets and projects reacts to your mouse movements
+    - Apr 2022: entire access to project history
 - v.1.7 : July 2019 
 	- reports are now totally integrated to BUGS which produces pdf files
 - v.1.6 : February 2019 
