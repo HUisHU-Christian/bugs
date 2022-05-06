@@ -1,4 +1,5 @@
 <?php
+$Email["de"] = 'E-Mail';
 $Email["en"] = 'Email';
 $Email["es"] = 'Correo';
 $Email["fr"] = 'Courriel';
@@ -6,6 +7,7 @@ $Email["pt"] = 'Email';
 $Email["pt-BR"] = 'Email';
 $Email["it"] = 'Email';
 
+$Language["de"] = 'Deutsch';
 $Language["en"] = 'English';
 $Language["es"] = 'Español';
 $Language["fr"] = 'Français';
@@ -13,6 +15,7 @@ $Language["pt"] = 'Portuguese';
 $Language["pt-BR"] = 'Portuguese (Brazil)';
 $Language["it"] = 'Italiano';
 
+$Login["de"] = 'Anmelden';
 $Login["en"] = 'Login';
 $Login["es"] = 'Empezar';
 $Login["fr"] = 'Entrer';
@@ -20,6 +23,7 @@ $Login["pt"] = 'Acessar';
 $Login["pt-BR"] = 'Acessar';
 $Login["it"] = 'Accedi';
 
+$Password["de"] = 'Passwort';
 $Password["en"] = 'Password';
 $Password["es"] = 'Contraseña';
 $Password["fr"] = 'Mot de passe';
@@ -27,6 +31,7 @@ $Password["pt"] = 'Senha';
 $Password["pt-BR"] = 'Senha';
 $Password["it"] = 'Password';
 
+$Remember["de"] = 'Erinnere dich an mich';
 $Remember["en"] = 'Remember me';
 $Remember["es"] = 'Me reconocer';
 $Remember["fr"] = 'Se rappeler de moi';
@@ -34,6 +39,7 @@ $Remember["pt"] = 'Lembre de mim';
 $Remember["pt-BR"] = 'Lembre de mim';
 $Remember["it"] = 'Ricordami';
 
+$Title["de"] = 'Anmeldung in den Accoun';
 $Title["en"] = 'Login to your account';
 $Title["es"] = 'Acceso a su cuenta';
 $Title["fr"] = 'Accéder à votre compte';
@@ -63,6 +69,7 @@ $WrongPwd["ru"] = 'Упсс, имя пользователя и пароль н�
 $WrongPwd["zh-CN"] = '哎呀, 您的账号或密码不符';
 $WrongPwd["zh-TW"] = '哎呦, 您的帳號或密碼不符';
 
+$Oublie["de"] = 'Passwort vergessen';
 $Oublie["en"] = 'Fogotten password';
 $Oublie["es"] = 'Si me olvido la contraseña';
 $Oublie["fr"] = 'J`ai oublié mon mot de passe';
@@ -70,6 +77,7 @@ $Oublie["pt"] = 'Senha esquecida';
 $Oublie["pt-BR"] = 'Senha esquecida';
 $Oublie["it"] = 'Password dimenticata';
 
+$OublieQuoi["de"] = 'Ziehen Sie das Kennwortfeld in den Mülleimer ';
 $OublieQuoi["en"] = 'Drag and drop the password box into the trash can ';
 $OublieQuoi["es"] = 'Arrastre y suelte el cuadro de contraseña en la papelera ';
 $OublieQuoi["fr"] = 'Glissez-déposez la case du mot de passe dans la poubelle';
@@ -77,6 +85,7 @@ $OublieQuoi["pt"] = 'Arraste e solte a caixa de senha na lixeira ';
 $OublieQuoi["pt-BR"] = 'Arraste e solte a caixa de senha na lixeira ';
 $OublieQuoi["it"] = 'Trascina e rilascia la casella della password nel cestino ';
 
+$OublieResu["de"] = 'Ein neues Passwort wird versendet an ';
 $OublieResu["en"] = 'A new password will be generated and sent to ';
 $OublieResu["es"] = 'Se generará una nueva contraseña y se enviará a ';
 $OublieResu["fr"] = 'Un nouveau mot de passe sera généré et envoyé à';
@@ -84,6 +93,7 @@ $OublieResu["pt"] = 'Uma nova senha será gerada e enviada para';
 $OublieResu["pt-BR"] = 'Uma nova senha será gerada e enviada para';
 $OublieResu["it"] = 'Verrà generata e inviata una nuova password';
 
+$OublieCour["de"] = 'Bitte gib Deine Login-E-Mail ein ';
 $OublieCour["en"] = 'Please enter your login email ';
 $OublieCour["es"] = 'Por favor, introduzca su correo electrónico de inicio de sesión';
 $OublieCour["fr"] = 'Veuillez indiquer votre courriel de connexion';
